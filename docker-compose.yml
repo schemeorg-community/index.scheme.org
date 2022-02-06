@@ -1,8 +1,6 @@
 services:
   solr:
     image: "solr:8"
-    ports:
-      - "8983:8983"
     volumes:
       - "./solrconfig:/scmindex"
     healthcheck:

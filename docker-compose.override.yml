@@ -1,4 +1,7 @@
 services:
+  solr:
+    ports:
+      - "8983:8983"
   app:
     volumes:
       - type: bind
