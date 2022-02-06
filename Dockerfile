@@ -7,9 +7,9 @@ RUN mvn clean package
 
 FROM openjdk:11
 WORKDIR app
-COPY --from=0 /app/target/scheme-index-0.0.1.jar .
+COPY --from=0 /app/target/r7rs-index-0.0.1.jar .
 COPY types types
 COPY dockerconfig config
 COPY templates templates
 COPY static static
-CMD java -jar scheme-index-0.0.1.jar
+CMD java -jar r7rs-index-0.0.1.jar

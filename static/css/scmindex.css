@@ -53,6 +53,7 @@
     padding: 5px;
     display: flex;
     flex-direction: column;
+    margin-bottom: 0;
 }
 
 .facets {
@@ -303,4 +304,12 @@
     max-width: 600px;
     margin-top: 50px;
     margin-bottom: 50px;
+}
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    align-items: center;
+    color: #444;
 }
