@@ -1,0 +1,21 @@
+services:
+  solr:
+    image: "solr:8"
+    ports:
+      - "8983:8983"
+    volumes:
+      - "./solrconfig:/scmindex"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8983/solr/scmindex/admin/ping"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    command: ["solr-precreate", "scmindex", "/scmindex"]
+
+  app:
+    build: .
+    ports:
+      - "80:4567"
+    depends_on:
+      solr:
+        condition: service_healthy

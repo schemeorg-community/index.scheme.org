@@ -1,0 +1,12 @@
+services:
+  app:
+    volumes:
+      - type: bind
+        source: ./static
+        target: /app/static
+      - type: bind
+        source: ./templates
+        target: /app/templates
+      - type: bind
+        source: ./dockerdevconfig
+        target: /app/config

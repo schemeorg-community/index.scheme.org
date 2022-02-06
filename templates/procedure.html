@@ -1,0 +1,28 @@
+<div class="procedure">
+    <div class="lib">
+        <span class="plain">(import </span><a href="?lib={{lib}}" class="important sig-type">{{lib}}</a>
+        <span class="plain">)</span>
+    </div>
+    <div class="main-signature">
+        {{# signature }}
+            {{> signature }}
+        {{/ signature}}
+    </div>
+    {{# has_param_signatures }}
+    <div class="param-signatures">
+        <div class="plain">Parameter types:</div>
+        {{# param_signatures }}
+        <div class="param-signature">
+            {{# signature }}
+                {{> signature }}
+            {{/ signature }}
+        </div>
+        {{/ param_signatures }}
+    </div>
+    {{/ has_param_signatures }}
+    <div class="tags">
+        {{# tags }}
+            <a class="tag tag-{{.}}" href="?tag={{.}}">{{ . }}</a>
+        {{/ tags }}
+    </div>
+</div>
