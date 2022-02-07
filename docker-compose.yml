@@ -19,8 +19,7 @@ services:
     volumes:
       - "./nginx.conf:/etc/nginx/nginx.conf"
       - "./static:/www/data"
-      - "./cert/r7rsindex.key:/etc/ssl/certs/r7rsindex.key"
-      - "./cert/r7rsindex.crt:/etc/ssl/certs/r7rsindex.crt"
+      - "/etc/letsencrypt/:/etc/letsencrypt/"
     ports:
       - "80:80"
       - "443:443"
