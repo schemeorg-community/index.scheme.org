@@ -39,7 +39,8 @@
 (let ((funcs (read-specs "types/index.scm")))
  (index-types solr-url funcs))
 
-(static-files/external-location "static")
+(when (get-property 'serve-static)
+  (static-files/external-location "static"))
 
 (get "/search"
      (lambda (req resp)

@@ -9,11 +9,18 @@ services:
       timeout: 10s
       retries: 10
     command: ["solr-precreate", "scmindex", "/scmindex"]
-
   app:
     build: .
-    ports:
-      - "80:4567"
     depends_on:
       solr:
         condition: service_healthy
+  nginx:
+    image: "nginx:1.21"
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf"
+      - "./static:/www/data"
+      - "./cert/r7rsindex.key:/etc/ssl/certs/r7rsindex.key"
+      - "./cert/r7rsindex.crt:/etc/ssl/certs/r7rsindex.crt"
+    ports:
+      - "80:80"
+      - "443:443"

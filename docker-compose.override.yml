@@ -3,6 +3,8 @@ services:
     ports:
       - "8983:8983"
   app:
+    ports:
+      - "80:4567"
     volumes:
       - type: bind
         source: ./static
@@ -13,3 +15,5 @@ services:
       - type: bind
         source: ./dockerdevconfig
         target: /app/config
+  nginx:
+    entrypoint: ["echo", "nginx disabled in dev"]

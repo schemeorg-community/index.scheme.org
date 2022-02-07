@@ -1,14 +1,11 @@
 :root {
     --bg-color: #eee;
+    --tag-bg-color: #f4f4f4;
     --accent-color: #e00;
     --accent-color-dark: #900;
     --accent-color-light: #fdd;
     --secondary-color: #338;
 
-    --tag1-color: #00c742;
-    --tag2-color: #00c370;
-    --tag3-color: #00bd8f;
-    --tag4-color: #04b5a3;
 }
 
 .signature {
@@ -16,26 +13,32 @@
     font-family: monospace;
 }
 
-.important.sig-type:hover {
+.sig-type:hover {
     text-decoration: underline;
     opacity: 0.7;
 }
 
-.important.sig-name {
+.sig-name {
     color: var(--accent-color-dark);
-    font-weight: bold;
 }
 
-.important.sig-type {
+.sig-type {
     color: var(--secondary-color);
     text-decoration: none;
-    font-weight: bold;
     margin-right: 5px;
     cursor: pointer;
 }
 
-.plain, .facet-count {
+.important {
+    font-weight: bold;
+}
+
+.plain, .facet-count, .sig-muted {
     color: #444;
+}
+
+.sig-muted {
+    margin-right: 5px;
 }
 
 .search-page {
@@ -48,7 +51,7 @@
 }
 
 .search-form {
-    min-width: 200px;
+    min-width: 150px;
     flex: 1;
     padding: 5px;
     display: flex;
@@ -73,7 +76,7 @@
 
 .procedure {
     background-color: white;
-    padding: 10px;
+    padding: 0.5em;
     border-top: 1px gray solid;
     border-left: 1px gray solid;
     border-right: 1px gray solid;
@@ -116,7 +119,7 @@
 }
 
 .tag {
-    transform: translateY(-10px);
+    transform: translateY(-0.5em);
     padding-left: 5px;
     padding-right: 5px;
     margin-left: 2px;
@@ -125,29 +128,14 @@
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;
     color: white;
-    font-weight: bold;
     text-decoration: none;
+    color: var(--secondary-color);
+    background-color: var(--tag-bg-color);
 }
 
 .tag:hover {
     text-decoration: underline;
     opacity: 0.7;
-}
-
-.tag.tag-pure {
-    background-color: var(--tag1-color);
-}
-
-.tag.tag-predicate {
-    background-color: var(--tag2-color);
-}
-
-.tag.tag-parameter {
-    background-color: var(--tag3-color);
-}
-
-.tag.tag-parameterized {
-    background-color: var(--tag4-color);
 }
 
 .procedure:first-child {
@@ -189,6 +177,7 @@
 
 .facet-option input:checked {
     background-color: var(--accent-color);
+    border-color: var(--accent-color-dark);
 }
 
 .facet-option input:checked + .facet-text{
@@ -223,7 +212,11 @@
 }
 
 .query {
+    min-width: 0;
     flex: 1;
+    border: solid gray 1px;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 .pager {
@@ -241,6 +234,7 @@
     background-color: white;
     width: 1.5em;
     height: 1.5em;
+    line-height: 1.5em;
     text-align: center;
     border-top: solid gray 1px;
     border-left: solid gray 1px;
@@ -312,4 +306,8 @@
     margin-top: 50px;
     align-items: center;
     color: #444;
+}
+
+fieldset {
+    border: 1px gray solid;
 }

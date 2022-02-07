@@ -1,6 +1,7 @@
 (define-library
   (scmindex solr)
   (import (scheme base)
+          (scheme write)
           (arvyy httpclient)
           (scmindex types-parser))
   
@@ -24,7 +25,7 @@
               (define json (func->json f))
               (define extra
                 `((param_types_filter . ,(list->vector (map symbol->string (flatten-type supertype-map (func-param-types f)))))
-                  (return_types_filter . ,(list->vector (map symbol->string (flatten-type subtype-map (func-return-types f)))))))
+                  (return_types_filter . ,(list->vector (map symbol->string (flatten-type supertype-map (func-return-types f)))))))
               (append extra json))
             funcs)))
       (post-json (string-append solr-url "/update/json") payload))

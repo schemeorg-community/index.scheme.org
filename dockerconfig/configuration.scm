@@ -1,4 +1,5 @@
 ((solr-url . "http://solr:8983")
  (solr-core . "scmindex")
  (page-size . 40)
- (cache-templates . #t))
+ (cache-templates . #t)
+ (serve-static . #f))
