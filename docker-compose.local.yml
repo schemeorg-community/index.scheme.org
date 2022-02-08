@@ -1,0 +1,6 @@
+services:
+  nginx:
+    volumes:
+      - "./nginx.conf:/etc/nginx/nginx.conf"
+      - "./static:/www/data"
+      - "./cert/:/etc/letsencrypt/live/r7rsindex.com"

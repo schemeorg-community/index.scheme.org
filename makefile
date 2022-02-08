@@ -1,3 +1,3 @@
 create-dev-certs:
 	mkdir -p cert
-	openssl req -newkey rsa:4096 -x509 -sha256 -days 3650 -nodes -out cert/r7rsindex.crt -keyout cert/r7rsindex.key
+	openssl req -new -x509 -days 999 -nodes -out cert/fullchain.pem -keyout cert/privkey.pem
