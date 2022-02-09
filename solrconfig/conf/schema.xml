@@ -22,6 +22,7 @@
     <field name="id" type="uuid" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="_version_" type="plong" indexed="false" stored="false"/>
     <field name="name" type="text_general" indexed="true" stored="true" />
+    <field name="name_precise" type="string" indexed="true" stored="false" />
     <field name="signature" type="string" indexed="false" stored="true" />
     <field name="lib" type="string" indexed="true" stored="true" />
     <field name="param_names" type="text_general" indexed="true" stored="true" multiValued="true"/>
@@ -33,6 +34,8 @@
     <field name="return_types_filter" type="strings" indexed="true" stored="true" />
     <field name="super_types" type="strings" indexed="true" stored="true" />
 
+
+    <copyField source="name" dest="name_precise"/>
 
     <uniqueKey>id</uniqueKey>
 
@@ -46,12 +49,12 @@
 
     <fieldType name="text_general" class="solr.TextField">
         <analyzer type="index">
-            <tokenizer class="solr.StandardTokenizerFactory"/>
+            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.NGramFilterFactory" minGramSize="2" maxGramSize="20"/>
         </analyzer>
         <analyzer type="query">
-            <tokenizer class="solr.StandardTokenizerFactory"/>
+            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
             <filter class="solr.LowerCaseFilterFactory"/>
         </analyzer>
     </fieldType>
