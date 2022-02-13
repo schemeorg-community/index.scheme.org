@@ -22,4 +22,10 @@
  
  (apply
    (lambda ((procedure? proc) arg ... (list? args)) *)
-   (pure)))
+   (pure))
+ 
+ (if
+   (syntax-rules ()
+     ((_ test consequent))
+     ((_ test consequent alternate))))
+ )

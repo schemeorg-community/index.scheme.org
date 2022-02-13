@@ -1,4 +1,5 @@
 (
+ 
  (*
    (lambda ((number? z) ...) number?)
    (pure))
@@ -43,6 +44,10 @@
  (abs
    (lambda ((real? x)) number?)
    (pure))
+ 
+ (and
+   (syntax-rules ()
+     ((_ test1 ...))))
 
  (append
    (lambda ((list? list) ...)  list?)
@@ -68,6 +73,10 @@
  (assv
    (lambda (obj (list? alist)) (or list? boolean?))
    (pure))
+ 
+ (begin
+   (syntax-rules ()
+     ((_ expression-or-definition ...))))
 
  (binary-port?
    (lambda (obj) boolean?)
@@ -232,6 +241,26 @@
    (pure predicate)
    ()
    (number?))
+ 
+ (cond
+   (syntax-rules (else =>)
+     ((_ clause1 clause2 ...)))
+   ()
+   ((clause (test expression1 ...)
+            (test => expression)
+            (else expression1 expression2 ...))))
+ 
+ (cond-expand
+   (syntax-rules (library and or not)
+     ((_ ce-clause1 ce-clause2 ...)))
+   ()
+   ((ce-clause (feature-requirement expression ...)
+               (else expression))
+    (feature-requirement feature-identifier
+                         (library library-name)
+                         (and feature-requirement ...)
+                         (or feature-requirement ...)
+                         (not feature-requirement))))
 
  (cons
    (lambda (obj1 obj2) pair?)
@@ -245,14 +274,48 @@
    (lambda () input-port?)
    (parameter))
 
- (
-  current-output-port
+ (current-output-port
   (lambda () output-port?)
   (parameter))
+ 
+ (define
+   (syntax-rules ()
+     ((_ variable expression))
+     ((_ (variable parameter1 ...) body))
+     ((_ (variable parameter1 ... . parameter) body))))
+ 
+ (define-record-type
+   (syntax-rules ()
+     ((name constructor pred field ...)))
+   ()
+   ((constructor (constructor-name field-name ...))
+    (field (field-name accessor-name)
+           (field-name accessor-name modifier-name))))
+ 
+ (define-syntax
+   (syntax-rules ()
+     ((_ keyword transformer-spec))))
+ 
+ (define-values
+   (syntax-rules ()
+     ((_ formals expression)))
+   ()
+   ((formals (variable1 ...)
+             variable
+             (variable1 ... variable_n . variable_n+1))))
 
  (denominator
    (lambda ((rational? q)) integer?)
    (pure))
+ 
+ (do
+    (syntax-rules ()
+      ((_ (variable-decl1 ...)
+          (test expression ...)
+          command ...)))
+    ()
+    ((variable-decl (variable init step)
+                    (variable init))))
 
  (dynamic-wind
    (lambda ((procedure? before) (procedure? thunk) (procedure? after)) *)
@@ -375,6 +438,27 @@
  (get-output-string
    (lambda ((output-port? port)) string?)
    ())
+ 
+ (guard
+   (syntax-rules (=> else)
+     ((_ (variable cond-clause1 cond-clause2 ...) body)))
+   ()
+   ((cond-clause (test expression1 ...)
+                 (test => expression)
+                 (else expression1 expression2 ...))))
+ 
+ (if
+    (syntax-rules ()
+      ((_ test consequent))
+      ((_ test consequent alternate))))
+ 
+ (include
+   (syntax-rules ()
+     ((_ string1 string2 ...))))
+ 
+ (include-ci
+   (syntax-rules ()
+     ((_ string1 string2 ...))))
 
  (inexact
    (lambda ((number? z)) inexact?)
@@ -405,6 +489,13 @@
    ()
    (rational?))
 
+ (lambda
+   (syntax-rules ()
+     ((_ formals body)))
+   ()
+   ((formals (variable1 ...)
+             variable
+             (variable1 ... variable_n . variable_n+1))))
 
  (lcm
    (lambda ((integer? n) ...) integer?)
@@ -413,6 +504,60 @@
  (length
    (lambda ((list? list)) integer?)
    (pure))
+ 
+ (let
+  (syntax-rules ()
+    ((_ bindings body)))
+  ()
+  ((bindings ((variable1 init1) ...))))
+ 
+ (let*
+  (syntax-rules ()
+    ((_ bindings body)))
+  ()
+  ((bindings ((variable1 init1) ...))))
+
+ (let*-values
+   (syntax-rules ()
+     ((_ mv-binding-spec body)))
+   ()
+   ((mv-binding-spec ((formals1 init1) ...))
+    (formals (variable1 ...)
+             variable
+             (variable1 ... variable_n . variable_n+1))))
+ 
+ (let-syntax
+   (syntax-rules ()
+     ((_ bindings body)))
+   ()
+   ((bindings ((keyword transformer-spec) ...))))
+ 
+ (let-values
+   (syntax-rules ()
+     ((_ mv-binding-spec body)))
+   ()
+   ((mv-binding-spec ((formals1 init1) ...))
+    (formals (variable1 ...)
+             variable
+             (variable1 ... variable_n . variable_n+1))))
+ 
+ (letrec
+  (syntax-rules ()
+    ((_ bindings body)))
+  ()
+  ((bindings ((variable1 init1) ...))))
+ 
+ (letrec*
+  (syntax-rules ()
+    ((_ bindings body)))
+  ()
+  ((bindings ((variable1 init1) ...))))
+
+ (letrec-syntax
+   (syntax-rules ()
+     ((_ bindings body)))
+   ()
+   ((bindings ((keyword transformer-spec) ...))))
 
  (list
    (lambda (obj ...) list?)
@@ -534,6 +679,10 @@
  (newline
    (lambda ((output-port? port)) undefined)
    ())
+ 
+ (not
+   (lambda (obj) boolean?)
+   (pure))
 
  (null?
    (lambda (obj) boolean?)
@@ -574,6 +723,10 @@
  (open-output-string
    (lambda () output-port?)
    (pure))
+ 
+ (or
+   (syntax-rules ()
+     ((_ test1 ...))))
 
  (output-port-open?
    (lambda ((output-port? port)) boolean?)
@@ -588,6 +741,10 @@
  (pair?
    (lambda (obj) boolean?)
    (pure predicate))
+ 
+ (parameterize
+   (syntax-rules ()
+     ((_ ((param1 value1) ...) body))))
 
  (peek-char
    (lambda () (or eof-object? char?))
@@ -616,6 +773,14 @@
  (procedure?
    (lambda (obj) boolean?)
    (pure predicate))
+ 
+ (quasiquote
+   (syntax-rules ()
+     ((_ qq-template))))
+ 
+ (quote
+   (syntax-rules ()
+     ((_ datum))))
 
  (quotient
    (lambda ((integer? n1) (integer? n2)) integer?)
@@ -717,6 +882,16 @@
  (round
    (lambda ((real? x)) integer?)
    (pure))
+ 
+ (set!
+   (syntax-rules ()
+     ((_ variable expression))))
+ 
+ (set-car!
+   (lambda ((pair?  pair) obj) undefined))
+ 
+ (set-cdr!
+   (lambda ((pair?  pair) obj) undefined))
 
  (square
    (lambda ((number? z)) number?)
@@ -875,6 +1050,33 @@
  (symbol?
    (lambda (obj) boolean?)
    (pure predicate))
+ 
+ (syntax-error
+   (syntax-rules ()
+     ((_ message args ...))))
+ 
+ (syntax-rules
+   (syntax-rules ()
+     ((_ (literal ...) syntax-rule ...))
+     ((_ ellipsis (literal ...) syntax-rule ...)))
+   ()
+   ((syntax-rule (pattern template))
+    (pattern identifier
+             constant
+             (pattern ...)
+             (pattern pattern ... . pattern)
+             (pattern ... pattern ellipsis pattern ...)
+             (pattern ... pattern ellipsis pattern ... . pattern)
+             (_append |#| (pattern ...))
+             (_append |#| (pattern ... pattern ellipsis pattern ...)))
+    (template identifier
+              constant
+              (element ...)
+              (element element ... . template)
+              (ellipsis template)
+              (_append |#| (element ...)))
+    (element template
+             (_append template ellipsis))))
 
  (textual-port?
    (lambda (obj) boolean?)
@@ -902,6 +1104,18 @@
  (u8-ready?
    (lambda () boolean?)
    (parameterized))
+ 
+ (unless
+   (syntax-rules ()
+     ((_ test expression1 expression2 ...))))
+ 
+ (unquote
+   (syntax-rules ()
+     ((_ expression))))
+ 
+ (unquote-splicing
+   (syntax-rules ()
+     ((_ expression))))
 
  (u8-ready?
    (lambda ((input-port? port)) boolean?)
@@ -1016,6 +1230,10 @@
  (vector?
    (lambda (obj) boolean?)
    (pure predicate))
+ 
+ (when
+   (syntax-rules ()
+     ((_ test expression1 expression2 ...))))
 
  (with-exception-handler
    (lambda ((procedure? handler) (procedure? thunk)) *)

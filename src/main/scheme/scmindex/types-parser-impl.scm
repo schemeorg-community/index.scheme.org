@@ -52,12 +52,17 @@
     (lambda (entry)
       (define name (list-ref entry 0))
       (define signature (list-ref entry 1))
+      (define proc?
+        (cond
+          ((equal? (car signature) 'lambda) #t)
+          ((equal? (car signature) 'syntax-rules) #f)
+          (else (error (string-append "Unrecognized signature for " (->string name))))))
       (define tags (list-ref/f entry 2))
       (define param-signatures (list-ref/f entry 3))
-      (define supertypes (list-ref/f entry 4))
-      (define param-names (extract-param-names signature))
-      (define param-types (extract-param-types signature))
-      (define return-types (extract-return-types signature))
+      (define supertypes (if proc? (list-ref/f entry 4) '()))
+      (define param-names (if proc? (extract-param-names signature) (extract-syntax-names signature)))
+      (define param-types (if proc? (extract-param-types signature) '()))
+      (define return-types (if proc? (extract-return-types signature) '()))
       (make-func lib name param-names signature param-signatures tags param-types return-types supertypes))
     input))
 
@@ -71,6 +76,29 @@
                      (else (list param))))
                  params-list))
   (apply append lst*))
+
+(define (extract-syntax-names signature)
+  (define literals (cadr signature))
+  (define (do-extract fragment)
+    (cond
+      ((or (equal? '... fragment)
+           (null? fragment)) 
+       (list))
+      ((symbol? fragment) 
+       (lset-difference equal? (list fragment) literals))
+      ((pair? fragment)
+       (lset-difference equal? 
+                        (append (do-extract (car fragment))
+                                (do-extract (cdr fragment)))
+                        literals))))
+  (let* ((result (map
+                   (lambda (rule)
+                     (display "=====\n") (display signature) (newline)
+                     (do-extract (cdar rule)))
+                   (cddr signature)))
+         (result (apply append result))
+         (result (delete-duplicates result equal?)))
+    result))
 
 (define (extract-param-types signature)
   (define params-list (cadr signature))

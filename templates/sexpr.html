@@ -1,0 +1,18 @@
+{{#link}}
+<a class="sexpr {{class}}" href="{{link}}">
+    {{# sub-exprs }}
+        {{> sexpr }}
+    {{/ sub-exprs}}
+    {{text}}
+    {{{html}}}
+</a>
+{{/link}}
+{{^link}}
+<span class="sexpr {{class}}">
+    {{# sub-exprs }}
+        {{> sexpr }}
+    {{/sub-exprs}}
+    {{text}}
+    {{{html}}}
+</span>
+{{/link}}

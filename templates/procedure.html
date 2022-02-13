@@ -1,25 +1,35 @@
 <div class="procedure">
     <div class="lib">
-        <span class="plain">(import </span><a href="?lib={{lib}}" class="lib-link sig-type">{{lib}}</a>
-        <span class="plain">)</span>
+        <span class="muted">(import </span><a href="?lib={{lib}}" class="lib-link">{{lib}}</a><span class="muted">)</span>
     </div>
     <div class="main-signature">
-        {{# signature }}
-            {{> signature }}
+        {{# signature}}
+            {{> sexpr }}
         {{/ signature}}
     </div>
     {{# has_param_signatures }}
     <div class="param-signatures">
-        <div class="plain">Parameter types:</div>
+        <div class="muted">Parameter types</div>
         {{# param_signatures }}
         <div class="param-signature">
-            {{# signature }}
-                {{> signature }}
-            {{/ signature }}
+            {{> sexpr }}
         </div>
         {{/ param_signatures }}
     </div>
     {{/ has_param_signatures }}
+    {{# has_subsyntax_signatures }}
+    <div class="subsyntax-signatures">
+        <div class="muted subsyntax-signatures-header">Syntax fragments</div>
+        {{# subsyntax_signatures }}
+        <span class="subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
+        <div class="subsyntax-rules">
+            {{# rules }}
+                {{> sexpr }}
+            {{/ rules }}
+        </div>
+        {{/ subsyntax_signatures }}
+    </div>
+    {{/ has_subsyntax_signatures}}
     <div class="tags">
         {{# tags }}
             <a class="tag tag-{{.}}" href="?tag={{.}}">{{ . }}</a>

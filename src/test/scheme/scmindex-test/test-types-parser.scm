@@ -8,7 +8,7 @@
       (test-assert (member e actual)))
     expect))
 
-(test-equal 5 (length funcs))
+(test-equal 6 (length funcs))
 
 (let* ((f (list-ref funcs 0))
        (f* (func->json f)))

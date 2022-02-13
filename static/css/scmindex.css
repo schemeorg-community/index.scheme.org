@@ -5,40 +5,12 @@
     --accent-color-dark: #900;
     --accent-color-light: #fdd;
     --secondary-color: #338;
+    --tertary-color: green;
 
 }
 
-.signature {
-    font-size: 1.5em;
-    font-family: monospace;
-}
-
-.sig-type:hover {
-    text-decoration: underline;
-    opacity: 0.7;
-}
-
-.sig-name {
-    color: var(--accent-color-dark);
-}
-
-.sig-type {
-    color: var(--secondary-color);
-    text-decoration: none;
-    margin-right: 5px;
-    cursor: pointer;
-}
-
-.important {
-    font-weight: bold;
-}
-
-.plain, .facet-count, .sig-muted {
+.facet-count {
     color: #444;
-}
-
-.sig-muted {
-    margin-right: 5px;
 }
 
 .search-page {
@@ -95,20 +67,66 @@
     grid-area: lib;
 }
 
-.lib a {
+.lib-link {
+    color: var(--secondary-color);
     text-decoration: none;
 }
 
+.lib-link:hover {
+    text-decoration: underline;
+}
+
 .main-signature {
+    font-size: 1.5em;
     grid-area: sig;
 }
 
-.param-signatures {
+.param-signatures, .subsyntax-signatures {
     grid-area: param-sig;
+    padding-top: 0.5em;
 }
 
-.param-signature {
-    font-size: 0.9em;
+.subsyntax-signatures {
+    display: grid;
+}
+
+@media (min-width: 600px) {
+    .subsyntax-signatures-header {
+        grid-column: 1 / span 2;
+    }
+    .subsyntax-signatures {
+        grid-template-columns: auto 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    .subsyntax-signatures {
+        grid-template-columns: 1fr;
+    }
+}
+
+.subsyntax-signatures-header {
+    margin-bottom: 0.5em;
+}
+
+.subsyntax-rules {
+    margin-bottom: 1em;
+}
+
+.param-signature, .subsyntax-signature {
+    font-size: 1.2em;
+}
+
+.subsyntax-name {
+    font-family: monospace;
+    color: #444;
+    margin-right: 5px;
+}
+
+.subsyntax-signature {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: start;
 }
 
 .tags {
@@ -147,11 +165,6 @@
     border-bottom: 1px gray solid;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
-}
-
-.signature {
-    display: flex;
-    flex-wrap: wrap;
 }
 
 .chunk {
@@ -310,4 +323,77 @@
 
 fieldset {
     border: 1px gray solid;
+}
+
+
+/*******************************/
+
+.sexpr {
+    font-family: monospace;
+}
+
+.sexpr-flex {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.sexpr-shrink {
+    flex-shrink: 1;
+}
+
+.muted {
+    color: #444;
+}
+
+.syntaxbracket-0 {
+    color: #444;
+}
+
+.syntaxbracket-1 {
+    font-weight: bold;
+    color: var(--accent-color-dark);
+}
+
+.syntaxbracket-2 {
+    font-weight: bold;
+    color: var(--secondary-color);
+}
+
+.spacer {
+    width: 0.25em;
+}
+
+.bright-name {
+    font-weight: bold;
+    color: var(--accent-color-dark);
+}
+
+.muted-name {
+    font-weight: bold;
+    color: #444;
+}
+
+.bright-type {
+    font-weight: bold;
+    color: var(--secondary-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.bright-type:hover {
+    text-decoration: underline;
+    opacity: 0.7;
+}
+
+.bright-syntax {
+    font-weight: bold;
+    color: var(--tertary-color);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.muted-type {
+    font-weight: bold;
+    color: #444;
 }

@@ -1,4 +1,13 @@
 (
+ 
+ (delay
+   (lambda (expression) promise?)
+   (syntax))
+ 
+ (delay-force
+   (lambda (expression) promise?)
+   (syntax))
+ 
  (force
    (lambda ((promise? promise)) *))
  
