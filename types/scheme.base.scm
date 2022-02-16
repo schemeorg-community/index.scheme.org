@@ -53,25 +53,29 @@
    (lambda ((list? list) ...)  list?)
    (pure))
 
+ (append
+   (lambda ((list? list) ... obj)  *)
+   (pure))
+
  (apply
    (lambda ((procedure? proc) arg1 ... (list? args)) *)
    (pure))
 
  (assoc
-   (lambda (obj (list? alist)) (or list? boolean?))
+   (lambda (obj (list? alist)) (or pair? boolean?))
    (pure))
 
  (assoc
-   (lambda (obj (list? alist) (procedure? =)) (or list? boolean?))
+   (lambda (obj (list? alist) (procedure? =)) (or pair? boolean?))
    (pure)
-   ((= (lambda (a b) boolean?))))
+   ((= (lambda (a b) *))))
 
  (assq
-   (lambda (obj (list? alist)) (or list? boolean?))
+   (lambda (obj (list? alist)) (or pair? boolean?))
    (pure))
 
  (assv
-   (lambda (obj (list? alist)) (or list? boolean?))
+   (lambda (obj (list? alist)) (or pair? boolean?))
    (pure))
  
  (begin
@@ -173,7 +177,14 @@
  (car
    (lambda ((pair? pair)) *)
    (pure))
-
+ 
+ (case
+   (syntax-rules (=> else)
+     ((_ key clause1 clause2 ...)))
+   ()
+   ((clause ((datum1 ...) expression1 expression2 ...)
+            ((datum1 ...) => expression)
+            (else expression1 expression2 ...))))
 
  (cdar
    (lambda ((pair? pair)) *)
@@ -425,7 +436,7 @@
  (for-each
    (lambda ((procedure? proc) (list? list1) (list? list2) ...) undefined)
    ()
-   ((proc (lambda (obj ...) undefined))))
+   ((proc (lambda (obj1 obj2 ...) undefined))))
 
  (gcd
    (lambda ((integer? n) ...) integer?)
@@ -637,7 +648,7 @@
  (map
    (lambda ((procedure? proc) (list? list1) (list? list2) ...) list?)
    (pure)
-   ((proc (lambda (obj ...) *))))
+   ((proc (lambda (obj1 obj2 ...) *))))
 
  (max
    (lambda ((real? x1) (real? x2) ...) real?)
@@ -650,7 +661,7 @@
  (member
    (lambda (obj (list? list) (procedure? compare)) (or boolean? list?))
    (pure)
-   ((compare (lambda (obj1 obj2) boolean?))))
+   ((compare (lambda (obj1 obj2) *))))
 
  (memq
    (lambda (obj (list? list)) (or boolean? list?))

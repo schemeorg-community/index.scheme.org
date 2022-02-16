@@ -1,5 +1,8 @@
 (
  
+ ;; helper
+ ((r7rsindex aux) . "types/r7rsindex.aux.scm")
+ 
  ;; r7rs small
  ((scheme base) . "types/scheme.base.scm")
  ((scheme case-lambda) . "types/scheme.case-lambda.scm")
@@ -18,5 +21,11 @@
  ((scheme write) . "types/scheme.write.scm")
  
  ; r7rs large
- ;((scheme list) . "types/scheme.list.scm")
+ ((scheme list) . "types/scheme.list.scm")
+ ((scheme comparator) . "types/scheme.comparator.scm")
+ 
+ ; srfi
+ ((srfi 1) . "types/scheme.list.scm")
+ ((srfi 128) . "types/scheme.comparator.scm")
+ 
  )

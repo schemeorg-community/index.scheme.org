@@ -93,7 +93,6 @@
                         literals))))
   (let* ((result (map
                    (lambda (rule)
-                     (display "=====\n") (display signature) (newline)
                      (do-extract (cdar rule)))
                    (cddr signature)))
          (result (apply append result))
