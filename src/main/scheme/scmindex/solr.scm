@@ -24,7 +24,7 @@
             (lambda (f)
               (define json (func->json f))
               (define extra
-                `((param_types_filter . ,(list->vector (map symbol->string (flatten-type supertype-map (func-param-types f)))))
+                `((param_types_filter . ,(list->vector (map symbol->string (flatten-type subtype-map (func-param-types f)))))
                   (return_types_filter . ,(list->vector (map symbol->string (flatten-type supertype-map (func-return-types f)))))))
               (append extra json))
             funcs)))

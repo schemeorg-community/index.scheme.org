@@ -24,10 +24,12 @@
  ((scheme comparator) . "types/scheme.comparator.scm")
  ((scheme list) . "types/scheme.list.scm")
  ((scheme sort) . "types/scheme.sort.scm")
+ ((scheme vector) . "types/scheme.vector.scm")
  
  ; srfi
  ((srfi 1) . "types/scheme.list.scm")
  ((srfi 128) . "types/scheme.comparator.scm")
  ((srfi 132) . "types/scheme.sort.scm")
+ ((srfi 133) . "types/scheme.vector.scm")
  
  )
