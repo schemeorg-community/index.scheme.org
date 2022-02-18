@@ -16,8 +16,8 @@
    (lambda ((procedure? type-test) (procedure? equality) (procedure-or-false? ordering) (procedure-or-false? hash)) comparator?)
    (pure)
    ((type-test (lambda (obj) boolean?))
-    (equality (lambda (obj) boolean?))
-    (ordering (lambda (obj) boolean?))
+    (equality (lambda (obj1 obj2) boolean?))
+    (ordering (lambda (obj1 obj2) boolean?))
     (hash (lambda (obj) integer?))))
  
  (make-pair-comparator
@@ -106,12 +106,12 @@
  (comparator-equality-predicate
    (lambda ((comparator? comparator)) procedure?)
    (pure)
-   ((return (lambda (obj) boolean?))))
+   ((return (lambda (obj1 obj2) boolean?))))
  
  (comparator-ordering-predicate
    (lambda ((comparator? comparator)) procedure-or-false?)
    (pure)
-   ((return (lambda (obj) boolean?))))
+   ((return (lambda (obj1 obj2) boolean?))))
  
  (comparator-hash-function
    (lambda ((comparator? comparator)) procedure-or-false?)
@@ -152,7 +152,7 @@
  
  (comparator-if<=>
    (syntax-rules ()
-     ((comparator object1 object2 less-than equal-to greater-than))
-     ((object1 object2 less-than equal-to greater-than))))
+     ((_ comparator object1 object2 less-than equal-to greater-than))
+     ((_ object1 object2 less-than equal-to greater-than))))
  
  )
