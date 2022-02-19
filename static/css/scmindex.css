@@ -276,6 +276,18 @@
     border-color: var(--accent-color);
 }
 
+.page-gap {
+    color: #444;
+    background-color: white;
+    width: 1.5em;
+    height: 1.5em;
+    line-height: 1.5em;
+    text-align: center;
+    border-top: solid gray 1px;
+    border-left: solid gray 1px;
+    border-bottom: solid gray 1px;
+}
+
 .sig-right-margin {
     margin-right: 5px;
 }

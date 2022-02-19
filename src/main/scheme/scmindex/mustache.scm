@@ -74,20 +74,39 @@
           (lambda (e)
             (not (equal? 'page (car e))))
           query))
+      (define near/start (max 1 (- page 3)))
+      (define near/end (min total-pages (+ page 3)))
+      (define near-range (iota (+ 1 near/end (- near/start)) near/start))
+      (define begining
+        (case near/start
+          ((1) '())
+          ((2) '(1))
+          (else '(1 #f))))
+      (define ending
+        (case (- total-pages near/end)
+          ((0) '())
+          ((1) (list total-pages))
+          (else (list #f total-pages))))
+      (define shown-pages
+        (append begining near-range ending))
+      
       (list->vector
         (map
           (lambda (p)
-            (define link-query
-              (cons
-                (cons 'page (number->string p))
-                query-without-page))
-            (define link
-              (if (= p page)
-                  #f
-                  (string-append "?" (encode-query link-query))))
-            `((number . ,p)
-              (link . ,link)))
-          (iota total-pages 1))))
+            (if (not p)
+                `((pager-gap . #t))
+                (let* ((link-query
+                        (cons
+                          (cons 'page (number->string p))
+                          query-without-page))
+                       (link
+                         (if (= p page)
+                             #f
+                             (string-append "?" (encode-query link-query)))))
+                  `((number . ,p)
+                    (link . ,link)
+                    (pager-gap . #f)))))
+          shown-pages)))
     
     (define (make-doc-data doc)
       (define (get key)
@@ -95,41 +114,45 @@
           ((assoc key doc) => cdr)
           (else #f)))
       (define signature (read (open-input-string (get 'signature))))
-      (define proc? (equal? 'lambda (car signature)))
       (define (make-link type param?)
         (if param?
             (string-append "?" (encode-query `((return . ,(symbol->string type)))))
             (string-append "?" (encode-query `((param . ,(symbol->string type)))))))
-      (define param-signatures
-        (if proc?
-            (map
-              (lambda (param-sig)
-                (make-signature-sexpr-data (symbol->string (car param-sig))
-                                           (cadr param-sig)
-                                           (lambda args #f)
-                                           #t))
-              (read (open-input-string (get 'param_signatures))))
-            '()))
-      (define subsyntax-signatures
-        (if proc?
-            '()
-            (let ((literals (cadr signature)))
-             (map
-               (lambda (param)
-                 `((name . ,(symbol->string (car param)))
-                   (rules . #(,@(map
-                                  (lambda (rule)
-                                    (make-subsyntax-signature-sexpr-data literals rule))
-                                  (cdr param))))))
-               (read (open-input-string (get 'param_signatures)))))))
-      (define signature-sd
-        (if proc?
-            (make-signature-sexpr-data (get 'name) 
+      (define-values
+        (param-signatures subsyntax-signatures signature-sd)
+        (case (car signature)
+          ((lambda)
+           (values (map
+                     (lambda (param-sig)
+                       (make-signature-sexpr-data (symbol->string (car param-sig))
+                                                  (cadr param-sig)
+                                                  (lambda args #f)
+                                                  #t))
+                     (read (open-input-string (get 'param_signatures))))
+                   '()
+                   (make-signature-sexpr-data (get 'name) 
                                        signature 
                                        make-link 
-                                       #f)
-            (make-syntax-signature-sexpr-data (get 'name)
-                                              signature)))
+                                       #f)))
+          ((syntax-rules)
+           (values '()
+                   (let ((literals (cadr signature)))
+                    (map
+                      (lambda (param)
+                        `((name . ,(symbol->string (car param)))
+                          (rules . #(,@(map
+                                         (lambda (rule)
+                                           (make-subsyntax-signature-sexpr-data literals rule))
+                                         (cdr param))))))
+                      (read (open-input-string (get 'param_signatures)))))
+                   (make-syntax-signature-sexpr-data (get 'name)
+                                                     signature)))
+          ((value)
+           (values '()
+                   '()
+                   (make-value-signature-sexpr-data (get 'name)
+                                                    signature
+                                                    make-link)))))
       `((signature . ,signature-sd)
         (param_signatures . ,(list->vector param-signatures))
         (has_param_signatures . ,(not (null? param-signatures)))
@@ -250,22 +273,18 @@
     (define (make-signature-sexpr-data name sig link-maker sub?)
       (define paren-open-sd
         `((class . "muted")
-          (link . #f)
           (text . "(")
           (sub-exprs . #f)))
       (define paren-close-sd
         `((class . "muted")
-          (link . #f)
           (text . ")")
           (sub-exprs . #f)))
       (define spacer-sd
         `((class . "spacer")
-          (link . #f)
           (text . "")
           (sub-exprs . #f)))
       (define name-sd
         `((class . ,(if sub? "muted-name" "bright-name"))
-          (lnk . #f)
           (text . ,name)
           (sub-exprs . #f)))
       
@@ -362,4 +381,21 @@
                            ((class . "sexpr-flex sexpr-shrink")
                             (link . #f)
                             (sub-exprs . #(,@(make-param-sds params))))
-                           ,return-sd)))))))
+                           ,return-sd)))))
+    
+    (define (make-value-signature-sexpr-data name sig link-maker)
+      `((class . "sexpr-flex")
+        (sub-exprs . #(((class . "bright-name")
+                        (text . ,name)
+                        (sub-exprs . #f))
+                       ((class . "spacer")
+                        (sub-exprs . #f))
+                       ((class . "muted")
+                        (html . "&DoubleLongRightArrow;")
+                        (sub-exprs . #f))
+                       ((class . "spacer")
+                        (sub-exprs . #f))
+                       ((class . "bright-type")
+                        (text . ,(symbol->string (cadr sig)))
+                        (link . ,(link-maker (cadr sig) #f))
+                        (sub-exprs . #f))))))))

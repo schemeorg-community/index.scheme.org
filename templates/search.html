@@ -47,12 +47,17 @@
             </div>
             <div class="pager">
                 {{# pages }}
-                    {{# link }}
-                    <a class="page" href="{{link}}">{{ number }}</a>
-                    {{/ link }}
-                    {{^ link }}
-                    <span class="page active">{{ number }}</span>
-                    {{/ link}}
+                    {{# pager-gap }}
+                        <span class="page-gap">...</span>
+                    {{/ pager-gap }}
+                    {{^ pager-gap }}
+                        {{# link }}
+                            <a class="page" href="{{link}}">{{ number }}</a>
+                        {{/ link }}
+                        {{^ link }}
+                            <span class="page active">{{ number }}</span>
+                        {{/ link}}
+                    {{/pager-gap}}
                 {{/ pages }}
             </div>
         </main>
