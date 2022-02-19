@@ -21,6 +21,7 @@
  ((scheme write) . "types/scheme.write.scm")
  
  ; r7rs large
+ ((scheme box) . "types/scheme.box.scm")
  ((scheme comparator) . "types/scheme.comparator.scm")
  ((scheme charset) . "types/scheme.charset.scm")
  ((scheme list) . "types/scheme.list.scm")
