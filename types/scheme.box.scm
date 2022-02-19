@@ -13,6 +13,7 @@
    (pure))
  
  (set-box!
-   (lambda ((box? box) value) undefined))
+   (lambda ((box? box) value) undefined)
+   ())
  
  )
