@@ -199,7 +199,7 @@
 
 (define (func->json func)
   `((lib . ,(->string (func-lib func)))
-    (name . ,(->string (func-name func)))
+    (name . ,(symbol->string (func-name func)))
     (param_names . ,(list->vector (map ->string (func-param-names func))))
     (signature . ,(->string (func-signature func)))
     (param_signatures . ,(->string (func-param-signatures func)))

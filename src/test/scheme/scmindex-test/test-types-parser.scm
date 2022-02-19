@@ -8,12 +8,12 @@
       (test-assert (member e actual)))
     expect))
 
-(test-equal 6 (length funcs))
+(test-equal 8 (length funcs))
 
 (let* ((f (list-ref funcs 0))
        (f* (func->json f)))
- (test-equal '(scheme base) (func-lib f))
- (test-equal "(scheme base)" (cdr (assoc 'lib f*)))
+ (test-equal '(test lib) (func-lib f))
+ (test-equal "(test lib)" (cdr (assoc 'lib f*)))
  (test-equal 'eq? (func-name f))
  (test-equal "eq?" (cdr (assoc 'name f*)))
  (test-equal '(a b) (func-param-names f))
@@ -57,3 +57,13 @@
       (content (open-output-string)))
   (json-write payload content)
   (test-assert (get-output-string content)))
+
+
+;; test if kawa special syntax doesn't mangle names
+(let ((f (list-ref funcs 6)))
+ (test-equal '|->char-set| (func-name f))
+ (test-equal "->char-set" (cdr (assoc 'name (func->json f)))))
+
+(let ((f (list-ref funcs 7)))
+ (test-equal '|char-set:lower-case| (func-name f))
+ (test-equal "char-set:lower-case" (cdr (assoc 'name (func->json f)))))

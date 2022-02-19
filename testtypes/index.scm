@@ -1,3 +1,3 @@
 (
- ((scheme base) . "testtypes/scheme.base.scm")
+ ((test lib) . "testtypes/test.lib.scm")
  )

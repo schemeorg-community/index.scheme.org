@@ -28,4 +28,9 @@
    (syntax-rules ()
      ((_ test consequent))
      ((_ test consequent alternate))))
- )
+ 
+ (->char-set
+   (lambda ((char? x)) string?))
+ 
+ (|char-set:lower-case|
+   (value char-set?)))
