@@ -24,6 +24,7 @@
  ((scheme box) . "types/scheme.box.scm")
  ((scheme comparator) . "types/scheme.comparator.scm")
  ((scheme charset) . "types/scheme.charset.scm")
+ ((scheme ephemeron) . "types/scheme.ephemeron.scm")
  ((scheme list) . "types/scheme.list.scm")
  ((scheme set) . "types/scheme.set.scm")
  ((scheme sort) . "types/scheme.sort.scm")
@@ -32,7 +33,9 @@
  ; srfi
  ((srfi 1) . "types/scheme.list.scm")
  ((srfi 14) . "types/scheme.charset.scm")
+ ((srfi 111) . "types/scheme.box.scm")
  ((srfi 113) . "types/scheme.set.scm")
+ ((srfi 124) . "types/scheme.ephemeron.scm")
  ((srfi 128) . "types/scheme.comparator.scm")
  ((srfi 132) . "types/scheme.sort.scm")
  ((srfi 133) . "types/scheme.vector.scm")
