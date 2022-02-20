@@ -12,4 +12,10 @@
    ()
    (list?))
  
+ (ialist?
+   (lambda (obj) boolean?)
+   (pure predicate)
+   ()
+   (ilist?))
+ 
  )
