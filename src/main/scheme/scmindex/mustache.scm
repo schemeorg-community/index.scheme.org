@@ -7,11 +7,85 @@
           (only (srfi 1) iota filter find)
           (arvyy httpclient))
   
-  (export make-mustache-data)
+  (export make-mustache-search-data
+          make-mustache-nav-data
+          make-mustache-settings-data)
   (begin
+    
+    (define settings-data
+      `#(
+         ((name . "pageSize")
+          (legend . "Page size")
+          (description . "")
+          (default-value . "40")
+          (values . #("10" "40" "100")))
+         
+         ((name . "theme")
+          (legend . "Theme")
+          (description . "")
+          (default-value . "light")
+          (values . #("light" "dark")))
+         
+         ((name . "overrideCtrlF")
+          (legend . "Override control+f behavior")
+          (description . "If enabled, pressing control+f will highlight and focus search text field")
+          (default-value . "no")
+          (values . #("yes" "no")))))
+    
+    (define (make-mustache-settings-data cookies)
+      (define data
+        (vector-map
+          (lambda (option)
+            (define name (cdr (assoc 'name option)))
+            (define selected-value
+              (cond
+                ((assoc (string->symbol name) cookies) => cdr)
+                (else (cdr (assoc 'default-value option)))))
+            (define values+selection
+              (vector-map
+                (lambda (value)
+                  `((value . ,value)
+                    (selected . ,(equal? value selected-value))))
+                (cdr (assoc 'values option))))
+            `((values . ,values+selection) ,@option))
+          settings-data))
+      `((options . ,data)))
+    
+    (define nav-data
+      `#(
+         ((label . "Home")
+          (link . "/")
+          (page . index))
+         
+         ((label . "Search")
+          (link . "/search")
+          (page . search))
+         
+         ((label . "Settings")
+          (link . "/settings")
+          (page . settings))
+         
+         ((label . "User guide")
+          (link . "/userguide")
+          (page . userguide))
+         
+         ((label . "REST api")
+          (link . "/restapi")
+          (page . restapi))
+         ))
 
+    (define (make-mustache-nav-data page)
+      (define links 
+        (vector-map
+          (lambda (d)
+            (define active (equal? (cdr (assoc 'page d)) page))
+            (cons
+              (cons 'active active)
+              d))
+          nav-data))
+      `((nav-links . ,links)))
 
-    (define (make-mustache-data 
+    (define (make-mustache-search-data 
               page
               page-size
               query

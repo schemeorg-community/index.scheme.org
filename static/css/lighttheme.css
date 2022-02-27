@@ -1,0 +1,12 @@
+:root {
+    --text-color-against-accent: white;
+    --text-color-against-bg: black;
+    --text-color-muted: #444;
+    --bg-color: #eee;
+    --bg-color2: white;
+    --accent-color: #900;
+    --accent-color-hover: #fdd;
+    --secondary-color: #338;
+    --tertary-color: #161;
+}
+

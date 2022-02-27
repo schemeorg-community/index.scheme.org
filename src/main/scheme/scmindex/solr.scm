@@ -10,9 +10,21 @@
     build-solr-query
     exec-solr-query
     parse-solr-response
-    solr-facet-values)
+    solr-facet-values
+    solr-get-suggestions)
   
   (begin
+    
+    (define (solr-get-suggestions suggest-url text)
+      (let* ((resp (post-json suggest-url `((params . ((q . ,text))))))
+             (suggest (cdr (assoc 'suggest resp)))
+             (nameSuggester (cdar suggest))
+             (result (cdar nameSuggester))
+             (suggestions (cdr (assoc 'suggestions result))))
+        (vector-map
+          (lambda (s)
+            (cdr (assoc 'term s)))
+          suggestions)))
     
     (define (index-types solr-url funcs)
       (define-values

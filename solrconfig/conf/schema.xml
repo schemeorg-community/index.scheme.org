@@ -22,7 +22,7 @@
     <field name="id" type="uuid" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="_version_" type="plong" indexed="false" stored="false"/>
     <field name="name" type="text_general" indexed="true" stored="true" />
-    <field name="name_precise" type="string" indexed="true" stored="false" />
+    <field name="name_precise" type="string" indexed="true" stored="true" />
     <field name="signature" type="string" indexed="false" stored="true" />
     <field name="lib" type="string" indexed="true" stored="true" />
     <field name="param_names" type="text_general" indexed="true" stored="true" multiValued="true"/>

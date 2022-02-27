@@ -81,12 +81,36 @@
            <str name="q.alt">*:*</str>
            <str name="qf">name_precise^5 name^2 param_names</str>
            <str name="facet">true</str>
+           <str name="facet.mincount">1</str>
            <str name="facet.field">tags</str>
            <str name="facet.field">lib</str>
            <str name="facet.field">param_types</str>
            <str name="facet.field">return_types</str>
            <str name="facet.field">tags</str>
         </lst>
+    </requestHandler>
+
+    <searchComponent name="suggest" class="solr.SuggestComponent">
+        <lst name="suggester">
+            <str name="name">nameSuggester</str>
+            <str name="lookupImpl">BlendedInfixLookupFactory</str>
+            <str name="dictionaryImpl">DocumentDictionaryFactory</str>
+            <str name="field">name</str>
+            <str name="suggestAnalyzerFieldType">text_general</str>
+            <str name="buildOnCommit">true</str>
+            <str name="highlight">false</str>
+        </lst>
+    </searchComponent>
+
+    <requestHandler name="/suggest" class="solr.SearchHandler">
+        <lst name="defaults">
+            <str name="suggest">true</str>
+            <str name="suggest.count">10</str>
+            <str name="suggest.dictionary">nameSuggester</str>
+        </lst>
+        <arr name="components">
+            <str>suggest</str>
+        </arr>
     </requestHandler>
 
     <updateProcessor class="solr.UUIDUpdateProcessorFactory" name="uuid">

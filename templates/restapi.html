@@ -1,29 +1,9 @@
 <html>
-    <head>
-        <title>R7RS Index</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="/css/scmindex.css">
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
-
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" integrity="sha512-P9vJUXK+LyvAzj8otTOKzdfF1F3UYVl13+F8Fof8/2QNb8Twd6Vb+VD52I7+87tex9UXxnzPgWA3rH96RExA7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-        <link rel="icon" href="/scmindex.png">
-        <script>let FF_FIX;</script>
-    </head>
-    <body class="index-page">
-        <main>
-            <h2>R7RS index</h2>
-            R7RS index allows searching for R7RS procedures through parameter types, return types, tags, names.
-            </hr>
-            <form method="GET" action="/search" class="search">
-                <input name="query" placeholder="Search ..." class="query">
-                <button type="submit" class="search-button">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
-            </hr>
-
-            <h2>REST API (unstable)</h2>
+    {{>head}}
+    <body>
+        {{>topnavigation}}
+        <main class="restapi-page">
+            <h1>REST API (unstable)</h1>
             The site exposes following REST json api endpoints:
             <p><span class="rest-url">/rest/libs</span> returns array of libraries found in index as strings;
             <p><span class="rest-url">/rest/tags</span> returns array of tags found in index as strings;
@@ -54,12 +34,6 @@
                 </li>
             </ul>
             Note that current REST api is unstable, and subject to change without a warning.
-            <h2>Report an issue</h2>
-            Please report any issues or suggestions you may have at <a href="https://github.com/arvyy/r7rs-index-site/issues">github</a>.
-
-            <div class="footer">
-                <span>Copyright 2022 Arvydas Silanskas</span>
-            </div>
         </main>
     </body>
 </html>

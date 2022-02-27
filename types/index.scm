@@ -20,7 +20,7 @@
  ((scheme time) . "types/scheme.time.scm")
  ((scheme write) . "types/scheme.write.scm")
  
- ; r7rs large
+ ; r7rs large red
  ((scheme box) . "types/scheme.box.scm")
  ((scheme comparator) . "types/scheme.comparator.scm")
  ((scheme charset) . "types/scheme.charset.scm")

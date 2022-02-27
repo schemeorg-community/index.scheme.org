@@ -1,0 +1,29 @@
+<html>
+    {{> head }}
+    <body>
+        {{>topnavigation}}
+        <main class="settings-page">
+            <h1>Settings</h1>
+            <p class="settings-tip">Here you can customize certain behavior aspects of the site. The choices are stored in cookies upon pressing "Save".
+            <form action="/settings" method="POST" class="settings-form">
+                {{# options }}
+                <fieldset class="settings-group">
+                    <legend>{{ legend }}</legend>
+                    <span class="settings-group-tip">{{description}}</span>
+                    {{# values }}
+                    <label class="settings-group-value">
+                        <input type="radio" 
+                               name="{{ name }}" 
+                               value="{{ value }}" 
+                               {{# selected }} checked {{/ selected}}
+                               >
+                               <span class="settings-group-value-text">{{ value }}</span>
+                    </label>
+                    {{/ values }}
+                </fieldset>
+                {{/ options }}
+                <button type="submit" class="save-preferences-button">Save</button>
+            </form>
+        </main>
+    </body>
+</html>

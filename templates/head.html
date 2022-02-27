@@ -1,0 +1,25 @@
+<head>
+    {{#page-title}}
+    <title>R7RS Index | {{page-title}}</title>
+    {{/page-title}}
+    {{^page-title}}
+    <title>R7RS Index</title>
+    {{/page-title}}
+    <meta charset="UTF-8">
+    {{#light-theme}}
+        <link href="/css/lighttheme.css" rel="stylesheet">
+    {{/light-theme}}
+    {{^light-theme}}
+        <link href="/css/darktheme.css" rel="stylesheet">
+    {{/light-theme}}
+    <link href="/css/scmindex.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/solid.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/fontawesome.min.css" integrity="sha512-P9vJUXK+LyvAzj8otTOKzdfF1F3UYVl13+F8Fof8/2QNb8Twd6Vb+VD52I7+87tex9UXxnzPgWA3rH96RExA7A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="icon" href="/scmindex.png">
+    <script src="/js/scmindex.js"></script>
+    {{#ctrlf-override}}
+    <script src="/js/ctrlFOverride.js"></script>
+    {{/ctrlf-override}}
+    <script>let FF_FIX;</script>
+</head>
