@@ -6,10 +6,10 @@
             <aside class="search-controls">
                 <form method="get" action="" class="search-form">
                     <div class="query-cnt">
-                        <input id="query-field" name="query" autocomplete="off" value="{{query}}" class="query" placeholder="Search ..." list="suggestions" oninput="updateSuggestions(this.value, 'suggestions')">
+                        <input id="query-field" name="query" autocomplete="off" value="{{query}}" class="query" placeholder="Search ..." list="suggestions" oninput="updateSuggestions(this.value, 'suggestions')" aria-label="Search text">
                         <datalist id="suggestions">
                         </datalist>
-                        <button type="submit" value="" class="search-button">
+                        <button type="submit" aria-label="Search" class="search-button">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
