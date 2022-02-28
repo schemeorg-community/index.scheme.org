@@ -262,7 +262,7 @@
             (else expression1 expression2 ...))))
  
  (cond-expand
-   (syntax-rules (library and or not)
+   (syntax-rules (library and or not else)
      ((_ ce-clause1 ce-clause2 ...)))
    ()
    ((ce-clause (feature-requirement expression ...)

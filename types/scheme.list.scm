@@ -683,11 +683,11 @@
  
  (delete-duplicates!
    (lambda ((list? list)) list?)
-   (pure))
+   ())
  
  (delete-duplicates!
    (lambda ((list? list) (procedure? =)) list?)
-   (pure)
+   ()
    ((= (lambda (obj1 obj2) *))))
  
  (assoc

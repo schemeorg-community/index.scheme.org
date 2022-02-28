@@ -25,6 +25,7 @@
  ((scheme comparator) . "types/scheme.comparator.scm")
  ((scheme charset) . "types/scheme.charset.scm")
  ((scheme ephemeron) . "types/scheme.ephemeron.scm")
+ ((scheme generator) . "types/scheme.generator.scm")
  ((scheme hash-table) . "types/scheme.hash-table.scm")
  ((scheme ilist) . "types/scheme.ilist.scm")
  ((scheme list) . "types/scheme.list.scm")
