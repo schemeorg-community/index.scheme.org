@@ -602,7 +602,7 @@
    (lambda (obj) boolean?)
    (pure predicate)
    ()
-   (pair? null?))
+   (pair? null? lseq?))
 
  (make-bytevector
    (lambda ((integer? k)) bytevector?)

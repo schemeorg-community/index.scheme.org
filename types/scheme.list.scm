@@ -54,7 +54,7 @@
    (lambda (obj) boolean?)
    (pure predicate)
    ()
-   (list?))
+   (list? lseq?))
  
  (circular-list?
    (lambda (obj) boolean?)
