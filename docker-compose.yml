@@ -1,4 +1,5 @@
 services:
+
   solr:
     image: "solr:8"
     volumes:
@@ -9,17 +10,33 @@ services:
       timeout: 10s
       retries: 10
     command: ["solr-precreate", "scmindex", "/scmindex"]
+
   app:
     build: .
     depends_on:
       solr:
         condition: service_healthy
+
   nginx:
     image: "nginx:1.21"
     volumes:
       - "./nginx.conf:/etc/nginx/nginx.conf"
+      - "./monitoring-password:/etc/nginx/monitoring-password"
       - "./static:/www/data"
       - "/etc/letsencrypt/:/etc/letsencrypt/"
     ports:
       - "80:80"
+      - "9090:9090"
       - "443:443"
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+
+  prometheus_exporter:
+    image: nginx/nginx-prometheus-exporter:0.10.0
+    command: ["-nginx.scrape-uri=http://nginx:80/stub_status"]
+    depends_on:
+      - nginx
+      - prometheus
