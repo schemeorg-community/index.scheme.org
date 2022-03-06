@@ -568,7 +568,7 @@
    ((pred (lambda (obj) *))))
  
  (find-tail
-   (lambda ((procedure? pred) (list? list)) (or pair? boolean?))
+   (lambda ((procedure? pred) (list? list)) (or pair? #f))
    (pure)
    ((pred (lambda (obj) *))))
  
@@ -633,25 +633,25 @@
    ((pred (lambda (obj1 obj2 ...) *))))
  
  (list-index
-   (lambda ((procedure? pred) (list? clist1) (list? clist2) ...) (or integer? boolean?))
+   (lambda ((procedure? pred) (list? clist1) (list? clist2) ...) (or integer? #f))
    (pure)
    ((pred (lambda (obj1 obj2 ...) *))))
  
  (member
-   (lambda (obj (list? list)) (or boolean? list?))
+   (lambda (obj (list? list)) (or #f list?))
    (pure))
 
  (member
-   (lambda (obj (list? list) (procedure? =)) (or boolean? list?))
+   (lambda (obj (list? list) (procedure? =)) (or #f list?))
    (pure)
    ((= (lambda (obj1 obj2) *))))
 
  (memq
-   (lambda (obj (list? list)) (or boolean? list?))
+   (lambda (obj (list? list)) (or #f list?))
    (pure))
 
  (memv
-   (lambda (obj (list? list)) (or boolean? list?))
+   (lambda (obj (list? list)) (or 3f list?))
    (pure))
  
  (delete
@@ -691,20 +691,20 @@
    ((= (lambda (obj1 obj2) *))))
  
  (assoc
-   (lambda (obj (list? alist)) (or list? boolean?))
+   (lambda (obj (list? alist)) (or list? #f))
    (pure))
 
  (assoc
-   (lambda (obj (list? alist) (procedure? =)) (or pair? boolean?))
+   (lambda (obj (list? alist) (procedure? =)) (or pair? #f))
    (pure)
    ((= (lambda (a b) *))))
 
  (assq
-   (lambda (obj (list? alist)) (or pair? boolean?))
+   (lambda (obj (list? alist)) (or pair? #f))
    (pure))
 
  (assv
-   (lambda (obj (list? alist)) (or pair? boolean?))
+   (lambda (obj (list? alist)) (or pair? #f))
    (pure))
  
  (alist-cons

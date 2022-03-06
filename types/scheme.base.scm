@@ -62,20 +62,20 @@
    (pure))
 
  (assoc
-   (lambda (obj (list? alist)) (or pair? boolean?))
+   (lambda (obj (list? alist)) (or pair? #f))
    (pure))
 
  (assoc
-   (lambda (obj (list? alist) (procedure? =)) (or pair? boolean?))
+   (lambda (obj (list? alist) (procedure? =)) (or pair? #f))
    (pure)
    ((= (lambda (a b) *))))
 
  (assq
-   (lambda (obj (list? alist)) (or pair? boolean?))
+   (lambda (obj (list? alist)) (or pair? #f))
    (pure))
 
  (assv
-   (lambda (obj (list? alist)) (or pair? boolean?))
+   (lambda (obj (list? alist)) (or pair? #f))
    (pure))
  
  (begin
@@ -655,20 +655,20 @@
    (pure))
 
  (member
-   (lambda (obj (list? list)) (or boolean? list?))
+   (lambda (obj (list? list)) (or #f list?))
    (pure))
 
  (member
-   (lambda (obj (list? list) (procedure? compare)) (or boolean? list?))
+   (lambda (obj (list? list) (procedure? compare)) (or #f list?))
    (pure)
    ((compare (lambda (obj1 obj2) *))))
 
  (memq
-   (lambda (obj (list? list)) (or boolean? list?))
+   (lambda (obj (list? list)) (or #f list?))
    (pure))
 
  (memv
-   (lambda (obj (list? list)) (or boolean? list?))
+   (lambda (obj (list? list)) (or #f list?))
    (pure))
 
  (min

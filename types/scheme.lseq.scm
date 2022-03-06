@@ -89,7 +89,7 @@
    ((pred (lambda (element) boolean?))))
  
  (lseq-find-tail
-   (lambda ((procedure? pred) (lseq? lseq)) (or boolean? lseq?))
+   (lambda ((procedure? pred) (lseq? lseq)) (or #f lseq?))
    (pure)
    ((pred (lambda (element) boolean?))))
  
@@ -114,25 +114,25 @@
    ((pred (lambda (element) *))))
 
  (lseq-index
-   (lambda ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...) (or integer? boolean?))
+   (lambda ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...) (or integer? #f))
    (pure)
    ((pred (lambda (element) *))))
  
  (lseq-member
-   (lambda (x (lseq? lseq)) (or boolean? lseq?))
+   (lambda (x (lseq? lseq)) (or #f lseq?))
    (pure))
  
  (lseq-member
-   (lambda (x (lseq? lseq) (procedure? =)) (or boolean? lseq?))
+   (lambda (x (lseq? lseq) (procedure? =)) (or #f lseq?))
    (pure)
    ((= (lambda (a b) boolean?))))
  
  (lseq-memq
-   (lambda (x (lseq? lseq)) (or boolean? lseq?))
+   (lambda (x (lseq? lseq)) (or #f lseq?))
    (pure))
  
  (lseq-memv
-   (lambda (x (lseq? lseq)) (or boolean? lseq?))
+   (lambda (x (lseq? lseq)) (or #f lseq?))
    (pure))
  
  )

@@ -19,5 +19,3 @@ services:
     entrypoint: ["echo", "nginx disabled in dev"]
   prometheus:
     entrypoint: ["echo", "prometheus disabled in dev"]
-  prometheus_exporter:
-    entrypoint: ["echo", "prometheus_exporter disabled in dev"]

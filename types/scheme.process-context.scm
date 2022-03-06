@@ -16,7 +16,7 @@
    (lambda (obj) undefined))
  
  (get-environment-variable
-   (lambda ((string? name)) (or string? boolean?))
+   (lambda ((string? name)) (or string? #f))
    (pure))
  
  (get-environment-variables

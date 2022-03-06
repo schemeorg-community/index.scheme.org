@@ -465,7 +465,7 @@
    ((pred (lambda (obj) *))))
  
  (ifind-tail
-   (lambda ((procedure? pred) (ilist? ilist)) (or ipair? boolean?))
+   (lambda ((procedure? pred) (ilist? ilist)) (or ipair? #f))
    (pure)
    ((pred (lambda (obj) *))))
  
@@ -500,25 +500,25 @@
    ((pred (lambda (obj1 obj2 ...) *))))
  
  (ilist-index
-   (lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) (or integer? boolean?))
+   (lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) (or integer? #f))
    (pure)
    ((pred (lambda (obj1 obj2 ...) *))))
  
  (imember
-   (lambda (obj (ilist? ilist)) (or boolean? ilist?))
+   (lambda (obj (ilist? ilist)) (or #f ilist?))
    (pure))
 
  (imember
-   (lambda (obj (ilist? ilist) (procedure? =)) (or boolean? ilist?))
+   (lambda (obj (ilist? ilist) (procedure? =)) (or #f ilist?))
    (pure)
    ((= (lambda (obj1 obj2) *))))
 
  (imemq
-   (lambda (obj (ilist? ilist)) (or boolean? ilist?))
+   (lambda (obj (ilist? ilist)) (or #f ilist?))
    (pure))
 
  (imemv
-   (lambda (obj (ilist? ilist)) (or boolean? ilist?))
+   (lambda (obj (ilist? ilist)) (or #f ilist?))
    (pure))
  
  (idelete
@@ -540,20 +540,20 @@
    ((= (lambda (obj1 obj2) *))))
  
  (iassoc
-   (lambda (obj (ilist? ialist)) (or ilist? boolean?))
+   (lambda (obj (ilist? ialist)) (or ilist? #f))
    (pure))
 
  (iassoc
-   (lambda (obj (ilist? ialist) (procedure? =)) (or ipair? boolean?))
+   (lambda (obj (ilist? ialist) (procedure? =)) (or ipair? #f))
    (pure)
    ((= (lambda (a b) *))))
 
  (iassq
-   (lambda (obj (ilist? ialist)) (or ipair? boolean?))
+   (lambda (obj (ilist? ialist)) (or ipair? #f))
    (pure))
 
  (iassv
-   (lambda (obj (ilist? ialist)) (or ipair? boolean?))
+   (lambda (obj (ilist? ialist)) (or ipair? #f))
    (pure))
  
  (ialist-cons

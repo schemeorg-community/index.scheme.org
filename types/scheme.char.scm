@@ -51,7 +51,7 @@
    (pure))
 
  (digit-value
-   (lambda ((char? char)) (or boolean? integer?))
+   (lambda ((char? char)) (or #f integer?))
    (pure))
 
  (string-ci<=?

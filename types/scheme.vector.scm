@@ -115,27 +115,27 @@
    ((f (lambda (obj1 obj2) *))))
  
  (vector-index
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? boolean?))
+   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
    (pure)
    ((pred? (lambda (obj1 obj2 ...) *))))
  
  (vector-index-right
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? boolean?))
+   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
    (pure)
    ((pred? (lambda (obj1 obj2 ...) *))))
  
  (vector-skip
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? boolean?))
+   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
    (pure)
    ((pred? (lambda (obj1 obj2 ...) *))))
  
  (vector-skip-right
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? boolean?))
+   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
    (pure)
    ((pred? (lambda (obj1 obj2 ...) *))))
  
  (vector-binary-search
-   (lambda ((vector? vec) value (procedure? cmp)) (or integer? boolean?))
+   (lambda ((vector? vec) value (procedure? cmp)) (or integer? #f))
    (pure)
    ((cmp (lambda (a b) integer?))))
  
