@@ -30,7 +30,7 @@
  ((scheme ideque) . "types/scheme.ideque.scm")
  ((scheme ilist) . "types/scheme.ilist.scm")
  ((scheme list) . "types/scheme.list.scm")
- ;((scheme list-queue) . "types/scheme.list-queue.scm")
+ ((scheme list-queue) . "types/scheme.list-queue.scm")
  ((scheme lseq) . "types/scheme.lseq.scm")
  ((scheme rlist) . "types/scheme.rlist.scm")
  ((scheme set) . "types/scheme.set.scm")
