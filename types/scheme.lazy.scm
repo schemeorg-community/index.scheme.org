@@ -18,4 +18,5 @@
  (promise?
    (lambda (obj) boolean?)
    (pure predicate))
+ 
  )
