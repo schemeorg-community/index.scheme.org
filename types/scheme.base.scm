@@ -1044,7 +1044,9 @@
 
  (string?
    (lambda (obj) boolean?)
-   (pure predicate))
+   (pure predicate)
+   ()
+   (textual?))
 
  (substring
    (lambda ((string? string) (integer? start) (integer? end)) string?)

@@ -36,7 +36,7 @@
  ((scheme set) . "types/scheme.set.scm")
  ((scheme stream) . "types/scheme.stream.scm")
  ((scheme sort) . "types/scheme.sort.scm")
- ;((scheme text) . "types/scheme.text.scm")
+ ((scheme text) . "types/scheme.text.scm")
  ((scheme vector) . "types/scheme.vector.scm")
  
  ; r7rs large tangerine
