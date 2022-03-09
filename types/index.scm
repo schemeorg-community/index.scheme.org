@@ -40,7 +40,7 @@
  ((scheme vector) . "types/scheme.vector.scm")
  
  ; r7rs large tangerine
- ;((scheme bitwise) . "types/scheme.bitwise.scm")
+ ((scheme bitwise) . "types/scheme.bitwise.scm")
  ;((scheme bytevector) . "types/scheme.bytevector.scm")
  ;((scheme division) . "types/scheme.division.scm")
  ;((scheme fixnum) . "types/scheme.fixnum.scm")
