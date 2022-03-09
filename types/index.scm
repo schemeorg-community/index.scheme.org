@@ -43,7 +43,7 @@
  ((scheme bitwise) . "types/scheme.bitwise.scm")
  ;((scheme bytevector) . "types/scheme.bytevector.scm")
  ((scheme division) . "types/scheme.division.scm")
- ;((scheme fixnum) . "types/scheme.fixnum.scm")
+ ((scheme fixnum) . "types/scheme.fixnum.scm")
  ;((scheme flonum) . "types/scheme.flonum.scm")
  ;((scheme mapping) . "types/scheme.mapping.scm")
  ;((scheme mapping hash) . "types/scheme.mapping.hash.scm")
