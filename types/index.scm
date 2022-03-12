@@ -1,8 +1,4 @@
 (
- 
- ;; helper
- ((r7rsindex aux) . "types/r7rsindex.aux.scm")
- 
  ;; r7rs small
  ((scheme base) . "types/scheme.base.scm")
  ((scheme case-lambda) . "types/scheme.case-lambda.scm")
@@ -48,7 +44,7 @@
  ;((scheme mapping) . "types/scheme.mapping.scm")
  ;((scheme mapping hash) . "types/scheme.mapping.hash.scm")
  ;((scheme regex) . "types/scheme.regex.scm")
- ;((scheme show) . "types/scheme.show.scm")
+ ((scheme show) . "types/scheme.show.scm")
  ;((scheme vector base) . "types/scheme.vector.base.scm")
  ;((scheme vector u8) . "types/scheme.vector.u8.scm")
  ;((scheme vector s8) . "types/scheme.vector.s8.scm")

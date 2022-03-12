@@ -38,7 +38,7 @@
  (test-equal '(exact?) (func-supertypes f)))
 
 (let-values
-  (((supertype-map subtype-map)
+  (((supertype-map subtype-map subtype-loose-map)
     (make-type-maps funcs)))
   
   (test-equal '(exact? . (integer?)) (assoc 'exact? subtype-map))

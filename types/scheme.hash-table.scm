@@ -27,17 +27,17 @@
     (successor (lambda (seed) *))))
 
  (alist->hash-table
-   (lambda ((alist? alist) (comparator? comparator) arg ...) hash-table?)
+   (lambda ((list? alist) (comparator? comparator) arg ...) hash-table?)
    (pure))
 
  (alist->hash-table
-   (lambda ((alist? alist) (procedure? equality-predicate) arg ...) hash-table?)
+   (lambda ((list? alist) (procedure? equality-predicate) arg ...) hash-table?)
    (pure deprecated)
    ((equality-predicate (lambda (a b) boolean?))
     (hash-function (lambda (obj) integer?))))
 
  (alist->hash-table
-   (lambda ((alist? alist) (procedure? equality-predicate) (procedure? hash-function) arg ...) hash-table?)
+   (lambda ((list? alist) (procedure? equality-predicate) (procedure? hash-function) arg ...) hash-table?)
    (pure deprecated)
    ((equality-predicate (lambda (a b) boolean?))
     (hash-function (lambda (obj) integer?))))
@@ -206,7 +206,7 @@
    (pure))
 
  (hash-table->alist
-   (lambda ((hash-table? hash-table)) alist?)
+   (lambda ((hash-table? hash-table)) list?)
    ())
 
  (hash-table-union!

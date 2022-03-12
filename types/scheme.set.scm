@@ -490,10 +490,10 @@
    ())
  
  (bag->alist
-   (lambda ((bag? bag)) alist?))
+   (lambda ((bag? bag)) list?))
  
  (alist->bag
-   (lambda ((comparator? comparator) (alist? alist)) bag?)
+   (lambda ((comparator? comparator) (list? alist)) bag?)
    (pure))
  
  (set-comparator

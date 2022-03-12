@@ -53,8 +53,7 @@
  (proper-list?
    (lambda (obj) boolean?)
    (pure predicate)
-   ()
-   (list? lseq?))
+   ())
  
  (circular-list?
    (lambda (obj) boolean?)
@@ -455,12 +454,12 @@
  (reduce
    (lambda ((procedure? f) ridentity (list? list))*)
    (pure)
-   ((f (lambda ((obj fold-state)) *))))
+   ((f (lambda (obj fold-state) *))))
  
  (reduce-right
    (lambda ((procedure? f) ridentity (list? list))*)
    (pure)
-   ((f (lambda ((obj fold-state)) *))))
+   ((f (lambda (obj fold-state) *))))
  
  (unfold
    (lambda ((procedure? p) (procedure? f) (procedure? g) seed) list?)
@@ -708,27 +707,27 @@
    (pure))
  
  (alist-cons
-   (lambda (key datum (alist? alist)) alist?)
+   (lambda (key datum (list? alist)) list?)
    (pure))
  
  (alist-copy
-   (lambda ((alist? alist)) alist?)
+   (lambda ((list? alist)) list?)
    (pure))
  
  (alist-delete
-   (lambda (key (alist? alist)) alist?)
+   (lambda (key (list? alist)) list?)
    (pure))
  
  (alist-delete
-   (lambda (key (alist? alist) (procedure? =)) alist?)
+   (lambda (key (list? alist) (procedure? =)) list?)
    (pure)
    ((= (lambda (a b) *))))
  
  (alist-delete!
-   (lambda (key (alist? alist)) alist?))
+   (lambda (key (list? alist)) list?))
  
  (alist-delete!
-   (lambda (key (alist? alist) (procedure? =)) alist?)
+   (lambda (key (list? alist) (procedure? =)) list?)
    ()
    ((= (lambda (a b) *))))
  

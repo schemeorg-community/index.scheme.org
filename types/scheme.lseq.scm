@@ -7,7 +7,9 @@
  
  (lseq?
    (lambda (x) boolean?)
-   (pure predicate))
+   (pure predicate)
+   ()
+   (list? dotted-list?))
  
  (lseq=?
    (lambda ((procedure? elt=?) (lseq? lseq1) (lseq? lseq2)) boolean?)

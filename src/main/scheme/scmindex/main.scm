@@ -80,7 +80,7 @@
 
 (post "/settings"
       (lambda (req resp)
-        (define options '("overrideCtrlF" "queryParser" "theme" "pageSize"))
+        (define options '("overrideCtrlF" "queryParser" "theme" "pageSize" "filterParamsLoose"))
         (for-each
           (lambda (opt)
             (define value (req/query-param req opt))
@@ -97,6 +97,11 @@
            ((assoc 'pageSize (req/cookies req)) => (lambda (e)
                                                      (string->number (cdr e))))
            (else default-page-size)))
+       (define filter-params-loose?
+         (cond
+           ((assoc 'filterParamsLoose (req/cookies req)) => (lambda (e)
+                                                              (equal? "yes" (cdr e))))
+           (else #t)))
        (define page (let ((value (req/query-param req "page")))
                       (if value
                           (string->number value)
@@ -107,7 +112,7 @@
        (define param-types (or (req/query-param-values req "param") '()))
        (define return-types (or (req/query-param-values req "return") '()))
        (define tags (or (req/query-param-values req "tag") '()))
-       (define data (exec-solr-query solr-search-url start page-size query libs param-types return-types tags))
+       (define data (exec-solr-query solr-search-url start page-size query libs param-types return-types tags filter-params-loose?))
        (define search-data
          (make-mustache-search-data 
            page
@@ -193,7 +198,8 @@
              (define param-types (or (req/query-param-values req "param") '()))
              (define return-types (or (req/query-param-values req "return") '()))
              (define tags (or (req/query-param-values req "tag") '()))
-             (define data (exec-solr-query solr-search-url start rows query libs param-types return-types tags))
+             (define filter-params-loose? (or (req/query-param req "filter_loose") #t))
+             (define data (exec-solr-query solr-search-url start rows query libs param-types return-types tags filter-params-loose?))
              (define payload (open-output-string))
              (json-write data payload)
              (resp/set-type! resp "application/json")

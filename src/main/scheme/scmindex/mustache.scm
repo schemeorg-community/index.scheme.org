@@ -30,6 +30,16 @@
           (legend . "Override control+f behavior")
           (description . "If enabled, pressing control+f will highlight and focus search text field")
           (default-value . "no")
+          (values . #("yes" "no")))
+         
+         ((name . "filterParamsLoose")
+          (legend . "Use loose parameter filtering")
+          (description . "When enabled, filtering by parameter of union type, will return results that take parameter of 
+                       a type that composes that union. For example, filtering by `list?` (which is union type of `pair?` 
+                       and `null?`) will find functions that take `pair?` argument. This leads to showing functions
+                       that searcher is probably interested in, however at the drawback that those functions won't be
+                       applicable in general case")
+          (default-value . "yes")
           (values . #("yes" "no")))))
     
     (define (make-mustache-settings-data cookies)
@@ -375,6 +385,10 @@
              `((class . ,(if sub? "muted-name" "bright-syntax"))
                (text . "#f")
                (sub-exprs . #f)))
+            ((equal? value #t)
+             `((class . ,(if sub? "muted-name" "bright-syntax"))
+               (text . "#f")
+               (sub-exprs . #f)))
             ((symbol? value)
              `((class . ,(if sub? "muted-name" "bright-type"))
                (text . ,(symbol->string value))
@@ -403,6 +417,34 @@
                          ,(return-value->sd returns)))))
       
       (define (make-param-sds params)
+        (define slash `((class . "muted-type")
+                        (link . #f)
+                        (text . "/")
+                        (sub-exprs . #f)))
+        (define (make-type-sd type)
+          (cond
+            ((symbol? type) 
+             `((class . ,(if sub? "muted-type" "bright-type"))
+               (link . ,(link-maker type #t))
+               (text . ,type)
+               (sub-exprs . #f)))
+            ((equal? #f type)
+             `((class . ,(if sub? "muted-type" "bright-syntax"))
+               (link . #f)
+               (text . "#f")
+               (sub-exprs . #f)))
+            ((list? type)
+             (let loop ((types (cdr type))
+                        (sds '()))
+               (cond 
+                 ((null? types)
+                  `((class . "sexpr-flex")
+                    (link . #f)
+                    (sub-exprs . ,(list->vector (cdr sds)))))
+                 (else (let* ((type (car types))
+                              (sd (make-type-sd type)))
+                         (loop (cdr types)
+                               (append (list slash sd) sds)))))))))
         (let loop ((params params)
                    (last (null? (cdr (cadr sig))))
                    (result '()))
@@ -414,10 +456,7 @@
                   (link . #f)
                   (sub-exprs . #(,spacer-sd
                                  ,paren-open-sd
-                                  ((class . ,(if sub? "muted-type" "bright-type"))
-                                   (link . ,(link-maker (car param) #t))
-                                   (text . ,(car param))
-                                   (sub-exprs . #f))
+                                  ,(make-type-sd (car param))
                                   ,spacer-sd
                                   ((class . "muted")
                                    (link . #f)
@@ -425,15 +464,14 @@
                                    (sub-exprs . #f))
                                   ,paren-close-sd
                                   ,@(if last (list paren-close-sd) (list))))))
-              (else
-                `((class . "sexpr-flex")
-                  (link . #f)
-                  (sub-exprs . #(,spacer-sd
-                                 ((class . "muted")
-                                  (link . #f)
-                                  (text . ,param)
-                                  (sub-exprs . #f))
-                                 ,@(if last (list paren-close-sd) (list))))))))
+              (else `((class . "sexpr-flex")
+                      (link . #f)
+                      (sub-exprs . #(,spacer-sd
+                                      ((class . "muted")
+                                       (link . #f)
+                                       (text . ,(symbol->string param))
+                                       (sub-exprs . #f))
+                                      ,@(if last (list paren-close-sd) (list))))))))
           
           (if last
               (reverse (cons sd result))

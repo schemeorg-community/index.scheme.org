@@ -377,12 +377,12 @@
  (ireduce
    (lambda ((procedure? f) ridentity (ilist? ilist))*)
    (pure)
-   ((f (lambda ((obj fold-state)) *))))
+   ((f (lambda (obj fold-state) *))))
  
  (ireduce-right
    (lambda ((procedure? f) ridentity (ilist? ilist))*)
    (pure)
-   ((f (lambda ((obj fold-state)) *))))
+   ((f (lambda (obj fold-state) *))))
  
  (iunfold
    (lambda ((procedure? p) (procedure? f) (procedure? g) seed) ilist?)
@@ -557,15 +557,15 @@
    (pure))
  
  (ialist-cons
-   (lambda (key datum (ialist? ialist)) ialist?)
+   (lambda (key datum (ilist? ialist)) ilist?)
    (pure))
  
  (ialist-delete
-   (lambda (key (ialist? ialist)) ialist?)
+   (lambda (key (ilist? ialist)) ilist?)
    (pure))
  
  (ialist-delete
-   (lambda (key (ialist? ialist) (procedure? =)) ialist?)
+   (lambda (key (ilist? ialist) (procedure? =)) ilist?)
    (pure)
    ((= (lambda (a b) *))))
  

@@ -28,7 +28,7 @@
     
     (define (index-types solr-url funcs)
       (define-values
-        (supertype-map subtype-map)
+        (supertype-map subtype-strict-map subtype-loose-map)
         (make-type-maps funcs))
       (define payload
         (list->vector
@@ -36,8 +36,9 @@
             (lambda (f)
               (define json (func->json f))
               (define extra
-                `((param_types_filter . ,(list->vector (map symbol->string (flatten-type subtype-map (func-param-types f)))))
-                  (return_types_filter . ,(list->vector (map symbol->string (flatten-type supertype-map (func-return-types f)))))))
+                `((param_subtypes_loose . ,(list->vector (map symbol->string (flatten-type subtype-loose-map (func-param-types f)))))
+                  (param_subtypes . ,(list->vector (map symbol->string (flatten-type subtype-strict-map (func-param-types f)))))
+                  (return_supertypes . ,(list->vector (map symbol->string (flatten-type supertype-map (func-return-types f)))))))
               (append extra json))
             funcs)))
       (post-json (string-append solr-url "/update/json") payload))
@@ -53,12 +54,12 @@
           (cdr (assoc 'value e)))
         facet-values))
     
-    (define (exec-solr-query solr-url start page-size text libs params returns tags)
-      (define body (build-solr-query start page-size text libs params returns tags))
+    (define (exec-solr-query solr-url start page-size text libs params returns tags filter-params-loose?)
+      (define body (build-solr-query start page-size text libs params returns tags filter-params-loose?))
       (define solr-resp (post-json solr-url body))
       (parse-solr-response solr-resp))
 
-    (define (build-solr-query start page-size text libs params returns tags)
+    (define (build-solr-query start page-size text libs params returns tags filter-params-loose?)
       (define fq-lib
         (if (and libs (not (null? libs)))
             (let loop ((libs libs)
@@ -68,26 +69,33 @@
                   (loop (cdr libs)
                         (string-append str "\"" (escape-solr-spec (car libs)) "\" OR "))))
             `()))
+      (define param-filter-field (if filter-params-loose? "param_subtypes_loose" "param_subtypes"))
       (define fq-params
         (map 
           (lambda (p)
-            (string-append "param_types_filter: \"" (escape-solr-spec p) "\""))
+            (string-append param-filter-field ": \"" (escape-solr-spec p) "\""))
           params))
       (define fq-returns
         (map
           (lambda (r)
-            (string-append "return_types_filter: \"" (escape-solr-spec r) "\""))
+            (string-append "return_supertypes: \"" (escape-solr-spec r) "\""))
           returns))
       (define fq-tags
         (map
           (lambda (t)
             (string-append "tags: \"" (escape-solr-spec t) "\""))
           tags))
-      (define bq-params
+      (define bq-params-types
         (map 
           (lambda (p)
             (string-append "param_types: \"" (escape-solr-spec p) "\"^5"))
           params))
+      (define bq-params-subtypes
+        (map 
+          (lambda (p)
+            (string-append "param_subtypes: \"" (escape-solr-spec p) "\"^2"))
+          params))
+      (define bq-params `(,@bq-params-types ,@bq-params-subtypes))
       (define bq
         (if (null? bq-params)
              '()

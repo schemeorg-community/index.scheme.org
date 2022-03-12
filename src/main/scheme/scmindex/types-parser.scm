@@ -5,7 +5,7 @@
           (scheme file)
           (scheme read)
           (scheme write)
-          (only (srfi 1) lset-adjoin lset-difference alist-cons alist-delete delete-duplicates)
+          (only (srfi 1) lset-adjoin lset-difference alist-cons alist-delete delete-duplicates filter)
           )
 
   (export read-specs 
@@ -112,7 +112,9 @@
                      (lambda (param)
                        (cond
                          ((list? param) (list (cadr param)))
-                         ((equal? '... param) (list))
+                         ((or (equal? '... param)
+                              (equal? #f param)
+                              (equal? #t param)) (list))
                          (else (list param))))
                      params-list))
       (apply append lst*))
@@ -144,17 +146,29 @@
       (define lst* (map
                      (lambda (param)
                        (cond
-                         ((list? param) (list (car param)))
+                         ((list? param)
+                          (let ((type (car param)))
+                            (cond
+                              ((and (list? type) (equal? 'or (car type)))
+                               (cdr type))
+                              ((list? type) (error (string-append "Bad signature: " (->string signature))))
+                              ((symbol? type) (list type))
+                              ((equal? #f type) (list))
+                              (else (error (string-append "Bad signature: " (->string signature)))))))
                          (else (list))))
                      params-list))
-      (apply append lst*))
+      (filter
+        symbol?
+        (apply append lst*)))
 
     (define (extract-return-types signature)
       (define (extract value)
         (cond
-          ((equal? '* value) (list))
-          ((equal? '... value) (list))
-          ((equal? 'undefined value) (list))
+          ((or (equal? '* value)
+               (equal? '... value)
+               (equal? 'undefined value)
+               (equal? #f value))
+           (list))
           ((symbol? value) (list value))
           ((and (list? value)
                 (or (equal? 'values (car value))
@@ -166,22 +180,27 @@
       (extract (caddr signature)))
 
     (define (make-type-maps funcs)
-      (define entries*
-        (map
-          (lambda (func)
-            (define supertypes (func-supertypes func))
-            (define type (func-name func))
-            (if (not supertypes)
-                '()
-                (map
-                  (lambda (supertype)
-                    (cons type supertype))
-                  supertypes)))
-          funcs))
-      (define entries (apply append entries*))
-      (define supertype-map (make-multivalue-alist entries car cdr))
-      (define subtype-map (make-multivalue-alist entries cdr car))
-      (values supertype-map subtype-map))
+      (define (make-entries strict)
+        (define entries*
+          (map
+            (lambda (func)
+              (define supertypes (func-supertypes func))
+              (define type (func-name func))
+              (cond
+                ((or (not supertypes) (null? supertypes)) '())
+                ((and strict (not (null? (cdr supertypes)))) '())
+                (else (map
+                        (lambda (supertype)
+                          (cons type supertype))
+                        supertypes))))
+            funcs))
+        (apply append entries*))
+      (define entries-strict (make-entries #t))
+      (define entries-loose (make-entries #f))
+      (define supertype-map (make-multivalue-alist entries-loose car cdr))
+      (define subtype-loose-map (make-multivalue-alist entries-loose cdr car))
+      (define subtype-strict-map (make-multivalue-alist entries-strict cdr car))
+      (values supertype-map subtype-strict-map subtype-loose-map))
 
     (define (make-multivalue-alist entries key-proc value-proc)
       (let loop ((alist '())
