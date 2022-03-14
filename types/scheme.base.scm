@@ -54,7 +54,7 @@
    (pure))
 
  (append
-   (lambda ((list? list) ... obj)  *)
+   (lambda ((list? list) ... obj) *)
    (pure))
 
  (apply

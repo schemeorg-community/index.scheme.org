@@ -6,9 +6,10 @@
           (scheme read)
           (scheme write)
           (only (srfi 1) lset-adjoin lset-difference alist-cons alist-delete delete-duplicates filter)
-          )
+          (arvyy slf4j))
 
   (export read-specs 
+          read-spec
           make-type-maps
           flatten-type
           func->json
@@ -27,6 +28,8 @@
 
           )
   (begin
+
+    (define logger (get-logger "types-parser"))
 
     (define-record-type <scmindex-function>
                         (make-func 
@@ -56,6 +59,7 @@
 
 
     (define (read-specs index-file)
+      (log-info logger "Reading specs from index file {}" index-file)
       (with-input-from-file 
         index-file
         (lambda ()
@@ -63,6 +67,7 @@
           (define funcs*
             (map
               (lambda (entry)
+                (log-info logger "Reading specs from data file {} for lib {}" (cdr entry) (car entry))
                 (with-input-from-file
                   (cdr entry)
                   (lambda ()
@@ -80,7 +85,9 @@
     (define (read-spec lib input)
       (map
         (lambda (entry)
-          (define name (list-ref entry 0))
+          (define name (let ((n (list-ref entry 0)))
+                         (log-debug logger "Reading spec {}" n)
+                         n))
           (define signature (list-ref entry 1))
           (define-values
             (supertypes param-names param-types return-types)

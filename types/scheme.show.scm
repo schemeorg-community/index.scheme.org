@@ -1,11 +1,11 @@
 (
 
  (show
-   (lambda ((#f port) fmt ...) string?)
+   (lambda ((#f port) (formatter fmt) ...) string?)
    (pure))
 
  (show
-   (lambda (((or output-port? boolean?) port) fmt ...) undefined)
+   (lambda (((or output-port? boolean?) port) (formatter fmt) ...) undefined)
    ())
 
  (displayed

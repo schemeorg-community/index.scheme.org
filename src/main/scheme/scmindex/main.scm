@@ -8,100 +8,104 @@
   (scmindex types-parser)
   (scmindex mustache)
   (scmindex solr)
+  (scmindex settings)
   (srfi 180))
 
 (define config
   (with-input-from-file "./config/configuration.scm" read))
 
-(define (get-property prop)
-  (cond
-    ((assoc prop config) => cdr)
-    (else (error (string-append "Required property missing " (symbol->string prop))))))
-
 (define (partial-locator name)
   (open-input-file (string-append "templates/" name ".html")))
 
+(define get-template/cached
+  (let ((cache '()))
+    (lambda (name)
+      (cond
+        ((assoc name cache) => cdr)
+        (else (let ((tpl (compile name partial-locator)))
+                (set! cache (cons (cons name tpl) cache))
+                tpl))))))
+
+(define (get-template/uncached name)
+  (compile name partial-locator))
+
+(define get-template
+  (if (deploy-setting/cache-templates config)
+    get-template/cached
+    get-template/uncached))
+
+(define (get/html path handler)
+  (get path (lambda (req resp)
+              (define-values (name data) (handler req resp))
+              (execute (get-template name) data))))
+
+(define (get/rest path handler)
+  (get path (lambda (req resp)
+              (define result (handler req resp))
+              (define type-param (req/query-param req "wt"))
+              (define keep-sexpr (equal? "sexpr" type-param))
+              (define payload (open-output-string))
+              (if keep-sexpr
+                (begin
+                  (write result payload)
+                  (resp/set-type! resp "application/sexpr"))
+                (begin
+                  (json-write result payload)
+                  (resp/set-type! resp "application/json")))
+              (resp/set-header! resp "Access-Control-Allow-Origin" "*")
+              (get-output-string payload))))
+
 (define (make-tpl-getter name)
-  (if (get-property 'cache-templates)
+  (if (deploy-setting/cache-templates config)
       (let ((tpl (compile name partial-locator)))
        (lambda () tpl))
       (lambda () (compile name partial-locator))))
 
-(define get-index-tpl (make-tpl-getter "index"))
-(define get-search-tpl (make-tpl-getter "search"))
-(define get-settings-tpl (make-tpl-getter "settings"))
-(define get-userguide-tpl (make-tpl-getter "userguide"))
-(define get-restapi-tpl (make-tpl-getter "restapi"))
-
-(define solr-url (string-append (get-property 'solr-url) "/solr/" (get-property 'solr-core)))
+(define solr-url (string-append (deploy-setting/solr-url config) "/solr/" (deploy-setting/solr-core config)))
 (define solr-search-url (string-append solr-url "/search"))
 (define solr-suggest-url (string-append solr-url "/suggest"))
-(define default-page-size (get-property 'page-size))
-
-(define (->string obj)
-  (define port (open-output-string))
-  (write obj port)
-  (get-output-string port))
+(define default-page-size (deploy-setting/page-size config))
 
 (define (make-head-data req)
-  (define light-theme?
-    (cond
-      ((assoc 'theme (req/cookies req)) => (lambda (e)
-                                             (equal? "light" (cdr e))))
-      (else #t)))
-  (define override-ctrlf?
-    (cond
-      ((assoc 'overrideCtrlF (req/cookies req)) => (lambda (e)
-                                                     (equal? "yes" (cdr e))))
-      (else #f)))
-  `((light-theme . ,light-theme?)
-    (ctrlf-override . ,override-ctrlf?)))
+  `((light-theme . ,(user-setting/light-theme? req))
+    (ctrlf-override . ,(user-setting/ctrl-f-override req))))
 
 (let ((funcs (read-specs "types/index.scm")))
  (index-types solr-url funcs))
 
-(when (get-property 'serve-static)
+(when (deploy-setting/serve-static config)
   (static-files/external-location "static"))
 
-(get "/"
-     (lambda (req resp)
-       (execute (get-index-tpl) 
-                `((page-title . "Home") 
-                  ,@(make-mustache-nav-data 'index)
-                  ,@(make-head-data req)))))
+(get/html "/"
+          (lambda (req resp)
+            (values "index"
+                    `((page-title . "Home") 
+                       ,@(make-mustache-nav-data 'index)
+                       ,@(make-head-data req)))))
 
-(get "/settings"
+(get/html "/settings"
      (lambda (req resp)
-       (execute (get-settings-tpl) 
-                `((page-title . "Settings") 
-                  ,@(make-mustache-nav-data 'settings)
-                  ,@(make-head-data req)
-                  ,@(make-mustache-settings-data (req/cookies req))))))
+       (values "settings" 
+               `((page-title . "Settings") 
+                 ,@(make-mustache-nav-data 'settings)
+                 ,@(make-head-data req)
+                 ,@(mustache-settings-data req)))))
 
 (post "/settings"
       (lambda (req resp)
-        (define options '("overrideCtrlF" "queryParser" "theme" "pageSize" "filterParamsLoose"))
         (for-each
           (lambda (opt)
             (define value (req/query-param req opt))
             (if value
                 (resp/set-cookie! resp opt value)
                 (resp/remove-cookie! resp opt))) 
-          options)
+          settings-options)
         (resp/redirect resp "/settings")))
 
-(get "/search"
+(get/html "/search"
      (lambda (req resp)
-       (define page-size
-         (cond
-           ((assoc 'pageSize (req/cookies req)) => (lambda (e)
-                                                     (string->number (cdr e))))
-           (else default-page-size)))
-       (define filter-params-loose?
-         (cond
-           ((assoc 'filterParamsLoose (req/cookies req)) => (lambda (e)
-                                                              (equal? "yes" (cdr e))))
-           (else #t)))
+       (define page-size (user-setting/page-size req))
+       (define filter-params-loose?  (user-setting/param-filter-loose req))
        (define page (let ((value (req/query-param req "page")))
                       (if value
                           (string->number value)
@@ -123,73 +127,49 @@
            return-types
            tags
            data))
-       (execute (get-search-tpl) `((page-title . "Search") 
-                                   ,@search-data
-                                   ,@(make-mustache-nav-data 'search)
-                                   ,@(make-head-data req)))))
+       (values "search" 
+               `((page-title . "Search") 
+                 ,@search-data
+                 ,@(make-mustache-nav-data 'search)
+                 ,@(make-head-data req)))))
 
-(get "/userguide"
+(get/html "/userguide"
+          (lambda (req resp)
+            (values "userguide" 
+                    `((page-title . "User guide") 
+                      ,@(make-mustache-nav-data 'userguide)
+                      ,@(make-head-data req)))))
+
+(get/html "/restapi"
      (lambda (req resp)
-       (execute (get-userguide-tpl) 
-                `((page-title . "User guide") 
-                  ,@(make-mustache-nav-data 'userguide)
-                  ,@(make-head-data req)))))
+       (values "restapi" 
+               `((page-title . "REST api") 
+                 ,@(make-mustache-nav-data 'restapi)
+                 ,@(make-head-data req)))))
 
-(get "/restapi"
-     (lambda (req resp)
-       (execute (get-restapi-tpl) 
-                `((page-title . "REST api") 
-                  ,@(make-mustache-nav-data 'restapi)
-                  ,@(make-head-data req)))))
-
-(get "/suggest"
+(get/rest "/suggest"
      (lambda (req resp)
        (define text (req/query-param req "text"))
-       (define suggest-json (solr-get-suggestions solr-suggest-url text))
-       (define payload (open-output-string))
-       (json-write suggest-json payload)
-       (resp/set-type! resp "application/json")
-       (resp/set-header! resp "Access-Control-Allow-Origin" "*")
-       (get-output-string payload)))
+       (solr-get-suggestions solr-suggest-url text)))
 
 (path "/rest"
-      (get "/libs"
+      (get/rest "/libs"
            (lambda (req resp)
-             (define libs (solr-facet-values solr-search-url 'lib))
-             (define payload (open-output-string))
-             (json-write libs payload)
-             (resp/set-type! resp "application/json")
-             (resp/set-header! resp "Access-Control-Allow-Origin" "*")
-             (get-output-string payload)))
+             (solr-facet-values solr-search-url 'lib)))
       
-      (get "/params"
+      (get/rest "/params"
            (lambda (req resp)
-             (define libs (solr-facet-values solr-search-url 'param_types))
-             (define payload (open-output-string))
-             (json-write libs payload)
-             (resp/set-type! resp "application/json")
-             (resp/set-header! resp "Access-Control-Allow-Origin" "*")
-             (get-output-string payload)))
+             (solr-facet-values solr-search-url 'param_types)))
       
-      (get "/returns"
+      (get/rest "/returns"
            (lambda (req resp)
-             (define libs (solr-facet-values solr-search-url 'return_types))
-             (define payload (open-output-string))
-             (json-write libs payload)
-             (resp/set-type! resp "application/json")
-             (resp/set-header! resp "Access-Control-Allow-Origin" "*")
-             (get-output-string payload)))
+             (solr-facet-values solr-search-url 'return_types)))
       
-      (get "/tags"
+      (get/rest "/tags"
            (lambda (req resp)
-             (define libs (solr-facet-values solr-search-url 'tags))
-             (define payload (open-output-string))
-             (json-write libs payload)
-             (resp/set-type! resp "application/json")
-             (resp/set-header! resp "Access-Control-Allow-Origin" "*")
-             (get-output-string payload)))
+             (solr-facet-values solr-search-url 'tags)))
       
-      (get "/procedures"
+      (get/rest "/procedures"
            (lambda (req resp)
              (define start (or (req/query-param req "start") 0))
              (define rows (or (req/query-param req "rows") default-page-size))
@@ -199,9 +179,4 @@
              (define return-types (or (req/query-param-values req "return") '()))
              (define tags (or (req/query-param-values req "tag") '()))
              (define filter-params-loose? (or (req/query-param req "filter_loose") #t))
-             (define data (exec-solr-query solr-search-url start rows query libs param-types return-types tags filter-params-loose?))
-             (define payload (open-output-string))
-             (json-write data payload)
-             (resp/set-type! resp "application/json")
-             (resp/set-header! resp "Access-Control-Allow-Origin" "*")
-             (get-output-string payload))))
+             (exec-solr-query solr-search-url start rows query libs param-types return-types tags filter-params-loose?))))
