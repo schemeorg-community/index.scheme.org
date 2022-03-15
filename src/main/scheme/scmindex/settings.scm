@@ -67,7 +67,7 @@
       (define (user-setting/page-size req)
         (cond
           ((assoc 'pageSize (req/cookies req)) => (lambda (e)
-                                                    (equal? "light" (cdr e))))
+                                                    (string->number (cdr e))))
           (else 40)))
 
       (define (user-setting/light-theme? req)
