@@ -4,3 +4,9 @@ scrape_configs:
   - job_name: nginx
     static_configs:
       - targets: ['prometheus_exporter:9113']
+  - job_name: node
+    static_configs:
+      - targets: ['host.docker.internal:9100']
+  - job_name: solr
+    static_configs:
+      - targets: ['solr_exporter:9983']

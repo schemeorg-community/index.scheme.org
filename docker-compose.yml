@@ -11,6 +11,15 @@ services:
       retries: 10
     command: ["solr-precreate", "scmindex", "/scmindex"]
 
+  solr_exporter:
+    image: "solr:8"
+    entrypoint:
+      - "/opt/solr/contrib/prometheus-exporter/bin/solr-exporter"
+      - "-b"
+      - "http://solr:8983/solr"
+      - "-f"
+      - "/opt/solr/contrib/prometheus-exporter/conf/solr-exporter-config.xml"
+
   app:
     build: .
     depends_on:
