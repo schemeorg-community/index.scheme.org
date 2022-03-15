@@ -71,19 +71,19 @@
    (pure))
  
  (ideque-take
-   (lambda ((ideque? ideque) (integer? n)) idequey?)
+   (lambda ((ideque? ideque) (integer? n)) ideque?)
    (pure))
  
  (ideque-take-right
-   (lambda ((ideque? ideque) (integer? n)) idequey?)
+   (lambda ((ideque? ideque) (integer? n)) ideque?)
    (pure))
  
  (ideque-drop
-   (lambda ((ideque? ideque) (integer? n)) idequey?)
+   (lambda ((ideque? ideque) (integer? n)) ideque?)
    (pure))
  
  (ideque-drop-right
-   (lambda ((ideque? ideque) (integer? n)) idequey?)
+   (lambda ((ideque? ideque) (integer? n)) ideque?)
    (pure))
  
  (ideque-split-at
@@ -103,7 +103,7 @@
    (pure))
  
  (ideque-count
-   (lambda ((procedure? pred) (idequey? ideque)) integer?)
+   (lambda ((procedure? pred) (ideque? ideque)) integer?)
    (pure)
    ((pred (lambda (element) boolean?))))
  

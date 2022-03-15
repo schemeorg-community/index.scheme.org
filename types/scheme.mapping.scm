@@ -218,7 +218,7 @@
    (pure))
 
  (mapping-entries
-   (lambda ((mapping? mapping)) (values list? list))
+   (lambda ((mapping? mapping)) (values list? list?))
    (pure))
 
  (mapping-map

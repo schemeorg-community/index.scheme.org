@@ -218,7 +218,7 @@
    (pure))
 
  (hashmap-entries
-   (lambda ((hashmap? hashmap)) (values list? list))
+   (lambda ((hashmap? hashmap)) (values list? list?))
    (pure))
 
  (hashmap-map

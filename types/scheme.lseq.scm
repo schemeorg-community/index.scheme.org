@@ -37,11 +37,11 @@
    (pure))
  
  (lseq-take
-   (lambda ((lseq? lseq) (integer? i)) lseq)
+   (lambda ((lseq? lseq) (integer? i)) lseq?)
    (pure))
  
  (lseq-drop
-   (lambda ((lseq? lseq) (integer? i)) lseq)
+   (lambda ((lseq? lseq) (integer? i)) lseq?)
    (pure))
  
  (lseq-realize

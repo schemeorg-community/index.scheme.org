@@ -1299,7 +1299,7 @@
    (parameterized))
 
  (write-u8
-   (lambda ((integer? byte) (output-port port)) undefined)
+   (lambda ((integer? byte) (output-port? port)) undefined)
    ())
 
  (zero?
