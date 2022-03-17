@@ -190,19 +190,19 @@
    ())
 
  (bytevector-ieee-single-ref
-   (lambda ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size)) integer?)
+   (lambda ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size)) real?)
    (pure))
 
  (bytevector-ieee-double-ref
-   (lambda ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size)) integer?)
+   (lambda ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size)) real?)
    (pure))
 
  (bytevector-ieee-single-native-ref
-   (lambda ((bytevector? bytevector) (integer? k) (integer? size)) integer?)
+   (lambda ((bytevector? bytevector) (integer? k) (integer? size)) real?)
    (pure))
 
  (bytevector-ieee-double-native-ref
-   (lambda ((bytevector? bytevector) (integer? k) (integer? size)) integer?)
+   (lambda ((bytevector? bytevector) (integer? k) (integer? size)) real?)
    (pure))
 
  (bytevector-ieee-single-set!
