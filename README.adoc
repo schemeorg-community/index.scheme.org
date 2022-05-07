@@ -1,0 +1,206 @@
+= R7RS index
+:toc: left
+
+R7RS index is a tool for indexing and searching through procedures and syntax from R7RS-small and R7RS-large libraries.
+R7RS index can be used in 3 ways - as a site (https://r7rsindex.com), through REST API, or through stdio API
+
+== General search implementation principles
+
+== Building / downloading and running
+
+=== Natively
+
+You can build R7RS index by running `ant` from the root of the source directory. Note that the build process required following executables to be on path
+
+* `ant` - Apache Ant build tool
+
+* `mvn` - Apache maven project tool
+
+* `asciidoctor` - Asciidoctor documentation compiler
+
+After the build successfully completes, you should find everything R7RS index needs in `dist` directory.
+
+Alternatively, you may find release zip available for downloads at https://github.com/arvyy/r7rs-index-site/releases.
+
+Once you have the built version, you can run it using:
+
+```
+java -jar r7rs-index.jar
+```
+
+See #Configuration section for configuring the application behavior.
+
+=== Using docker
+
+If you prefer using docker, you can build a docker image using
+
+```
+<TODO>
+```
+
+The built image has same contents / structure as a native built inside the `/app` path.
+
+=== Running for development
+
+First run `ant` to checkout and install dependencies. Afterwards, run
+
+```
+mvn kawa:run
+```
+
+== Configuration
+
+=== Config.scm
+
+Core application behavior is managed using a scm configuration file, containing a list of key-value pairs, where each key is a symbol (ie. an alist).
+Running the application, first argument is interpreted as a path to configuration file. If not set, it defaults to `./config/configuration.scm`
+
+The following is exhaustive list of valid properties
+[cols="1,3,1"]
+|===
+| Property
+| Description
+| Default
+
+| solr-embed
+| Specify whether embed solr / lucene index inside the application itself (if #t), or connect to a standalone solr instance (if #f)
+| #t
+
+| solr-home
+| Directory contain solr home / configuration. Relevant only if solr-embed is #t
+| "./solrhome"
+
+| solr-url
+| Solr url to connect to. Relevant only if solr-embed is #f
+| "http://localhost:8983/solr"
+
+| solr-core
+| Solr core to use
+| "scmindex"
+
+| enable-web
+| Whether enable web ui and REST api
+| #t
+
+| port
+| Which port to use. Relevant only if enable-web is #t
+| 8080
+
+| cache-templates
+| Whether templates should be cached (ie compiled once and remembered). Use #f in development, so that you don't need to restart the app to see changes
+| #t
+
+| serve-static
+| Whether application should serve static resources from ./static folder. Use #f if you have some other web server (eg nginx in front) serving the content.
+| #t
+
+| enable-repl
+| Whether to enable stdio repl api
+| #f
+
+| spec-index
+| Index of definitions to load (see Types definitions section)
+| "./types/index.scm"
+|===
+
+=== Types definitions
+
+Type definitions are structured into type files one for each library, and a single root index file which defines names and paths to those library files.
+The index file is specified in configuration under `spec-index` property, with a default value "./types/index.scm".
+
+Index should be a list of pairs - where `car` is a symbolic library name, and `cdr` is the file to load its definitions from.
+
+```
+(
+    ((scheme base) . "types/scheme.base.scm")
+)
+```
+
+Each library file is a list of entries, where each entry itself is a list and consists of 2 - 5 elements. An entry may be defining a function, a syntax macro, or a plain value.
+
+Function format:
+
+1. name.
++
+Note, that the name doesn't have to be unique -- if the function has multiple overloaded signatures, simply create multiple definition for each possible option.
+
+2. signature, in the form of `(lambda (<parameter> ...) <return type>)`
++
+Each parameter is either of the form `(<type> param-name)` or just `param-name`, when type is "any". Each parameter may be succeeded by a `...` literal to indicate varargs / repetition.
++
+Parameter type is either:
+
+* a predicate name (eg. `list?`);
+* a type union in the form of `(or <type> ...)` (eg. `(or list? number?)`). When using `or`, `#f` might be used as a type inside of it due to its common appearance as a "null" value.
+
++
+Return type can be same as parameter type described above, plus:
+
+* `undefined`, indicating a value that shouldn't be used in portable code (eg. result of `for-each`);
+* `*`, indicating a useful value but of unknown type.
+* `(values <type> ...)` form when the function returns more than one value.
+
+3. list of tags
++
+One of `pure`, `parameterized`, `parameter`, `predicate`, `syntax`, `deprecated`.
+
+4. list of parameter signatures, in case this is a higher order function.
++
+Each entry in this list is a list, where first element is a parameter name (must match one of parameters in main signature), and second parameter
+is its signature of same format as a main function's signature definition. To describe return value's signature, use `return` as a name.
+
+5. list of associated types. Only applicable when this function is a predicate and logically describes a type.
++
+All elements in the associated types list should be predicate function names.
+If the list has just one entry, then said entry corresponds to logical supertype of currently defined function / type.
+If the list has more than one entry, then currently defined function / type is a union of those types.
+
+Some examples:
+
+```
+(
+    ;; type definition of a union
+    (list?
+       (lambda (obj) boolean?)
+       (pure predicate)
+       ()
+       (pair? null?))
+
+    ;; parameters with types, parameter signature
+    (map
+       (lambda ((procedure? proc) (list? list1) (list? list2) ...) list?)
+       (pure)
+       ((proc (lambda (obj1 obj2 ...) *))))
+
+    ;; use of `values`
+    (exact-integer-sqrt
+       (lambda ((integer? k)) (values integer? integer?))
+       (pure))
+
+    ;; use of `or`, use of overloading same name
+    (assoc
+       (lambda (obj (list? alist)) (or pair? #f))
+       (pure))
+
+    (assoc
+       (lambda (obj (list? alist) (procedure? =)) (or pair? #f))
+       (pure)
+       ((= (lambda (a b) *))))
+)
+```
+
+
+=== Logging
+
+R7RS index uses logback for logging. By default (as defined in `src/main/resources/logback.xml`) it only does rolling file logging into `./logs` directory, and not into standard output.
+You can provide custom logging configuration by running
+
+```
+java -Dlogback.configurationFile=/path/to/config.xml -jar r7rs-index.jar
+```
+
+Consult logback documentation for details.
+
+== REST API
+
+== STDIO API

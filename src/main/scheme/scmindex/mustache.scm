@@ -4,8 +4,8 @@
           (scheme read)
           (scheme write)
           (scheme cxr)
-          (only (srfi 1) iota filter find)
-          (arvyy httpclient))
+          (class java.net URLEncoder)
+          (only (srfi 1) iota filter find))
   
   (export make-mustache-search-data
           make-mustache-nav-data
@@ -104,6 +104,27 @@
             (cons 'selected (and (member (cdr (assoc 'value f)) selected-values) #t))
             f))
         facet-result))
+
+    ;TODO move out
+    (define (encode-query alist)
+      (let loop ((str "")
+                 (alist alist)
+                 (first #t))
+        (cond
+          ((null? alist) str)
+          (else (let ((key (caar alist))
+                      (value (cdar alist))
+                      (rest (cdr alist)))
+                  (define fragment
+                    (string-append
+                      (URLEncoder:encode (symbol->string key) "UTF-8")
+                      "="
+                      (URLEncoder:encode value "UTF-8")))
+                  (define new-str
+                    (if first
+                        fragment
+                        (string-append str "&" fragment)))
+                  (loop new-str rest #f))))))
     
     (define (make-pager-data page total-pages query)
       (define query-without-page

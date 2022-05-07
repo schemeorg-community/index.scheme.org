@@ -1,0 +1,3 @@
+[submodule "kawa-web-collection"]
+	path = kawa-web-collection
+	url = https://github.com/arvyy/kawa-web-collection
