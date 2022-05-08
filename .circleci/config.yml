@@ -21,6 +21,7 @@ jobs:
       - run: |
         echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
         docker build -t arvyy/r7rs-index:$CIRCLE_BRANCH -f docker/Dockerfile .
+      - run: docker push arvyy/r7rs-index:$CIRCLE_BRANCH
 
   deploy:
     machine: true
