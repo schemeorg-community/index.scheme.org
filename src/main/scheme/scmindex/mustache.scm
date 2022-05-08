@@ -28,13 +28,10 @@
           (link . "/settings")
           (page . settings))
          
-         ((label . "User guide")
-          (link . "/userguide")
-          (page . userguide))
-         
-         ((label . "REST api")
-          (link . "/restapi")
-          (page . restapi))
+         ((label . "Documentation")
+          (link . "/README.html")
+          (page . docs))
+
          ))
 
     (define (make-mustache-nav-data page)

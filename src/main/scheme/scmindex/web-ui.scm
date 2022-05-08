@@ -181,7 +181,7 @@
              (define param-types (or (req/query-param-values req "param") '()))
              (define return-types (or (req/query-param-values req "return") '()))
              (define tags (or (req/query-param-values req "tag") '()))
-             (define filter-params-loose? (or (req/query-param req "filter_loose") #t))
+             (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
              (exec-solr-query solr-client solr-core start rows query libs param-types return-types tags filter-params-loose?))))
         )
 

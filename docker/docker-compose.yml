@@ -1,51 +1,17 @@
 services:
-
-  solr:
-    image: "solr:8"
-    volumes:
-      - "./solrconfig:/scmindex"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8983/solr/scmindex/admin/ping"]
-      interval: 10s
-      timeout: 10s
-      retries: 10
-    command: ["solr-precreate", "scmindex", "/scmindex"]
-
-  solr_exporter:
-    image: "solr:8"
-    entrypoint:
-      - "/opt/solr/contrib/prometheus-exporter/bin/solr-exporter"
-      - "-b"
-      - "http://solr:8983/solr"
-      - "-f"
-      - "/opt/solr/contrib/prometheus-exporter/conf/solr-exporter-config.xml"
-
   app:
-    build: .
-    depends_on:
-      solr:
-        condition: service_healthy
+    image: "r7rs-index:latest"
+    volumes:
+      - "statics:/app/static"
 
   nginx:
     image: "nginx:1.21"
     volumes:
       - "./nginx.conf:/etc/nginx/nginx.conf"
-      - "./monitoring-password:/etc/nginx/monitoring-password"
-      - "./static:/www/data"
+      - "statics:/www/data:ro"
       - "/etc/letsencrypt/:/etc/letsencrypt/"
     ports:
       - "80:80"
-      - "9090:9090"
       - "443:443"
-
-  prometheus:
-    image: prom/prometheus
-    volumes:
-      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
-
-  prometheus_exporter:
-    image: nginx/nginx-prometheus-exporter:0.10.0
-    command: ["-nginx.scrape-uri=http://nginx:80/stub_status"]
-    depends_on:
-      - nginx
-      - prometheus
+volumes:
+  statics:
