@@ -42,31 +42,57 @@
         </dependency>
 
         <dependency>
-            <groupId>com.sparkjava</groupId>
-            <artifactId>spark-core</artifactId>
-            <version>2.9.2</version>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>solr-embedded</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>fluent-hc</artifactId>
-            <version>4.5.12</version>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>solrj</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>log4j-slf4j-impl</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- enable logging during testing -->
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.21</version>
-            <scope>test</scope>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>spark</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
         </dependency>
 
-        <!-- iostream util for readin http response in tests -->
         <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>2.8.0</version>
-            <scope>test</scope>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>slf4j</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>mustache</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>srfi-180</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
         </dependency>
 
         <dependency>
@@ -93,7 +119,26 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
                 <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>
+                                <exclude>META-INF/*.SF</exclude>
+                                <exclude>META-INF/*.DSA</exclude>
+                                <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <transformers>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.apache.lucene.codecs.Codec</resource>
+                        </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.apache.lucene.codecs.DocValuesFormat</resource>
+                        </transformer>
+                        <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                            <resource>META-INF/services/org.apache.lucene.codecs.PostingsFormat</resource>
+                        </transformer>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                             <mainClass>main</mainClass>
                         </transformer>
@@ -114,7 +159,8 @@
                 <plugin>
                     <groupId>com.github.arvyy</groupId>
                     <artifactId>kawa-maven-plugin</artifactId>
-                    <version>0.0.5</version>
+                    <version>0.0.7</version>
+					<extensions>true</extensions>
                     <executions>
                         <execution>
                             <id>test</id>
@@ -129,20 +175,6 @@
                             </goals>
                         </execution>
                     </executions>
-                    <configuration>
-                        <schemeCompileTargets>
-                            <target>arvyy/kawa-spark.scm</target>
-                            <target>arvyy/mustache.scm</target>
-                            <target>arvyy/slf4j.scm</target>
-                            <target>srfi/180.scm</target>
-                            <target>scmindex/types-parser.scm</target>
-                            <target>scmindex/solr.scm</target>
-                            <target>scmindex/main.scm</target>
-                        </schemeCompileTargets>
-                        <schemeMain>scmindex/main.scm</schemeMain>
-                        <warnUnused>false</warnUnused>
-                    </configuration>
-
                 </plugin>
             </plugins>
         </pluginManagement>

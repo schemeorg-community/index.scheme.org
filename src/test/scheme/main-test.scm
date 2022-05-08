@@ -1,23 +1,22 @@
-(import (scheme base)
-        (scheme process-context)
-        (srfi 64)
-        (kawa-spark-test main-test)
-        (mustache-test main-test)
-        (scmindex-test main-test))
-
-(test-begin "Kawa web test")
-
-;; on test end exit with non-zero status if there were failures
-(let* ((runner (test-runner-current))
-       (callback (test-runner-on-final runner)))
-  (test-runner-on-final!
-    runner
-    (lambda (r)
-      (callback r)
-      (exit (= 0 (test-runner-fail-count r))))))
-
-(do-kawa-spark-test)
-(do-mustache-test)
-(do-scmindex-test)
-
-(test-end)
+(define-library
+  (main-test)
+  (import (scheme base)
+          (scheme write)
+          (scheme read)
+          (scmindex types-parser) 
+          (scmindex mustache)
+          (only (srfi 1) lset=)
+          (srfi 64)
+          (srfi 180))
+  
+  (export run-tests)
+  
+  (begin
+    
+    (define (run-tests)
+      (test-begin "SCM index test")
+      (test-group "types-parser"
+                  (include "test-types-parser.scm"))
+      (test-group "mustache"
+                  (include "test-mustache.scm"))
+      (test-end))))

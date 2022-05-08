@@ -2,7 +2,8 @@
   (scmindex solr)
   (import (scheme base)
           (scheme write)
-          (arvyy httpclient)
+          ;(arvyy httpclient)
+          (arvyy solrj)
           (scmindex types-parser))
   
   (export
@@ -14,19 +15,19 @@
     solr-get-suggestions)
   
   (begin
-    
-    (define (solr-get-suggestions suggest-url text)
-      (let* ((resp (post-json suggest-url `((params . ((q . ,text))))))
-             (suggest (cdr (assoc 'suggest resp)))
-             (nameSuggester (cdar suggest))
-             (result (cdar nameSuggester))
-             (suggestions (cdr (assoc 'suggestions result))))
+
+    (define (solr-get-suggestions solr-client core text)
+        (define resp (query solr-client core "/suggest" `((q . ,text))))
+        (define suggest (cdr (assoc 'suggest resp)))
+        (define nameSuggester (cdar suggest))
+        (define value (cdar nameSuggester))
+        (define suggestions (cdr (assoc 'suggestions value)))
         (vector-map
           (lambda (s)
             (cdr (assoc 'term s)))
-          suggestions)))
+          suggestions))
     
-    (define (index-types solr-url funcs)
+    (define (index-types solr-client core funcs)
       (define-values
         (supertype-map subtype-strict-map subtype-loose-map)
         (make-type-maps funcs))
@@ -41,11 +42,14 @@
                   (return_supertypes . ,(list->vector (map symbol->string (flatten-type supertype-map (func-return-types f)))))))
               (append extra json))
             funcs)))
-      (post-json (string-append solr-url "/update/json") payload))
-    
-    (define (solr-facet-values solr-url facet)
-      (define solr-query `((params . ((rows . 0)))))
-      (define solr-resp (post-json solr-url solr-query))
+      (parameterize ((commit-within 10))
+          (delete-by-query solr-client core "*:*")
+          (add solr-client core payload)
+          (commit solr-client core)))
+
+    (define (solr-facet-values solr-client core facet)
+      (define solr-query `((rows . 0)))
+      (define solr-resp (query solr-client core "/search" solr-query))
       (define facet-counts (cdr (assoc 'facet_counts solr-resp)))
       (define facet-fields (cdr (assoc 'facet_fields facet-counts)))
       (define facet-values (fold-facet-values (cdr (assoc facet facet-fields))))
@@ -53,10 +57,10 @@
         (lambda (e)
           (cdr (assoc 'value e)))
         facet-values))
-    
-    (define (exec-solr-query solr-url start page-size text libs params returns tags filter-params-loose?)
+
+    (define (exec-solr-query solr-client core start page-size text libs params returns tags filter-params-loose?)
       (define body (build-solr-query start page-size text libs params returns tags filter-params-loose?))
-      (define solr-resp (post-json solr-url body))
+      (define solr-resp (query solr-client core "/search" body))
       (parse-solr-response solr-resp))
 
     (define (build-solr-query start page-size text libs params returns tags filter-params-loose?)
@@ -100,20 +104,22 @@
         (if (null? bq-params)
              '()
              `((bq . ,(list->vector bq-params)))))
-      (define fq 
-        `((fq . ,(list->vector (append fq-returns fq-params fq-lib fq-tags)))))
+      (define fq
+        (let ((vals (list->vector (append fq-returns fq-params fq-lib fq-tags))))
+            (if (= (vector-length vals) 0)
+                '()
+                `((fq . ,vals)))))
       (define q
         (if text
             `((q . ,text))
             `()))
       (define params-json
         (append q bq fq `((start . ,start) (rows . ,page-size))))
-      
-      `((params . ,params-json)))
+      params-json)
     
     (define (parse-solr-response response)
       (define resp (cdr (assoc 'response response)))
-      (define total (cdr (assoc 'numFound resp)))
+      (define total (cdr (assoc 'num-found resp)))
       (define docs (cdr (assoc 'docs resp)))
       (define facet-counts (cdr (assoc 'facet_counts response)))
       (define facet-fields (cdr (assoc 'facet_fields facet-counts)))
@@ -128,20 +134,13 @@
         (param . ,param-facets)
         (tag . ,tag-facets)
         (return . ,return-facets)))
-    
+
     (define (fold-facet-values vals)
-      (let loop ((lst (vector->list vals))
-                 (rez '()))
-        (cond
-          ((null? lst) (list->vector (reverse rez)))
-          (else (let ((val (car lst))
-                      (count (cadr lst))
-                      (rest (cddr lst)))
-                  (loop rest
-                        (cons 
-                          `((value . ,val)
-                            (count . ,count))
-                          rez)))))))
+        (list->vector (map
+            (lambda (e)
+                `((value . ,(symbol->string (car e)))
+                  (count . ,(cdr e))))
+            vals)))
     
     (define (escape-solr-spec str)
       (define lst*

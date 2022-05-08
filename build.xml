@@ -1,0 +1,71 @@
+<project name="r7rs-index" default="dist" basedir=".">
+
+    <condition property="isWindows">
+        <os family="windows" />
+    </condition>
+
+    <condition property="isUnix">
+        <os family="unix" />
+    </condition>
+
+    <target name="prepare_windows" if="isWindows">
+        <echo>Detected windows environment</echo>
+        <property name="exec" value="cmd"/>
+        <property name="args" value="/c"/>
+    </target>
+
+    <target name="prepare_unix" if="isUnix">
+        <echo>Detected unix environment</echo>
+        <property name="exec" value="sh"/>
+        <property name="args" value="-c"/>
+    </target>
+
+    <target name="compile-jar" depends="prepare_unix, prepare_windows">
+        <exec dir="." executable="${exec}">
+            <arg line="${args} 'git submodule update --init --recursive'"/>
+        </exec>
+        <exec dir="kawa-web-collection" executable="${exec}">
+            <arg line="${args} 'mvn clean install'"/>
+        </exec>
+        <exec dir="." executable="${exec}">
+            <arg line="${args} 'mvn clean package'"/>
+        </exec>
+    </target>
+
+    <target name="compile-doc" depends="prepare_unix, prepare_windows">
+        <exec dir="." executable="${exec}">
+            <arg line="${args} 'asciidoctor README.adoc'"/>
+        </exec>
+    </target>
+
+    <target name="dist" depends="compile-jar, compile-doc">
+        <delete dir="dist" failonerror="false"/>
+        <mkdir dir="dist"/>
+        <copy todir="dist/solrhome">
+            <fileset dir="solrhome">
+                <include name="solr.xml"/>
+                <include name="scmindex/core.properties"/>
+                <include name="scmindex/conf/*"/>
+            </fileset>
+        </copy>
+        <copy todir="dist/static">
+            <fileset dir="static"/>
+        </copy>
+        <copy todir="dist/types">
+            <fileset dir="types"/>
+        </copy>
+        <copy todir="dist/templates">
+            <fileset dir="templates"/>
+        </copy>
+        <copy file="config/configuration-dist.scm" tofile="dist/config/configuration.scm"/>
+        <copy file="target/r7rs-index-0.0.1.jar" tofile="dist/r7rs-index.jar"/>
+        <copy file="README.adoc" tofile="dist/README.adoc"/>
+        <copy file="README.html" tofile="dist/README.html"/>
+        <copy file="README.html" tofile="dist/static/README.html"/>
+    </target>
+
+    <target name="distzip" depends="dist">
+        <zip destfile="dist.zip" basedir="dist"/>
+    </target>
+
+</project>

@@ -1,0 +1,382 @@
+= R7RS index
+:toc: left
+
+R7RS index is a tool for indexing and searching through procedures and syntax from R7RS-small and R7RS-large libraries.
+R7RS index can be used in 3 ways - as a site (https://r7rsindex.com), through REST API, or through stdio API
+
+== Userguide for site visitors
+
+R7RS index search consists of control pane on the left, and result list in the center. 
+
+=== Control pane
+
+In the control pane, optionally select values from the filter list, optionally enter search query in the text field, and press either enter or button with magnifying glass to display the results. If you have javascript enabled, typing in the search query field should give you auto suggestions for identifier names, although those suggestions are not filtered by current selection. If you have javascript enabled and have checked apropriate option in settings, you can use control + f to quickly focus to the query text field.
+
+=== Result list
+
+Each result item can be either a procedure, a macro, or a value. At the top it shows a library it is exported from. Note, that some identifiers are exported from multiple libraries. The library name can be pressed, which will result in starting new search using said library as a filter. On the right side top, associated list of tags with the result is shown. Like with library, tags are also clickable, and start a search using the clicked tag as a filter.
+
+Procedure, procedure-like macros and value names are rendered in *red*. Procedures are distinguished by being surrounded with parenthesis, as if being called. Following the name until the "=>" sign are parameters. If parameter is just a name, it means it has an unspecified type. Otherwise, parameter may be a list of type and name. Types are represented as predicate procedures. After the "=>" sign is the return type. The return can be one of: 
+
+* predicate procedure name (just like parameter type); 
+
+* a "*" symbol (meaning it returns a value of unknown type); 
+
+* a word "undefined" (meaning it returns a value which shouldn't be used in portable code); 
+
+* a list with "values" word in car position (meaning it has a multivalue return); 
+
+* a list with "or" word in car position (meaning the return type is a union between given types). 
+
+Types expressed as predicates in *blue* are links. Pressing on a type in parameter position will search using that type as *return value* filter; pressing on a type in return value position will search using that type as *parameter* filter.
+
+Scheme is a functional language and thus it'd be useful to specify taken / returned procedure values. Therefore, if one of parameters is *procedure?*, it's signature is defined below the main procedure's signature, using parameter's name in car position. Likewise same is done if return value is a procedure; but in that case word "return" is used as a name.
+
+Procedures can have more than one entry, even from same library. This occurs, if the procedures is has optional parameters and therefore can be called in multiple ways; or if the result type can be determined more precisely under more specific input parameters.
+
+Structural macros that don't resemble functions are rendered in *green*. If macro is complex, some parts of it are grouped, and the syntax of those groups shown below the syntax of whole macro. Macro literals are also rendered in green. To make parenthesis more obvious, auxiliary parenthesis coloring is used, however this coloring doesn't signify any information.
+
+=== Tags
+
+Result items might have one or more of following tags
+
+* pure - this procedure is referentially transparent (as long as whatever procedure parameters it has are also referentially transparent). Procedures that return undefined value cannot be marked as pure;
+* predicate - this procedure that takes any object and returns a boolean. Such procedure may be used as a type;
+* parameterized - the behavior of the procedure depends on a dynamic parameter (ie, uses procedure created with "make-parameter");
+* parameter - this procedure was created with "make-parameter" and may be used in parameterize form;
+* syntax - this is actually a macro, although presented as a procedure (the justification is that combining ad-hoc type annotation with syntax specification might be confusing. Simple macros were subjectively chosen to be shown as if they were procedures if they superficially appear and are called as such. This might be changed in the future);
+* deprecated - not recommended to be used, exists only for backwards compatibility with older SRFIs.
+
+=== Filtering logic
+
+Selecting multiple libraries, will return results that are part of *any* of the given libraries.
+
+Selecting multiple tags, will return results that contain *all* of the given tags.
+
+Selecting multiple parameter types will return results that match *all* of the given types. 
+
+Some types contain logical "parent" / more general types, eg. *number?* is a parent of *integer?*. When searching by parameter type, the procedures that take parent type will be matched. However, the results with more precise "child" type are weight more heavily and should appear at the start of the search.
+
+Some types are defined as a union of other types; for example *list?* is a union of *pair?* and *null?*. If loose parameter filtering is enabled under settings, the composing parts will be treated as parent of union type; ie searching for *list?* you'd be also presented with procedures applicable to *pair?*. On one hand this presents extra results you might be interested, on the other hand those results might not be applicable in general case.
+
+Selecting multiple return types will return results that match *all* of the given types. As and in case filter by parameter type, when filtering by return type the type hierarchy is taken into consideration. Searching by a "parent" return type will also yield procedures returning more precise "child" types.
+
+The text query is parsed by edismax parser, and is used to filter by name and parameter / subsyntax names. This means it supports and interprets common searching syntax, such as using "-" in front of the word to exclude results containing said word. This has its disadvantages; eg. if you tried to search for coercion functions and typed "->string" (without quotes) into the search input field, you wouldn't find anything interesting, because the leading minus was interpreted specially. Instead, you'd have to search using "exact phrase", by putting double quotes around the search.
+
+
+== Building and running
+
+=== Natively
+
+You can build R7RS index by running `ant` from the root of the source directory. Note that the build process required following executables to be on path
+
+* `ant` - Apache Ant build tool
+
+* `mvn` - Apache maven project tool
+
+* `asciidoctor` - Asciidoctor documentation compiler
+
+After the build successfully completes, you should find everything R7RS index needs in `dist` directory.
+
+Alternatively, you may find release zip available for downloads at https://github.com/arvyy/r7rs-index-site/releases.
+
+Once you have the built version, you can run it using:
+
+```
+java -jar r7rs-index.jar
+```
+
+See <<Configuration>> section for configuring the application behavior.
+
+=== Using docker
+
+If you prefer using docker, you can build a docker image using
+
+```
+docker build -t r7rs-index -f docker/Dockerfile .
+```
+
+which can the be run with 
+
+```
+docker run -p 8080:8080 --init r7rs-index
+```
+
+The built image has same structure as a native build inside the `/app` path.
+
+=== Running for development
+
+First, install dependencies under kawa-web-collection submodule
+
+```
+cd kawa-web-collection
+mvn install
+```
+
+Afterwards, run the application with
+
+```
+mvn kawa:run
+```
+
+== Configuration
+
+=== Config.scm
+
+Core application behavior is managed using a scm configuration file, containing a list of key-value pairs, where each key is a symbol (ie. an alist).
+Running the application, first argument is interpreted as a path to configuration file. If not set, it defaults to `./config/configuration.scm`
+
+The following is exhaustive list of valid properties
+[cols="1,3,1"]
+|===
+| Property
+| Description
+| Default
+
+| solr-embed
+| Specify whether embed solr / lucene index inside the application itself (if #t), or connect to a standalone solr instance (if #f)
+| #t
+
+| solr-home
+| Directory contain solr home / configuration. Relevant only if solr-embed is #t
+| "./solrhome"
+
+| solr-url
+| Solr url to connect to. Relevant only if solr-embed is #f
+| "http://localhost:8983/solr"
+
+| solr-core
+| Solr core to use
+| "scmindex"
+
+| enable-web
+| Whether enable web ui and REST api
+| #t
+
+| port
+| Which port to use. Relevant only if enable-web is #t
+| 8080
+
+| cache-templates
+| Whether templates should be cached (ie compiled once and remembered). Use #f in development, so that you don't need to restart the app to see changes
+| #t
+
+| serve-static
+| Whether application should serve static resources from ./static folder. Use #f if you have some other web server (eg nginx in front) serving the content.
+| #t
+
+| enable-repl
+| Whether to enable stdio repl api
+| #f
+
+| spec-index
+| Index of definitions to load (see Types definitions section)
+| "./types/index.scm"
+|===
+
+=== Types definitions
+
+Type definitions are structured into type files one for each library, and a single root index file which defines names and paths to those library files.
+The index file is specified in configuration under `spec-index` property, with a default value "./types/index.scm".
+
+Index should be a list of pairs - where `car` is a symbolic library name, and `cdr` is the file to load its definitions from.
+
+```
+(
+    ((scheme base) . "types/scheme.base.scm")
+)
+```
+
+Each library file is a list of entries, where each entry itself is a list and consists of 2 - 5 elements. An entry may be defining a function, a syntax macro, or a plain value.
+
+==== Function format
+
+1. name.
++
+Note, that the name doesn't have to be unique -- if the function has multiple overloaded signatures, simply create multiple definition for each possible option.
+
+2. signature, in the form of `(lambda (<parameter> ...) <return type>)`
++
+Each parameter is either of the form `(<type> param-name)` or just `param-name`, when type is "any". Each parameter may be succeeded by a `...` literal to indicate varargs / repetition.
++
+Parameter type is either:
+
+* a predicate name (eg. `list?`);
+* a type union in the form of `(or <type> ...)` (eg. `(or list? number?)`). When using `or`, `#f` might be used as a type inside of it due to its common appearance as a "null" value.
+
++
+Return type can be same as parameter type described above, plus:
+
+* `undefined`, indicating a value that shouldn't be used in portable code (eg. result of `for-each`);
+* `*`, indicating a useful value but of unknown type.
+* `(values <type> ...)` form when the function returns more than one value.
+
+3. list of tags
++
+One of `pure`, `parameterized`, `parameter`, `predicate`, `syntax`, `deprecated`.
+
+4. list of parameter signatures, in case this is a higher order function.
++
+Each entry in this list is a list, where first element is a parameter name (must match one of parameters in main signature), and second parameter
+is its signature of same format as a main function's signature definition. To describe return value's signature, use `return` as a name.
+
+5. list of associated types. Only applicable when this function is a predicate and logically describes a type.
++
+All elements in the associated types list should be predicate function names.
+If the list has just one entry, then said entry corresponds to logical supertype of currently defined function / type.
+If the list has more than one entry, then currently defined function / type is a union of those types.
+
+Some examples:
+
+```
+(
+    ;; type definition of a union
+    (list?
+       (lambda (obj) boolean?)
+       (pure predicate)
+       ()
+       (pair? null?))
+
+    ;; parameters with types, parameter signature
+    (map
+       (lambda ((procedure? proc) (list? list1) (list? list2) ...) list?)
+       (pure)
+       ((proc (lambda (obj1 obj2 ...) *))))
+
+    ;; use of `values`
+    (exact-integer-sqrt
+       (lambda ((integer? k)) (values integer? integer?))
+       (pure))
+
+    ;; use of `or`, use of overloading same name
+    (assoc
+       (lambda (obj (list? alist)) (or pair? #f))
+       (pure))
+
+    (assoc
+       (lambda (obj (list? alist) (procedure? =)) (or pair? #f))
+       (pure)
+       ((= (lambda (a b) *))))
+)
+```
+
+==== Syntax macro format
+
+1. name
+
+2. signature, in the form of `(syntax-rules (<keyword> ...) (<pattern>) ...)`
++
+Pattern should be: symbol, `.`, `...`, or grouping of patterns inside `()`. As a hatch to rendering outside of parens,
+use `(_append )` form, which concatenates its arguments (see an example below).
+
+3. tags
+
+4. list of subpattern signatures
+
+Each entry in this list is a list, in the form of `(name <pattern> ...)`, where name should match one of identifiers
+in other signature, and the pattern is as described in 2.
+
+Some examples:
+
+```
+(
+
+    (cond
+      (syntax-rules (else =>)
+        ((_ clause1 clause2 ...)))
+      ()
+      ((clause (test expression1 ...)
+               (test => expression)
+               (else expression1 expression2 ...))))
+
+    (syntax-rules
+       (syntax-rules ()
+         ((_ (literal ...) syntax-rule ...))
+         ((_ ellipsis (literal ...) syntax-rule ...)))
+       ()
+       ((syntax-rule (pattern template))
+        (pattern identifier
+                 constant
+                 (pattern ...)
+                 (pattern pattern ... . pattern)
+                 (pattern ... pattern ellipsis pattern ...)
+                 (pattern ... pattern ellipsis pattern ... . pattern)
+                 (_append |#| (pattern ...))
+                 (_append |#| (pattern ... pattern ellipsis pattern ...)))
+        (template identifier
+                  constant
+                  (element ...)
+                  (element element ... . template)
+                  (ellipsis template)
+                  (_append |#| (element ...)))
+        (element template
+                 (_append template ellipsis))))
+)
+```
+
+==== Value format
+
+
+1. name.
+
+2. signature, in the form of `(value <type>)`
+
+where type is same as described under functions.
+
+Some examples:
+
+```
+(
+    (stream-null
+       (value stream-null?))
+)
+```
+
+
+=== Logging
+
+R7RS index uses logback for logging. By default (as defined in `src/main/resources/logback.xml`) it only does rolling file logging into `./logs` directory, and not into standard output.
+You can provide custom logging configuration by running
+
+```
+java -Dlogback.configurationFile=/path/to/config.xml -jar r7rs-index.jar
+```
+
+Consult logback documentation for details.
+
+== REST API
+
+All of the following endpoints accept `wt` query parameter.
+If the parameter's value is `sexpr`, the results are returned as if with `write`, using scheme-json convention
+as defined in srfi 180. Otherwise, results are returned as json.
+
+`/rest/libs` returns array of libraries found in index as strings;
+
+`/rest/tags` returns array of tags found in index as strings;
+
+`/rest/returns` returns array of types, which were used as a return type, found in index as strings;
+
+`/rest/params` returns array of types, which were used as a parameter type, found in index as strings;
+
+`/rest/procedures` returns found procedures with faceting meta data. The endpoint accepts following query parameters:
+
+
+* `query` text search parameter.
+
+* `start` result offset (pagination).
+
+* `rows` size of returned result list. Defaults to 40 if unspecified.
+
+* `lib` library filter. Possible values returned in `/rest/libs`. The parameter can appear multiple times, and the result will include procedures from any of given libraries.
+
+* `tag` tag filter. Possible values returned in `/rest/tags`. The parameter can appear multiple times, and the result will include procedures which contain all given tags.
+
+* `param` param type filter. Possible values returned in `/rest/params`. The parameter can appear multiple times, and the result will include procedures which contain all given parameter types.
+
+* `filter_loose` whether enable loose filtering as described in <<Filtering logic>>
+
+* `return` return type filter. Possible values returned in `/rest/returns`. The parameter can appear multiple times, and the result will include procedures which contain all given return types.
+
+Note that current REST api is unstable, and subject to change without a warning.
+
+== STDIO API
