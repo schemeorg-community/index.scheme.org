@@ -1,6 +1,6 @@
 services:
   app:
-    image: "r7rs-index:latest"
+    image: "r7rs-index:master"
     volumes:
       - "statics:/app/static"
 
