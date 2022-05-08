@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Deploy Over SSH
           command: |
-            ssh $SSH_USER@$SSH_HOST "bash ~/update.sh arvyy/r7rs-index:$CIRCLE_BRANCH"
+            ssh $SSH_USER@$SSH_HOST "bash ~/update.sh"
 
 workflows:
   sample:

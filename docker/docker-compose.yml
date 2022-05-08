@@ -1,8 +1,11 @@
 services:
   app:
-    image: "r7rs-index:master"
+    image: "arvyy/r7rs-index:master"
     volumes:
       - "statics:/app/static"
+      - type: bind
+        source: ./logs
+        target: /app/logs
 
   nginx:
     image: "nginx:1.21"
@@ -13,5 +16,6 @@ services:
     ports:
       - "80:80"
       - "443:443"
+
 volumes:
   statics:
