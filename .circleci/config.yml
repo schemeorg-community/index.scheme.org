@@ -25,7 +25,7 @@ jobs:
           cd kawa-web-collection
           git submodule update --init
           cd ..
-          echo "$DOCKER_PASS" | docker login --username $DOCKER_USER --password-stdin
+          docker login -u $DOCKER_USER -p $DOCKER_PASS
           docker build -t arvyy/r7rs-index:$CIRCLE_BRANCH -f docker/Dockerfile .
 
       - run: docker push arvyy/r7rs-index:$CIRCLE_BRANCH
