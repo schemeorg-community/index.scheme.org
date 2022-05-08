@@ -8,13 +8,13 @@ jobs:
       - checkout
 
       - run:
-        name: Test
-        command: |
-          cd kawa-web-collection
-          git submodule update --init
-          mvn install -DskipTests=true
-          cd ..
-          mvn test
+          name: Test
+          command: |
+            cd kawa-web-collection
+            git submodule update --init
+            mvn install -DskipTests=true
+            cd ..
+            mvn test
 
   build:
     machine: true
