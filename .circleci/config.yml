@@ -37,7 +37,7 @@ workflows:
   sample:
     jobs:
       - test
-      -build:
+      - build:
           requires:
             - test
       - deploy:
