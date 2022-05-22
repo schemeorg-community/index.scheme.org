@@ -15,7 +15,7 @@
                         <datalist id="suggestions">
                         </datalist>
                         <button type="submit" aria-label="Search" class="search-button">
-                            <i class="fas fa-search"></i>
+                            <span class="icon-search"></span>
                         </button>
                     </div>
                     <div class="facets">
@@ -30,7 +30,7 @@
                                        {{# selected? }} checked {{/ selected? }}
                                        >
                                        <span class="facet-text">
-                                           <span class="facet-value">{{ value }}</span>
+                                           <span class="facet-value">{{ label }}</span>
                                            <span class="facet-count">({{ count }})</span>
                                        </span>
                             </label>

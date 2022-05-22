@@ -57,9 +57,10 @@
 
     (define-mustache-record-type <nav-item>
         nav-item-lookup
-        (make-nav-item label link active?)
+        (make-nav-item label icon-cls link active?)
         nav-item?
         (label nav-item-label)
+        (icon-cls nav-item-icon-cls)
         (link nav-item-link)
         (active? nav-item-active?))
 
@@ -81,9 +82,10 @@
 
     (define-mustache-record-type <facet-option>
         facet-option-lookup
-        (make-facet-option value count selected?)
+        (make-facet-option value label count selected?)
         facet-option?
         (value facet-option-value)
+        (label facet-option-label)
         (count facet-option-count)
         (selected? facet-option-selected?))
 
@@ -173,15 +175,15 @@
             result-item-extra-lookup))
 
     (define make-mustache-nav-data
-        (let ((pages '(("Home" "/" index)
-                       ("Search" "/search" search)
-                       ("Settings" "/settings" settings)
-                       ("Documentation" "/README.html" docs))))
+        (let ((pages '(("Home" "icon-home3" "/" index)
+                       ("Search" "icon-search" "/search" search)
+                       ("Settings" "icon-cog" "/settings" settings)
+                       ("Documentation" "icon-file-text2" "/README.html" docs))))
             (lambda (page)
                 (map
                     (lambda (p)
-                        (define active? (equal? (list-ref p 2) page))
-                        (make-nav-item (car p) (cadr p) active?))
+                        (define active? (equal? (list-ref p 3) page))
+                        (make-nav-item (list-ref p 0) (list-ref p 1) (list-ref p 2) active?))
                     pages))))
 
     (define settings-data
@@ -263,6 +265,14 @@
 
     (define (make-mustache-search-data page page-size query libs tags param-types return-types search-result)
 
+      (define (remove-parens str)
+        (list->string
+            (filter
+                (lambda (ch)
+                    (and (not (eqv? ch #\())
+                         (not (eqv? ch #\)))))
+                (string->list str))))
+
       (define current-query
         (append
           `((page . ,(number->string page)))
@@ -289,20 +299,20 @@
        (make-search-result-mustache
             query
             (list
-                (make-facet "lib" "Library" (make-mustache-facet (search-result-libs search-result) libs))
-                (make-facet "tag" "Tag" (make-mustache-facet (search-result-tags search-result) tags))
-                (make-facet "param" "Parameter type" (make-mustache-facet (search-result-params search-result) param-types))
-                (make-facet "return" "Return type" (make-mustache-facet (search-result-returns search-result) return-types)))
+                (make-facet "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
+                (make-facet "tag" "Tag" (parse-facet-options (search-result-tags search-result) tags #f))
+                (make-facet "param" "Parameter type" (parse-facet-options (search-result-params search-result) param-types #f))
+                (make-facet "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f)))
             (make-pager-data page (ceiling (/ (search-result-total search-result) page-size)) current-query)
             (map make-doc-data (search-result-items search-result))))
 
-    ;;TODO rename to parse-facet-options
-    (define (make-mustache-facet facet-result selected-values)
+    (define (parse-facet-options facet-result selected-values label-transformer)
+      (define fn (if label-transformer label-transformer (lambda (x) x)))
       (map
         (lambda (f)
           (define value (search-result-facet-value f))
           (define selected? (member value selected-values))
-          (make-facet-option value (search-result-facet-count f) selected?))
+          (make-facet-option value (fn value) (search-result-facet-count f) selected?))
         facet-result))
 
     ;TODO move out
