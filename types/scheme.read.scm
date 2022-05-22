@@ -1,9 +1,2 @@
-(
- (read
-   (lambda () *)
-   (parameterized))
- 
- (read
-   (lambda ((input-port? port)) *))
- 
- )
+(((name . read) (signature lambda () *) (tags parameterized))
+ ((name . read) (signature lambda ((input-port? port)) *)))

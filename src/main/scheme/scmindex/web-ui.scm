@@ -41,7 +41,9 @@
 (define (get/html path handler)
   (get path (lambda (req resp)
               (define-values (name data) (handler req resp))
-              (execute (get-template name) data))))
+              (parameterize ((current-lookup data-lookup)
+                             (current-collection list-collection))
+                (execute (get-template name) data)))))
 
 (define (get/rest path handler)
   (get path (lambda (req resp)
@@ -81,18 +83,11 @@
 
 (get/html "/"
           (lambda (req resp)
-            (values "index"
-                    `((page-title . "Home")
-                       ,@(make-mustache-nav-data 'index)
-                       ,@(make-head-data req)))))
+            (render-home-page req)))
 
 (get/html "/settings"
      (lambda (req resp)
-       (values "settings"
-               `((page-title . "Settings")
-                 ,@(make-mustache-nav-data 'settings)
-                 ,@(make-head-data req)
-                 ,@(mustache-settings-data req)))))
+       (render-settings-page req)))
 
 (post "/settings"
       (lambda (req resp)
@@ -102,7 +97,7 @@
             (if value
                 (resp/set-cookie! resp opt value)
                 (resp/remove-cookie! resp opt)))
-          settings-options)
+          settings-cookies)
         (resp/redirect resp "/settings")))
 
 (get/html "/search"
@@ -120,35 +115,7 @@
        (define return-types (or (req/query-param-values req "return") '()))
        (define tags (or (req/query-param-values req "tag") '()))
        (define data (exec-solr-query solr-client solr-core start page-size query libs param-types return-types tags filter-params-loose?))
-       (define search-data
-         (make-mustache-search-data
-           page
-           page-size
-           query
-           libs
-           param-types
-           return-types
-           tags
-           data))
-       (values "search"
-               `((page-title . "Search")
-                 ,@search-data
-                 ,@(make-mustache-nav-data 'search)
-                 ,@(make-head-data req)))))
-
-(get/html "/userguide"
-          (lambda (req resp)
-            (values "userguide"
-                    `((page-title . "User guide")
-                      ,@(make-mustache-nav-data 'userguide)
-                      ,@(make-head-data req)))))
-
-(get/html "/restapi"
-     (lambda (req resp)
-       (values "restapi"
-               `((page-title . "REST api")
-                 ,@(make-mustache-nav-data 'restapi)
-                 ,@(make-head-data req)))))
+       (render-search-page req page page-size query libs tags param-types return-types data)))
 
 (get/rest "/suggest"
      (lambda (req resp)

@@ -2,8 +2,8 @@
   (scmindex solr)
   (import (scheme base)
           (scheme write)
-          ;(arvyy httpclient)
           (arvyy solrj)
+          (scmindex domain)
           (scmindex types-parser))
   
   (export
@@ -120,27 +120,29 @@
     (define (parse-solr-response response)
       (define resp (cdr (assoc 'response response)))
       (define total (cdr (assoc 'num-found resp)))
-      (define docs (cdr (assoc 'docs resp)))
+      (define docs (map json->func (vector->list (cdr (assoc 'docs resp)))))
       (define facet-counts (cdr (assoc 'facet_counts response)))
       (define facet-fields (cdr (assoc 'facet_fields facet-counts)))
       (define lib-facets (fold-facet-values (cdr (assoc 'lib facet-fields))))
       (define param-facets (fold-facet-values (cdr (assoc 'param_types facet-fields))))
       (define return-facets (fold-facet-values (cdr (assoc 'return_types facet-fields))))
       (define tag-facets (fold-facet-values (cdr (assoc 'tags facet-fields))))
-      
-      `((procedures . ,docs)
-        (total . ,total)
-        (lib . ,lib-facets)
-        (param . ,param-facets)
-        (tag . ,tag-facets)
-        (return . ,return-facets)))
+
+      (make-search-result
+        docs
+        total
+        lib-facets
+        param-facets
+        tag-facets
+        return-facets))
 
     (define (fold-facet-values vals)
-        (list->vector (map
+        (map
             (lambda (e)
-                `((value . ,(symbol->string (car e)))
-                  (count . ,(cdr e))))
-            vals)))
+                (make-search-result-facet
+                    (symbol->string (car e))
+                    (cdr e)))
+            vals))
     
     (define (escape-solr-spec str)
       (define lst*

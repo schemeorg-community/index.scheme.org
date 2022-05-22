@@ -1,476 +1,446 @@
-(
-
- (mapping
-   (lambda ((comparator? comparator) arg ...) mapping?)
-   (pure))
-
- (mapping-unfold
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed (comparator? comparator)) mapping?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) (values * *)))
-    (successor (lambda (seed) *))))
-
- (mapping?
-   (lambda (obj) boolean?)
-   (pure predicate))
-
- (mapping-contains?
-   (lambda ((mapping? mapping) key) boolean?)
-   (pure))
-
- (mapping-empty?
-   (lambda ((mapping? mapping)) boolean?)
-   (pure))
-
- (mapping-disjoint?
-   (lambda ((mapping? mapping1) (mapping? mapping2)) boolean?)
-   (pure))
-
- (mapping-ref
-   (lambda ((mapping? mapping) key) *)
-   (pure))
-
- (mapping-ref
-   (lambda ((mapping? mapping) key (procedure? failure)) *)
-   (pure)
-   ((failure (lambda () *))))
-
- (mapping-ref
-   (lambda ((mapping? mapping) key (procedure? failure) (procedure? success)) *)
-   (pure)
-   ((failure (lambda () *))
-    (success (lambda (value) *))))
-
- (mapping-ref/default
-   (lambda ((mapping? mapping) key default) *)
-   (pure))
-
- (mapping-key-comparator
-   (lambda ((mapping? mapping)) comparator?)
-   (pure))
-
- (mapping-adjoin
-   (lambda ((mapping? mapping) key1 value1 ...) mapping?)
-   (pure))
-
- (mapping-adjoin!
-   (lambda ((mapping? mapping) key1 value1 ...) mapping?)
-   ())
-
- (mapping-set
-   (lambda ((mapping? mapping) key1 value1 ...) mapping?)
-   (pure))
-
- (mapping-set!
-   (lambda ((mapping? mapping) key1 value1 ...) mapping?)
-   ())
-
- (mapping-replace
-   (lambda ((mapping? mapping) key value) mapping?)
-   (pure))
-
- (mapping-replace!
-   (lambda ((mapping? mapping) key value) mapping?)
-   ())
-
- (mapping-delete
-   (lambda ((mapping? mapping) key ...) mapping?)
-   (pure))
-
- (mapping-delete!
-   (lambda ((mapping? mapping) key ...) mapping?)
-   (pure))
-
- (mapping-delete-all
-   (lambda ((mapping? mapping) (list? keys)) mapping?)
-   (pure))
-
- (mapping-delete-all!
-   (lambda ((mapping? mapping) (list? keys)) mapping?)
-   ())
-
- (mapping-intern
-   (lambda ((mapping? mapping) key (procedure? failure)) (values mapping? *))
-   (pure)
-   ((failure (lambda () *))))
-
- (mapping-intern!
-   (lambda ((mapping? mapping) key (procedure? failure)) (values mapping? *))
-   ()
-   ((failure (lambda () *))))
-
- (mapping-update
-   (lambda ((mapping? mapping) key (procedure? updater)) mapping?)
-   (pure)
-   ((updater (lambda (value) *))))
-
- (mapping-update
-   (lambda ((mapping? mapping) key (procedure? updater) (procedure? failure)) mapping?)
-   (pure)
-   ((updater (lambda (value) *))
-    (failure (lambda () *))))
-
- (mapping-update
-   (lambda ((mapping? mapping) key (procedure? updater) (procedure? failure) (procedure? success)) mapping?)
-   (pure)
-   ((updater (lambda (value) *))
-    (failure (lambda () *))
-    (success (lambda (value) *))))
-
- (mapping-update!
-   (lambda ((mapping? mapping) key (procedure? updater)) mapping?)
-   ()
-   ((updater (lambda (value) *))))
-
- (mapping-update!
-   (lambda ((mapping? mapping) key (procedure? updater) (procedure? failure)) mapping?)
-   ()
-   ((updater (lambda (value) *))
-    (failure (lambda () *))))
-
- (mapping-update!
-   (lambda ((mapping? mapping) key (procedure? updater) (procedure? failure) (procedure? success)) mapping?)
-   ()
-   ((updater (lambda (value) *))
-    (failure (lambda () *))
-    (success (lambda (value) *))))
-
- (mapping-update/default
-   (lambda ((mapping? mapping) key (procedure? updater) default) mapping?)
-   (pure)
-   ((updater (lambda (value) *))))
-
- (mapping-update!/default
-   (lambda ((mapping? mapping) key (procedure? updater) default) mapping?)
-   ()
-   ((updater (lambda (value) *))))
-
- (mapping-pop
-   (lambda ((mapping? mapping)) (values mapping? * *))
-   (pure))
-
- (mapping-pop
-   (lambda ((mapping? mapping) (procedure? failure)) (values mapping? * *))
-   (pure)
-   ((failure (lambda () (values mapping? * *)))))
-
- (mapping-pop!
-   (lambda ((mapping? mapping)) (values mapping? * *))
-   ())
-
- (mapping-pop!
-   (lambda ((mapping? mapping) (procedure? failure)) (values mapping? * *))
-   ()
-   ((failure (lambda () (values mapping? * *)))))
-
- (mapping-search
-   (lambda ((mapping? mapping) key (procedure? failure) (procedure? success)) (values mapping? *))
-   (pure)
-   ((failure (lambda ((procedure? insert) (procedure? ignore)) *))
-    (insert (lambda (value obj) *))
-    (ignore (lambda (obj) *))
-    (success (lambda (key value (procedure? update) (procedure? remove)) *))
-    (update (lambda (new-key new-value obj) *))
-    (remove (lambda (obj) *))))
-
- (mapping-search!
-   (lambda ((mapping? mapping) key (procedure? failure) (procedure? success)) (values mapping? *))
-   ()
-   ((failure (lambda ((procedure? insert) (procedure? ignore)) *))
-    (insert (lambda (value obj) *))
-    (ignore (lambda (obj) *))
-    (success (lambda (key value (procedure? update) (procedure? remove)) *))
-    (update (lambda (new-key new-value obj) *))
-    (remove (lambda (obj) *))))
-
- (mapping-size
-   (lambda ((mapping? mapping)) integer?)
-   (pure))
-
- (mapping-find
-   (lambda ((procedure? predicate) (mapping? mapping) (procedure? failure)) (values * *))
-   (pure)
-   ((predicate (lambda (key value) boolean?))
-    (failure (lambda () *))))
-
- (mapping-count
-   (lambda ((procedure? predicate) (mapping? mapping)) integer?)
-   (pure)
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-any?
-   (lambda ((procedure? predicate) (mapping? mapping)) boolean?)
-   (pure)
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-every?
-   (lambda ((procedure? predicate) (mapping? mapping)) boolean?)
-   (pure)
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-keys
-   (lambda ((mapping? mapping)) list?)
-   (pure))
-
- (mapping-values
-   (lambda ((mapping? mapping)) list?)
-   (pure))
-
- (mapping-entries
-   (lambda ((mapping? mapping)) (values list? list?))
-   (pure))
-
- (mapping-map
-   (lambda ((procedure? proc) (comparator? comparator) (mapping? mapping)) mapping?)
-   (pure)
-   ((proc (lambda (key value) (values * *)))))
-
- (mapping-for-each
-   (lambda ((procedure? proc) (comparator? comparator) (mapping? mapping)) undefined)
-   ()
-   ((proc (lambda (key value) undefined))))
-
- (mapping-fold
-   (lambda ((procedure? proc) nil (mapping? mapping)) *)
-   (pure)
-   ((proc (lambda (key value state) *))))
-
- (mapping-map->list
-   (lambda ((procedure? proc) (mapping? mapping)) list?)
-   (pure)
-   ((proc (lambda (key value) *))))
-
- (mapping-filter
-   (lambda ((procedure? predicate) (mapping? mapping)) mapping?)
-   (pure)
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-filter!
-   (lambda ((procedure? predicate) (mapping? mapping)) mapping?)
-   ()
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-remove
-   (lambda ((procedure? predicate) (mapping? mapping)) mapping?)
-   (pure)
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-remove!
-   (lambda ((procedure? predicate) (mapping? mapping)) mapping?)
-   ()
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-partition
-   (lambda ((procedure? predicate) (mapping? mapping)) (values mapping? mapping?))
-   (pure)
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-partition!
-   (lambda ((procedure? predicate) (mapping? mapping)) (values mapping? mapping?))
-   ()
-   ((predicate (lambda (key value) boolean?))))
-
- (mapping-copy
-   (lambda ((mapping? mapping)) mapping?)
-   (pure))
-
- (mapping->alist
-   (lambda ((mapping? mapping)) list?)
-   (pure))
-
- (alist->mapping
-   (lambda ((comparator? comparator) (list? alist)) mapping?)
-   (pure))
-
- (alist->mapping!
-   (lambda ((mapping? mapping) (list? alist)) mapping?)
-   ())
-
- (mapping=?
-   (lambda ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...) boolean?)
-   (pure))
-
- (mapping<?
-   (lambda ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...) boolean?)
-   (pure))
-
- (mapping>?
-   (lambda ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...) boolean?)
-   (pure))
-
- (mapping<=?
-   (lambda ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...) boolean?)
-   (pure))
-
- (mapping>=?
-   (lambda ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...) boolean?)
-   (pure))
-
- (mapping-union
-   (lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
-   (pure))
-
- (mapping-intersection
-   (lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
-   (pure))
-
- (mapping-difference
-   (lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
-   (pure))
-
- (mapping-xor
-   (lambda ((mapping? mapping1) (mapping? mapping2)) mapping?)
-   (pure))
-
- (mapping-union!
-   (lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
-   ())
-
- (mapping-intersection!
-   (lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
-   ())
-
- (mapping-difference!
-   (lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
-   ())
-
- (mapping-xor!
-   (lambda ((mapping? mapping1) (mapping? mapping2)) mapping?)
-   ())
-
- (mapping/ordered
-   (lambda ((comparator? comparator) arg ...) mapping?)
-   (pure))
-
- (mapping-unfold/ordered
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed (comparator? comparator)) mapping?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) (values * *)))
-    (successor (lambda (seed) *))))
-
- (alist->mapping/ordered
-   (lambda ((comparator? comparator) (list? alist)) mapping?)
-   (pure))
-
- (alist->mapping/ordered!
-   (lambda ((mapping? mapping) (list? alist)) mapping?)
-   ())
-
- (mapping-min-key
-   (lambda ((mapping? mapping)) *)
-   (pure))
-
- (mapping-max-key
-   (lambda ((mapping? mapping)) *)
-   (pure))
-
- (mapping-min-value
-   (lambda ((mapping? mapping)) *)
-   (pure))
-
- (mapping-max-value
-   (lambda ((mapping? mapping)) *)
-   (pure))
-
- (mapping-min-entry
-   (lambda ((mapping? mapping)) (values * *))
-   (pure))
-
- (mapping-max-entry
-   (lambda ((mapping? mapping)) (values * *))
-   (pure))
-
- (mapping-key-predecessor
-   (lambda ((mapping? mapping) obj (procedure? failure)) *)
-   (pure)
-   ((failure (lambda () *))))
-
- (mapping-key-successor
-   (lambda ((mapping? mapping) obj (procedure? failure)) *)
-   (pure)
-   ((failure (lambda () *))))
-
- (mapping-range=
-   (lambda ((mapping? mapping) obj) mapping?)
-   (pure))
-
- (mapping-range<
-   (lambda ((mapping? mapping) obj) mapping?)
-   (pure))
-
- (mapping-range>
-   (lambda ((mapping? mapping) obj) mapping?)
-   (pure))
-
- (mapping-range<=
-   (lambda ((mapping? mapping) obj) mapping?)
-   (pure))
-
- (mapping-range>=
-   (lambda ((mapping? mapping) obj) mapping?)
-   (pure))
-
- (mapping-range=!
-   (lambda ((mapping? mapping) obj) mapping?)
-   ())
-
- (mapping-range<!
-   (lambda ((mapping? mapping) obj) mapping?)
-   ())
-
- (mapping-range>!
-   (lambda ((mapping? mapping) obj) mapping?)
-   ())
-
- (mapping-range<=!
-   (lambda ((mapping? mapping) obj) mapping?)
-   ())
-
- (mapping-range>=!
-   (lambda ((mapping? mapping) obj) mapping?)
-   ())
-
- (mapping-split
-   (lambda ((mapping? mapping) obj) (values mapping? mapping? mapping? mapping? mapping?))
-   (pure))
-
- (mapping-split!
-   (lambda ((mapping? mapping) obj) (values mapping? mapping? mapping? mapping? mapping?))
-   ())
-
- (mapping-catenate
-   (lambda ((mapping? mapping1) key value (mapping? mapping2)) mapping?)
-   (pure))
-
- (mapping-catenate!
-   (lambda ((mapping? mapping1) key value (mapping? mapping2)) mapping?)
-   ())
-
- (mapping-map/monotone
-   (lambda ((procedure? proc) (comparator? comparator) (mapping? mapping)) mapping?)
-   (pure)
-   ((proc (lambda (key value) (values * *)))))
-
- (mapping-map/monotone!
-   (lambda ((procedure? proc) (comparator? comparator) (mapping? mapping)) mapping?)
-   ()
-   ((proc (lambda (key value) (values * *)))))
-
- (mapping-fold/reverse
-   (lambda ((procedure? proc) nil (mapping? mapping)) *)
-   (pure)
-   ((proc (lambda (key value state) *))))
-
- (comparator?
-   (lambda (obj) boolean?)
-   (pure predicate))
-
- (make-mapping-comparator
-   (lambda ((comparator? comparator)) comparator?)
-   (pure))
-
- (mapping-comparator (value comparator?))
-
- )
+(((name . mapping)
+  (signature lambda ((comparator? comparator) arg ...) mapping?)
+  (tags pure))
+ ((name . mapping-unfold)
+  (signature
+   lambda
+   ((procedure? stop?)
+    (procedure? mapper)
+    (procedure? successor)
+    seed
+    (comparator? comparator))
+   mapping?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) (values * *)))
+   (successor (lambda (seed) *))))
+ ((name . mapping?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . mapping-contains?)
+  (signature lambda ((mapping? mapping) key) boolean?)
+  (tags pure))
+ ((name . mapping-empty?)
+  (signature lambda ((mapping? mapping)) boolean?)
+  (tags pure))
+ ((name . mapping-disjoint?)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2)) boolean?)
+  (tags pure))
+ ((name . mapping-ref)
+  (signature lambda ((mapping? mapping) key) *)
+  (tags pure))
+ ((name . mapping-ref)
+  (signature lambda ((mapping? mapping) key (procedure? failure)) *)
+  (tags pure)
+  (subsigs (failure (lambda () *))))
+ ((name . mapping-ref)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? failure) (procedure? success))
+   *)
+  (tags pure)
+  (subsigs (failure (lambda () *)) (success (lambda (value) *))))
+ ((name . mapping-ref/default)
+  (signature lambda ((mapping? mapping) key default) *)
+  (tags pure))
+ ((name . mapping-key-comparator)
+  (signature lambda ((mapping? mapping)) comparator?)
+  (tags pure))
+ ((name . mapping-adjoin)
+  (signature lambda ((mapping? mapping) key1 value1 ...) mapping?)
+  (tags pure))
+ ((name . mapping-adjoin!)
+  (signature lambda ((mapping? mapping) key1 value1 ...) mapping?))
+ ((name . mapping-set)
+  (signature lambda ((mapping? mapping) key1 value1 ...) mapping?)
+  (tags pure))
+ ((name . mapping-set!)
+  (signature lambda ((mapping? mapping) key1 value1 ...) mapping?))
+ ((name . mapping-replace)
+  (signature lambda ((mapping? mapping) key value) mapping?)
+  (tags pure))
+ ((name . mapping-replace!)
+  (signature lambda ((mapping? mapping) key value) mapping?))
+ ((name . mapping-delete)
+  (signature lambda ((mapping? mapping) key ...) mapping?)
+  (tags pure))
+ ((name . mapping-delete!)
+  (signature lambda ((mapping? mapping) key ...) mapping?)
+  (tags pure))
+ ((name . mapping-delete-all)
+  (signature lambda ((mapping? mapping) (list? keys)) mapping?)
+  (tags pure))
+ ((name . mapping-delete-all!)
+  (signature lambda ((mapping? mapping) (list? keys)) mapping?))
+ ((name . mapping-intern)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? failure))
+   (values mapping? *))
+  (tags pure)
+  (subsigs (failure (lambda () *))))
+ ((name . mapping-intern!)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? failure))
+   (values mapping? *))
+  (subsigs (failure (lambda () *))))
+ ((name . mapping-update)
+  (signature lambda ((mapping? mapping) key (procedure? updater)) mapping?)
+  (tags pure)
+  (subsigs (updater (lambda (value) *))))
+ ((name . mapping-update)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? updater) (procedure? failure))
+   mapping?)
+  (tags pure)
+  (subsigs (updater (lambda (value) *)) (failure (lambda () *))))
+ ((name . mapping-update)
+  (signature
+   lambda
+   ((mapping? mapping)
+    key
+    (procedure? updater)
+    (procedure? failure)
+    (procedure? success))
+   mapping?)
+  (tags pure)
+  (subsigs
+   (updater (lambda (value) *))
+   (failure (lambda () *))
+   (success (lambda (value) *))))
+ ((name . mapping-update!)
+  (signature lambda ((mapping? mapping) key (procedure? updater)) mapping?)
+  (subsigs (updater (lambda (value) *))))
+ ((name . mapping-update!)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? updater) (procedure? failure))
+   mapping?)
+  (subsigs (updater (lambda (value) *)) (failure (lambda () *))))
+ ((name . mapping-update!)
+  (signature
+   lambda
+   ((mapping? mapping)
+    key
+    (procedure? updater)
+    (procedure? failure)
+    (procedure? success))
+   mapping?)
+  (subsigs
+   (updater (lambda (value) *))
+   (failure (lambda () *))
+   (success (lambda (value) *))))
+ ((name . mapping-update/default)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? updater) default)
+   mapping?)
+  (tags pure)
+  (subsigs (updater (lambda (value) *))))
+ ((name . mapping-update!/default)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? updater) default)
+   mapping?)
+  (subsigs (updater (lambda (value) *))))
+ ((name . mapping-pop)
+  (signature lambda ((mapping? mapping)) (values mapping? * *))
+  (tags pure))
+ ((name . mapping-pop)
+  (signature
+   lambda
+   ((mapping? mapping) (procedure? failure))
+   (values mapping? * *))
+  (tags pure)
+  (subsigs (failure (lambda () (values mapping? * *)))))
+ ((name . mapping-pop!)
+  (signature lambda ((mapping? mapping)) (values mapping? * *)))
+ ((name . mapping-pop!)
+  (signature
+   lambda
+   ((mapping? mapping) (procedure? failure))
+   (values mapping? * *))
+  (subsigs (failure (lambda () (values mapping? * *)))))
+ ((name . mapping-search)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? failure) (procedure? success))
+   (values mapping? *))
+  (tags pure)
+  (subsigs
+   (failure (lambda ((procedure? insert) (procedure? ignore)) *))
+   (insert (lambda (value obj) *))
+   (ignore (lambda (obj) *))
+   (success (lambda (key value (procedure? update) (procedure? remove)) *))
+   (update (lambda (new-key new-value obj) *))
+   (remove (lambda (obj) *))))
+ ((name . mapping-search!)
+  (signature
+   lambda
+   ((mapping? mapping) key (procedure? failure) (procedure? success))
+   (values mapping? *))
+  (subsigs
+   (failure (lambda ((procedure? insert) (procedure? ignore)) *))
+   (insert (lambda (value obj) *))
+   (ignore (lambda (obj) *))
+   (success (lambda (key value (procedure? update) (procedure? remove)) *))
+   (update (lambda (new-key new-value obj) *))
+   (remove (lambda (obj) *))))
+ ((name . mapping-size)
+  (signature lambda ((mapping? mapping)) integer?)
+  (tags pure))
+ ((name . mapping-find)
+  (signature
+   lambda
+   ((procedure? predicate) (mapping? mapping) (procedure? failure))
+   (values * *))
+  (tags pure)
+  (subsigs (predicate (lambda (key value) boolean?)) (failure (lambda () *))))
+ ((name . mapping-count)
+  (signature lambda ((procedure? predicate) (mapping? mapping)) integer?)
+  (tags pure)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-any?)
+  (signature lambda ((procedure? predicate) (mapping? mapping)) boolean?)
+  (tags pure)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-every?)
+  (signature lambda ((procedure? predicate) (mapping? mapping)) boolean?)
+  (tags pure)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-keys)
+  (signature lambda ((mapping? mapping)) list?)
+  (tags pure))
+ ((name . mapping-values)
+  (signature lambda ((mapping? mapping)) list?)
+  (tags pure))
+ ((name . mapping-entries)
+  (signature lambda ((mapping? mapping)) (values list? list?))
+  (tags pure))
+ ((name . mapping-map)
+  (signature
+   lambda
+   ((procedure? proc) (comparator? comparator) (mapping? mapping))
+   mapping?)
+  (tags pure)
+  (subsigs (proc (lambda (key value) (values * *)))))
+ ((name . mapping-for-each)
+  (signature
+   lambda
+   ((procedure? proc) (comparator? comparator) (mapping? mapping))
+   undefined)
+  (subsigs (proc (lambda (key value) undefined))))
+ ((name . mapping-fold)
+  (signature lambda ((procedure? proc) nil (mapping? mapping)) *)
+  (tags pure)
+  (subsigs (proc (lambda (key value state) *))))
+ ((name . mapping-map->list)
+  (signature lambda ((procedure? proc) (mapping? mapping)) list?)
+  (tags pure)
+  (subsigs (proc (lambda (key value) *))))
+ ((name . mapping-filter)
+  (signature lambda ((procedure? predicate) (mapping? mapping)) mapping?)
+  (tags pure)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-filter!)
+  (signature lambda ((procedure? predicate) (mapping? mapping)) mapping?)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-remove)
+  (signature lambda ((procedure? predicate) (mapping? mapping)) mapping?)
+  (tags pure)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-remove!)
+  (signature lambda ((procedure? predicate) (mapping? mapping)) mapping?)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-partition)
+  (signature
+   lambda
+   ((procedure? predicate) (mapping? mapping))
+   (values mapping? mapping?))
+  (tags pure)
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-partition!)
+  (signature
+   lambda
+   ((procedure? predicate) (mapping? mapping))
+   (values mapping? mapping?))
+  (subsigs (predicate (lambda (key value) boolean?))))
+ ((name . mapping-copy)
+  (signature lambda ((mapping? mapping)) mapping?)
+  (tags pure))
+ ((name . mapping->alist)
+  (signature lambda ((mapping? mapping)) list?)
+  (tags pure))
+ ((name . alist->mapping)
+  (signature lambda ((comparator? comparator) (list? alist)) mapping?)
+  (tags pure))
+ ((name . alist->mapping!)
+  (signature lambda ((mapping? mapping) (list? alist)) mapping?))
+ ((name . mapping=?)
+  (signature
+   lambda
+   ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...)
+   boolean?)
+  (tags pure))
+ ((name . mapping<?)
+  (signature
+   lambda
+   ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...)
+   boolean?)
+  (tags pure))
+ ((name . mapping>?)
+  (signature
+   lambda
+   ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...)
+   boolean?)
+  (tags pure))
+ ((name . mapping<=?)
+  (signature
+   lambda
+   ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...)
+   boolean?)
+  (tags pure))
+ ((name . mapping>=?)
+  (signature
+   lambda
+   ((comparator? comparator) (mapping? mapping1) (mapping? mapping2) ...)
+   boolean?)
+  (tags pure))
+ ((name . mapping-union)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
+  (tags pure))
+ ((name . mapping-intersection)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
+  (tags pure))
+ ((name . mapping-difference)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?)
+  (tags pure))
+ ((name . mapping-xor)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2)) mapping?)
+  (tags pure))
+ ((name . mapping-union!)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?))
+ ((name . mapping-intersection!)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?))
+ ((name . mapping-difference!)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2) ...) mapping?))
+ ((name . mapping-xor!)
+  (signature lambda ((mapping? mapping1) (mapping? mapping2)) mapping?))
+ ((name . mapping/ordered)
+  (signature lambda ((comparator? comparator) arg ...) mapping?)
+  (tags pure))
+ ((name . mapping-unfold/ordered)
+  (signature
+   lambda
+   ((procedure? stop?)
+    (procedure? mapper)
+    (procedure? successor)
+    seed
+    (comparator? comparator))
+   mapping?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) (values * *)))
+   (successor (lambda (seed) *))))
+ ((name . alist->mapping/ordered)
+  (signature lambda ((comparator? comparator) (list? alist)) mapping?)
+  (tags pure))
+ ((name . alist->mapping/ordered!)
+  (signature lambda ((mapping? mapping) (list? alist)) mapping?))
+ ((name . mapping-min-key)
+  (signature lambda ((mapping? mapping)) *)
+  (tags pure))
+ ((name . mapping-max-key)
+  (signature lambda ((mapping? mapping)) *)
+  (tags pure))
+ ((name . mapping-min-value)
+  (signature lambda ((mapping? mapping)) *)
+  (tags pure))
+ ((name . mapping-max-value)
+  (signature lambda ((mapping? mapping)) *)
+  (tags pure))
+ ((name . mapping-min-entry)
+  (signature lambda ((mapping? mapping)) (values * *))
+  (tags pure))
+ ((name . mapping-max-entry)
+  (signature lambda ((mapping? mapping)) (values * *))
+  (tags pure))
+ ((name . mapping-key-predecessor)
+  (signature lambda ((mapping? mapping) obj (procedure? failure)) *)
+  (tags pure)
+  (subsigs (failure (lambda () *))))
+ ((name . mapping-key-successor)
+  (signature lambda ((mapping? mapping) obj (procedure? failure)) *)
+  (tags pure)
+  (subsigs (failure (lambda () *))))
+ ((name . mapping-range=)
+  (signature lambda ((mapping? mapping) obj) mapping?)
+  (tags pure))
+ ((name . mapping-range<)
+  (signature lambda ((mapping? mapping) obj) mapping?)
+  (tags pure))
+ ((name . mapping-range>)
+  (signature lambda ((mapping? mapping) obj) mapping?)
+  (tags pure))
+ ((name . mapping-range<=)
+  (signature lambda ((mapping? mapping) obj) mapping?)
+  (tags pure))
+ ((name . mapping-range>=)
+  (signature lambda ((mapping? mapping) obj) mapping?)
+  (tags pure))
+ ((name . mapping-range=!)
+  (signature lambda ((mapping? mapping) obj) mapping?))
+ ((name . mapping-range<!)
+  (signature lambda ((mapping? mapping) obj) mapping?))
+ ((name . mapping-range>!)
+  (signature lambda ((mapping? mapping) obj) mapping?))
+ ((name . mapping-range<=!)
+  (signature lambda ((mapping? mapping) obj) mapping?))
+ ((name . mapping-range>=!)
+  (signature lambda ((mapping? mapping) obj) mapping?))
+ ((name . mapping-split)
+  (signature
+   lambda
+   ((mapping? mapping) obj)
+   (values mapping? mapping? mapping? mapping? mapping?))
+  (tags pure))
+ ((name . mapping-split!)
+  (signature
+   lambda
+   ((mapping? mapping) obj)
+   (values mapping? mapping? mapping? mapping? mapping?)))
+ ((name . mapping-catenate)
+  (signature
+   lambda
+   ((mapping? mapping1) key value (mapping? mapping2))
+   mapping?)
+  (tags pure))
+ ((name . mapping-catenate!)
+  (signature
+   lambda
+   ((mapping? mapping1) key value (mapping? mapping2))
+   mapping?))
+ ((name . mapping-map/monotone)
+  (signature
+   lambda
+   ((procedure? proc) (comparator? comparator) (mapping? mapping))
+   mapping?)
+  (tags pure)
+  (subsigs (proc (lambda (key value) (values * *)))))
+ ((name . mapping-map/monotone!)
+  (signature
+   lambda
+   ((procedure? proc) (comparator? comparator) (mapping? mapping))
+   mapping?)
+  (subsigs (proc (lambda (key value) (values * *)))))
+ ((name . mapping-fold/reverse)
+  (signature lambda ((procedure? proc) nil (mapping? mapping)) *)
+  (tags pure)
+  (subsigs (proc (lambda (key value state) *))))
+ ((name . comparator?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . make-mapping-comparator)
+  (signature lambda ((comparator? comparator)) comparator?)
+  (tags pure))
+ ((name . mapping-comparator) (signature value comparator?)))

@@ -1,7 +1,11 @@
 <html lang="en">
-    {{>head}}
+    {{#head}}
+        {{>head}}
+    {{/head}}
     <body>
-        {{>topnavigation}}
+        {{#navigation}}
+            {{>topnavigation}}
+        {{/navigation}}
         <main class="index-page">
             <h1>R7RS index</h1>
             <p>R7RS index allows searching for R7RS-small and R7RS-large (work in progress) procedures, syntax and constants through types, tags, and names. Please see <a class="text-link" href="/README.html#_userguide_for_site_visitors">user guide</a> for details
@@ -24,7 +28,7 @@
             </hr>
 
             <h2>REST api, STDIO repl api</h2>
-            <p>R7RS provides multiple options for integrating its search component with other software. Please consult <a href="/README.html">documentation</a> for details.</p>
+            <p>R7RS provides multiple options for integrating its search component with other software. Please consult <a class="example-link" href="/README.html">documentation</a> for details.</p>
 
             <h2>Report an issue</h2>
             <p>Please report any issues or suggestions you may have at <a class="text-link" href="https://github.com/arvyy/r7rs-index-site/issues">github</a>.</p>

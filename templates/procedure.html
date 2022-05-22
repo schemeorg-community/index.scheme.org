@@ -7,27 +7,23 @@
             {{> sexpr }}
         {{/ signature}}
     </div>
-    {{# has_param_signatures }}
     <div class="param-signatures">
-        {{# param_signatures }}
+        {{# param-signatures }}
         <div class="param-signature">
             {{> sexpr }}
         </div>
-        {{/ param_signatures }}
+        {{/ param-signatures }}
     </div>
-    {{/ has_param_signatures }}
-    {{# has_subsyntax_signatures }}
     <div class="subsyntax-signatures">
-        {{# subsyntax_signatures }}
+        {{# subsyntax-signatures }}
         <span class="subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
         <div class="subsyntax-rules">
             {{# rules }}
                 {{> sexpr }}
             {{/ rules }}
         </div>
-        {{/ subsyntax_signatures }}
+        {{/ subsyntax-signatures }}
     </div>
-    {{/ has_subsyntax_signatures}}
     <div class="tags">
         {{# tags }}
             <a class="tag tag-{{.}}" href="?tag={{.}}">{{ . }}</a>

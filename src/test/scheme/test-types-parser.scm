@@ -1,11 +1,10 @@
 (test-group
   "Test function general"
   (define spec-raw
-    `(integer?
-        (lambda (obj) boolean?)
-        (pure predicate)
-        ()
-        (number?)))
+    `((name . integer?)
+      (signature . (lambda (obj) boolean?))
+      (tags . (pure predicate))
+      (supertypes . (number?))))
   (define f (car (read-spec '(test lib) (list spec-raw))))
   (define f* (func->json f))
   (test-equal '(test lib) (func-lib f))
@@ -28,12 +27,12 @@
   (define specs
     (read-spec '(test lib)
                `(
-                 (f1
-                   (lambda () *))
-                 (f2
-                   (lambda (obj1 obj2 ...) *))
-                 (f3
-                   (lambda ((string? str) ... (#f obj2)) *))
+                 ((name . f1)
+                  (signature . (lambda () *)))
+                 ((name . f2)
+                  (signature . (lambda (obj1 obj2 ...) *)))
+                 ((name . f3)
+                  (signature . (lambda ((string? str) ... (#f obj2)) *)))
                  )))
   (test-equal '() (func-param-names (list-ref specs 0)))
   (test-equal '(obj1 obj2) (func-param-names (list-ref specs 1)))
@@ -44,14 +43,14 @@
   (define specs
     (read-spec '(test lib)
                `(
-                 (f1
-                   (lambda () *))
-                 (f2
-                   (lambda (obj) *))
-                 (f3
-                   (lambda ((string? str) (#f int)) *))
-                 (f4
-                   (lambda (((or #f string?) str)) *)))))
+                 ((name . f1)
+                  (signature . (lambda () *)))
+                 ((name . f2)
+                  (signature . (lambda (obj) *)))
+                 ((name . f3)
+                  (signature . (lambda ((string? str) (#f int)) *)))
+                 ((name . f4)
+                  (signature . (lambda (((or #f string?) str)) *))))))
   (test-equal '() (func-param-types (list-ref specs 0)))
   (test-equal '() (func-param-types (list-ref specs 1)))
   (test-equal '(string?) (func-param-types (list-ref specs 2)))
@@ -62,18 +61,18 @@
   (define specs
     (read-spec '(test lib)
                 `(
-                  (f1
-                    (lambda () *))
-                  (f2
-                    (lambda () undefined))
-                  (f3
-                    (lambda () string?))
-                  (f4
-                    (lambda () (or integer? string?)))
-                  (f5
-                    (lambda () (or #f string?)))
-                  (f6
-                    (lambda () (values integer? string? ...))))))
+                  ((name . f1)
+                   (signature . (lambda () *)))
+                  ((name . f2)
+                   (signature . (lambda () undefined)))
+                  ((name . f3)
+                   (signature . (lambda () string?)))
+                  ((name . f4)
+                   (signature . (lambda () (or integer? string?))))
+                  ((name . f5)
+                   (signature . (lambda () (or #f string?))))
+                  ((name . f6)
+                   (signature . (lambda () (values integer? string? ...)))))))
   (test-equal '() (func-return-types (list-ref specs 0)))
   (test-equal '() (func-return-types (list-ref specs 1)))
   (test-equal '(string?) (func-return-types (list-ref specs 2)))
@@ -93,34 +92,28 @@
   (define specs
     (read-spec '(test lib)
                `(
-                 (A?
-                   (lambda (obj) boolean?)
-                   (pure predicate)
-                   ())
-                 (B?
-                   (lambda (obj) boolean?)
-                   (pure predicate)
-                   ())
-                 (C?
-                   (lambda (obj) boolean?)
-                   (pure predicate)
-                   ()
-                   (A? B?))
-                 (D?
-                   (lambda (obj) boolean?)
-                   (pure predicate)
-                   ()
-                   (C?))
-                 (E?
-                   (lambda (obj) boolean?)
-                   (pure predicate)
-                   ()
-                   (A?))
-                 (F?
-                   (lambda (obj) boolean?)
-                   (pure predicate)
-                   ()
-                   (E?)))))
+                 ((name . A?)
+                  (signature . (lambda (obj) boolean?))
+                  (tags . (pure predicate)))
+                 ((name . B?)
+                  (signature . (lambda (obj) boolean?))
+                  (tags . (pure predicate)))
+                 ((name . C?)
+                  (signature . (lambda (obj) boolean?))
+                  (tags . (pure predicate))
+                  (supertypes . (A? B?)))
+                 ((name . D?)
+                  (signature . (lambda (obj) boolean?))
+                  (tags . (pure predicate))
+                  (supertypes . (C?)))
+                 ((name . E?)
+                  (signature . (lambda (obj) boolean?))
+                  (tags . (pure predicate))
+                  (supertypes . (A?)))
+                 ((name . F?)
+                  (signature . (lambda (obj) boolean?))
+                  (tags . (pure predicate))
+                  (supertypes . (E?))))))
       (define-values
         (supertype-map subtype-strict-map subtype-loose-map)
         (make-type-maps specs))
@@ -153,11 +146,12 @@
   "Test kawa mangling"
   (define specs
     (read-spec '(test lib)
-               `((->char-set
-                   (lambda ((char? x)) string?))
+               `(
+                 ((name . ->char-set)
+                  (signature . (lambda ((char? x)) string?)))
 
-                 (|char-set:lower-case|
-                   (value char-set?)))))
+                 ((name . |char-set:lower-case|)
+                  (signature . (value char-set?))))))
   ;; test workaround works to prevent kawa mangling
   (let ((f (list-ref specs 0)))
     (test-equal '|->char-set| (func-name f))

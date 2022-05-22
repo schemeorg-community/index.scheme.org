@@ -1,74 +1,72 @@
-(
- 
- (floor/
-   (lambda ((integer? numerator) (integer? denominator)) (values integer? integer?))
-   (pure))
- 
- (floor-quotient
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (floor-remainder
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (ceiling/
-   (lambda ((integer? numerator) (integer? denominator)) (values integer? integer?))
-   (pure))
- 
- (ceiling-quotient
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (ceiling-remainder
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (truncate/
-   (lambda ((integer? numerator) (integer? denominator)) (values integer? integer?))
-   (pure))
- 
- (truncate-quotient
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (truncate-remainder
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (round/
-   (lambda ((integer? numerator) (integer? denominator)) (values integer? integer?))
-   (pure))
- 
- (round-quotient
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (round-remainder
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (euclidean/
-   (lambda ((integer? numerator) (integer? denominator)) (values integer? integer?))
-   (pure))
- 
- (euclidean-quotient
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (euclidean-remainder
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (balanced/
-   (lambda ((integer? numerator) (integer? denominator)) (values integer? integer?))
-   (pure))
- 
- (balanced-quotient
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- 
- (balanced-remainder
-   (lambda ((integer? numerator) (integer? denominator)) integer?)
-   (pure))
- )
+(((name . floor/)
+  (signature
+   lambda
+   ((integer? numerator) (integer? denominator))
+   (values integer? integer?))
+  (tags pure))
+ ((name . floor-quotient)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . floor-remainder)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . ceiling/)
+  (signature
+   lambda
+   ((integer? numerator) (integer? denominator))
+   (values integer? integer?))
+  (tags pure))
+ ((name . ceiling-quotient)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . ceiling-remainder)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . truncate/)
+  (signature
+   lambda
+   ((integer? numerator) (integer? denominator))
+   (values integer? integer?))
+  (tags pure))
+ ((name . truncate-quotient)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . truncate-remainder)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . round/)
+  (signature
+   lambda
+   ((integer? numerator) (integer? denominator))
+   (values integer? integer?))
+  (tags pure))
+ ((name . round-quotient)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . round-remainder)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . euclidean/)
+  (signature
+   lambda
+   ((integer? numerator) (integer? denominator))
+   (values integer? integer?))
+  (tags pure))
+ ((name . euclidean-quotient)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . euclidean-remainder)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . balanced/)
+  (signature
+   lambda
+   ((integer? numerator) (integer? denominator))
+   (values integer? integer?))
+  (tags pure))
+ ((name . balanced-quotient)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure))
+ ((name . balanced-remainder)
+  (signature lambda ((integer? numerator) (integer? denominator)) integer?)
+  (tags pure)))

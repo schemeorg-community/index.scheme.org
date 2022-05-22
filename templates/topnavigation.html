@@ -1,10 +1,10 @@
 <nav>
-    {{# nav-links }}
-        {{#active}}
+    {{# items }}
+        {{#active?}}
             <span class="nav-link-active">{{label}}</span>
-        {{/active}}
-        {{^active}}
+        {{/active?}}
+        {{^active?}}
             <a href="{{link}}" class="nav-link">{{label}}</a>
-        {{/active}}
-    {{/nav-links}}
+        {{/active?}}
+    {{/items}}
 </nav>

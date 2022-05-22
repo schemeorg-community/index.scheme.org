@@ -1,664 +1,417 @@
-(
- (ipair
-   (lambda (a d) ipair?)
-   (pure))
- 
- (ilist
-   (lambda (object ...) ilist?)
-   (pure))
- 
- (xipair
-   (lambda (d a) ipair?)
-   (pure))
- 
- (ipair*
-   (lambda (elt1 elt2 ...) *))
- 
- (make-ilist
-   (lambda ((integer? n)) ilist?))
- 
- (make-ilist
-   (lambda ((integer? n) fill) ilist?)
-   (pure))
- 
- (ilist-tabulate
-   (lambda ((integer? n) (procedure? init-proc)) ilist?)
-   (pure)
-   ((init-proc (lambda ((integer? i)) *))))
- 
- (ilist-copy
-   (lambda ((ilist? dilist)) ilist?)
-   (pure))
- 
- (ilist-copy
-   (lambda ((dotted-ilist? dilist)) dotted-ilist?)
-   (pure))
- 
- (iiota
-   (lambda ((integer? count)) ilist?)
-   (pure))
- 
- (iiota
-   (lambda ((integer? count) (number? start)) ilist?)
-   (pure))
- 
- (iiota
-   (lambda ((integer? count) (number? start) (number? step)) ilist?)
-   (pure))
- 
- (proper-ilist?
-   (lambda (obj) boolean?)
-   (pure predicate)
-   ()
-   (ilist?))
- 
- (ilist?
-   (lambda (obj) boolean?)
-   (pure predicate)
-   ()
-   (ilist?))
- 
- (dotted-ilist?
-   (lambda (obj) boolean?)
-   (pure predicate)
-   ()
-   (ipair?))
- 
- (ipair?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (null-ilist?
-   (lambda ((ilist? lst)) boolean?)
-   (pure predicate))
- 
- (not-ipair?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (ilist=
-   (lambda ((procedure? elt=) (ilist? ilist1) ...) boolean?)
-   (pure)
-   ((elt= (lambda (a b) *))))
- 
- (icaar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icadr
-  (lambda ((ipair? ipair)) *)
-  (pure))
- 
- (icar
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (icdar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icddr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdr
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (icaaaar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icaaadr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icaaar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icaadar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icaaddr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icaadr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icadaar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icadadr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icadar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icaddar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icadddr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icaddr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdaaar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdaadr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdaar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdadar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdaddr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdadr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icddaar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icddadr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icddar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdddar
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icddddr
-   (lambda ((ipair? ipair)) *)
-   (pure))
-
- (icdddr
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (ilist-ref
-   (lambda ((ilist? ilist) (integer? i)) *)
-   (pure))
- 
- (ifirst
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (isecond
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (ithird
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (ifourth
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (ififth
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (isixth
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (iseventh
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (ieighth
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (ininth
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (itenth
-   (lambda ((ipair? ipair)) *)
-   (pure))
- 
- (icar+cdr
-   (lambda ((ipair? ipair)) (values * *))
-   (pure))
- 
- (itake
-   (lambda ((ilist? x) (integer? i)) ilist?)
-   (pure))
- 
- (itake
-   (lambda ((dotted-ilist? x) (integer? i)) ilist?)
-   (pure))
- 
- (idrop
-   (lambda ((ilist? x) (integer? i)) ilist?)
-   (pure))
- 
- (idrop
-   (lambda ((dotted-ilist? x) (integer? i)) *)
-   (pure))
- 
- (itake-right
-   (lambda ((ilist? dilist) (integer? i)) ilist?)
-   (pure))
- 
- (itake-right
-   (lambda ((dotted-ilist? dilist) (integer? i)) *)
-   (pure))
- 
- (idrop-right
-   (lambda ((ilist? dilist) (integer? i)) ilist?)
-   (pure))
- 
- (idrop-right
-   (lambda ((dotted-ilist? dilist) (integer? i)) ilist?)
-   (pure))
- 
- (isplit-at
-   (lambda ((ilist? x) (integer? i)) (values ilist? ilist?))
-   (pure))
- 
- (isplit-at
-   (lambda ((dotted-ilist? x) (integer? i)) (values ilist? *))
-   (pure))
- 
- (ilast
-   (lambda ((ilist? ipair)) *)
-   (pure))
- 
- (ilast-ipair
-   (lambda ((ilist? ipair)) ipair?)
-   (pure))
- 
- (ilength
-   (lambda ((ilist? ilist)) integer?)
-   (pure))
- 
- (iappend
-   (lambda ((ilist? ilist) ...)  ilist?)
-   (pure))
-
- (iappend
-   (lambda ((ilist? ilist) ... obj)  *)
-   (pure))
- 
- (iconcatenate
-   (lambda ((ilist? ilist-of-ilists)) *)
-   (pure))
- 
- (ireverse
-   (lambda ((ilist? ilist)) ilist?)
-   (pure))
- 
- (iappend-reverse
-   (lambda ((ilist? rev-head) (ilist? tail)) ilist?)
-   (pure))
- 
- (iappend-reverse
-   (lambda ((ilist? rev-head) tail) *)
-   (pure))
- 
- (izip
-   (lambda ((ilist? ilist1) (ilist? ilist2) ...) ilist?)
-   (pure))
- 
- (iunzip1
-   (lambda ((ilist? ilist)) ilist?)
-   (pure))
- 
- (iunzip2
-   (lambda ((ilist? ilist)) (values ilist? ilist?))
-   (pure))
- 
- (iunzip3
-   (lambda ((ilist? ilist)) (values ilist? ilist? ilist?))
-   (pure))
- 
- (iunzip4
-   (lambda ((ilist? ilist)) (values ilist? ilist? ilist? ilist?))
-   (pure))
- 
- (iunzip5
-   (lambda ((ilist? ilist)) (values ilist? ilist? ilist? ilist? ilist?))
-   (pure))
- 
- (icount
-   (lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) integer?)
-   (pure)
-   ((pred (lambda (obj ...) *))))
- 
- (ifold
-   (lambda ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...) *)
-   (pure)
-   ((kons (lambda (obj1 obj2 ... fold-state) *))))
- 
- (ifold-right
-   (lambda ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...) *)
-   (pure)
-   ((kons (lambda (obj1 obj2 ... fold-state) *))))
- 
- (ipair-fold
-   (lambda ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...) *)
-   (pure)
-   ((kons (lambda ((ipair? ipair1) (ipair? ipair2) ... fold-state) *))))
- 
- (ipair-fold-right
-   (lambda ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...) *)
-   (pure)
-   ((kons (lambda ((ipair? ipair1) (ipair? ipair2) ... fold-state) *))))
- 
- (ireduce
-   (lambda ((procedure? f) ridentity (ilist? ilist))*)
-   (pure)
-   ((f (lambda (obj fold-state) *))))
- 
- (ireduce-right
-   (lambda ((procedure? f) ridentity (ilist? ilist))*)
-   (pure)
-   ((f (lambda (obj fold-state) *))))
- 
- (iunfold
-   (lambda ((procedure? p) (procedure? f) (procedure? g) seed) ilist?)
-   (pure)
-   ((p (lambda (seed) boolean?))
-    (f (lambda (seed) *))
-    (g (lambda (seed) *))))
- 
- (iunfold
-   (lambda ((procedure? p) (procedure? f) (procedure? g) seed (ilist? tail-gen)) *)
-   (pure)
-   ((p (lambda (seed) boolean?))
-    (f (lambda (seed) *))
-    (g (lambda (seed) *))
-    (tail-gen (lambda () *))))
- 
- (iunfold-right
-   (lambda ((procedure? p) (procedure? f) (procedure? g) seed) ilist?)
-   (pure)
-   ((p (lambda (seed) boolean?))
-    (f (lambda (seed) *))
-    (g (lambda (seed) *))))
- 
- (iunfold-right
-   (lambda ((procedure? p) (procedure? f) (procedure? g) seed (ilist? tail-gen)) *)
-   (pure)
-   ((p (lambda (seed) boolean?))
-    (f (lambda (seed) *))
-    (g (lambda (seed) *))
-    (tail-gen (lambda () *))))
- 
- (imap
-   (lambda ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...) ilist?)
-   (pure)
-   ((proc (lambda (obj1 obj2 ...) *))))
- 
- (ifor-each
-   (lambda ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...) undefined)
-   ()
-   ((proc (lambda (obj1 obj2 ...) undefined))))
- 
- (iappend-map
-   (lambda ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...) ilist?)
-   (pure)
-   ((proc (lambda (obj1 obj2 ...) ilist?))))
- 
- (imap-in-order
-   (lambda ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...) ilist?)
-   ()
-   ((proc (lambda (obj1 obj2 ...) *))))
- 
- (ipair-for-each
-   (lambda ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...) undefined)
-   ()
-   ((proc (lambda ((ipair? obj1) (ipair? obj2) ...) undefined))))
- 
- (ifilter-map
-   (lambda ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...) ilist?)
-   (pure)
-   ((proc (lambda (obj1 obj2 ...) *))))
- 
- (ifilter
-   (lambda ((procedure? pred) (ilist? ilist)) ilist?)
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (ipartition
-   (lambda ((procedure? pred) (ilist? ilist)) (values ilist? ilist?))
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (iremove
-   (lambda ((procedure? pred) (ilist? ilist)) ilist?)
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (ifind
-   (lambda ((procedure? pred) (ilist? ilist)) *)
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (ifind-tail
-   (lambda ((procedure? pred) (ilist? ilist)) (or ipair? #f))
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (itake-while
-   (lambda ((procedure? pred) (ilist? ilist)) ilist?)
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (idrop-while
-   (lambda ((procedure? pred) (ilist? ilist)) ilist?)
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (ispan
-   (lambda ((procedure? pred) (ilist? ilist)) (values ilist? ilist?))
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (ibreak
-   (lambda ((procedure? pred) (ilist? ilist)) (values ilist? ilist?))
-   (pure)
-   ((pred (lambda (obj) *))))
- 
- (iany
-   (lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) *)
-   (pure)
-   ((pred (lambda (obj1 obj2 ...) *))))
- 
- (ievery
-   (lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) *)
-   (pure)
-   ((pred (lambda (obj1 obj2 ...) *))))
- 
- (ilist-index
-   (lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) (or integer? #f))
-   (pure)
-   ((pred (lambda (obj1 obj2 ...) *))))
- 
- (imember
-   (lambda (obj (ilist? ilist)) (or #f ilist?))
-   (pure))
-
- (imember
-   (lambda (obj (ilist? ilist) (procedure? =)) (or #f ilist?))
-   (pure)
-   ((= (lambda (obj1 obj2) *))))
-
- (imemq
-   (lambda (obj (ilist? ilist)) (or #f ilist?))
-   (pure))
-
- (imemv
-   (lambda (obj (ilist? ilist)) (or #f ilist?))
-   (pure))
- 
- (idelete
-   (lambda (obj (ilist? ilist)) ilist?)
-   (pure))
- 
- (idelete
-   (lambda (obj (ilist? ilist) (procedure? =)) ilist?)
-   (pure)
-   ((= (lambda (obj1 obj2) *))))
- 
- (idelete-duplicates
-   (lambda ((ilist? ilist)) ilist?)
-   (pure))
- 
- (idelete-duplicates
-   (lambda ((ilist? ilist) (procedure? =)) ilist?)
-   (pure)
-   ((= (lambda (obj1 obj2) *))))
- 
- (iassoc
-   (lambda (obj (ilist? ialist)) (or ilist? #f))
-   (pure))
-
- (iassoc
-   (lambda (obj (ilist? ialist) (procedure? =)) (or ipair? #f))
-   (pure)
-   ((= (lambda (a b) *))))
-
- (iassq
-   (lambda (obj (ilist? ialist)) (or ipair? #f))
-   (pure))
-
- (iassv
-   (lambda (obj (ilist? ialist)) (or ipair? #f))
-   (pure))
- 
- (ialist-cons
-   (lambda (key datum (ilist? ialist)) ilist?)
-   (pure))
- 
- (ialist-delete
-   (lambda (key (ilist? ialist)) ilist?)
-   (pure))
- 
- (ialist-delete
-   (lambda (key (ilist? ialist) (procedure? =)) ilist?)
-   (pure)
-   ((= (lambda (a b) *))))
- 
- (replace-icar
-   (lambda ((ipair? ipair) object) ipair?))
- 
- (replace-icdr
-   (lambda ((ipair? ipair) object) ipair?))
- 
- (pair->ipair
-   (lambda ((pair? pair)) ipair?)
-   (pure))
- 
- (ipair->pair
-   (lambda ((ipair? ipair)) pair?)
-   (pure))
-
- (list->ilist
-   (lambda ((list? flist)) ilist?)
-   (pure))
-
- (list->ilist
-   (lambda ((dotted-list? flist)) dotted-ilist?)
-   (pure))
-
- (ilist->list
-   (lambda ((ilist? flist)) list?)
-   (pure))
-
- (ilist->list
-   (lambda ((dotted-ilist? flist)) dotted-list?)
-   (pure))
- 
- (tree->itree
-   (lambda ((pair? pair)) ipair?)
-   (pure))
- 
- (tree->itree
-   (lambda (object) *)
-   (pure))
- 
- (itree->tree
-   (lambda ((ipair? ipair)) pair?)
-   (pure))
- 
- (itree->tree
-   (lambda (object) *)
-   (pure))
- 
- (gtree->itree
-   (lambda ((pair? pair)) ipair?)
-   (pure))
- 
- (gtree->itree
-   (lambda (object) *)
-   (pure))
- 
- (gitree->tree
-   (lambda ((ipair? ipair)) pair?)
-   (pure))
- 
- (gitree->tree
-   (lambda (object) *)
-   (pure))
- 
- (iapply
-   (lambda ((procedure? proc) arg1 ... (ilist? args)) *)
-   (pure))
- 
- (ipair-comparator
-   (value comparator?))
- 
- (ilist-comparator
-   (value comparator?))
- 
- (make-ilist-comparator
-   (lambda ((comparator? element-comparator)) comparator?)
-   (pure))
- 
- (make-improper-ilist-comparator
-   (lambda ((comparator? element-comparator)) comparator?)
-   (pure))
- 
- (make-ipair-comparator
-   (lambda ((comparator? car-comparator) (comparator? cdr-comparator)) comparator?)
-   (pure))
- 
- (make-icar-comparator
-   (lambda ((comparator? comparator)) comparator?)
-   (pure))
- 
- (make-icdr-comparator
-   (lambda ((comparator? comparator)) comparator?)
-   (pure))
- 
- )
+(((name . ipair) (signature lambda (a d) ipair?) (tags pure))
+ ((name . ilist) (signature lambda (object ...) ilist?) (tags pure))
+ ((name . xipair) (signature lambda (d a) ipair?) (tags pure))
+ ((name . ipair*) (signature lambda (elt1 elt2 ...) *))
+ ((name . make-ilist) (signature lambda ((integer? n)) ilist?))
+ ((name . make-ilist)
+  (signature lambda ((integer? n) fill) ilist?)
+  (tags pure))
+ ((name . ilist-tabulate)
+  (signature lambda ((integer? n) (procedure? init-proc)) ilist?)
+  (tags pure)
+  (subsigs (init-proc (lambda ((integer? i)) *))))
+ ((name . ilist-copy) (signature lambda ((ilist? dilist)) ilist?) (tags pure))
+ ((name . ilist-copy)
+  (signature lambda ((dotted-ilist? dilist)) dotted-ilist?)
+  (tags pure))
+ ((name . iiota) (signature lambda ((integer? count)) ilist?) (tags pure))
+ ((name . iiota)
+  (signature lambda ((integer? count) (number? start)) ilist?)
+  (tags pure))
+ ((name . iiota)
+  (signature lambda ((integer? count) (number? start) (number? step)) ilist?)
+  (tags pure))
+ ((name . proper-ilist?)
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (subsigs)
+  (supertypes ilist?))
+ ((name . ilist?)
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (subsigs)
+  (supertypes ilist?))
+ ((name . dotted-ilist?)
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (subsigs)
+  (supertypes ipair?))
+ ((name . ipair?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . null-ilist?)
+  (signature lambda ((ilist? lst)) boolean?)
+  (tags pure predicate))
+ ((name . not-ipair?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . ilist=)
+  (signature lambda ((procedure? elt=) (ilist? ilist1) ...) boolean?)
+  (tags pure)
+  (subsigs (elt= (lambda (a b) *))))
+ ((name . icaar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icadr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icddr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaaaar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaaadr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaaar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaadar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaaddr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaadr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icadaar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icadadr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icadar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaddar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icadddr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icaddr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdaaar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdaadr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdaar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdadar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdaddr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdadr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icddaar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icddadr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icddar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdddar) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icddddr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icdddr) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . ilist-ref)
+  (signature lambda ((ilist? ilist) (integer? i)) *)
+  (tags pure))
+ ((name . ifirst) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . isecond) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . ithird) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . ifourth) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . ififth) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . isixth) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . iseventh) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . ieighth) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . ininth) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . itenth) (signature lambda ((ipair? ipair)) *) (tags pure))
+ ((name . icar+cdr)
+  (signature lambda ((ipair? ipair)) (values * *))
+  (tags pure))
+ ((name . itake)
+  (signature lambda ((ilist? x) (integer? i)) ilist?)
+  (tags pure))
+ ((name . itake)
+  (signature lambda ((dotted-ilist? x) (integer? i)) ilist?)
+  (tags pure))
+ ((name . idrop)
+  (signature lambda ((ilist? x) (integer? i)) ilist?)
+  (tags pure))
+ ((name . idrop)
+  (signature lambda ((dotted-ilist? x) (integer? i)) *)
+  (tags pure))
+ ((name . itake-right)
+  (signature lambda ((ilist? dilist) (integer? i)) ilist?)
+  (tags pure))
+ ((name . itake-right)
+  (signature lambda ((dotted-ilist? dilist) (integer? i)) *)
+  (tags pure))
+ ((name . idrop-right)
+  (signature lambda ((ilist? dilist) (integer? i)) ilist?)
+  (tags pure))
+ ((name . idrop-right)
+  (signature lambda ((dotted-ilist? dilist) (integer? i)) ilist?)
+  (tags pure))
+ ((name . isplit-at)
+  (signature lambda ((ilist? x) (integer? i)) (values ilist? ilist?))
+  (tags pure))
+ ((name . isplit-at)
+  (signature lambda ((dotted-ilist? x) (integer? i)) (values ilist? *))
+  (tags pure))
+ ((name . ilast) (signature lambda ((ilist? ipair)) *) (tags pure))
+ ((name . ilast-ipair) (signature lambda ((ilist? ipair)) ipair?) (tags pure))
+ ((name . ilength) (signature lambda ((ilist? ilist)) integer?) (tags pure))
+ ((name . iappend) (signature lambda ((ilist? ilist) ...) ilist?) (tags pure))
+ ((name . iappend) (signature lambda ((ilist? ilist) ... obj) *) (tags pure))
+ ((name . iconcatenate)
+  (signature lambda ((ilist? ilist-of-ilists)) *)
+  (tags pure))
+ ((name . ireverse) (signature lambda ((ilist? ilist)) ilist?) (tags pure))
+ ((name . iappend-reverse)
+  (signature lambda ((ilist? rev-head) (ilist? tail)) ilist?)
+  (tags pure))
+ ((name . iappend-reverse)
+  (signature lambda ((ilist? rev-head) tail) *)
+  (tags pure))
+ ((name . izip)
+  (signature lambda ((ilist? ilist1) (ilist? ilist2) ...) ilist?)
+  (tags pure))
+ ((name . iunzip1) (signature lambda ((ilist? ilist)) ilist?) (tags pure))
+ ((name . iunzip2)
+  (signature lambda ((ilist? ilist)) (values ilist? ilist?))
+  (tags pure))
+ ((name . iunzip3)
+  (signature lambda ((ilist? ilist)) (values ilist? ilist? ilist?))
+  (tags pure))
+ ((name . iunzip4)
+  (signature lambda ((ilist? ilist)) (values ilist? ilist? ilist? ilist?))
+  (tags pure))
+ ((name . iunzip5)
+  (signature
+   lambda
+   ((ilist? ilist))
+   (values ilist? ilist? ilist? ilist? ilist?))
+  (tags pure))
+ ((name . icount)
+  (signature
+   lambda
+   ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...)
+   integer?)
+  (tags pure)
+  (subsigs (pred (lambda (obj ...) *))))
+ ((name . ifold)
+  (signature
+   lambda
+   ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...)
+   *)
+  (tags pure)
+  (subsigs (kons (lambda (obj1 obj2 ... fold-state) *))))
+ ((name . ifold-right)
+  (signature
+   lambda
+   ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...)
+   *)
+  (tags pure)
+  (subsigs (kons (lambda (obj1 obj2 ... fold-state) *))))
+ ((name . ipair-fold)
+  (signature
+   lambda
+   ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...)
+   *)
+  (tags pure)
+  (subsigs (kons (lambda ((ipair? ipair1) (ipair? ipair2) ... fold-state) *))))
+ ((name . ipair-fold-right)
+  (signature
+   lambda
+   ((procedure? kons) knil (ilist? ilist1) (ilist? ilist2) ...)
+   *)
+  (tags pure)
+  (subsigs (kons (lambda ((ipair? ipair1) (ipair? ipair2) ... fold-state) *))))
+ ((name . ireduce)
+  (signature lambda ((procedure? f) ridentity (ilist? ilist)) *)
+  (tags pure)
+  (subsigs (f (lambda (obj fold-state) *))))
+ ((name . ireduce-right)
+  (signature lambda ((procedure? f) ridentity (ilist? ilist)) *)
+  (tags pure)
+  (subsigs (f (lambda (obj fold-state) *))))
+ ((name . iunfold)
+  (signature lambda ((procedure? p) (procedure? f) (procedure? g) seed) ilist?)
+  (tags pure)
+  (subsigs
+   (p (lambda (seed) boolean?))
+   (f (lambda (seed) *))
+   (g (lambda (seed) *))))
+ ((name . iunfold)
+  (signature
+   lambda
+   ((procedure? p) (procedure? f) (procedure? g) seed (ilist? tail-gen))
+   *)
+  (tags pure)
+  (subsigs
+   (p (lambda (seed) boolean?))
+   (f (lambda (seed) *))
+   (g (lambda (seed) *))
+   (tail-gen (lambda () *))))
+ ((name . iunfold-right)
+  (signature lambda ((procedure? p) (procedure? f) (procedure? g) seed) ilist?)
+  (tags pure)
+  (subsigs
+   (p (lambda (seed) boolean?))
+   (f (lambda (seed) *))
+   (g (lambda (seed) *))))
+ ((name . iunfold-right)
+  (signature
+   lambda
+   ((procedure? p) (procedure? f) (procedure? g) seed (ilist? tail-gen))
+   *)
+  (tags pure)
+  (subsigs
+   (p (lambda (seed) boolean?))
+   (f (lambda (seed) *))
+   (g (lambda (seed) *))
+   (tail-gen (lambda () *))))
+ ((name . imap)
+  (signature
+   lambda
+   ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...)
+   ilist?)
+  (tags pure)
+  (subsigs (proc (lambda (obj1 obj2 ...) *))))
+ ((name . ifor-each)
+  (signature
+   lambda
+   ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...)
+   undefined)
+  (subsigs (proc (lambda (obj1 obj2 ...) undefined))))
+ ((name . iappend-map)
+  (signature
+   lambda
+   ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...)
+   ilist?)
+  (tags pure)
+  (subsigs (proc (lambda (obj1 obj2 ...) ilist?))))
+ ((name . imap-in-order)
+  (signature
+   lambda
+   ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...)
+   ilist?)
+  (subsigs (proc (lambda (obj1 obj2 ...) *))))
+ ((name . ipair-for-each)
+  (signature
+   lambda
+   ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...)
+   undefined)
+  (subsigs (proc (lambda ((ipair? obj1) (ipair? obj2) ...) undefined))))
+ ((name . ifilter-map)
+  (signature
+   lambda
+   ((procedure? proc) (ilist? ilist1) (ilist? ilist2) ...)
+   ilist?)
+  (tags pure)
+  (subsigs (proc (lambda (obj1 obj2 ...) *))))
+ ((name . ifilter)
+  (signature lambda ((procedure? pred) (ilist? ilist)) ilist?)
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . ipartition)
+  (signature lambda ((procedure? pred) (ilist? ilist)) (values ilist? ilist?))
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . iremove)
+  (signature lambda ((procedure? pred) (ilist? ilist)) ilist?)
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . ifind)
+  (signature lambda ((procedure? pred) (ilist? ilist)) *)
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . ifind-tail)
+  (signature lambda ((procedure? pred) (ilist? ilist)) (or ipair? #f))
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . itake-while)
+  (signature lambda ((procedure? pred) (ilist? ilist)) ilist?)
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . idrop-while)
+  (signature lambda ((procedure? pred) (ilist? ilist)) ilist?)
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . ispan)
+  (signature lambda ((procedure? pred) (ilist? ilist)) (values ilist? ilist?))
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . ibreak)
+  (signature lambda ((procedure? pred) (ilist? ilist)) (values ilist? ilist?))
+  (tags pure)
+  (subsigs (pred (lambda (obj) *))))
+ ((name . iany)
+  (signature lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) *)
+  (tags pure)
+  (subsigs (pred (lambda (obj1 obj2 ...) *))))
+ ((name . ievery)
+  (signature lambda ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...) *)
+  (tags pure)
+  (subsigs (pred (lambda (obj1 obj2 ...) *))))
+ ((name . ilist-index)
+  (signature
+   lambda
+   ((procedure? pred) (ilist? ilist1) (ilist? ilist2) ...)
+   (or integer? #f))
+  (tags pure)
+  (subsigs (pred (lambda (obj1 obj2 ...) *))))
+ ((name . imember)
+  (signature lambda (obj (ilist? ilist)) (or #f ilist?))
+  (tags pure))
+ ((name . imember)
+  (signature lambda (obj (ilist? ilist) (procedure? =)) (or #f ilist?))
+  (tags pure)
+  (subsigs (= (lambda (obj1 obj2) *))))
+ ((name . imemq)
+  (signature lambda (obj (ilist? ilist)) (or #f ilist?))
+  (tags pure))
+ ((name . imemv)
+  (signature lambda (obj (ilist? ilist)) (or #f ilist?))
+  (tags pure))
+ ((name . idelete) (signature lambda (obj (ilist? ilist)) ilist?) (tags pure))
+ ((name . idelete)
+  (signature lambda (obj (ilist? ilist) (procedure? =)) ilist?)
+  (tags pure)
+  (subsigs (= (lambda (obj1 obj2) *))))
+ ((name . idelete-duplicates)
+  (signature lambda ((ilist? ilist)) ilist?)
+  (tags pure))
+ ((name . idelete-duplicates)
+  (signature lambda ((ilist? ilist) (procedure? =)) ilist?)
+  (tags pure)
+  (subsigs (= (lambda (obj1 obj2) *))))
+ ((name . iassoc)
+  (signature lambda (obj (ilist? ialist)) (or ilist? #f))
+  (tags pure))
+ ((name . iassoc)
+  (signature lambda (obj (ilist? ialist) (procedure? =)) (or ipair? #f))
+  (tags pure)
+  (subsigs (= (lambda (a b) *))))
+ ((name . iassq)
+  (signature lambda (obj (ilist? ialist)) (or ipair? #f))
+  (tags pure))
+ ((name . iassv)
+  (signature lambda (obj (ilist? ialist)) (or ipair? #f))
+  (tags pure))
+ ((name . ialist-cons)
+  (signature lambda (key datum (ilist? ialist)) ilist?)
+  (tags pure))
+ ((name . ialist-delete)
+  (signature lambda (key (ilist? ialist)) ilist?)
+  (tags pure))
+ ((name . ialist-delete)
+  (signature lambda (key (ilist? ialist) (procedure? =)) ilist?)
+  (tags pure)
+  (subsigs (= (lambda (a b) *))))
+ ((name . replace-icar) (signature lambda ((ipair? ipair) object) ipair?))
+ ((name . replace-icdr) (signature lambda ((ipair? ipair) object) ipair?))
+ ((name . pair->ipair) (signature lambda ((pair? pair)) ipair?) (tags pure))
+ ((name . ipair->pair) (signature lambda ((ipair? ipair)) pair?) (tags pure))
+ ((name . list->ilist) (signature lambda ((list? flist)) ilist?) (tags pure))
+ ((name . list->ilist)
+  (signature lambda ((dotted-list? flist)) dotted-ilist?)
+  (tags pure))
+ ((name . ilist->list) (signature lambda ((ilist? flist)) list?) (tags pure))
+ ((name . ilist->list)
+  (signature lambda ((dotted-ilist? flist)) dotted-list?)
+  (tags pure))
+ ((name . tree->itree) (signature lambda ((pair? pair)) ipair?) (tags pure))
+ ((name . tree->itree) (signature lambda (object) *) (tags pure))
+ ((name . itree->tree) (signature lambda ((ipair? ipair)) pair?) (tags pure))
+ ((name . itree->tree) (signature lambda (object) *) (tags pure))
+ ((name . gtree->itree) (signature lambda ((pair? pair)) ipair?) (tags pure))
+ ((name . gtree->itree) (signature lambda (object) *) (tags pure))
+ ((name . gitree->tree) (signature lambda ((ipair? ipair)) pair?) (tags pure))
+ ((name . gitree->tree) (signature lambda (object) *) (tags pure))
+ ((name . iapply)
+  (signature lambda ((procedure? proc) arg1 ... (ilist? args)) *)
+  (tags pure))
+ ((name . ipair-comparator) (signature value comparator?))
+ ((name . ilist-comparator) (signature value comparator?))
+ ((name . make-ilist-comparator)
+  (signature lambda ((comparator? element-comparator)) comparator?)
+  (tags pure))
+ ((name . make-improper-ilist-comparator)
+  (signature lambda ((comparator? element-comparator)) comparator?)
+  (tags pure))
+ ((name . make-ipair-comparator)
+  (signature
+   lambda
+   ((comparator? car-comparator) (comparator? cdr-comparator))
+   comparator?)
+  (tags pure))
+ ((name . make-icar-comparator)
+  (signature lambda ((comparator? comparator)) comparator?)
+  (tags pure))
+ ((name . make-icdr-comparator)
+  (signature lambda ((comparator? comparator)) comparator?)
+  (tags pure)))

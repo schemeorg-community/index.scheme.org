@@ -1,26 +1,10 @@
-(
- (angle
-   (lambda ((complex? z)) real?)
-   (pure))
- 
- (imag-part
-   (lambda ((complex? z)) real?)
-   (pure))
- 
- (magnitude
-   (lambda ((complex? z)) real?)
-   (pure))
-
- (make-polar
-   (lambda ((real? x3) (real? x4)) complex?)
-   (pure))
- 
- (make-rectangular
-   (lambda ((real? x1) (real? x2)) complex?)
-   (pure))
- 
- (real-part
-   (lambda ((complex? z)) real?)
-   (pure))
- 
- )
+(((name . angle) (signature lambda ((complex? z)) real?) (tags pure))
+ ((name . imag-part) (signature lambda ((complex? z)) real?) (tags pure))
+ ((name . magnitude) (signature lambda ((complex? z)) real?) (tags pure))
+ ((name . make-polar)
+  (signature lambda ((real? x3) (real? x4)) complex?)
+  (tags pure))
+ ((name . make-rectangular)
+  (signature lambda ((real? x1) (real? x2)) complex?)
+  (tags pure))
+ ((name . real-part) (signature lambda ((complex? z)) real?) (tags pure)))

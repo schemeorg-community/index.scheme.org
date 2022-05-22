@@ -1,505 +1,328 @@
-(
- 
- (set
-   (lambda ((comparator? comparator) element ...) set?)
-   (pure))
- 
- (set-unfold
-   (lambda ((comparator? comparator) (procedure? stop?) (procedure? mapper) (procedure? successor) seed) set?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (set?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (set-contains?
-   (lambda ((set? set) element) boolean?)
-   (pure))
- 
- (set-empty?
-   (lambda ((set? set)) boolean?)
-   (pure))
- 
- (set-disjoint?
-   (lambda ((set? set1) (set? set2)) boolean?)
-   (pure))
- 
- (set-member
-   (lambda ((set? set) element default) *)
-   (pure))
- 
- (set-element-comparator
-   (lambda ((set? set)) comparator?)
-   (pure))
- 
- (set-adjoin
-   (lambda ((set? set) element ...) set?)
-   (pure))
- 
- (set-adjoin!
-   (lambda ((set? set) element ...) set?)
-   ())
- 
- (set-replace
-   (lambda ((set? set) element) set?)
-   (pure))
- 
- (set-replace!
-   (lambda ((set? set) element) set?)
-   ())
- 
- (set-delete
-   (lambda ((set? set) element ...) set?)
-   (pure))
- 
- (set-delete!
-   (lambda ((set? set) element ...) set?)
-   ())
- 
- (set-delete-all
-   (lambda ((set? set) (list? elements)) set?)
-   (pure))
- 
- (set-delete-all!
-   (lambda ((set? set) (list? elements)) set?)
-   ())
- 
- (set-search!
-   (lambda ((set? set) element (procedure? failure) (procedure? success)) (values set? *))
-   ()
-   ((failure (lambda ((procedure? insert) (procedure? ignore)) *))
-    (insert (lambda (obj) *))
-    (ignore (lambda (obj) *))
-    (success (lambda (element (procedure? update) (procedure? remove)) *))
-    (update (lambda (new-element obj) *))
-    (remove (lambda (obj) *))))
- 
- (set-size
-   (lambda ((set? set)) integer?)
-   (pure))
- 
- (set-find
-   (lambda ((procedure? predicate) (set? set) (procedure? failure)) *)
-   (pure)
-   ((predicate (lambda (obj) boolean?))
-    (failure (lambda () *))))
- 
- (set-count
-   (lambda ((procedure? predicate) (set? set)) integer?)
-   (pure)
-   ((predicate (lambda (obj) boolean?))))
- 
- (set-any?
-   (lambda ((procedure? predicate) (set? set)) boolean?)
-   (pure)
-   ((predicate (lambda (obj) boolean?))))
- 
- (set-every?
-   (lambda ((procedure? predicate) (set? set)) boolean?)
-   (pure)
-   ((predicate (lambda (obj) boolean?))))
- 
- (set-map
-   (lambda ((comparator? comparator) (procedure? proc) (set? set)) *)
-   (pure)
-   ((proc (lambda (obj) *))))
- 
- (set-for-each
-   (lambda ((procedure? proc) (set? set)) undefined)
-   ()
-   ((proc (lambda (obj) undefined))))
- 
- (set-fold
-   (lambda ((procedure? proc) nil (set? set)) *)
-   (pure)
-   ((proc (lambda (obj state) *))))
- 
- (set-filter
-   (lambda ((procedure? predicate) (set? set)) set?)
-   (pure)
-   ((predicate (lambda (obj) *))))
- 
- (set-filter!
-   (lambda ((procedure? predicate) (set? set)) set?)
-   ()
-   ((predicate (lambda (obj) *))))
- 
- (set-remove
-   (lambda ((procedure? predicate) (set? set)) set?)
-   (pure)
-   ((predicate (lambda (obj) *))))
- 
- (set-remove!
-   (lambda ((procedure? predicate) (set? set)) set?)
-   ()
-   ((predicate (lambda (obj) *))))
- 
- (set-partition
-   (lambda ((procedure? predicate) (set? set)) (values set? set?))
-   (pure)
-   ((predicate (lambda (obj) *))))
- 
- (set-partition!
-   (lambda ((procedure? predicate) (set? set)) (values set? set?))
-   ()
-   ((predicate (lambda (obj) *))))
- 
- (set-copy
-   (lambda ((set? set)) set?)
-   (pure))
- 
- (set->list
-   (lambda ((set? set)) list?)
-   ())
- 
- (list->set
-   (lambda ((comparator? comparator) (list? list)) set?)
-   (pure))
- 
- (list->set!
-   (lambda ((set? set) (list? list)) set?)
-   ())
- 
- (set=?
-   (lambda ((set? set1) (set? set2) ...) boolean?)
-   (pure))
- 
- (set<?
-   (lambda ((set? set1) (set? set2) ...) boolean?)
-   (pure))
- 
- (set>?
-   (lambda ((set? set1) (set? set2) ...) boolean?)
-   (pure))
- 
- (set<=?
-   (lambda ((set? set1) (set? set2) ...) boolean?)
-   (pure))
- 
- (set>=?
-   (lambda ((set? set1) (set? set2) ...) boolean?)
-   (pure))
- 
- (set-union
-   (lambda ((set? set1) (set? set2) ...) set?)
-   (pure))
- 
- (set-intersection
-   (lambda ((set? set1) (set? set2) ...) set?)
-   (pure))
- 
- (set-difference
-   (lambda ((set? set1) (set? set2) ...) set?)
-   (pure))
- 
- (set-xor
-   (lambda ((set? set1) (set? set2)) set?)
-   (pure))
- 
- (set-union!
-   (lambda ((set? set1) (set? set2) ...) set?)
-   ())
- 
- (set-intersection!
-   (lambda ((set? set1) (set? set2) ...) set?)
-   ())
- 
- (set-difference!
-   (lambda ((set? set1) (set? set2) ...) set?)
-   ())
- 
- (set-xor!
-   (lambda ((set? set1) (set? set2)) set?)
-   ())
- 
- ;;;;;
- 
- 
- (bag
-   (lambda ((comparator? comparator) element ...) bag?)
-   (pure))
- 
- (bag-unfold
-   (lambda ((comparator? comparator) (procedure? stop?) (procedure? mapper) (procedure? successor) seed) bag?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (bag?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (bag-contains?
-   (lambda ((bag? bag) element) boolean?)
-   (pure))
- 
- (bag-empty?
-   (lambda ((bag? bag)) boolean?)
-   (pure))
- 
- (bag-disjoint?
-   (lambda ((bag? bag1) (bag? bag2)) boolean?)
-   (pure))
- 
- (bag-member
-   (lambda ((bag? bag) element default) *)
-   (pure))
- 
- (bag-element-comparator
-   (lambda ((bag? bag)) comparator?)
-   (pure))
- 
- (bag-adjoin
-   (lambda ((bag? bag) element ...) bag?)
-   (pure))
- 
- (bag-adjoin!
-   (lambda ((bag? bag) element ...) bag?)
-   ())
- 
- (bag-replace
-   (lambda ((bag? bag) element) bag?)
-   (pure))
- 
- (bag-replace!
-   (lambda ((bag? bag) element) bag?)
-   ())
- 
- (bag-delete
-   (lambda ((bag? bag) element ...) bag?)
-   (pure))
- 
- (bag-delete!
-   (lambda ((bag? bag) element ...) bag?)
-   ())
- 
- (bag-delete-all
-   (lambda ((bag? bag) (list? elements)) bag?)
-   (pure))
- 
- (bag-delete-all!
-   (lambda ((bag? bag) (list? elements)) bag?)
-   ())
- 
- (bag-search!
-   (lambda ((bag? bag) element (procedure? failure) (procedure? success)) (values bag? *))
-   ()
-   ((failure (lambda ((procedure? insert) (procedure? ignore)) *))
-    (insert (lambda (obj) *))
-    (ignore (lambda (obj) *))
-    (success (lambda (element (procedure? update) (procedure? remove)) *))
-    (update (lambda (new-element obj) *))
-    (remove (lambda (obj) *))))
- 
- (bag-size
-   (lambda ((bag? bag)) integer?)
-   (pure))
- 
- (bag-find
-   (lambda ((procedure? predicate) (bag? bag) (procedure? failure)) *)
-   (pure)
-   ((predicate (lambda (obj) boolean?))
-    (failure (lambda () *))))
- 
- (bag-count
-   (lambda ((procedure? predicate) (bag? bag)) integer?)
-   (pure)
-   ((predicate (lambda (obj) boolean?))))
- 
- (bag-any?
-   (lambda ((procedure? predicate) (bag? bag)) boolean?)
-   (pure)
-   ((predicate (lambda (obj) boolean?))))
- 
- (bag-every?
-   (lambda ((procedure? predicate) (bag? bag)) boolean?)
-   (pure)
-   ((predicate (lambda (obj) boolean?))))
- 
- (bag-map
-   (lambda ((comparator? comparator) (procedure? proc) (bag? bag)) *)
-   (pure)
-   ((proc (lambda (obj) *))))
- 
- (bag-for-each
-   (lambda ((procedure? proc) (bag? bag)) undefined)
-   ()
-   ((proc (lambda (obj) undefined))))
- 
- (bag-fold
-   (lambda ((procedure? proc) nil (bag? bag)) *)
-   (pure)
-   ((proc (lambda (obj state) *))))
- 
- (bag-filter
-   (lambda ((procedure? predicate) (bag? bag)) bag?)
-   (pure)
-   ((predicate (lambda (obj) *))))
- 
- (bag-filter!
-   (lambda ((procedure? predicate) (bag? bag)) bag?)
-   ()
-   ((predicate (lambda (obj) *))))
- 
- (bag-remove
-   (lambda ((procedure? predicate) (bag? bag)) bag?)
-   (pure)
-   ((predicate (lambda (obj) *))))
- 
- (bag-remove!
-   (lambda ((procedure? predicate) (bag? bag)) bag?)
-   ()
-   ((predicate (lambda (obj) *))))
- 
- (bag-partition
-   (lambda ((procedure? predicate) (bag? bag)) (values bag? bag?))
-   (pure)
-   ((predicate (lambda (obj) *))))
- 
- (bag-partition!
-   (lambda ((procedure? predicate) (bag? bag)) (values bag? bag?))
-   ()
-   ((predicate (lambda (obj) *))))
- 
- (bag-copy
-   (lambda ((bag? bag)) bag?)
-   (pure))
- 
- (bag->list
-   (lambda ((bag? bag)) list?)
-   ())
- 
- (list->bag
-   (lambda ((comparator? comparator) (list? list)) bag?)
-   (pure))
- 
- (list->bag!
-   (lambda ((bag? bag) (list? list)) bag?)
-   ())
- 
- (bag=?
-   (lambda ((bag? bag1) (bag? bag2) ...) boolean?)
-   (pure))
- 
- (bag<?
-   (lambda ((bag? bag1) (bag? bag2) ...) boolean?)
-   (pure))
- 
- (bag>?
-   (lambda ((bag? bag1) (bag? bag2) ...) boolean?)
-   (pure))
- 
- (bag<=?
-   (lambda ((bag? bag1) (bag? bag2) ...) boolean?)
-   (pure))
- 
- (bag>=?
-   (lambda ((bag? bag1) (bag? bag2) ...) boolean?)
-   (pure))
- 
- (bag-union
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   (pure))
- 
- (bag-intersection
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   (pure))
- 
- (bag-difference
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   (pure))
- 
- (bag-xor
-   (lambda ((bag? bag1) (bag? bag2)) bag?)
-   (pure))
- 
- (bag-union!
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   ())
- 
- (bag-intersection!
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   ())
- 
- (bag-difference!
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   ())
- 
- (bag-xor!
-   (lambda ((bag? bag1) (bag? bag2)) bag?)
-   ())
- 
- ;;;;;;;;;;
- 
- (bag-sum
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   (pure))
- 
- (bag-sum!
-   (lambda ((bag? bag1) (bag? bag2) ...) bag?)
-   ())
- 
- (bag-product
-   (lambda ((integer? n) (bag? bag)) bag?)
-   (pure))
- 
- (bag-product!
-   (lambda ((integer? n) (bag? bag)) bag?)
-   ())
- 
- (bag-unique-size
-   (lambda ((bag? bag)) integer?)
-   (pure))
- 
- (bag-element-count
-   (lambda ((bag? bag) element) integer?)
-   (pure))
-
- (bag-for-each-unique
-   (lambda ((procedure? proc) (bag? bag)) undefined)
-   ()
-   ((proc (lambda (obj) undefined))))
- 
- (bag-fold-unique
-   (lambda ((procedure? proc) nil (bag? bag)) *)
-   (pure)
-   ((proc (lambda (obj state) *))))
- 
- (bag-increment!
-   (lambda ((bag? bag) element count) bag?)
-   ())
- 
- (bag-decrement!
-   (lambda ((bag? bag) element count) bag?)
-   ())
- 
- (bag->set
-   (lambda ((bag? bag)) set?)
-   (pure))
- 
- (set->bag
-   (lambda ((set? set)) bag?)
-   (pure))
- 
- (set->bag!
-   (lambda ((set? set)) bag?)
-   ())
- 
- (bag->alist
-   (lambda ((bag? bag)) list?))
- 
- (alist->bag
-   (lambda ((comparator? comparator) (list? alist)) bag?)
-   (pure))
- 
- (set-comparator
-   (value comparator?))
- 
- (bag-comparator
-   (value comparator?))
- 
- )
+(((name . set)
+  (signature lambda ((comparator? comparator) element ...) set?)
+  (tags pure))
+ ((name . set-unfold)
+  (signature
+   lambda
+   ((comparator? comparator)
+    (procedure? stop?)
+    (procedure? mapper)
+    (procedure? successor)
+    seed)
+   set?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . set?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . set-contains?)
+  (signature lambda ((set? set) element) boolean?)
+  (tags pure))
+ ((name . set-empty?) (signature lambda ((set? set)) boolean?) (tags pure))
+ ((name . set-disjoint?)
+  (signature lambda ((set? set1) (set? set2)) boolean?)
+  (tags pure))
+ ((name . set-member)
+  (signature lambda ((set? set) element default) *)
+  (tags pure))
+ ((name . set-element-comparator)
+  (signature lambda ((set? set)) comparator?)
+  (tags pure))
+ ((name . set-adjoin)
+  (signature lambda ((set? set) element ...) set?)
+  (tags pure))
+ ((name . set-adjoin!) (signature lambda ((set? set) element ...) set?))
+ ((name . set-replace)
+  (signature lambda ((set? set) element) set?)
+  (tags pure))
+ ((name . set-replace!) (signature lambda ((set? set) element) set?))
+ ((name . set-delete)
+  (signature lambda ((set? set) element ...) set?)
+  (tags pure))
+ ((name . set-delete!) (signature lambda ((set? set) element ...) set?))
+ ((name . set-delete-all)
+  (signature lambda ((set? set) (list? elements)) set?)
+  (tags pure))
+ ((name . set-delete-all!)
+  (signature lambda ((set? set) (list? elements)) set?))
+ ((name . set-search!)
+  (signature
+   lambda
+   ((set? set) element (procedure? failure) (procedure? success))
+   (values set? *))
+  (subsigs
+   (failure (lambda ((procedure? insert) (procedure? ignore)) *))
+   (insert (lambda (obj) *))
+   (ignore (lambda (obj) *))
+   (success (lambda (element (procedure? update) (procedure? remove)) *))
+   (update (lambda (new-element obj) *))
+   (remove (lambda (obj) *))))
+ ((name . set-size) (signature lambda ((set? set)) integer?) (tags pure))
+ ((name . set-find)
+  (signature lambda ((procedure? predicate) (set? set) (procedure? failure)) *)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?)) (failure (lambda () *))))
+ ((name . set-count)
+  (signature lambda ((procedure? predicate) (set? set)) integer?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?))))
+ ((name . set-any?)
+  (signature lambda ((procedure? predicate) (set? set)) boolean?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?))))
+ ((name . set-every?)
+  (signature lambda ((procedure? predicate) (set? set)) boolean?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?))))
+ ((name . set-map)
+  (signature lambda ((comparator? comparator) (procedure? proc) (set? set)) *)
+  (tags pure)
+  (subsigs (proc (lambda (obj) *))))
+ ((name . set-for-each)
+  (signature lambda ((procedure? proc) (set? set)) undefined)
+  (subsigs (proc (lambda (obj) undefined))))
+ ((name . set-fold)
+  (signature lambda ((procedure? proc) nil (set? set)) *)
+  (tags pure)
+  (subsigs (proc (lambda (obj state) *))))
+ ((name . set-filter)
+  (signature lambda ((procedure? predicate) (set? set)) set?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . set-filter!)
+  (signature lambda ((procedure? predicate) (set? set)) set?)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . set-remove)
+  (signature lambda ((procedure? predicate) (set? set)) set?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . set-remove!)
+  (signature lambda ((procedure? predicate) (set? set)) set?)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . set-partition)
+  (signature lambda ((procedure? predicate) (set? set)) (values set? set?))
+  (tags pure)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . set-partition!)
+  (signature lambda ((procedure? predicate) (set? set)) (values set? set?))
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . set-copy) (signature lambda ((set? set)) set?) (tags pure))
+ ((name . set->list) (signature lambda ((set? set)) list?))
+ ((name . list->set)
+  (signature lambda ((comparator? comparator) (list? list)) set?)
+  (tags pure))
+ ((name . list->set!) (signature lambda ((set? set) (list? list)) set?))
+ ((name . set=?)
+  (signature lambda ((set? set1) (set? set2) ...) boolean?)
+  (tags pure))
+ ((name . set<?)
+  (signature lambda ((set? set1) (set? set2) ...) boolean?)
+  (tags pure))
+ ((name . set>?)
+  (signature lambda ((set? set1) (set? set2) ...) boolean?)
+  (tags pure))
+ ((name . set<=?)
+  (signature lambda ((set? set1) (set? set2) ...) boolean?)
+  (tags pure))
+ ((name . set>=?)
+  (signature lambda ((set? set1) (set? set2) ...) boolean?)
+  (tags pure))
+ ((name . set-union)
+  (signature lambda ((set? set1) (set? set2) ...) set?)
+  (tags pure))
+ ((name . set-intersection)
+  (signature lambda ((set? set1) (set? set2) ...) set?)
+  (tags pure))
+ ((name . set-difference)
+  (signature lambda ((set? set1) (set? set2) ...) set?)
+  (tags pure))
+ ((name . set-xor)
+  (signature lambda ((set? set1) (set? set2)) set?)
+  (tags pure))
+ ((name . set-union!) (signature lambda ((set? set1) (set? set2) ...) set?))
+ ((name . set-intersection!)
+  (signature lambda ((set? set1) (set? set2) ...) set?))
+ ((name . set-difference!)
+  (signature lambda ((set? set1) (set? set2) ...) set?))
+ ((name . set-xor!) (signature lambda ((set? set1) (set? set2)) set?))
+ ((name . bag)
+  (signature lambda ((comparator? comparator) element ...) bag?)
+  (tags pure))
+ ((name . bag-unfold)
+  (signature
+   lambda
+   ((comparator? comparator)
+    (procedure? stop?)
+    (procedure? mapper)
+    (procedure? successor)
+    seed)
+   bag?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . bag?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . bag-contains?)
+  (signature lambda ((bag? bag) element) boolean?)
+  (tags pure))
+ ((name . bag-empty?) (signature lambda ((bag? bag)) boolean?) (tags pure))
+ ((name . bag-disjoint?)
+  (signature lambda ((bag? bag1) (bag? bag2)) boolean?)
+  (tags pure))
+ ((name . bag-member)
+  (signature lambda ((bag? bag) element default) *)
+  (tags pure))
+ ((name . bag-element-comparator)
+  (signature lambda ((bag? bag)) comparator?)
+  (tags pure))
+ ((name . bag-adjoin)
+  (signature lambda ((bag? bag) element ...) bag?)
+  (tags pure))
+ ((name . bag-adjoin!) (signature lambda ((bag? bag) element ...) bag?))
+ ((name . bag-replace)
+  (signature lambda ((bag? bag) element) bag?)
+  (tags pure))
+ ((name . bag-replace!) (signature lambda ((bag? bag) element) bag?))
+ ((name . bag-delete)
+  (signature lambda ((bag? bag) element ...) bag?)
+  (tags pure))
+ ((name . bag-delete!) (signature lambda ((bag? bag) element ...) bag?))
+ ((name . bag-delete-all)
+  (signature lambda ((bag? bag) (list? elements)) bag?)
+  (tags pure))
+ ((name . bag-delete-all!)
+  (signature lambda ((bag? bag) (list? elements)) bag?))
+ ((name . bag-search!)
+  (signature
+   lambda
+   ((bag? bag) element (procedure? failure) (procedure? success))
+   (values bag? *))
+  (subsigs
+   (failure (lambda ((procedure? insert) (procedure? ignore)) *))
+   (insert (lambda (obj) *))
+   (ignore (lambda (obj) *))
+   (success (lambda (element (procedure? update) (procedure? remove)) *))
+   (update (lambda (new-element obj) *))
+   (remove (lambda (obj) *))))
+ ((name . bag-size) (signature lambda ((bag? bag)) integer?) (tags pure))
+ ((name . bag-find)
+  (signature lambda ((procedure? predicate) (bag? bag) (procedure? failure)) *)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?)) (failure (lambda () *))))
+ ((name . bag-count)
+  (signature lambda ((procedure? predicate) (bag? bag)) integer?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?))))
+ ((name . bag-any?)
+  (signature lambda ((procedure? predicate) (bag? bag)) boolean?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?))))
+ ((name . bag-every?)
+  (signature lambda ((procedure? predicate) (bag? bag)) boolean?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) boolean?))))
+ ((name . bag-map)
+  (signature lambda ((comparator? comparator) (procedure? proc) (bag? bag)) *)
+  (tags pure)
+  (subsigs (proc (lambda (obj) *))))
+ ((name . bag-for-each)
+  (signature lambda ((procedure? proc) (bag? bag)) undefined)
+  (subsigs (proc (lambda (obj) undefined))))
+ ((name . bag-fold)
+  (signature lambda ((procedure? proc) nil (bag? bag)) *)
+  (tags pure)
+  (subsigs (proc (lambda (obj state) *))))
+ ((name . bag-filter)
+  (signature lambda ((procedure? predicate) (bag? bag)) bag?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . bag-filter!)
+  (signature lambda ((procedure? predicate) (bag? bag)) bag?)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . bag-remove)
+  (signature lambda ((procedure? predicate) (bag? bag)) bag?)
+  (tags pure)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . bag-remove!)
+  (signature lambda ((procedure? predicate) (bag? bag)) bag?)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . bag-partition)
+  (signature lambda ((procedure? predicate) (bag? bag)) (values bag? bag?))
+  (tags pure)
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . bag-partition!)
+  (signature lambda ((procedure? predicate) (bag? bag)) (values bag? bag?))
+  (subsigs (predicate (lambda (obj) *))))
+ ((name . bag-copy) (signature lambda ((bag? bag)) bag?) (tags pure))
+ ((name . bag->list) (signature lambda ((bag? bag)) list?))
+ ((name . list->bag)
+  (signature lambda ((comparator? comparator) (list? list)) bag?)
+  (tags pure))
+ ((name . list->bag!) (signature lambda ((bag? bag) (list? list)) bag?))
+ ((name . bag=?)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) boolean?)
+  (tags pure))
+ ((name . bag<?)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) boolean?)
+  (tags pure))
+ ((name . bag>?)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) boolean?)
+  (tags pure))
+ ((name . bag<=?)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) boolean?)
+  (tags pure))
+ ((name . bag>=?)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) boolean?)
+  (tags pure))
+ ((name . bag-union)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) bag?)
+  (tags pure))
+ ((name . bag-intersection)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) bag?)
+  (tags pure))
+ ((name . bag-difference)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) bag?)
+  (tags pure))
+ ((name . bag-xor)
+  (signature lambda ((bag? bag1) (bag? bag2)) bag?)
+  (tags pure))
+ ((name . bag-union!) (signature lambda ((bag? bag1) (bag? bag2) ...) bag?))
+ ((name . bag-intersection!)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) bag?))
+ ((name . bag-difference!)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) bag?))
+ ((name . bag-xor!) (signature lambda ((bag? bag1) (bag? bag2)) bag?))
+ ((name . bag-sum)
+  (signature lambda ((bag? bag1) (bag? bag2) ...) bag?)
+  (tags pure))
+ ((name . bag-sum!) (signature lambda ((bag? bag1) (bag? bag2) ...) bag?))
+ ((name . bag-product)
+  (signature lambda ((integer? n) (bag? bag)) bag?)
+  (tags pure))
+ ((name . bag-product!) (signature lambda ((integer? n) (bag? bag)) bag?))
+ ((name . bag-unique-size)
+  (signature lambda ((bag? bag)) integer?)
+  (tags pure))
+ ((name . bag-element-count)
+  (signature lambda ((bag? bag) element) integer?)
+  (tags pure))
+ ((name . bag-for-each-unique)
+  (signature lambda ((procedure? proc) (bag? bag)) undefined)
+  (subsigs (proc (lambda (obj) undefined))))
+ ((name . bag-fold-unique)
+  (signature lambda ((procedure? proc) nil (bag? bag)) *)
+  (tags pure)
+  (subsigs (proc (lambda (obj state) *))))
+ ((name . bag-increment!) (signature lambda ((bag? bag) element count) bag?))
+ ((name . bag-decrement!) (signature lambda ((bag? bag) element count) bag?))
+ ((name . bag->set) (signature lambda ((bag? bag)) set?) (tags pure))
+ ((name . set->bag) (signature lambda ((set? set)) bag?) (tags pure))
+ ((name . set->bag!) (signature lambda ((set? set)) bag?))
+ ((name . bag->alist) (signature lambda ((bag? bag)) list?))
+ ((name . alist->bag)
+  (signature lambda ((comparator? comparator) (list? alist)) bag?)
+  (tags pure))
+ ((name . set-comparator) (signature value comparator?))
+ ((name . bag-comparator) (signature value comparator?)))

@@ -1,318 +1,229 @@
-(
- (generator
-   (lambda (arg ...) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (make-iota-generator
-   (lambda ((integer? count)) procedure?)
-   ()
-   ((return (lambda () (or integer? eof-object?)))))
- 
- (make-iota-generator
-   (lambda ((integer? count) (real? start)) procedure?)
-   ()
-   ((return (lambda () (or real? eof-object?)))))
- 
- (make-iota-generator
-   (lambda ((integer? count) (real? start) (real? step)) procedure?)
-   ()
-   ((return (lambda () (or real? eof-object?)))))
- 
- (make-range-generator
-   (lambda ((real? start)) procedure?)
-   ()
-   ((return (lambda () real?))))
- 
- (make-range-generator
-   (lambda ((real? start) (real? end)) procedure?)
-   ()
-   ((return (lambda () (or real? eof-object?)))))
- 
- (make-range-generator
-   (lambda ((real? start) (real? end) (real? step)) procedure?)
-   ()
-   ((return (lambda () (or real? eof-object?)))))
- 
- (make-coroutine-generator
-   (lambda ((procedure? proc)) procedure?)
-   ()
-   ((proc (lambda ((procedure? yield)) undefined))
-    (yield (lambda (value) undefined))
-    (return (lambda () *))))
- 
- (list->generator
-   (lambda ((list? lis)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (vector->generator
-   (lambda ((vector? vec)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (vector->generator
-   (lambda ((vector? vec) (integer? start)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (vector->generator
-   (lambda ((vector? vec) (integer? start) (integer? end)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (reverse-vector->generator
-   (lambda ((vector? vec)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (reverse-vector->generator
-   (lambda ((vector? vec) (integer? start)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (reverse-vector->generator
-   (lambda ((vector? vec) (integer? start) (integer? end)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (string->generator
-   (lambda ((string? str)) procedure?)
-   ()
-   ((return (lambda () (or char? eof-object?)))))
- 
- (string->generator
-   (lambda ((string? str) (integer? start)) procedure?)
-   ()
-   ((return (lambda () (or char? eof-object?)))))
- 
- (string->generator
-   (lambda ((string? str) (integer? start) (integer? end)) procedure?)
-   ()
-   ((return (lambda () (or char? eof-object?)))))
- 
- (bytevector->generator
-   (lambda ((bytevector? bytevector)) procedure?)
-   ()
-   ((return (lambda () (or integer? eof-object?)))))
- 
- (bytevector->generator
-   (lambda ((bytevector? bytevector) (integer? start)) procedure?)
-   ()
-   ((return (lambda () (or integer? eof-object?)))))
- 
- (bytevector->generator
-   (lambda ((bytevector? bytevector) (integer? start) (integer? end)) procedure?)
-   ()
-   ((return (lambda () (or integer? eof-object?)))))
- 
- (make-for-each-generator
-   (lambda ((procedure? for-each) obj) procedure?)
-   ()
-   ((for-each (lambda (element) undefined))
-    (return (lambda () *))))
- 
- (make-unfold-generator
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed) procedure?)
-   ()
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))
-    (return (lambda () *))))
- 
- (gcons*
-   (lambda (item ... (procedure? gen)) procedure?)
-   ()
-   ((gen (lambda () *))
-    (return (lambda () *))))
- 
- (gappend
-   (lambda ((procedure? gen) ...) procedure?)
-   ()
-   ((gen (lambda () *))
-    (return (lambda () *))))
- 
- (gcombine
-   (lambda ((procedure? proc) seed (procedure? gen1) (procedure? gen2) ...) procedure?)
-   ()
-   ((proc (lambda (value1 value2 ... seed) (values * *)))
-    (gen (lambda () *))
-    (return (lambda () *))))
- 
- (gfilter
-   (lambda ((procedure? pred) (procedure? gen)) procedure?)
-   ()
-   ((pred (lambda (element) boolean?))
-    (gen (lambda () *))
-    (return (lambda () *))))
- 
- (gremove
-   (lambda ((procedure? pred) (procedure? gen)) procedure?)
-   ()
-   ((pred (lambda (element) boolean?))
-    (gen (lambda () *))
-    (return (lambda () *))))
- 
- (gtake
-   (lambda ((procedure? gen) (integer? k)) procedure?)
-   ()
-   ((gen (lambda () *))
-    (return (lambda () *))))
- 
- (gtake
-   (lambda ((procedure? gen) (integer? k) padding) procedure?)
-   ()
-   ((gen (lambda () *))
-    (return (lambda () *))))
- 
- (gdrop
-   (lambda ((procedure? gen) (integer? k)) procedure?)
-   ()
-   ((gen (lambda () *))
-    (return (lambda () *))))
- 
- (gtake-while
-   (lambda ((procedure? pred) (procedure? gen)) procedure?)
-   ()
-   ((pred (lambda (element) boolean?))
-    (gen (lambda () *))
-    (return (lambda () *))))
- 
- (gdrop-while
-   (lambda ((procedure? pred) (procedure? gen)) procedure?)
-   ()
-   ((pred (lambda (element) boolean?))
-    (gen (lambda () *))
-    (return (lambda () *))))
- 
- (gdelete
-   (lambda (item (procedure? gen)) procedure?)
-   ()
-   ((gen (lambda () *))
-    (return (lambda () *))))
- 
- (gdelete
-   (lambda (item (procedure? gen) (procedure? =)) procedure?)
-   ()
-   ((gen (lambda () *))
-    (= (lambda (a b) boolean?))
-    (return (lambda () *))))
- 
- (gdelete-neighbor-dups
-   (lambda ((procedure? gen)) procedure?)
-   ()
-   ((gen (lambda () *))
-    (return (lambda () *))))
- 
- (gdelete-neighbor-dups
-   (lambda ((procedure? gen) (procedure? =)) procedure?)
-   ()
-   ((gen (lambda () *))
-    (= (lambda (a b) boolean?))
-    (return (lambda () *))))
- 
- (gindex
-   (lambda ((procedure? value-gen) (procedure? index-gen)) procedure?)
-   ()
-   ((value-gen (lambda () *))
-    (index-gen (lambda () (or integer? eof-object?)))
-    (return (lambda () *))))
- 
- (gselect
-   (lambda ((procedure? value-gen) (procedure? truth-gen)) procedure?)
-   ()
-   ((value-gen (lambda () *))
-    (truth-gen (lambda () (or boolean? eof-object?)))
-    (return (lambda () *))))
- 
- (generator->list
-   (lambda ((procedure? generator)) list?)
-   ()
-   ((generator (lambda () *))))
- 
- (generator->list
-   (lambda ((procedure? generator) (integer? k)) list?)
-   ()
-   ((generator (lambda () *))))
- 
- (generator->reverse-list
-   (lambda ((procedure? generator)) list?)
-   ()
-   ((generator (lambda () *))))
- 
- (generator->reverse-list
-   (lambda ((procedure? generator) (integer? k)) list?)
-   ()
-   ((generator (lambda () *))))
- 
- (generator->vector
-   (lambda ((procedure? generator)) vector?)
-   ()
-   ((generator (lambda () *))))
- 
- (generator->vector
-   (lambda ((procedure? generator) (integer? k)) vector?)
-   ()
-   ((generator (lambda () *))))
- 
- (generator->vector!
-   (lambda ((vector? vector) (integer? at) (procedure? generator)) integer?)
-   ()
-   ((generator (lambda () *))))
- 
- (generator->string
-   (lambda ((procedure? generator)) string?)
-   ()
-   ((generator (lambda () (or char? eof-object?)))))
- 
- (generator->string
-   (lambda ((procedure? generator) (integer? k)) string?)
-   ()
-   ((generator (lambda () (or char? eof-object?)))))
- 
- (generator-fold
-   (lambda ((procedure? proc) seed (procedure? gen1) (procedure? gen2) ...) procedure?)
-   ()
-   ((proc (lambda (val1 val2 ... state) *))
-    (gen (lambda () *))))
- 
- (generator-for-each
-   (lambda ((procedure? proc) (procedure? gen1) (procedure? gen2) ...) undefined)
-   ()
-   ((proc (lambda (val1 val2 ...) undefined))
-    (gen (lambda () *))))
- 
- (generator-find
-   (lambda ((procedure? pred) (procedure? generator)) *)
-   ()
-   ((pred (lambda (element) boolean?))
-    (generator (lambda () *))))
- 
- (generator-count
-   (lambda ((procedure? pred) (procedure? generator)) integer?)
-   ()
-   ((pred (lambda (element) boolean?))
-    (generator (lambda () *))))
- 
- (generator-any
-   (lambda ((procedure? pred) (procedure? generator)) *)
-   ()
-   ((pred (lambda (element) boolean?))
-    (generator (lambda () *))))
- 
- (generator-every
-   (lambda ((procedure? pred) (procedure? generator)) *)
-   ()
-   ((pred (lambda (element) boolean?))
-    (generator (lambda () *))))
- 
- (generator-unfold
-   (lambda ((procedure? gen) (procedure? unfold) arg ...) *)
-   ()
-   ((gen (lambda () *))
-    (unfold (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed args ...) *))
-    (stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- )
+(((name . generator)
+  (signature lambda (arg ...) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . make-iota-generator)
+  (signature lambda ((integer? count)) procedure?)
+  (subsigs (return (lambda () (or integer? eof-object?)))))
+ ((name . make-iota-generator)
+  (signature lambda ((integer? count) (real? start)) procedure?)
+  (subsigs (return (lambda () (or real? eof-object?)))))
+ ((name . make-iota-generator)
+  (signature lambda ((integer? count) (real? start) (real? step)) procedure?)
+  (subsigs (return (lambda () (or real? eof-object?)))))
+ ((name . make-range-generator)
+  (signature lambda ((real? start)) procedure?)
+  (subsigs (return (lambda () real?))))
+ ((name . make-range-generator)
+  (signature lambda ((real? start) (real? end)) procedure?)
+  (subsigs (return (lambda () (or real? eof-object?)))))
+ ((name . make-range-generator)
+  (signature lambda ((real? start) (real? end) (real? step)) procedure?)
+  (subsigs (return (lambda () (or real? eof-object?)))))
+ ((name . make-coroutine-generator)
+  (signature lambda ((procedure? proc)) procedure?)
+  (subsigs
+   (proc (lambda ((procedure? yield)) undefined))
+   (yield (lambda (value) undefined))
+   (return (lambda () *))))
+ ((name . list->generator)
+  (signature lambda ((list? lis)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . vector->generator)
+  (signature lambda ((vector? vec)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . vector->generator)
+  (signature lambda ((vector? vec) (integer? start)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . vector->generator)
+  (signature lambda ((vector? vec) (integer? start) (integer? end)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . reverse-vector->generator)
+  (signature lambda ((vector? vec)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . reverse-vector->generator)
+  (signature lambda ((vector? vec) (integer? start)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . reverse-vector->generator)
+  (signature lambda ((vector? vec) (integer? start) (integer? end)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . string->generator)
+  (signature lambda ((string? str)) procedure?)
+  (subsigs (return (lambda () (or char? eof-object?)))))
+ ((name . string->generator)
+  (signature lambda ((string? str) (integer? start)) procedure?)
+  (subsigs (return (lambda () (or char? eof-object?)))))
+ ((name . string->generator)
+  (signature lambda ((string? str) (integer? start) (integer? end)) procedure?)
+  (subsigs (return (lambda () (or char? eof-object?)))))
+ ((name . bytevector->generator)
+  (signature lambda ((bytevector? bytevector)) procedure?)
+  (subsigs (return (lambda () (or integer? eof-object?)))))
+ ((name . bytevector->generator)
+  (signature lambda ((bytevector? bytevector) (integer? start)) procedure?)
+  (subsigs (return (lambda () (or integer? eof-object?)))))
+ ((name . bytevector->generator)
+  (signature
+   lambda
+   ((bytevector? bytevector) (integer? start) (integer? end))
+   procedure?)
+  (subsigs (return (lambda () (or integer? eof-object?)))))
+ ((name . make-for-each-generator)
+  (signature lambda ((procedure? for-each) obj) procedure?)
+  (subsigs (for-each (lambda (element) undefined)) (return (lambda () *))))
+ ((name . make-unfold-generator)
+  (signature
+   lambda
+   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+   procedure?)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))
+   (return (lambda () *))))
+ ((name . gcons*)
+  (signature lambda (item ... (procedure? gen)) procedure?)
+  (subsigs (gen (lambda () *)) (return (lambda () *))))
+ ((name . gappend)
+  (signature lambda ((procedure? gen) ...) procedure?)
+  (subsigs (gen (lambda () *)) (return (lambda () *))))
+ ((name . gcombine)
+  (signature
+   lambda
+   ((procedure? proc) seed (procedure? gen1) (procedure? gen2) ...)
+   procedure?)
+  (subsigs
+   (proc (lambda (value1 value2 ... seed) (values * *)))
+   (gen (lambda () *))
+   (return (lambda () *))))
+ ((name . gfilter)
+  (signature lambda ((procedure? pred) (procedure? gen)) procedure?)
+  (subsigs
+   (pred (lambda (element) boolean?))
+   (gen (lambda () *))
+   (return (lambda () *))))
+ ((name . gremove)
+  (signature lambda ((procedure? pred) (procedure? gen)) procedure?)
+  (subsigs
+   (pred (lambda (element) boolean?))
+   (gen (lambda () *))
+   (return (lambda () *))))
+ ((name . gtake)
+  (signature lambda ((procedure? gen) (integer? k)) procedure?)
+  (subsigs (gen (lambda () *)) (return (lambda () *))))
+ ((name . gtake)
+  (signature lambda ((procedure? gen) (integer? k) padding) procedure?)
+  (subsigs (gen (lambda () *)) (return (lambda () *))))
+ ((name . gdrop)
+  (signature lambda ((procedure? gen) (integer? k)) procedure?)
+  (subsigs (gen (lambda () *)) (return (lambda () *))))
+ ((name . gtake-while)
+  (signature lambda ((procedure? pred) (procedure? gen)) procedure?)
+  (subsigs
+   (pred (lambda (element) boolean?))
+   (gen (lambda () *))
+   (return (lambda () *))))
+ ((name . gdrop-while)
+  (signature lambda ((procedure? pred) (procedure? gen)) procedure?)
+  (subsigs
+   (pred (lambda (element) boolean?))
+   (gen (lambda () *))
+   (return (lambda () *))))
+ ((name . gdelete)
+  (signature lambda (item (procedure? gen)) procedure?)
+  (subsigs (gen (lambda () *)) (return (lambda () *))))
+ ((name . gdelete)
+  (signature lambda (item (procedure? gen) (procedure? =)) procedure?)
+  (subsigs
+   (gen (lambda () *))
+   (= (lambda (a b) boolean?))
+   (return (lambda () *))))
+ ((name . gdelete-neighbor-dups)
+  (signature lambda ((procedure? gen)) procedure?)
+  (subsigs (gen (lambda () *)) (return (lambda () *))))
+ ((name . gdelete-neighbor-dups)
+  (signature lambda ((procedure? gen) (procedure? =)) procedure?)
+  (subsigs
+   (gen (lambda () *))
+   (= (lambda (a b) boolean?))
+   (return (lambda () *))))
+ ((name . gindex)
+  (signature lambda ((procedure? value-gen) (procedure? index-gen)) procedure?)
+  (subsigs
+   (value-gen (lambda () *))
+   (index-gen (lambda () (or integer? eof-object?)))
+   (return (lambda () *))))
+ ((name . gselect)
+  (signature lambda ((procedure? value-gen) (procedure? truth-gen)) procedure?)
+  (subsigs
+   (value-gen (lambda () *))
+   (truth-gen (lambda () (or boolean? eof-object?)))
+   (return (lambda () *))))
+ ((name . generator->list)
+  (signature lambda ((procedure? generator)) list?)
+  (subsigs (generator (lambda () *))))
+ ((name . generator->list)
+  (signature lambda ((procedure? generator) (integer? k)) list?)
+  (subsigs (generator (lambda () *))))
+ ((name . generator->reverse-list)
+  (signature lambda ((procedure? generator)) list?)
+  (subsigs (generator (lambda () *))))
+ ((name . generator->reverse-list)
+  (signature lambda ((procedure? generator) (integer? k)) list?)
+  (subsigs (generator (lambda () *))))
+ ((name . generator->vector)
+  (signature lambda ((procedure? generator)) vector?)
+  (subsigs (generator (lambda () *))))
+ ((name . generator->vector)
+  (signature lambda ((procedure? generator) (integer? k)) vector?)
+  (subsigs (generator (lambda () *))))
+ ((name . generator->vector!)
+  (signature
+   lambda
+   ((vector? vector) (integer? at) (procedure? generator))
+   integer?)
+  (subsigs (generator (lambda () *))))
+ ((name . generator->string)
+  (signature lambda ((procedure? generator)) string?)
+  (subsigs (generator (lambda () (or char? eof-object?)))))
+ ((name . generator->string)
+  (signature lambda ((procedure? generator) (integer? k)) string?)
+  (subsigs (generator (lambda () (or char? eof-object?)))))
+ ((name . generator-fold)
+  (signature
+   lambda
+   ((procedure? proc) seed (procedure? gen1) (procedure? gen2) ...)
+   procedure?)
+  (subsigs (proc (lambda (val1 val2 ... state) *)) (gen (lambda () *))))
+ ((name . generator-for-each)
+  (signature
+   lambda
+   ((procedure? proc) (procedure? gen1) (procedure? gen2) ...)
+   undefined)
+  (subsigs (proc (lambda (val1 val2 ...) undefined)) (gen (lambda () *))))
+ ((name . generator-find)
+  (signature lambda ((procedure? pred) (procedure? generator)) *)
+  (subsigs (pred (lambda (element) boolean?)) (generator (lambda () *))))
+ ((name . generator-count)
+  (signature lambda ((procedure? pred) (procedure? generator)) integer?)
+  (subsigs (pred (lambda (element) boolean?)) (generator (lambda () *))))
+ ((name . generator-any)
+  (signature lambda ((procedure? pred) (procedure? generator)) *)
+  (subsigs (pred (lambda (element) boolean?)) (generator (lambda () *))))
+ ((name . generator-every)
+  (signature lambda ((procedure? pred) (procedure? generator)) *)
+  (subsigs (pred (lambda (element) boolean?)) (generator (lambda () *))))
+ ((name . generator-unfold)
+  (signature lambda ((procedure? gen) (procedure? unfold) arg ...) *)
+  (subsigs
+   (gen (lambda () *))
+   (unfold
+    (lambda ((procedure? stop?)
+             (procedure? mapper)
+             (procedure? successor)
+             seed
+             args
+             ...)
+      *))
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *)))))

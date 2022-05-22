@@ -117,6 +117,7 @@ nav {
 .lib {
     font-size: 0.8em;
     grid-area: lib;
+    margin-bottom: 0.8em;
 }
 
 .lib-link {
