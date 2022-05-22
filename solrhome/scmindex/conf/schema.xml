@@ -28,6 +28,7 @@
     <field name="param_names" type="text_general" indexed="true" stored="true" multiValued="true"/>
     <field name="tags" type="strings" indexed="true" stored="true" />
     <field name="param_signatures" type="string" indexed="false" stored="true" />
+    <field name="syntax_param_signatures" type="string" indexed="false" stored="true" />
     <field name="param_types" type="strings" indexed="true" stored="true" />
     <field name="param_subtypes" type="strings" indexed="true" stored="true" />
     <field name="param_subtypes_loose" type="strings" indexed="true" stored="true" />

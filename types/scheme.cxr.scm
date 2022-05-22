@@ -1,97 +1,24 @@
-(
- (caaaar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (caaadr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (caaar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (caadar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (caaddr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (caadr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cadaar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cadadr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cadar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (caddar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cadddr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (caddr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdaaar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdaadr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdaar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdadar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdaddr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdadr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cddaar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cddadr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cddar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdddar
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cddddr
-   (lambda ((pair? pair)) *)
-   (pure))
-
- (cdddr
-   (lambda ((pair? pair)) *)
-   (pure))
- )
+(((name . caaaar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . caaadr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . caaar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . caadar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . caaddr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . caadr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cadaar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cadadr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cadar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . caddar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cadddr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . caddr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdaaar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdaadr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdaar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdadar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdaddr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdadr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cddaar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cddadr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cddar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdddar) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cddddr) (signature lambda ((pair? pair)) *) (tags pure))
+ ((name . cdddr) (signature lambda ((pair? pair)) *) (tags pure)))

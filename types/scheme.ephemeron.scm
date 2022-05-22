@@ -1,22 +1,9 @@
-(
- 
- (ephemeron?
-   (lambda (object) boolean?)
-   (pure predicate))
- 
- (make-ephemeron
-   (lambda (key datum) ephemeron?))
- 
- (ephemeron-broken?
-   (lambda ((ephemeron? ephemeron)) boolean?))
- 
- (ephemeron-key
-   (lambda ((ephemeron? ephemeron)) *))
- 
- (ephemeron-datum
-   (lambda ((ephemeron? ephemeron)) *))
- 
- (reference-barrier
-   (lambda (key) *))
- 
- )
+(((name . ephemeron?)
+  (signature lambda (object) boolean?)
+  (tags pure predicate))
+ ((name . make-ephemeron) (signature lambda (key datum) ephemeron?))
+ ((name . ephemeron-broken?)
+  (signature lambda ((ephemeron? ephemeron)) boolean?))
+ ((name . ephemeron-key) (signature lambda ((ephemeron? ephemeron)) *))
+ ((name . ephemeron-datum) (signature lambda ((ephemeron? ephemeron)) *))
+ ((name . reference-barrier) (signature lambda (key) *)))

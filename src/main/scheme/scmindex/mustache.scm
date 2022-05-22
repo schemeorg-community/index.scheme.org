@@ -4,57 +4,275 @@
           (scheme read)
           (scheme write)
           (scheme cxr)
+          (arvyy mustache)
+          (arvyy kawa-spark)
           (class java.net URLEncoder)
+          (scmindex domain)
           (only (srfi 1) iota filter find))
   
-  (export make-mustache-search-data
-          make-mustache-nav-data
+  (export
+        render-home-page
+        render-search-page
+        render-settings-page
+        settings-cookies
+        data-lookup
+        user-setting/page-size
+        user-setting/param-filter-loose
 
-          make-doc-data
-          )
+        ;; exported for testing
+        make-doc-data)
   (begin
-    
-    (define nav-data
-      `#(
-         ((label . "Home")
-          (link . "/")
-          (page . index))
-         
-         ((label . "Search")
-          (link . "/search")
-          (page . search))
-         
-         ((label . "Settings")
-          (link . "/settings")
-          (page . settings))
-         
-         ((label . "Documentation")
-          (link . "/README.html")
-          (page . docs))
 
-         ))
+    (define-syntax define-mustache-record-type
+        (syntax-rules ()
+            ((_ type lookup constructor pred (field getter) ...)
+             (begin
+                (define-record-type type constructor pred (field getter) ...)
+                (define lookup
+                    (let ((getter-map (list (cons (quote field) getter) ...)))
+                        (lambda (obj name found not-found)
+                            (cond
+                                ((not (pred obj)) (not-found))
+                                ((assoc (string->symbol name) getter-map) =>
+                                 (lambda (e)
+                                   (found ((cdr e) obj))))
+                                 (else (not-found))))))))))
 
-    (define (make-mustache-nav-data page)
-      (define links 
-        (vector-map
-          (lambda (d)
-            (define active (equal? (cdr (assoc 'page d)) page))
-            (cons
-              (cons 'active active)
-              d))
-          nav-data))
-      `((nav-links . ,links)))
 
-    (define (make-mustache-search-data 
-              page
-              page-size
-              query
-              libs
-              param-types
-              return-types
-              tags
-              data)
-      
+    (define-mustache-record-type <sexpr-el>
+        sexpr-el-lookup
+        (make-sexpr-el html text class link sub-exprs)
+        sexpr-el?
+        (html sexpr-el-html)
+        (text sexpr-el-text)
+        (class sexpr-el-class)
+        (link sexpr-el-link)
+        (sub-exprs sexpr-el-sub-exprs))
+
+    (define-mustache-record-type <navigation>
+        navigation-lookup
+        (make-navigation items)
+        navigation?
+        (items navigation-items))
+
+    (define-mustache-record-type <nav-item>
+        nav-item-lookup
+        (make-nav-item label icon-cls link active?)
+        nav-item?
+        (label nav-item-label)
+        (icon-cls nav-item-icon-cls)
+        (link nav-item-link)
+        (active? nav-item-active?))
+
+    (define-mustache-record-type <pager-btn>
+        pager-button-lookup
+        (make-pager-button number link gap?)
+        pager-button?
+        (number pager-button-number)
+        (link pager-button-link)
+        (gap? pager-button-gap?))
+
+    (define-mustache-record-type <facet>
+        facet-lookup
+        (make-facet name title options)
+        facet?
+        (name facet-name)
+        (title facet-title)
+        (options facet-options))
+
+    (define-mustache-record-type <facet-option>
+        facet-option-lookup
+        (make-facet-option value label count selected?)
+        facet-option?
+        (value facet-option-value)
+        (label facet-option-label)
+        (count facet-option-count)
+        (selected? facet-option-selected?))
+
+    (define-mustache-record-type <search-result-mustache>
+        search-result-mustache-lookup
+        (make-search-result-mustache query facets pages procedures)
+        search-result-mustache?
+        (query search-result-mustache-query)
+        (facets search-result-mustache-facets)
+        (pages search-result-mustache-pages)
+        (procedures search-result-mustache-procedures))
+
+    (define-mustache-record-type <result-item>
+        result-item-lookup
+        (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib)
+        result-item?
+        (signature result-item-signature)
+        (param-signatures result-item-param-signatures)
+        (subsyntax-signatures result-item-subsyntax-signatures)
+        (syntax-param-signatures result-item-syntax-param-signatures)
+        (tags result-item-tags)
+        (lib result-item-lib))
+
+    (define-mustache-record-type <page-head>
+        page-head-lookup
+        (make-page-head title light-theme ctrlf-override)
+        page-head?
+        (title page-head-title)
+        (light-theme page-head-light-theme)
+        (ctrlf-override page-head-ctrlf-override))
+
+    (define-mustache-record-type <setting>
+        setting-lookup
+        (make-setting name legend description default-value options)
+        setting?
+        (name setting-name)
+        (legend setting-legend)
+        (description setting-description)
+        (default-value setting-default-value)
+        (options setting-options))
+
+    (define-mustache-record-type <setting-option>
+        setting-option-lookup
+        (make-setting-option value selected?)
+        setting-option?
+        (value setting-option-value)
+        (selected? setting-option-selected?))
+
+    (define-mustache-record-type <page>
+        page-lookup
+        (make-page head navigation body)
+        page?
+        (head page-head)
+        (navigation page-navigation)
+        (body page-body))
+
+    (define-mustache-record-type <syntax-rule>
+        syntax-rule-lookup
+        (make-syntax-rule name rules)
+        syntax-rule?
+        (name syntax-rule-name)
+        (rules syntax-rule-rules))
+
+    (define (result-item-extra-lookup obj name found not-found)
+        (cond
+            ((not (result-item? obj)) (not-found))
+            ((equal? "has-param-signatures?" name) (found (not (null? (result-item-param-signatures obj)))))
+            ((equal? "has-subsyntax-signatures?" name) (found (not (null? (result-item-subsyntax-signatures obj)))))
+            ((equal? "has-syntax-param-signatures?" name) (found (not (null? (result-item-syntax-param-signatures obj)))))
+            (else (not-found))))
+
+    (define data-lookup
+        (compose-lookups
+            sexpr-el-lookup
+            navigation-lookup
+            nav-item-lookup
+            pager-button-lookup
+            facet-lookup
+            facet-option-lookup
+            search-result-mustache-lookup
+            result-item-lookup
+            page-head-lookup
+            setting-lookup
+            setting-option-lookup
+            page-lookup
+            syntax-rule-lookup
+            result-item-extra-lookup))
+
+    (define make-mustache-nav-data
+        (let ((pages '(("Home" "icon-home3" "/" index)
+                       ("Search" "icon-search" "/search" search)
+                       ("Settings" "icon-cog" "/settings" settings)
+                       ("Documentation" "icon-file-text2" "/README.html" docs))))
+            (lambda (page)
+                (map
+                    (lambda (p)
+                        (define active? (equal? (list-ref p 3) page))
+                        (make-nav-item (list-ref p 0) (list-ref p 1) (list-ref p 2) active?))
+                    pages))))
+
+    (define settings-data
+        (list
+            (make-setting "pageSize"
+                          "Page size"
+                          ""
+                          "40"
+                          '("10" "40" "100"))
+
+            (make-setting "theme"
+                          "Theme"
+                          ""
+                          "light"
+                          '("light" "dark"))
+
+            (make-setting "overrideCtrlF"
+                          "Override control+f behavior"
+                          "If enabled, pressing control+f will highlight and focus search text field"
+                          "no"
+                          '("yes" "no"))
+
+            (make-setting "filterParamsLoose"
+                          "Use loose parameter filtering"
+                          "When enabled, filtering by parameter of union type, will return results that take parameter of
+                           a type that composes that union. For example, filtering by `list?` (which is union type of `pair?`
+                           and `null?`) will find functions that take `pair?` argument. This leads to showing functions
+                           that searcher is probably interested in, however at the drawback that those functions won't be
+                           applicable in general case"
+                           "yes"
+                           '("yes" "no"))))
+
+      (define settings-cookies '("overrideCtrlF" "theme" "pageSize" "filterParamsLoose"))
+
+      (define (user-setting/page-size req)
+        (cond
+          ((assoc 'pageSize (req/cookies req)) => (lambda (e)
+                                                    (string->number (cdr e))))
+          (else 40)))
+
+      (define (user-setting/light-theme? req)
+        (cond
+          ((assoc 'theme (req/cookies req)) => (lambda (e)
+                                                    (equal? "light" (cdr e))))
+          (else #t)))
+
+      (define (user-setting/ctrl-f-override req)
+        (cond
+          ((assoc 'overrideCtrlF (req/cookies req)) => (lambda (e)
+                                                    (equal? "yes" (cdr e))))
+          (else #f)))
+
+      (define (user-setting/param-filter-loose req)
+        (cond
+          ((assoc 'filterParamsLoose (req/cookies req)) => (lambda (e)
+                                                             (equal? "yes" (cdr e))))
+          (else #t)))
+
+    (define (mustache-settings-data req)
+      (define cookies (req/cookies req))
+      (map
+        (lambda (s)
+          (define name (setting-name s))
+          (define selected-value
+            (cond
+              ((assoc (string->symbol name) cookies) => cdr)
+              (else (setting-default-value s))))
+          (define options
+            (map
+              (lambda (value)
+                (make-setting-option value (equal? value selected-value)))
+              (setting-options s)))
+          (make-setting (setting-name s)
+                        (setting-legend s)
+                        (setting-description s)
+                        (setting-default-value s)
+                        options))
+        settings-data))
+
+    (define (make-mustache-search-data page page-size query libs tags param-types return-types search-result)
+
+      (define (remove-parens str)
+        (list->string
+            (filter
+                (lambda (ch)
+                    (and (not (eqv? ch #\())
+                         (not (eqv? ch #\)))))
+                (string->list str))))
+
       (define current-query
         (append
           `((page . ,(number->string page)))
@@ -77,29 +295,24 @@
             (lambda (tag)
               (cons 'tag tag)) 
             tags)))
-      
-      `((query . ,query)
-        (facets . #(((name . "lib")
-                     (title . "Library")
-                     (options . ,(make-mustache-facet (cdr (assoc 'lib data)) libs)))
-                    ((name . "tag")
-                     (title . "Tag")
-                     (options . ,(make-mustache-facet (cdr (assoc 'tag data)) tags)))
-                    ((name . "param")
-                     (title . "Parameter type")
-                     (options . ,(make-mustache-facet (cdr (assoc 'param data)) param-types)))
-                    ((name . "return")
-                     (title . "Return type")
-                     (options . ,(make-mustache-facet (cdr (assoc 'return data)) return-types)))))
-        (pages . ,(make-pager-data page (ceiling (/ (cdr (assoc 'total data)) page-size)) current-query))
-        (procedures . ,(vector-map make-doc-data (cdr (assoc 'procedures data))))))
 
-    (define (make-mustache-facet facet-result selected-values)
-      (vector-map
+       (make-search-result-mustache
+            query
+            (list
+                (make-facet "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
+                (make-facet "tag" "Tag" (parse-facet-options (search-result-tags search-result) tags #f))
+                (make-facet "param" "Parameter type" (parse-facet-options (search-result-params search-result) param-types #f))
+                (make-facet "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f)))
+            (make-pager-data page (ceiling (/ (search-result-total search-result) page-size)) current-query)
+            (map make-doc-data (search-result-items search-result))))
+
+    (define (parse-facet-options facet-result selected-values label-transformer)
+      (define fn (if label-transformer label-transformer (lambda (x) x)))
+      (map
         (lambda (f)
-          (cons
-            (cons 'selected (and (member (cdr (assoc 'value f)) selected-values) #t))
-            f))
+          (define value (search-result-facet-value f))
+          (define selected? (member value selected-values))
+          (make-facet-option value (fn value) (search-result-facet-count f) selected?))
         facet-result))
 
     ;TODO move out
@@ -122,7 +335,7 @@
                         fragment
                         (string-append str "&" fragment)))
                   (loop new-str rest #f))))))
-    
+
     (define (make-pager-data page total-pages query)
       (define query-without-page
         (filter
@@ -145,34 +358,23 @@
       (define shown-pages
         (append begining near-range ending))
       
-      (list->vector
-        (map
-          (lambda (p)
-            (if (not p)
-                `((pager-gap . #t))
-                (let* ((link-query
-                        (cons
-                          (cons 'page (number->string p))
-                          query-without-page))
-                       (link
-                         (if (= p page)
-                             #f
-                             (string-append "?" (encode-query link-query)))))
-                  `((number . ,p)
-                    (link . ,link)
-                    (pager-gap . #f)))))
-          shown-pages)))
+      (map
+        (lambda (p)
+          (if (not p)
+              (make-pager-button #f #f #t)
+              (let* ((link-query
+                      (cons
+                        (cons 'page (number->string p))
+                        query-without-page))
+                     (link
+                       (if (= p page)
+                           #f
+                           (string-append "?" (encode-query link-query)))))
+                (make-pager-button p link #f))))
+        shown-pages))
     
     (define (make-doc-data doc)
-      (define (get key)
-        (cond
-          ((assoc key doc) => cdr)
-          (else #f)))
-      (define signature (read (open-input-string (get 'signature))))
-      (define (make-link type param?)
-        (if param?
-            (string-append "?" (encode-query `((return . ,(symbol->string type)))))
-            (string-append "?" (encode-query `((param . ,(symbol->string type)))))))
+      (define signature (func-signature doc))
       (define-values
         (param-signatures subsyntax-signatures signature-sd)
         (case (car signature)
@@ -183,9 +385,9 @@
                                                   (cadr param-sig)
                                                   (lambda args #f)
                                                   #t))
-                     (read (open-input-string (get 'param_signatures))))
+                     (func-param-signatures doc))
                    '()
-                   (make-signature-sexpr-data (get 'name) 
+                   (make-signature-sexpr-data (func-name doc)
                                        signature 
                                        make-link 
                                        #f)))
@@ -194,86 +396,94 @@
                    (let ((literals (cadr signature)))
                     (map
                       (lambda (param)
-                        `((name . ,(symbol->string (car param)))
-                          (rules . #(,@(map
-                                         (lambda (rule)
-                                           (make-subsyntax-signature-sexpr-data literals rule))
-                                         (cdr param))))))
-                      (read (open-input-string (get 'param_signatures)))))
-                   (make-syntax-signature-sexpr-data (get 'name)
+                        (make-syntax-rule (symbol->string (car param))
+                            (map
+                                (lambda (rule)
+                                  (make-subsyntax-signature-sexpr-data literals rule))
+                                (cdr param))))
+                      (func-param-signatures doc)))
+                   (make-syntax-signature-sexpr-data (func-name doc)
                                                      signature)))
           ((value)
            (values '()
                    '()
-                   (make-value-signature-sexpr-data (get 'name)
+                   (make-value-signature-sexpr-data (func-name doc)
                                                     signature
                                                     make-link)))))
-      `((signature . ,signature-sd)
-        (param_signatures . ,(list->vector param-signatures))
-        (has_param_signatures . ,(not (null? param-signatures)))
-        (subsyntax_signatures . ,(list->vector subsyntax-signatures))
-        (has_subsyntax_signatures . ,(not (null? subsyntax-signatures)))
-        (tags . ,(get 'tags))
-        (lib . ,(get 'lib))))
+      (define syntax-param-signatures
+        (make-syntax-param-signatures (func-syntax-param-signatures doc)))
+
+      (make-result-item
+        signature-sd
+        param-signatures
+        subsyntax-signatures
+        syntax-param-signatures
+        (func-tags doc)
+        (func-lib doc)))
     
     (define (make-subsyntax-signature-sexpr-data literals rule)
       (define (term-handler term)
         (cond
           ((find (lambda (el) (equal? term el)) literals)
-           `((text . ,(symbol->string term))
-             (sub-exprs . #f)
-             (class . "bright-syntax")))
+           (make-sexpr-el #f (symbol->string term) "bright-syntax" #f #f))
           ((or (equal? '... term)
                (equal? '|#| term))
-           `((text . ,(symbol->string term))
-             (sub-exprs . #f)
-             (class . "muted")))
-          (else 
-            `((class . "sexpr-flex muted")
-              (sub-exprs . #(((html . "&#x27E8")
-                              (sub-exprs . #f))
-                             ((text . ,(symbol->string term))
-                              (sub-exprs . #f))
-                             ((html . "&#x27E9")
-                              (sub-exprs . #f))))))))
-      `((class . "sexpr-flex")
-        (sub-exprs . #(,@(make-sexpr-data (cons rule '()) term-handler 1)))))
-    
+           (make-sexpr-el #f (symbol->string term) "muted" #f #f))
+          (else
+            (make-sexpr-el #f #f "sexpr-flex muted" #f
+                (list (make-sexpr-el "&#x27E8" #f #f #f #f)
+                      (make-sexpr-el #f (symbol->string term) #f #f #f)
+                      (make-sexpr-el "&#x27E9" #f #f #f #f))))))
+      (make-sexpr-el #f #f "sexpr-flex" #f (make-sexpr-data (cons rule '()) term-handler 1)))
+
+  (define (make-syntax-param-signatures params)
+    (map
+        (lambda (param)
+            (define name (symbol->string (car param)))
+            (define type (cadr param))
+            (make-sexpr-el #f #f "sexpr-flex" #f
+                (list
+                    paren-open-sd
+                    (make-param-type-sd type #f make-link)
+                    spacer-sd
+                    (make-sexpr-el #f name "muted" #f #f)
+                    paren-close-sd)))
+        params))
+
+  (define (make-link type param?)
+    (if param?
+        (string-append "?" (encode-query `((return . ,(symbol->string type)))))
+        (string-append "?" (encode-query `((param . ,(symbol->string type)))))))
+
     (define (make-syntax-signature-sexpr-data name signature)
-      (define name-symbol (string->symbol name))
       (define rules
         (map 
           (lambda (r)
-            (cons name-symbol (cdar r)))
+            `((,name ,@(cdar r)) ,@(cdr r)))
           (cddr signature)))
       (define literals (cadr signature))
       (define (term-handler term)
         (cond
-          ((or (equal? name-symbol term)
+          ((or (equal? name term)
                (find (lambda (el) (equal? term el)) literals))
-           `((text . ,(symbol->string term))
-             (sub-exprs . #f)
-             (class . "bright-syntax")))
+           (make-sexpr-el #f (symbol->string term) "bright-syntax" #f #f))
           ((equal? '... term)
-           `((text . "...")
-             (sub-exprs . #f)
-             (class . "muted")))
-          (else 
-            `((class . "sexpr-flex muted")
-              (sub-exprs . #(((html . "&#x27E8")
-                              (sub-exprs . #f))
-                             ((text . ,(symbol->string term))
-                              (sub-exprs . #f))
-                             ((html . "&#x27E9")
-                              (sub-exprs . #f))))))))
+           (make-sexpr-el #f "..." "muted" #f #f))
+          (else
+           (make-sexpr-el #f #f "sexpr-flex muted" #f
+                (list (make-sexpr-el "&#x27E8" #f #f #f #f)
+                      (make-sexpr-el #f (symbol->string term) #f #f #f)
+                      (make-sexpr-el "&#x27E9" #f #f #f #f))))))
       (define rules-sds
         (map
           (lambda (rule)
-            `((class . "sexpr-flex")
-              (sub-exprs . #(,@(make-sexpr-data (cons rule '()) term-handler 0)))))
+            (define return
+                (if (= 1 (length rule))
+                    '()
+                    `(,(make-return-sd (cadr rule) make-link #f))))
+            (make-sexpr-el #f #f "sexpr-flex" #f (append (make-sexpr-data (cons (car rule) '()) term-handler 0) return)))
           rules))
-      `((class . "sexpr-flex-col")
-        (sub-exprs . #(,@rules-sds))))
+      (make-sexpr-el #f #f "sexpr-flex-col" #f rules-sds))
     
     (define (make-sexpr-data sexpr term-handler depth)
       (define (wrap-list sexpr)
@@ -284,14 +494,10 @@
         (define processed-lst 
           (make-sexpr-data sexpr term-handler new-depth))
         (if (pair? sexpr)
-            `(((class . "sexpr-flex")
-               (sub-exprs . #(((class . ,(string-append "syntaxbracket-" (number->string depth)))
-                               (text . "(")
-                               (sub-exprs . #f))
-                              ,@processed-lst
-                              ((class . ,(string-append "syntaxbracket-" (number->string depth)))
-                               (text . ")")
-                               (sub-exprs . #f))))))
+            (list (make-sexpr-el #f #f "sexpr-flex" #f
+                                  `(,(make-sexpr-el #f "(" (string-append "syntaxbracket-" (number->string depth)) #f #f)
+                                    ,@processed-lst
+                                    ,(make-sexpr-el #f ")" (string-append "syntaxbracket-" (number->string depth)) #f #f))))
             processed-lst))
       
       (cond
@@ -306,183 +512,152 @@
          (list (term-handler sexpr)))
         ((and (pair? sexpr) (symbol? (cdr sexpr)))
          `(,@(wrap-list (car sexpr))
-           ((class . "spacer")
-            (sub-exprs . #f))
-           ((class . "muted")
-            (sub-exprs . #f)
-            (html . "."))
-           ((class . "spacer")
-            (sub-exprs . #f))
+           ,spacer-sd
+           ,(make-sexpr-el "." #f "muted" #f #f)
+           ,spacer-sd
            ,@(make-sexpr-data (cdr sexpr) term-handler depth)))
         ((pair? sexpr)
          `(,@(wrap-list (car sexpr))
-            ((class . "spacer")
-             (sub-exprs . #f))
-            ,@(make-sexpr-data (cdr sexpr) term-handler depth)))
+           ,spacer-sd
+           ,@(make-sexpr-data (cdr sexpr) term-handler depth)))
         ((null? sexpr)
          (list))
         (else (error sexpr))))
     
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-    
-    (define (make-signature-sexpr-data name sig link-maker sub?)
-      (define paren-open-sd
-        `((class . "muted")
-          (text . "(")
-          (sub-exprs . #f)))
-      (define paren-close-sd
-        `((class . "muted")
-          (text . ")")
-          (sub-exprs . #f)))
       (define spacer-sd
-        `((class . "spacer")
-          (text . "")
-          (sub-exprs . #f)))
-      (define name-sd
-        `((class . ,(if sub? "muted-name" "bright-name"))
-          (text . ,name)
-          (sub-exprs . #f)))
-      
-      (define (make-return-sd returns)
+        (make-sexpr-el #f #f "spacer" #f #f))
+
+      (define paren-open-sd
+        (make-sexpr-el #f "(" "muted" #f #f))
+
+      (define paren-close-sd
+        (make-sexpr-el #f ")" "muted" #f #f))
+
+      (define long-arrow-sd
+        (make-sexpr-el "&DoubleLongRightArrow;" #f "muted" #f #f))
+
+      (define slash (make-sexpr-el #f "/" "muted-type" #f #f))
+
+    (define (make-return-sd returns link-maker sub?)
         (define (return-value->sd value)
           (cond
             ((or (equal? value '...)
                  (equal? value 'undefined)
                  (equal? value '*))
-             `((class . "muted")
-               (text . ,(symbol->string value))
-               (sub-exprs . #f)))
+             (make-sexpr-el #f (symbol->string value) "muted" #f #f))
             ((equal? value #f)
-             `((class . ,(if sub? "muted-name" "bright-syntax"))
-               (text . "#f")
-               (sub-exprs . #f)))
-            ((equal? value #t)
-             `((class . ,(if sub? "muted-name" "bright-syntax"))
-               (text . "#f")
-               (sub-exprs . #f)))
+             (make-sexpr-el #f "#f" (if sub? "muted-name" "bright-syntax") #f #f))
             ((symbol? value)
-             `((class . ,(if sub? "muted-name" "bright-type"))
-               (text . ,(symbol->string value))
-               (link . ,(link-maker value #f))
-               (sub-exprs . #f)))
+             (make-sexpr-el #f (symbol->string value) (if sub? "muted-name" "bright-type") (link-maker value #f) #f))
             ((list? value)
-             `((class . "sexpr-flex")
-               (sub-exprs . #(,paren-open-sd
-                              ((class . "muted")
-                               (text . ,(symbol->string (car value)))
-                               (sub-exprs . #f))
-                              ,@(map 
-                                  (lambda (e)
-                                    `((class . "sexpr-flex")
-                                      (sub-exprs . #(,spacer-sd ,(return-value->sd e)))))
-                                  (cdr value))
-                              ,paren-close-sd))))))
-        `((class . "sexpr-flex")
-          (link . #f)
-          (sub-exprs . #(,spacer-sd
-                         ((class . "muted")
-                          (link . #f)
-                          (html . "&DoubleLongRightArrow;")
-                          (sub-exprs . #f))
-                         ,spacer-sd
-                         ,(return-value->sd returns)))))
-      
+             (make-sexpr-el #f #f "sexpr-flex" #f `(
+                ,paren-open-sd
+                ,(make-sexpr-el #f (symbol->string (car value)) "muted" #f #f)
+                ,@(map
+                    (lambda (e)
+                        (make-sexpr-el #f #f "sexpr-flex" #f (list spacer-sd (return-value->sd e))))
+                    (cdr value))
+                ,paren-close-sd)))))
+        (make-sexpr-el #f #f "sexpr-flex" #f (list spacer-sd long-arrow-sd spacer-sd (return-value->sd returns))))
+
+    (define (make-param-type-sd type sub? link-maker)
+      (cond
+        ((symbol? type)
+         (make-sexpr-el #f type (if sub? "muted-type" "bright-type") (link-maker type #t) #f))
+        ((equal? #f type)
+         (make-sexpr-el #f "#f" (if sub? "muted-type" "bright-syntax") #f #f))
+        ((list? type)
+         (let loop ((types (cdr type))
+                    (sds '()))
+           (cond
+             ((null? types)
+              (make-sexpr-el #f #f "sexpr-flex" #f (cdr sds)))
+             (else (let* ((type (car types))
+                          (sd (make-param-type-sd type sub? link-maker)))
+                     (loop (cdr types)
+                           (append (list slash sd) sds)))))))))
+    
+    (define (make-signature-sexpr-data name sig link-maker sub?)
+
+      (define name-sd (make-sexpr-el #f name (if sub? "muted-name" "bright-name") #f #f))
+
       (define (make-param-sds params)
-        (define slash `((class . "muted-type")
-                        (link . #f)
-                        (text . "/")
-                        (sub-exprs . #f)))
-        (define (make-type-sd type)
-          (cond
-            ((symbol? type) 
-             `((class . ,(if sub? "muted-type" "bright-type"))
-               (link . ,(link-maker type #t))
-               (text . ,type)
-               (sub-exprs . #f)))
-            ((equal? #f type)
-             `((class . ,(if sub? "muted-type" "bright-syntax"))
-               (link . #f)
-               (text . "#f")
-               (sub-exprs . #f)))
-            ((list? type)
-             (let loop ((types (cdr type))
-                        (sds '()))
-               (cond 
-                 ((null? types)
-                  `((class . "sexpr-flex")
-                    (link . #f)
-                    (sub-exprs . ,(list->vector (cdr sds)))))
-                 (else (let* ((type (car types))
-                              (sd (make-type-sd type)))
-                         (loop (cdr types)
-                               (append (list slash sd) sds)))))))))
+
         (let loop ((params params)
                    (last (null? (cdr (cadr sig))))
                    (result '()))
           (define param (car params))
           (define sd
             (cond
-              ((list? param) 
-               `((class . "sexpr-flex")
-                  (link . #f)
-                  (sub-exprs . #(,spacer-sd
-                                 ,paren-open-sd
-                                  ,(make-type-sd (car param))
-                                  ,spacer-sd
-                                  ((class . "muted")
-                                   (link . #f)
-                                   (text . ,(cadr param))
-                                   (sub-exprs . #f))
-                                  ,paren-close-sd
-                                  ,@(if last (list paren-close-sd) (list))))))
-              (else `((class . "sexpr-flex")
-                      (link . #f)
-                      (sub-exprs . #(,spacer-sd
-                                      ((class . "muted")
-                                       (link . #f)
-                                       (text . ,(symbol->string param))
-                                       (sub-exprs . #f))
-                                      ,@(if last (list paren-close-sd) (list))))))))
-          
+              ((list? param)
+               (make-sexpr-el #f #f "sexpr-flex" #f
+                 `(,spacer-sd
+                   ,paren-open-sd
+                   ,(make-param-type-sd (car param) sub? link-maker)
+                   ,spacer-sd
+                   ,(make-sexpr-el #f (cadr param) "muted" #f #f)
+                   ,paren-close-sd
+                   ,@(if last (list paren-close-sd) (list)))))
+              (else
+                (make-sexpr-el #f #f "sexpr-flex" #f
+                 `(,spacer-sd
+                   ,(make-sexpr-el #f (symbol->string param) "muted" #f #f)
+                   ,@(if last (list paren-close-sd) (list)))))))
+
           (if last
               (reverse (cons sd result))
               (loop (cdr params)
                     (null? (cddr params))
                     (cons sd result)))))
-      
+
       (define params (cadr sig))
-      (define return-sd (make-return-sd (caddr sig)))
+      (define return-sd (make-return-sd (caddr sig) link-maker sub?))
       
       (if (null? params)
-          `((class . "sexpr-flex")
-            (link . #f)
-            (sub-exprs . #(,paren-open-sd
-                            ,name-sd
-                            ,paren-close-sd
-                            ,return-sd)))    
-          
-          `((class . "sexpr-flex")
-            (link . #f)
-            (sub-exprs . #(,paren-open-sd
-                           ,name-sd
-                           ((class . "sexpr-flex sexpr-shrink")
-                            (link . #f)
-                            (sub-exprs . #(,@(make-param-sds params))))
-                           ,return-sd)))))
+          (make-sexpr-el #f #f "sexpr-flex" #f
+            (list paren-open-sd
+                  name-sd
+                  paren-close-sd
+                  return-sd))
+          (make-sexpr-el #f #f "sexpr-flex" #f
+            (list paren-open-sd
+                  name-sd
+                  (make-sexpr-el #f #f "sexpr-flex sexpr-shrink" #f (make-param-sds params))
+                  return-sd))))
     
     (define (make-value-signature-sexpr-data name sig link-maker)
-      `((class . "sexpr-flex")
-        (sub-exprs . #(((class . "bright-name")
-                        (text . ,name)
-                        (sub-exprs . #f))
-                       ((class . "spacer")
-                        (sub-exprs . #f))
-                       ((class . "muted")
-                        (html . "&DoubleLongRightArrow;")
-                        (sub-exprs . #f))
-                       ((class . "spacer")
-                        (sub-exprs . #f))
-                       ((class . "bright-type")
-                        (text . ,(symbol->string (cadr sig)))
-                        (link . ,(link-maker (cadr sig) #f))
-                        (sub-exprs . #f))))))))
+        (make-sexpr-el #f #f "sexpr-flex" #f
+            (list (make-sexpr-el #f name "bright-name" #f #f)
+                  spacer-sd
+                  long-arrow-sd
+                  spacer-sd
+                  (make-sexpr-el #f (symbol->string (cadr sig)) "bright-type" (link-maker (cadr sig) #f) #f))))
+
+    (define (get-page-head title req)
+        (make-page-head title (user-setting/light-theme? req) (user-setting/ctrl-f-override req)))
+
+    (define (render-home-page req)
+        (values
+            "index"
+            (make-page
+                (get-page-head #f req)
+                (make-navigation (make-mustache-nav-data 'index))
+                #f)))
+
+    (define (render-search-page req page page-size query libs tags param-types return-types search-result)
+        (values
+            "search"
+            (make-page
+                (get-page-head "Search" req)
+                (make-navigation (make-mustache-nav-data 'search))
+                (make-mustache-search-data page page-size query libs tags param-types return-types search-result))))
+
+    (define (render-settings-page req)
+        (values
+            "settings"
+            (make-page
+                (get-page-head "Settings" req)
+                (make-navigation (make-mustache-nav-data 'settings))
+                (mustache-settings-data req))))
+
+))

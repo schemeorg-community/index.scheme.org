@@ -1,4 +1,1 @@
-(
- (interaction-environment
-   (lambda () *))
- )
+(((name . interaction-environment) (signature lambda () *)))

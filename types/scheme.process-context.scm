@@ -1,25 +1,9 @@
-(
- (command-line
-   (lambda () list?)
-   (pure))
- 
- (emergency-exit
-   (lambda () undefined))
- 
- (emergency-exit
-   (lambda (obj) undefined))
- 
- (exit
-   (lambda () undefined))
-
- (exit
-   (lambda (obj) undefined))
- 
- (get-environment-variable
-   (lambda ((string? name)) (or string? #f))
-   (pure))
- 
- (get-environment-variables
-   (lambda () list?)
-   (pure))
- )
+(((name . command-line) (signature lambda () list?) (tags pure))
+ ((name . emergency-exit) (signature lambda () undefined))
+ ((name . emergency-exit) (signature lambda (obj) undefined))
+ ((name . exit) (signature lambda () undefined))
+ ((name . exit) (signature lambda (obj) undefined))
+ ((name . get-environment-variable)
+  (signature lambda ((string? name)) (or string? #f))
+  (tags pure))
+ ((name . get-environment-variables) (signature lambda () list?) (tags pure)))

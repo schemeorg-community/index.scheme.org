@@ -12,5 +12,5 @@
   (vector-for-each
     (lambda (doc)
       (test-assert (not (null? (make-doc-data doc)))))
-    json-scm))
+    specs))
 

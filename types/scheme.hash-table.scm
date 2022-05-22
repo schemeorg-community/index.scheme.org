@@ -1,274 +1,268 @@
-(
-
- (make-hash-table
-   (lambda ((comparator? comparator) arg ...) hash-table?)
-   (pure))
-
- (make-hash-table
-   (lambda ((procedure? equality-predicate) arg ...) hash-table?)
-   (pure deprecated)
-   ((equality-predicate (lambda (a b) boolean?))))
-
- (make-hash-table
-   (lambda ((procedure? equality-predicate) (procedure? hash-function) arg ...) hash-table?)
-   (pure deprecated)
-   ((equality-predicate (lambda (a b) boolean?))
-    (hash-function (lambda (obj) integer?))))
-
- (hash-table
-   (lambda ((comparator? comparator) key1 value1 ...) hash-table?)
-   (pure))
-
- (hash-table-unfold
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed (comparator? comparator) arg ...) hash-table?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) (values * *)))
-    (successor (lambda (seed) *))))
-
- (alist->hash-table
-   (lambda ((list? alist) (comparator? comparator) arg ...) hash-table?)
-   (pure))
-
- (alist->hash-table
-   (lambda ((list? alist) (procedure? equality-predicate) arg ...) hash-table?)
-   (pure deprecated)
-   ((equality-predicate (lambda (a b) boolean?))
-    (hash-function (lambda (obj) integer?))))
-
- (alist->hash-table
-   (lambda ((list? alist) (procedure? equality-predicate) (procedure? hash-function) arg ...) hash-table?)
-   (pure deprecated)
-   ((equality-predicate (lambda (a b) boolean?))
-    (hash-function (lambda (obj) integer?))))
-
- (hash-table?
-   (lambda (obj) boolean?)
-   (pure predicate))
-
- (hash-table-contains?
-   (lambda ((hash-table? hash-table) key) boolean?)
-   (pure))
-
- (hash-table-exists?
-   (lambda ((hash-table? hash-table) key) boolean?)
-   (pure deprecated))
-
- (hash-table-empty?
-   (lambda ((hash-table? hash-table)) boolean?)
-   (pure))
-
- (hash-table=?
-   (lambda ((comparator? value-comparator) (hash-table? hash-table1) (hash-table? hash-table2)) boolean?)
-   (pure))
-
- (hash-table-mutable?
-   (lambda ((hash-table? hash-table)) boolean?)
-   (pure))
-
- (hash-table-ref
-   (lambda ((hash-table? hash-table) key) *)
-   (pure))
-
- (hash-table-ref
-   (lambda ((hash-table? hash-table) key (procedure? failure)) *)
-   (pure)
-   ((failure (lambda () *))))
-
- (hash-table-ref
-   (lambda ((hash-table? hash-table) key (procedure? failure) (procedure? success)) *)
-   (pure)
-   ((failure (lambda () *))
-    (success (lambda (value) *))))
-
- (hash-table-ref/default
-   (lambda ((hash-table? hash-table) key default) *)
-   (pure))
-
- (hash-table-set!
-   (lambda ((hash-table? hash-table) key1 value1 ...) undefined))
-
- (hash-table-delete!
-   (lambda ((hash-table? hash-table) key ...) undefined))
-
- (hash-table-intern!
-   (lambda ((hash-table? hash-table) key (procedure? failure)) undefined)
-   ()
-   ((failure (lambda () *))))
-
- (hash-table-update!
-   (lambda ((hash-table? hash-table) key (procedure? updater)) undefined)
-   ()
-   ((updated (lambda (value) *))))
-
- (hash-table-update!
-   (lambda ((hash-table? hash-table) key (procedure? updater) (procedure? failure)) undefined)
-   ()
-   ((updater (lambda (value) *))
-    (failure (lambda () *))))
-
- (hash-table-update!
-   (lambda ((hash-table? hash-table) key (procedure? updater) (procedure? failure) (procedure? success)) undefined)
-   ()
-   ((updater (lambda (value) *))
-    (failure (lambda () *))
-    (success (lambda (value) *))))
-
- (hash-table-update!/default
-   (lambda ((hash-table? hash-table) key (procedure? updater) default) undefined)
-   ()
-   ((updated (lambda (value) *))))
-
- (hash-table-pop!
-   (lambda ((hash-table? hash-table)) (values * *))
-   ())
-
- (hash-table-clear!
-   (lambda ((hash-table? hash-table)) undefined))
-
- (hash-table-size
-   (lambda ((hash-table? hash-table)) integer?)
-   (pure))
-
- (hash-table-keys
-   (lambda ((hash-table? hash-table)) list?)
-   (pure))
-
- (hash-table-values
-   (lambda ((hash-table? hash-table)) list?)
-   (pure))
-
- (hash-table-entries
-   (lambda ((hash-table? hash-table)) (values list? list?))
-   (pure))
-
- (hash-table-find
-   (lambda ((procedure? proc) (hash-table? hash-table) (procedure? failure)) *)
-   (pure)
-   ((proc (lambda (key value) *))
-    (failure (lambda () *))))
-
- (hash-table-count
-   (lambda ((procedure? pred) (hash-table? hash-table)) integer?)
-   (pure)
-   ((pred (lambda (key value) boolean?))))
-
- (hash-table-map
-   (lambda ((procedure? proc) (comparator? comparator) (hash-table? hash-table)) hash-table?)
-   (pure)
-   ((proc (lambda (value) *))))
-
- (hash-table-for-each
-   (lambda ((procedure? proc) (hash-table? hash-table)) undefined)
-   ()
-   ((proc (lambda (key value) undefined))))
-
- (hash-table-walk
-   (lambda ((hash-table? hash-table) (procedure? proc)) undefined)
-   (deprecated)
-   ((proc (lambda (key value) undefined))))
-
- (hash-table-map!
-   (lambda ((procedure? proc) (comparator? comparator) (hash-table? hash-table)) undefined)
-   ()
-   ((proc (lambda (key value) *))))
-
- (hash-table-map->list
-   (lambda ((procedure? proc) (hash-table? hash-table)) list?)
-   ()
-   ((proc (lambda (key value) *))))
-
- (hash-table-fold
-   (lambda ((procedure? proc) seed (hash-table? hash-table)) *)
-   (pure)
-   ((proc (lambda (key value state) *))))
-
- (hash-table-fold
-   (lambda ((hash-table? hash-table) (procedure? proc) seed) *)
-   (pure deprecated)
-   ((proc (lambda (key value state) *))))
-
- (hash-table-prune!
-   (lambda ((procedure? proc) (hash-table? hash-table)) undefined)
-   ()
-   ((proc (lambda (key value) boolean?))))
-
- (hash-table-copy
-   (lambda ((hash-table? hash-table)) hash-table?)
-   (pure))
-
- (hash-table-copy
-   (lambda ((hash-table? hash-table) (boolean? mutable)) hash-table?)
-   (pure))
-
- (hash-table-empty-copy
-   (lambda ((hash-table? hash-table)) hash-table?)
-   (pure))
-
- (hash-table->alist
-   (lambda ((hash-table? hash-table)) list?)
-   ())
-
- (hash-table-union!
-   (lambda ((hash-table? hash-table1) (hash-table? hash-table2)) hash-table?)
-   ())
-
- (hash-table-merge!
-   (lambda ((hash-table? hash-table1) (hash-table? hash-table2)) hash-table?)
-   (deprecated))
-
- (hash-table-intersection!
-   (lambda ((hash-table? hash-table1) (hash-table? hash-table2)) hash-table?)
-   ())
-
- (hash-table-difference!
-   (lambda ((hash-table? hash-table1) (hash-table? hash-table2)) hash-table?)
-   ())
-
- (hash-table-xor!
-   (lambda ((hash-table? hash-table1) (hash-table? hash-table2)) hash-table?)
-   ())
-
- (hash
-   (lambda (obj) integer?)
-   (deprecated))
-
- (hash
-   (lambda (obj arg) integer?)
-   (deprecated))
-
- (string-hash
-   (lambda ((string? str)) integer?)
-   (pure deprecated))
-
- (string-hash
-   (lambda ((string? str) arg) integer?)
-   (pure deprecated))
-
- (string-ci-hash
-   (lambda ((string? str)) integer?)
-   (pure deprecated))
-
- (string-ci-hash
-   (lambda ((string? str) arg) integer?)
-   (pure deprecated))
-
- (hash-by-identity
-   (lambda (obj) integer?)
-   (pure deprecated))
-
- (hash-by-identity
-   (lambda (obj arg) integer?)
-   (pure deprecated))
-
- (hash-table-equivalence-function
-   (lambda ((hash-table? hash-table)) procedure?)
-   (pure deprecated)
-   ((return (lambda (a b) boolean?))))
-
- (hash-table-hash-function
-   (lambda ((hash-table? hash-table)) procedure?)
-   (pure deprecated)
-   ((return (lambda (obj) integer?))))
-
- )
+(((name . make-hash-table)
+  (signature lambda ((comparator? comparator) arg ...) hash-table?)
+  (tags pure))
+ ((name . make-hash-table)
+  (signature lambda ((procedure? equality-predicate) arg ...) hash-table?)
+  (tags pure deprecated)
+  (subsigs (equality-predicate (lambda (a b) boolean?))))
+ ((name . make-hash-table)
+  (signature
+   lambda
+   ((procedure? equality-predicate) (procedure? hash-function) arg ...)
+   hash-table?)
+  (tags pure deprecated)
+  (subsigs
+   (equality-predicate (lambda (a b) boolean?))
+   (hash-function (lambda (obj) integer?))))
+ ((name . hash-table)
+  (signature lambda ((comparator? comparator) key1 value1 ...) hash-table?)
+  (tags pure))
+ ((name . hash-table-unfold)
+  (signature
+   lambda
+   ((procedure? stop?)
+    (procedure? mapper)
+    (procedure? successor)
+    seed
+    (comparator? comparator)
+    arg
+    ...)
+   hash-table?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) (values * *)))
+   (successor (lambda (seed) *))))
+ ((name . alist->hash-table)
+  (signature
+   lambda
+   ((list? alist) (comparator? comparator) arg ...)
+   hash-table?)
+  (tags pure))
+ ((name . alist->hash-table)
+  (signature
+   lambda
+   ((list? alist) (procedure? equality-predicate) arg ...)
+   hash-table?)
+  (tags pure deprecated)
+  (subsigs
+   (equality-predicate (lambda (a b) boolean?))
+   (hash-function (lambda (obj) integer?))))
+ ((name . alist->hash-table)
+  (signature
+   lambda
+   ((list? alist)
+    (procedure? equality-predicate)
+    (procedure? hash-function)
+    arg
+    ...)
+   hash-table?)
+  (tags pure deprecated)
+  (subsigs
+   (equality-predicate (lambda (a b) boolean?))
+   (hash-function (lambda (obj) integer?))))
+ ((name . hash-table?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . hash-table-contains?)
+  (signature lambda ((hash-table? hash-table) key) boolean?)
+  (tags pure))
+ ((name . hash-table-exists?)
+  (signature lambda ((hash-table? hash-table) key) boolean?)
+  (tags pure deprecated))
+ ((name . hash-table-empty?)
+  (signature lambda ((hash-table? hash-table)) boolean?)
+  (tags pure))
+ ((name . hash-table=?)
+  (signature
+   lambda
+   ((comparator? value-comparator)
+    (hash-table? hash-table1)
+    (hash-table? hash-table2))
+   boolean?)
+  (tags pure))
+ ((name . hash-table-mutable?)
+  (signature lambda ((hash-table? hash-table)) boolean?)
+  (tags pure))
+ ((name . hash-table-ref)
+  (signature lambda ((hash-table? hash-table) key) *)
+  (tags pure))
+ ((name . hash-table-ref)
+  (signature lambda ((hash-table? hash-table) key (procedure? failure)) *)
+  (tags pure)
+  (subsigs (failure (lambda () *))))
+ ((name . hash-table-ref)
+  (signature
+   lambda
+   ((hash-table? hash-table) key (procedure? failure) (procedure? success))
+   *)
+  (tags pure)
+  (subsigs (failure (lambda () *)) (success (lambda (value) *))))
+ ((name . hash-table-ref/default)
+  (signature lambda ((hash-table? hash-table) key default) *)
+  (tags pure))
+ ((name . hash-table-set!)
+  (signature lambda ((hash-table? hash-table) key1 value1 ...) undefined))
+ ((name . hash-table-delete!)
+  (signature lambda ((hash-table? hash-table) key ...) undefined))
+ ((name . hash-table-intern!)
+  (signature
+   lambda
+   ((hash-table? hash-table) key (procedure? failure))
+   undefined)
+  (subsigs (failure (lambda () *))))
+ ((name . hash-table-update!)
+  (signature
+   lambda
+   ((hash-table? hash-table) key (procedure? updater))
+   undefined)
+  (subsigs (updated (lambda (value) *))))
+ ((name . hash-table-update!)
+  (signature
+   lambda
+   ((hash-table? hash-table) key (procedure? updater) (procedure? failure))
+   undefined)
+  (subsigs (updater (lambda (value) *)) (failure (lambda () *))))
+ ((name . hash-table-update!)
+  (signature
+   lambda
+   ((hash-table? hash-table)
+    key
+    (procedure? updater)
+    (procedure? failure)
+    (procedure? success))
+   undefined)
+  (subsigs
+   (updater (lambda (value) *))
+   (failure (lambda () *))
+   (success (lambda (value) *))))
+ ((name . hash-table-update!/default)
+  (signature
+   lambda
+   ((hash-table? hash-table) key (procedure? updater) default)
+   undefined)
+  (subsigs (updated (lambda (value) *))))
+ ((name . hash-table-pop!)
+  (signature lambda ((hash-table? hash-table)) (values * *)))
+ ((name . hash-table-clear!)
+  (signature lambda ((hash-table? hash-table)) undefined))
+ ((name . hash-table-size)
+  (signature lambda ((hash-table? hash-table)) integer?)
+  (tags pure))
+ ((name . hash-table-keys)
+  (signature lambda ((hash-table? hash-table)) list?)
+  (tags pure))
+ ((name . hash-table-values)
+  (signature lambda ((hash-table? hash-table)) list?)
+  (tags pure))
+ ((name . hash-table-entries)
+  (signature lambda ((hash-table? hash-table)) (values list? list?))
+  (tags pure))
+ ((name . hash-table-find)
+  (signature
+   lambda
+   ((procedure? proc) (hash-table? hash-table) (procedure? failure))
+   *)
+  (tags pure)
+  (subsigs (proc (lambda (key value) *)) (failure (lambda () *))))
+ ((name . hash-table-count)
+  (signature lambda ((procedure? pred) (hash-table? hash-table)) integer?)
+  (tags pure)
+  (subsigs (pred (lambda (key value) boolean?))))
+ ((name . hash-table-map)
+  (signature
+   lambda
+   ((procedure? proc) (comparator? comparator) (hash-table? hash-table))
+   hash-table?)
+  (tags pure)
+  (subsigs (proc (lambda (value) *))))
+ ((name . hash-table-for-each)
+  (signature lambda ((procedure? proc) (hash-table? hash-table)) undefined)
+  (subsigs (proc (lambda (key value) undefined))))
+ ((name . hash-table-walk)
+  (signature lambda ((hash-table? hash-table) (procedure? proc)) undefined)
+  (tags deprecated)
+  (subsigs (proc (lambda (key value) undefined))))
+ ((name . hash-table-map!)
+  (signature
+   lambda
+   ((procedure? proc) (comparator? comparator) (hash-table? hash-table))
+   undefined)
+  (subsigs (proc (lambda (key value) *))))
+ ((name . hash-table-map->list)
+  (signature lambda ((procedure? proc) (hash-table? hash-table)) list?)
+  (subsigs (proc (lambda (key value) *))))
+ ((name . hash-table-fold)
+  (signature lambda ((procedure? proc) seed (hash-table? hash-table)) *)
+  (tags pure)
+  (subsigs (proc (lambda (key value state) *))))
+ ((name . hash-table-fold)
+  (signature lambda ((hash-table? hash-table) (procedure? proc) seed) *)
+  (tags pure deprecated)
+  (subsigs (proc (lambda (key value state) *))))
+ ((name . hash-table-prune!)
+  (signature lambda ((procedure? proc) (hash-table? hash-table)) undefined)
+  (subsigs (proc (lambda (key value) boolean?))))
+ ((name . hash-table-copy)
+  (signature lambda ((hash-table? hash-table)) hash-table?)
+  (tags pure))
+ ((name . hash-table-copy)
+  (signature lambda ((hash-table? hash-table) (boolean? mutable)) hash-table?)
+  (tags pure))
+ ((name . hash-table-empty-copy)
+  (signature lambda ((hash-table? hash-table)) hash-table?)
+  (tags pure))
+ ((name . hash-table->alist)
+  (signature lambda ((hash-table? hash-table)) list?))
+ ((name . hash-table-union!)
+  (signature
+   lambda
+   ((hash-table? hash-table1) (hash-table? hash-table2))
+   hash-table?))
+ ((name . hash-table-merge!)
+  (signature
+   lambda
+   ((hash-table? hash-table1) (hash-table? hash-table2))
+   hash-table?)
+  (tags deprecated))
+ ((name . hash-table-intersection!)
+  (signature
+   lambda
+   ((hash-table? hash-table1) (hash-table? hash-table2))
+   hash-table?))
+ ((name . hash-table-difference!)
+  (signature
+   lambda
+   ((hash-table? hash-table1) (hash-table? hash-table2))
+   hash-table?))
+ ((name . hash-table-xor!)
+  (signature
+   lambda
+   ((hash-table? hash-table1) (hash-table? hash-table2))
+   hash-table?))
+ ((name . hash) (signature lambda (obj) integer?) (tags deprecated))
+ ((name . hash) (signature lambda (obj arg) integer?) (tags deprecated))
+ ((name . string-hash)
+  (signature lambda ((string? str)) integer?)
+  (tags pure deprecated))
+ ((name . string-hash)
+  (signature lambda ((string? str) arg) integer?)
+  (tags pure deprecated))
+ ((name . string-ci-hash)
+  (signature lambda ((string? str)) integer?)
+  (tags pure deprecated))
+ ((name . string-ci-hash)
+  (signature lambda ((string? str) arg) integer?)
+  (tags pure deprecated))
+ ((name . hash-by-identity)
+  (signature lambda (obj) integer?)
+  (tags pure deprecated))
+ ((name . hash-by-identity)
+  (signature lambda (obj arg) integer?)
+  (tags pure deprecated))
+ ((name . hash-table-equivalence-function)
+  (signature lambda ((hash-table? hash-table)) procedure?)
+  (tags pure deprecated)
+  (subsigs (return (lambda (a b) boolean?))))
+ ((name . hash-table-hash-function)
+  (signature lambda ((hash-table? hash-table)) procedure?)
+  (tags pure deprecated)
+  (subsigs (return (lambda (obj) integer?)))))

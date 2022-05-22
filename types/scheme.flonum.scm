@@ -1,412 +1,183 @@
-(
- 
-    (fl-e (value flonum?))
-
-    (fl-1/e (value flonum?))
-
-    (fl-e-2 (value flonum?))
-
-    (fl-e-pi/4 (value flonum?))
-
-    (fl-log2-e (value flonum?))
-
-    (fl-log10-e (value flonum?))
-
-    (fl-log-2 (value flonum?))
-
-    (fl-1/log-2 (value flonum?))
-
-    (fl-log-3 (value flonum?))
-
-    (fl-log-pi (value flonum?))
-
-    (fl-log-10 (value flonum?))
-
-    (fl-1/log-10 (value flonum?))
-
-    (fl-pi (value flonum?))
-
-    (fl-1/pi (value flonum?))
-
-    (fl-2pi (value flonum?))
-
-    (fl-pi/2 (value flonum?))
-
-    (fl-pi/4 (value flonum?))
-
-    (fl-pi-squared (value flonum?))
-
-    (fl-degree (value flonum?))
-
-    (fl-2/pi (value flonum?))
-
-    (fl-2/sqrt-pi (value flonum?))
-
-    (fl-sqrt-2 (value flonum?))
-
-    (fl-sqrt-3 (value flonum?))
-
-    (fl-sqrt-5 (value flonum?))
-
-    (fl-sqrt-10 (value flonum?))
-
-    (fl-1/sqrt-2 (value flonum?))
-
-    (fl-cbrt-2 (value flonum?))
-
-    (fl-cbrt-3 (value flonum?))
-
-    (fl-4thrt-2 (value flonum?))
-
-    (fl-phi (value flonum?))
-
-    (fl-log-phi (value flonum?))
-
-    (fl-1/log-phi (value flonum?))
-
-    (fl-euler (value flonum?))
-
-    (fl-e-euler (value flonum?))
-
-    (fl-sin-1 (value flonum?))
-
-    (fl-cos-1 (value flonum?))
-
-    (fl-gamma-1/2 (value flonum?))
-
-    (fl-gamma-1/3 (value flonum?))
-
-    (fl-gamma-2/3 (value flonum?))
-
-    (fl-greatest (value flonum?))
-
-    (fl-least (value flonum?))
-
-    (fl-epsilon (value flonum?))
-
-    (fl-fast-fl+* (value boolean?))
-
-    (fl-integer-exponent-zero (value integer?))
-
-    (fl-integer-exponent-nan (value integer?))
-
-    (flonum
-      (lambda ((real? number)) flonum?)
-      (pure))
-
-    (fladjacent
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (flcopysign
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (make-flonum
-      (lambda ((flonum? x) (integer? n)) flonum?)
-      (pure))
-
-    (flinteger-fraction
-      (lambda ((flonum? x)) (values flonum? flonum?))
-      (pure))
-
-    (flexponent
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flinteger-exponent
-      (lambda ((flonum? x)) integer?)
-      (pure))
-
-    (flnormalized-fraction-exponent
-      (lambda ((flonum? x)) (flonum? integer?))
-      (pure))
-
-    (flsign-bit
-      (lambda ((flonum? x)) integer?)
-      (pure))
-
-    (flonum?
-      (lambda (obj) boolean?)
-      (pure predicate)
-      ()
-      (real?))
-
-    (fl=?
-      (lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
-      (pure))
-
-    (fl<?
-      (lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
-      (pure))
-
-    (fl>?
-      (lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
-      (pure))
-
-    (fl<=?
-      (lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
-      (pure))
-
-    (fl>=?
-      (lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
-      (pure))
-
-    (flunordered
-      (lambda ((flonum? x) (flonum? y)) boolean?)
-      (pure))
-
-    (flinteger?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flzero?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flpositive?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flnegative?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flodd?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (fleven?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flfinite?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flinfinite?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flnan?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flnormalized?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (fldenormalized?
-      (lambda ((flonum? x)) boolean?)
-      (pure))
-
-    (flmax
-      (lambda ((flonum? x) ...) flonum?)
-      (pure))
-
-    (flmin
-      (lambda ((flonum? x) ...) flonum?)
-      (pure))
-
-    (fl+
-      (lambda ((flonum? x) ...) flonum?)
-      (pure))
-
-    (fl*
-      (lambda ((flonum? x) ...) flonum?)
-      (pure))
-
-    (fl+*
-      (lambda ((flonum? x) (flonum? y) (flonum? z)) flonum?)
-      (pure))
-
-    (fl-
-      (lambda ((flonum? x) (flonum? y) ...) flonum?)
-      (pure))
-
-    (fl/
-      (lambda ((flonum? x) (flonum? y) ...) flonum?)
-      (pure))
-
-    (flabs
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flabsdiff
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (flposdiff
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (flsgn
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flnumerator
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (fldenominator
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flfloor
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flceiling
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flround
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (fltruncate
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flexp
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flexp2
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flexp-1
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flsquare
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flsqrt
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flcbrt
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flhypot
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (flexpt
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (fllog
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (fllog1+
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (fllog2
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (fllog10
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (make-fllog-base
-      (lambda ((flonum? base)) procedure?)
-      (pure)
-      ((return (lambda ((flonum? x)) flonum?))))
-
-    (flsin
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flcos
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (fltan
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flasin
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flacos
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flatan
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flatan
-      (lambda ((flonum? y) (flonum? x)) flonum?)
-      (pure))
-
-    (flsinh
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flcosh
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (fltanh
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flasinh
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flacosh
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flatanh
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flquotient
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (flremainder
-      (lambda ((flonum? x) (flonum? y)) flonum?)
-      (pure))
-
-    (flremquo
-      (lambda ((flonum? x) (flonum? y)) (values flonum? integer?))
-      (pure))
-
-    (flgamma
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flloggamma
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flfirst-bessel
-      (lambda ((integer? n) (flonum? x)) flonum?)
-      (pure))
-
-    (flsecond-bessel
-      (lambda ((integer? n) (flonum? x)) flonum?)
-      (pure))
-
-    (flerf
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-    (flerfc
-      (lambda ((flonum? x)) flonum?)
-      (pure))
-
-)
+(((name . fl-e) (signature value flonum?))
+ ((name . fl-1/e) (signature value flonum?))
+ ((name . fl-e-2) (signature value flonum?))
+ ((name . fl-e-pi/4) (signature value flonum?))
+ ((name . fl-log2-e) (signature value flonum?))
+ ((name . fl-log10-e) (signature value flonum?))
+ ((name . fl-log-2) (signature value flonum?))
+ ((name . fl-1/log-2) (signature value flonum?))
+ ((name . fl-log-3) (signature value flonum?))
+ ((name . fl-log-pi) (signature value flonum?))
+ ((name . fl-log-10) (signature value flonum?))
+ ((name . fl-1/log-10) (signature value flonum?))
+ ((name . fl-pi) (signature value flonum?))
+ ((name . fl-1/pi) (signature value flonum?))
+ ((name . fl-2pi) (signature value flonum?))
+ ((name . fl-pi/2) (signature value flonum?))
+ ((name . fl-pi/4) (signature value flonum?))
+ ((name . fl-pi-squared) (signature value flonum?))
+ ((name . fl-degree) (signature value flonum?))
+ ((name . fl-2/pi) (signature value flonum?))
+ ((name . fl-2/sqrt-pi) (signature value flonum?))
+ ((name . fl-sqrt-2) (signature value flonum?))
+ ((name . fl-sqrt-3) (signature value flonum?))
+ ((name . fl-sqrt-5) (signature value flonum?))
+ ((name . fl-sqrt-10) (signature value flonum?))
+ ((name . fl-1/sqrt-2) (signature value flonum?))
+ ((name . fl-cbrt-2) (signature value flonum?))
+ ((name . fl-cbrt-3) (signature value flonum?))
+ ((name . fl-4thrt-2) (signature value flonum?))
+ ((name . fl-phi) (signature value flonum?))
+ ((name . fl-log-phi) (signature value flonum?))
+ ((name . fl-1/log-phi) (signature value flonum?))
+ ((name . fl-euler) (signature value flonum?))
+ ((name . fl-e-euler) (signature value flonum?))
+ ((name . fl-sin-1) (signature value flonum?))
+ ((name . fl-cos-1) (signature value flonum?))
+ ((name . fl-gamma-1/2) (signature value flonum?))
+ ((name . fl-gamma-1/3) (signature value flonum?))
+ ((name . fl-gamma-2/3) (signature value flonum?))
+ ((name . fl-greatest) (signature value flonum?))
+ ((name . fl-least) (signature value flonum?))
+ ((name . fl-epsilon) (signature value flonum?))
+ ((name . fl-fast-fl+*) (signature value boolean?))
+ ((name . fl-integer-exponent-zero) (signature value integer?))
+ ((name . fl-integer-exponent-nan) (signature value integer?))
+ ((name . flonum) (signature lambda ((real? number)) flonum?) (tags pure))
+ ((name . fladjacent)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . flcopysign)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . make-flonum)
+  (signature lambda ((flonum? x) (integer? n)) flonum?)
+  (tags pure))
+ ((name . flinteger-fraction)
+  (signature lambda ((flonum? x)) (values flonum? flonum?))
+  (tags pure))
+ ((name . flexponent) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flinteger-exponent)
+  (signature lambda ((flonum? x)) integer?)
+  (tags pure))
+ ((name . flnormalized-fraction-exponent)
+  (signature lambda ((flonum? x)) (flonum? integer?))
+  (tags pure))
+ ((name . flsign-bit) (signature lambda ((flonum? x)) integer?) (tags pure))
+ ((name . flonum?)
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (subsigs)
+  (supertypes real?))
+ ((name . fl=?)
+  (signature lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
+  (tags pure))
+ ((name . fl<?)
+  (signature lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
+  (tags pure))
+ ((name . fl>?)
+  (signature lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
+  (tags pure))
+ ((name . fl<=?)
+  (signature lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
+  (tags pure))
+ ((name . fl>=?)
+  (signature lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
+  (tags pure))
+ ((name . flunordered)
+  (signature lambda ((flonum? x) (flonum? y)) boolean?)
+  (tags pure))
+ ((name . flinteger?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flzero?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flpositive?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flnegative?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flodd?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . fleven?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flfinite?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flinfinite?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flnan?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . flnormalized?) (signature lambda ((flonum? x)) boolean?) (tags pure))
+ ((name . fldenormalized?)
+  (signature lambda ((flonum? x)) boolean?)
+  (tags pure))
+ ((name . flmax) (signature lambda ((flonum? x) ...) flonum?) (tags pure))
+ ((name . flmin) (signature lambda ((flonum? x) ...) flonum?) (tags pure))
+ ((name . fl+) (signature lambda ((flonum? x) ...) flonum?) (tags pure))
+ ((name . fl*) (signature lambda ((flonum? x) ...) flonum?) (tags pure))
+ ((name . fl+*)
+  (signature lambda ((flonum? x) (flonum? y) (flonum? z)) flonum?)
+  (tags pure))
+ ((name . fl-)
+  (signature lambda ((flonum? x) (flonum? y) ...) flonum?)
+  (tags pure))
+ ((name . fl/)
+  (signature lambda ((flonum? x) (flonum? y) ...) flonum?)
+  (tags pure))
+ ((name . flabs) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flabsdiff)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . flposdiff)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . flsgn) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flnumerator) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . fldenominator) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flfloor) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flceiling) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flround) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . fltruncate) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flexp) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flexp2) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flexp-1) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flsquare) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flsqrt) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flcbrt) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flhypot)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . flexpt)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . fllog) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . fllog1+) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . fllog2) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . fllog10) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . make-fllog-base)
+  (signature lambda ((flonum? base)) procedure?)
+  (tags pure)
+  (subsigs (return (lambda ((flonum? x)) flonum?))))
+ ((name . flsin) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flcos) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . fltan) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flasin) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flacos) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flatan) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flatan)
+  (signature lambda ((flonum? y) (flonum? x)) flonum?)
+  (tags pure))
+ ((name . flsinh) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flcosh) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . fltanh) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flasinh) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flacosh) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flatanh) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flquotient)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . flremainder)
+  (signature lambda ((flonum? x) (flonum? y)) flonum?)
+  (tags pure))
+ ((name . flremquo)
+  (signature lambda ((flonum? x) (flonum? y)) (values flonum? integer?))
+  (tags pure))
+ ((name . flgamma) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flloggamma) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flfirst-bessel)
+  (signature lambda ((integer? n) (flonum? x)) flonum?)
+  (tags pure))
+ ((name . flsecond-bessel)
+  (signature lambda ((integer? n) (flonum? x)) flonum?)
+  (tags pure))
+ ((name . flerf) (signature lambda ((flonum? x)) flonum?) (tags pure))
+ ((name . flerfc) (signature lambda ((flonum? x)) flonum?) (tags pure)))

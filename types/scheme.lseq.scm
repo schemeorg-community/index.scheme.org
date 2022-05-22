@@ -1,140 +1,93 @@
-(
- 
- (generator->lseq
-   (lambda ((procedure? generator)) lseq?)
-   ()
-   ((generator (lambda () *))))
- 
- (lseq?
-   (lambda (x) boolean?)
-   (pure predicate)
-   ()
-   (list? dotted-list?))
- 
- (lseq=?
-   (lambda ((procedure? elt=?) (lseq? lseq1) (lseq? lseq2)) boolean?)
-   (pure)
-   ((elt=? (lambda (a b) boolean?))))
- 
- (lseq-car
-   (lambda ((lseq? lseq)) *)
-   (pure))
- 
- (lseq-first
-   (lambda ((lseq? lseq)) *)
-   (pure))
- 
- (lseq-cdr
-   (lambda ((lseq? lseq)) lseq?)
-   (pure))
- 
- (lseq-rest
-   (lambda ((lseq? lseq)) lseq?)
-   (pure))
- 
- (lseq-ref
-   (lambda ((lseq? lseq) (integer? i)) *)
-   (pure))
- 
- (lseq-take
-   (lambda ((lseq? lseq) (integer? i)) lseq?)
-   (pure))
- 
- (lseq-drop
-   (lambda ((lseq? lseq) (integer? i)) lseq?)
-   (pure))
- 
- (lseq-realize
-   (lambda ((lseq? lseq)) list?)
-   (pure))
- 
- (lseq->generator
-   (lambda ((lseq? lseq)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- (lseq-length
-   (lambda ((lseq? lseq)) integer?)
-   (pure))
- 
- (lseq-append
-   (lambda ((lseq? lseq) ...) lseq?)
-   (pure))
-
- (lseq-zip
-   (lambda ((lseq? lseq1) (lseq? lseq2) ...) lseq?)
-   (pure))
- 
- (lseq-map
-   (lambda ((procedure? proc) (lseq? lseq1) (lseq? lseq2) ...) lseq?)
-   (pure)
-   ((proc (lambda (value1 value2 ...) *))))
- 
- (lseq-for-each
-   (lambda ((procedure? proc) (lseq? lseq1) (lseq? lseq2) ...) *)
-   ()
-   ((proc (lambda (value1 value2 ...) *))))
- 
- (lseq-filter
-   (lambda ((procedure? pred) (lseq? lseq)) lseq?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (lseq-remove
-   (lambda ((procedure? pred) (lseq? lseq)) lseq?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (lseq-find
-   (lambda ((procedure? pred) (lseq? lseq)) *)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (lseq-find-tail
-   (lambda ((procedure? pred) (lseq? lseq)) (or #f lseq?))
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (lseq-take-while
-   (lambda ((procedure? pred) (lseq? lseq)) lseq?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (lseq-drop-while
-   (lambda ((procedure? pred) (lseq? lseq)) lseq?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (lseq-any
-   (lambda ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...) *)
-   (pure)
-   ((pred (lambda (element) *))))
- 
- (lseq-every
-   (lambda ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...) *)
-   (pure)
-   ((pred (lambda (element) *))))
-
- (lseq-index
-   (lambda ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...) (or integer? #f))
-   (pure)
-   ((pred (lambda (element) *))))
- 
- (lseq-member
-   (lambda (x (lseq? lseq)) (or #f lseq?))
-   (pure))
- 
- (lseq-member
-   (lambda (x (lseq? lseq) (procedure? =)) (or #f lseq?))
-   (pure)
-   ((= (lambda (a b) boolean?))))
- 
- (lseq-memq
-   (lambda (x (lseq? lseq)) (or #f lseq?))
-   (pure))
- 
- (lseq-memv
-   (lambda (x (lseq? lseq)) (or #f lseq?))
-   (pure))
- 
- )
+(((name . generator->lseq)
+  (signature lambda ((procedure? generator)) lseq?)
+  (subsigs (generator (lambda () *))))
+ ((name . lseq?)
+  (signature lambda (x) boolean?)
+  (tags pure predicate)
+  (subsigs)
+  (supertypes list? dotted-list?))
+ ((name . lseq=?)
+  (signature lambda ((procedure? elt=?) (lseq? lseq1) (lseq? lseq2)) boolean?)
+  (tags pure)
+  (subsigs (elt=? (lambda (a b) boolean?))))
+ ((name . lseq-car) (signature lambda ((lseq? lseq)) *) (tags pure))
+ ((name . lseq-first) (signature lambda ((lseq? lseq)) *) (tags pure))
+ ((name . lseq-cdr) (signature lambda ((lseq? lseq)) lseq?) (tags pure))
+ ((name . lseq-rest) (signature lambda ((lseq? lseq)) lseq?) (tags pure))
+ ((name . lseq-ref)
+  (signature lambda ((lseq? lseq) (integer? i)) *)
+  (tags pure))
+ ((name . lseq-take)
+  (signature lambda ((lseq? lseq) (integer? i)) lseq?)
+  (tags pure))
+ ((name . lseq-drop)
+  (signature lambda ((lseq? lseq) (integer? i)) lseq?)
+  (tags pure))
+ ((name . lseq-realize) (signature lambda ((lseq? lseq)) list?) (tags pure))
+ ((name . lseq->generator)
+  (signature lambda ((lseq? lseq)) procedure?)
+  (subsigs (return (lambda () *))))
+ ((name . lseq-length) (signature lambda ((lseq? lseq)) integer?) (tags pure))
+ ((name . lseq-append) (signature lambda ((lseq? lseq) ...) lseq?) (tags pure))
+ ((name . lseq-zip)
+  (signature lambda ((lseq? lseq1) (lseq? lseq2) ...) lseq?)
+  (tags pure))
+ ((name . lseq-map)
+  (signature lambda ((procedure? proc) (lseq? lseq1) (lseq? lseq2) ...) lseq?)
+  (tags pure)
+  (subsigs (proc (lambda (value1 value2 ...) *))))
+ ((name . lseq-for-each)
+  (signature lambda ((procedure? proc) (lseq? lseq1) (lseq? lseq2) ...) *)
+  (subsigs (proc (lambda (value1 value2 ...) *))))
+ ((name . lseq-filter)
+  (signature lambda ((procedure? pred) (lseq? lseq)) lseq?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . lseq-remove)
+  (signature lambda ((procedure? pred) (lseq? lseq)) lseq?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . lseq-find)
+  (signature lambda ((procedure? pred) (lseq? lseq)) *)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . lseq-find-tail)
+  (signature lambda ((procedure? pred) (lseq? lseq)) (or #f lseq?))
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . lseq-take-while)
+  (signature lambda ((procedure? pred) (lseq? lseq)) lseq?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . lseq-drop-while)
+  (signature lambda ((procedure? pred) (lseq? lseq)) lseq?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . lseq-any)
+  (signature lambda ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...) *)
+  (tags pure)
+  (subsigs (pred (lambda (element) *))))
+ ((name . lseq-every)
+  (signature lambda ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...) *)
+  (tags pure)
+  (subsigs (pred (lambda (element) *))))
+ ((name . lseq-index)
+  (signature
+   lambda
+   ((procedure? pred) (lseq? lseq1) (lseq? lseq2) ...)
+   (or integer? #f))
+  (tags pure)
+  (subsigs (pred (lambda (element) *))))
+ ((name . lseq-member)
+  (signature lambda (x (lseq? lseq)) (or #f lseq?))
+  (tags pure))
+ ((name . lseq-member)
+  (signature lambda (x (lseq? lseq) (procedure? =)) (or #f lseq?))
+  (tags pure)
+  (subsigs (= (lambda (a b) boolean?))))
+ ((name . lseq-memq)
+  (signature lambda (x (lseq? lseq)) (or #f lseq?))
+  (tags pure))
+ ((name . lseq-memv)
+  (signature lambda (x (lseq? lseq)) (or #f lseq?))
+  (tags pure)))

@@ -1,88 +1,75 @@
-(
- (char-alphabetic?
-   (lambda ((char? char)) boolean?)
-   (pure))
-
- (char-ci<=?
-   (lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
-   (pure))
-
- (char-ci<?
-   (lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
-   (pure))
-
- (char-ci=?
-   (lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
-   (pure))
-
- (char-ci>=?
-   (lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
-   (pure))
-
- (char-ci>?
-   (lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
-   (pure))
-
- (char-downcase
-   (lambda ((char? char)) char?)
-   (pure))
-
- (char-foldcase
-   (lambda ((char? char)) char?)
-   (pure))
-
- (char-lower-case?
-   (lambda ((char? char)) boolean?)
-   (pure))
-
- (char-numeric?
-   (lambda ((char? char)) boolean?)
-   (pure))
-
- (char-upcase
-   (lambda ((char? char)) char?)
-   (pure))
-
- (char-upper-case?
-   (lambda ((char? char)) boolean?)
-   (pure))
- (char-whitespace?
-   (lambda ((char? char)) boolean?)
-   (pure))
-
- (digit-value
-   (lambda ((char? char)) (or #f integer?))
-   (pure))
-
- (string-ci<=?
-   (lambda ((string? string1) (string? string2) (string? string3) ...) boolean?)
-   (pure))
-
- (string-ci<?
-   (lambda ((string? string1) (string? string2) (string? string3) ...) boolean?)
-   (pure))
-
- (string-ci=?
-   (lambda ((string? string1) (string? string2) (string? string3) ...) boolean?)
-   (pure))
-
- (string-ci>=?
-   (lambda ((string? string1) (string? string2) (string? string3) ...) boolean?)
-   (pure))
-
- (string-ci>?
-   (lambda ((string? string1) (string? string2) (string? string3) ...) boolean?)
-   (pure))
-
- (string-downcase
-   (lambda ((string? string)) string?)
-   (pure))
-
- (string-foldcase
-   (lambda ((string? string)) string?)
-   (pure))
-
- (string-upcase
-   (lambda ((string? string)) string?)
-   (pure))
- )
+(((name . char-alphabetic?)
+  (signature lambda ((char? char)) boolean?)
+  (tags pure))
+ ((name . char-ci<=?)
+  (signature lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
+  (tags pure))
+ ((name . char-ci<?)
+  (signature lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
+  (tags pure))
+ ((name . char-ci=?)
+  (signature lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
+  (tags pure))
+ ((name . char-ci>=?)
+  (signature lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
+  (tags pure))
+ ((name . char-ci>?)
+  (signature lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
+  (tags pure))
+ ((name . char-downcase) (signature lambda ((char? char)) char?) (tags pure))
+ ((name . char-foldcase) (signature lambda ((char? char)) char?) (tags pure))
+ ((name . char-lower-case?)
+  (signature lambda ((char? char)) boolean?)
+  (tags pure))
+ ((name . char-numeric?)
+  (signature lambda ((char? char)) boolean?)
+  (tags pure))
+ ((name . char-upcase) (signature lambda ((char? char)) char?) (tags pure))
+ ((name . char-upper-case?)
+  (signature lambda ((char? char)) boolean?)
+  (tags pure))
+ ((name . char-whitespace?)
+  (signature lambda ((char? char)) boolean?)
+  (tags pure))
+ ((name . digit-value)
+  (signature lambda ((char? char)) (or #f integer?))
+  (tags pure))
+ ((name . string-ci<=?)
+  (signature
+   lambda
+   ((string? string1) (string? string2) (string? string3) ...)
+   boolean?)
+  (tags pure))
+ ((name . string-ci<?)
+  (signature
+   lambda
+   ((string? string1) (string? string2) (string? string3) ...)
+   boolean?)
+  (tags pure))
+ ((name . string-ci=?)
+  (signature
+   lambda
+   ((string? string1) (string? string2) (string? string3) ...)
+   boolean?)
+  (tags pure))
+ ((name . string-ci>=?)
+  (signature
+   lambda
+   ((string? string1) (string? string2) (string? string3) ...)
+   boolean?)
+  (tags pure))
+ ((name . string-ci>?)
+  (signature
+   lambda
+   ((string? string1) (string? string2) (string? string3) ...)
+   boolean?)
+  (tags pure))
+ ((name . string-downcase)
+  (signature lambda ((string? string)) string?)
+  (tags pure))
+ ((name . string-foldcase)
+  (signature lambda ((string? string)) string?)
+  (tags pure))
+ ((name . string-upcase)
+  (signature lambda ((string? string)) string?)
+  (tags pure)))

@@ -1,200 +1,134 @@
-(
- 
- (stream-null
-   (value stream-null?)
-   ())
- 
- (stream-cons
-   (lambda (obj (stream? stream)) stream-pair?)
-   (pure syntax))
- 
- (stream?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (stream-null?
-   (lambda (obj) boolean?)
-   (pure predicate)
+(((name . stream-null) (signature value stream-null?))
+ ((name . stream-cons)
+  (signature syntax-rules () ((_ obj stream) stream-pair?))
+  (tags pure)
+  (syntax-param-signatures (stream stream?)))
+ ((name . stream?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . stream-null?)
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (subsigs)
+  (supertypes stream?))
+ ((name . stream-pair?)
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (subsigs)
+  (supertypes stream?))
+ ((name . stream-car) (signature lambda ((stream-pair? stream)) *) (tags pure))
+ ((name . stream-cdr)
+  (signature lambda ((stream-pair? stream)) stream?)
+  (tags pure))
+ ((name . stream-lambda)
+  (signature syntax-rules () ((_ formals body)))
+  (subsigs
+   (formals
+    (variable1 ...)
+    variable
+    (variable1 ... variable_n . variable_n+1))))
+ ((name . define-stream)
+  (signature
+   syntax-rules
    ()
-   (stream?))
- 
- (stream-pair?
-   (lambda (obj) boolean?)
-   (pure predicate)
-   ()
-   (stream?))
- 
- (stream-car
-   (lambda ((stream-pair? stream)) *)
-   (pure))
- 
- (stream-cdr
-   (lambda ((stream-pair? stream)) stream?)
-   (pure))
-
- (stream-lambda
-   (syntax-rules ()
-     ((_ formals body)))
-   ()
-   ((formals (variable1 ...)
-             variable
-             (variable1 ... variable_n . variable_n+1))))
- 
- (define-stream
-   (syntax-rules ()
-     ((_ (variable parameter1 ...) body))
-     ((_ (variable parameter1 ... . parameter) body)))
-   ())
- 
- (list->stream
-   (lambda ((list? list-of-objects)) stream?)
-   (pure))
- 
- (port->stream
-   (lambda () stream?)
-   (parameterized))
- 
- (port->stream
-   (lambda ((input-port? port)) stream?))
- 
- (stream
-   (lambda (object ...) stream?)
-   (pure syntax))
- 
- (stream->list
-   (lambda ((stream? stream)) list?)
-   (pure))
- 
- (stream->list
-   (lambda ((integer? n) (stream? stream)) list?)
-   (pure))
- 
- (stream-append
-   (lambda ((stream? stream) ...) stream?)
-   (pure))
- 
- (stream-concat
-   (lambda ((stream? stream-of-streams)) stream?)
-   (pure))
- 
- (stream-constant
-   (lambda (object ...) stream?)
-   (pure))
- 
- (stream-drop
-   (lambda ((integer? n) (stream? stream)) stream?)
-   (pure))
- 
- (stream-drop-while
-   (lambda ((procedure? pred?) (stream? stream)) stream?)
-   (pure)
-   ((pred? (lambda (obj) boolean?))))
- 
- (stream-filter
-   (lambda ((procedure? pred?) (stream? stream)) stream?)
-   (pure)
-   ((pred? (lambda (obj) boolean?))))
- 
- (stream-fold
-   (lambda ((procedure? proc) base (stream? stream)) *)
-   (pure)
-   ((proc (lambda (base element) *))))
- 
- (stream-for-each
-   (lambda ((procedure? proc) (stream? stream1) ...) undefined)
-   ()
-   ((proc (lambda (element1 ...) undefined))))
- 
- (stream-from
-   (lambda ((number? from)) stream?)
-   (pure))
- 
- (stream-from
-   (lambda ((number? from) (number? step)) stream?)
-   (pure))
- 
- (stream-iterate
-   (lambda ((procedure? proc) base) stream?)
-   (pure)
-   ((proc (lambda (element) *))))
- 
- (stream-length
-   (lambda ((stream? stream)) integer?)
-   (pure))
- 
- (stream-let
-   (syntax-rules ()
-     ((_ tag ((var expr) ...) body))))
- 
- (stream-map
-   (lambda ((procedure? proc) (stream? stream1) ...) stream?)
-   ()
-   ((proc (lambda (element1 ...) *))))
- 
- (stream-match
-   (syntax-rules (_)
-     ((_ stream clause ...)))
-   ()
-   ((clause ()
-            (pat0 pat1 ...)
-            (pat0 pat1 ... . pat_rest)
-            pat)
-    (pat identifier
-         _)))
- 
- (stream-of
-   (syntax-rules (in is)
-     ((_ expr clause ...)))
-   ()
-   ((clause (var in stream-expr)
-            (var is expr)
-            (pred? expr)
-            )))
- 
- (stream-range
-   (lambda ((real? first) (real? past)) stream?)
-   (pure))
- 
- (stream-range
-   (lambda ((real? first) (real? past) (real? step)) stream?)
-   (pure))
- 
- (stream-ref
-   (lambda ((stream? stream) (integer? n)) *)
-   (pure))
- 
- (stream-reverse
-   (lambda ((stream? stream)) stream?)
-   (pure))
- 
- (stream-scan
-   (lambda ((procedure? proc) base (stream? stream)) stream?)
-   (pure)
-   ((proc (lambda (base element) *))))
- 
- (stream-take
-   (lambda ((integer? n) (stream? stream)) stream?)
-   (pure))
- 
- (stream-take-while
-   (lambda ((procedure? pred?) (stream? stream)) stream?)
-   (pure)
-   ((pred? (lambda (obj) boolean?))))
- 
- (stream-unfold
-   (lambda ((procedure? map) (procedure? pred?) (procedure? gen) base) stream?)
-   (pure)
-   ((map (lambda (base) *))
-    (pred? (lambda (base) boolean?))
-    (gen (lambda (base) *))))
- 
- (stream-unfolds
-   (lambda ((procedure? proc) seed) (values stream? ...))
-   (pure)
-   ((proc (lambda (seed) (values (or list? #f) * ...)))))
- 
- (stream-zip
-   (lambda ((stream? stream) ...) stream?)
-   (pure))
- 
- )
+   ((_ (variable parameter1 ...) body))
+   ((_ (variable parameter1 ... . parameter) body))))
+ ((name . list->stream)
+  (signature lambda ((list? list-of-objects)) stream?)
+  (tags pure))
+ ((name . port->stream) (signature lambda () stream?) (tags parameterized))
+ ((name . port->stream) (signature lambda ((input-port? port)) stream?))
+ ((name . stream) (signature syntax-rules () ((_ object ...) stream?)) (tags pure))
+ ((name . stream->list)
+  (signature lambda ((stream? stream)) list?)
+  (tags pure))
+ ((name . stream->list)
+  (signature lambda ((integer? n) (stream? stream)) list?)
+  (tags pure))
+ ((name . stream-append)
+  (signature lambda ((stream? stream) ...) stream?)
+  (tags pure))
+ ((name . stream-concat)
+  (signature lambda ((stream? stream-of-streams)) stream?)
+  (tags pure))
+ ((name . stream-constant) (signature lambda (object ...) stream?) (tags pure))
+ ((name . stream-drop)
+  (signature lambda ((integer? n) (stream? stream)) stream?)
+  (tags pure))
+ ((name . stream-drop-while)
+  (signature lambda ((procedure? pred?) (stream? stream)) stream?)
+  (tags pure)
+  (subsigs (pred? (lambda (obj) boolean?))))
+ ((name . stream-filter)
+  (signature lambda ((procedure? pred?) (stream? stream)) stream?)
+  (tags pure)
+  (subsigs (pred? (lambda (obj) boolean?))))
+ ((name . stream-fold)
+  (signature lambda ((procedure? proc) base (stream? stream)) *)
+  (tags pure)
+  (subsigs (proc (lambda (base element) *))))
+ ((name . stream-for-each)
+  (signature lambda ((procedure? proc) (stream? stream1) ...) undefined)
+  (subsigs (proc (lambda (element1 ...) undefined))))
+ ((name . stream-from) (signature lambda ((number? from)) stream?) (tags pure))
+ ((name . stream-from)
+  (signature lambda ((number? from) (number? step)) stream?)
+  (tags pure))
+ ((name . stream-iterate)
+  (signature lambda ((procedure? proc) base) stream?)
+  (tags pure)
+  (subsigs (proc (lambda (element) *))))
+ ((name . stream-length)
+  (signature lambda ((stream? stream)) integer?)
+  (tags pure))
+ ((name . stream-let)
+  (signature syntax-rules () ((_ tag ((var expr) ...) body))))
+ ((name . stream-map)
+  (signature lambda ((procedure? proc) (stream? stream1) ...) stream?)
+  (subsigs (proc (lambda (element1 ...) *))))
+ ((name . stream-match)
+  (signature syntax-rules (_) ((_ stream clause ...)))
+  (subsigs
+   (clause () (pat0 pat1 ...) (pat0 pat1 ... . pat_rest) pat)
+   (pat identifier _)))
+ ((name . stream-of)
+  (signature syntax-rules (in is) ((_ expr clause ...)))
+  (subsigs (clause (var in stream-expr) (var is expr) (pred? expr))))
+ ((name . stream-range)
+  (signature lambda ((real? first) (real? past)) stream?)
+  (tags pure))
+ ((name . stream-range)
+  (signature lambda ((real? first) (real? past) (real? step)) stream?)
+  (tags pure))
+ ((name . stream-ref)
+  (signature lambda ((stream? stream) (integer? n)) *)
+  (tags pure))
+ ((name . stream-reverse)
+  (signature lambda ((stream? stream)) stream?)
+  (tags pure))
+ ((name . stream-scan)
+  (signature lambda ((procedure? proc) base (stream? stream)) stream?)
+  (tags pure)
+  (subsigs (proc (lambda (base element) *))))
+ ((name . stream-take)
+  (signature lambda ((integer? n) (stream? stream)) stream?)
+  (tags pure))
+ ((name . stream-take-while)
+  (signature lambda ((procedure? pred?) (stream? stream)) stream?)
+  (tags pure)
+  (subsigs (pred? (lambda (obj) boolean?))))
+ ((name . stream-unfold)
+  (signature
+   lambda
+   ((procedure? map) (procedure? pred?) (procedure? gen) base)
+   stream?)
+  (tags pure)
+  (subsigs
+   (map (lambda (base) *))
+   (pred? (lambda (base) boolean?))
+   (gen (lambda (base) *))))
+ ((name . stream-unfolds)
+  (signature lambda ((procedure? proc) seed) (values stream? ...))
+  (tags pure)
+  (subsigs (proc (lambda (seed) (values (or list? #f) * ...)))))
+ ((name . stream-zip)
+  (signature lambda ((stream? stream) ...) stream?)
+  (tags pure)))

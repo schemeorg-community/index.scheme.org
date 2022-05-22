@@ -1,234 +1,189 @@
-(
- 
- (ideque
-   (lambda (element ...) ideque?)
-   (pure))
- 
- (ideque-tabulate
-   (lambda ((integer? n) (procedure? proc)) ideque?)
-   (pure)
-   ((proc (lambda ((integer? k)) *))))
- 
- (ideque-unfold
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed) ideque?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (ideque-unfold-right
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed) ideque?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (ideque?
-   (lambda (x) boolean?)
-   (pure predicate))
- 
- (ideque=
-   (lambda ((procedure? elt=) (ideque? ideque) ...) boolean?)
-   (pure)
-   ((elt= (lambda (a b) boolean?))))
- 
- (ideque-any
-   (lambda ((procedure? pred) (ideque? ideque)) *)
-   (pure)
-   ((pred (lambda (element) *))))
- 
- (ideque-every
-   (lambda ((procedure? pred) (ideque? ideque)) *)
-   (pure)
-   ((pred (lambda (element) *))))
- 
- (ideque-front
-   (lambda ((ideque? ideque)) *)
-   (pure))
- 
- (ideque-back
-   (lambda ((ideque? ideque)) *)
-   (pure))
- 
- (ideque-remove-front
-   (lambda ((ideque? ideque)) ideque?)
-   (pure))
- 
- (ideque-remove-back
-   (lambda ((ideque? ideque)) ideque?)
-   (pure))
- 
- (ideque-add-front
-   (lambda ((ideque? ideque) obj) ideque?)
-   (pure))
- 
- (ideque-add-back
-   (lambda ((ideque? ideque) obj) ideque?)
-   (pure))
- 
- (ideque-ref
-   (lambda ((ideque? ideque) (integer? n)) *)
-   (pure))
- 
- (ideque-take
-   (lambda ((ideque? ideque) (integer? n)) ideque?)
-   (pure))
- 
- (ideque-take-right
-   (lambda ((ideque? ideque) (integer? n)) ideque?)
-   (pure))
- 
- (ideque-drop
-   (lambda ((ideque? ideque) (integer? n)) ideque?)
-   (pure))
- 
- (ideque-drop-right
-   (lambda ((ideque? ideque) (integer? n)) ideque?)
-   (pure))
- 
- (ideque-split-at
-   (lambda ((ideque? ideque) (integer? n)) (values ideque? ideque?))
-   (pure))
- 
- (ideque-length
-   (lambda ((ideque? ideque)) integer?)
-   (pure))
- 
- (ideque-append
-   (lambda ((ideque? ideque) ...) ideque?)
-   (pure))
- 
- (ideque-reverse
-   (lambda ((ideque? ideque)) ideque?)
-   (pure))
- 
- (ideque-count
-   (lambda ((procedure? pred) (ideque? ideque)) integer?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-zip
-   (lambda ((ideque? ideque1) (ideque? ideque2) ...) ideque?)
-   (pure))
- 
- (ideque-map
-   (lambda ((procedure? proc) (ideque? ideque)) ideque?)
-   (pure)
-   ((proc (lambda (element) *))))
- 
- (ideque-filter-map
-   (lambda ((procedure? proc) (ideque? ideque)) ideque?)
-   (pure)
-   ((proc (lambda (element) *))))
- 
- (ideque-for-each
-   (lambda ((procedure? proc) (ideque? ideque)) undefined)
-   ()
-   ((proc (lambda (element) undefined))))
- 
- (ideque-for-each-right
-   (lambda ((procedure? proc) (ideque? ideque)) undefined)
-   ()
-   ((proc (lambda (element) undefined))))
- 
- (ideque-fold
-   (lambda ((procedure? proc) nil (ideque? ideque)) *)
-   (pure)
-   ((proc (lambda (element state) *))))
- 
- (ideque-fold-right
-   (lambda ((procedure? proc) nil (ideque? ideque)) *)
-   (pure)
-   ((proc (lambda (element state) *))))
- 
- (ideque-append-map
-   (lambda ((procedure? proc) (ideque? ideque)) ideque?)
-   (pure)
-   ((proc (lambda (element) list?))))
- 
- (ideque-filter
-   (lambda ((procedure? pred) (ideque? ideque)) ideque?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-remove
-   (lambda ((procedure? pred) (ideque? ideque)) ideque?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-partition
-   (lambda ((procedure? pred) (ideque? ideque)) (values ideque? ideque?))
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-find
-   (lambda ((procedure? pred) (ideque? ideque)) *)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-find
-   (lambda ((procedure? pred) (ideque? ideque) (procedure? failure)) *)
-   (pure)
-   ((pred (lambda (element) boolean?))
-    (failure (lambda () *))))
- 
- (ideque-find-right
-   (lambda ((procedure? pred) (ideque? ideque)) *)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-find-right
-   (lambda ((procedure? pred) (ideque? ideque) (procedure? failure)) *)
-   (pure)
-   ((pred (lambda (element) boolean?))
-    (failure (lambda () *))))
- 
- (ideque-take-while
-   (lambda ((procedure? pred) (ideque? ideque)) ideque?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-take-while-right
-   (lambda ((procedure? pred) (ideque? ideque)) ideque?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-drop-while
-   (lambda ((procedure? pred) (ideque? ideque)) ideque?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-drop-while-right
-   (lambda ((procedure? pred) (ideque? ideque)) ideque?)
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-span
-   (lambda ((procedure? pred) (ideque? ideque)) (values ideque? ideque?))
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (ideque-break
-   (lambda ((procedure? pred) (ideque? ideque)) (values ideque? ideque?))
-   (pure)
-   ((pred (lambda (element) boolean?))))
- 
- (list->ideque
-   (lambda ((list? list)) ideque?)
-   (pure))
- 
- (ideque->list
-   (lambda ((ideque? ideque)) list?)
-   (pure))
- 
- (generator->ideque
-   (lambda ((procedure? generator)) ideque?)
-   ()
-   ((generator (lambda () *))))
- 
- (ideque->generator
-   (lambda ((ideque? ideque)) procedure?)
-   ()
-   ((return (lambda () *))))
- 
- )
+(((name . ideque) (signature lambda (element ...) ideque?) (tags pure))
+ ((name . ideque-tabulate)
+  (signature lambda ((integer? n) (procedure? proc)) ideque?)
+  (tags pure)
+  (subsigs (proc (lambda ((integer? k)) *))))
+ ((name . ideque-unfold)
+  (signature
+   lambda
+   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+   ideque?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . ideque-unfold-right)
+  (signature
+   lambda
+   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+   ideque?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . ideque?) (signature lambda (x) boolean?) (tags pure predicate))
+ ((name . ideque=)
+  (signature lambda ((procedure? elt=) (ideque? ideque) ...) boolean?)
+  (tags pure)
+  (subsigs (elt= (lambda (a b) boolean?))))
+ ((name . ideque-any)
+  (signature lambda ((procedure? pred) (ideque? ideque)) *)
+  (tags pure)
+  (subsigs (pred (lambda (element) *))))
+ ((name . ideque-every)
+  (signature lambda ((procedure? pred) (ideque? ideque)) *)
+  (tags pure)
+  (subsigs (pred (lambda (element) *))))
+ ((name . ideque-front) (signature lambda ((ideque? ideque)) *) (tags pure))
+ ((name . ideque-back) (signature lambda ((ideque? ideque)) *) (tags pure))
+ ((name . ideque-remove-front)
+  (signature lambda ((ideque? ideque)) ideque?)
+  (tags pure))
+ ((name . ideque-remove-back)
+  (signature lambda ((ideque? ideque)) ideque?)
+  (tags pure))
+ ((name . ideque-add-front)
+  (signature lambda ((ideque? ideque) obj) ideque?)
+  (tags pure))
+ ((name . ideque-add-back)
+  (signature lambda ((ideque? ideque) obj) ideque?)
+  (tags pure))
+ ((name . ideque-ref)
+  (signature lambda ((ideque? ideque) (integer? n)) *)
+  (tags pure))
+ ((name . ideque-take)
+  (signature lambda ((ideque? ideque) (integer? n)) ideque?)
+  (tags pure))
+ ((name . ideque-take-right)
+  (signature lambda ((ideque? ideque) (integer? n)) ideque?)
+  (tags pure))
+ ((name . ideque-drop)
+  (signature lambda ((ideque? ideque) (integer? n)) ideque?)
+  (tags pure))
+ ((name . ideque-drop-right)
+  (signature lambda ((ideque? ideque) (integer? n)) ideque?)
+  (tags pure))
+ ((name . ideque-split-at)
+  (signature lambda ((ideque? ideque) (integer? n)) (values ideque? ideque?))
+  (tags pure))
+ ((name . ideque-length)
+  (signature lambda ((ideque? ideque)) integer?)
+  (tags pure))
+ ((name . ideque-append)
+  (signature lambda ((ideque? ideque) ...) ideque?)
+  (tags pure))
+ ((name . ideque-reverse)
+  (signature lambda ((ideque? ideque)) ideque?)
+  (tags pure))
+ ((name . ideque-count)
+  (signature lambda ((procedure? pred) (ideque? ideque)) integer?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-zip)
+  (signature lambda ((ideque? ideque1) (ideque? ideque2) ...) ideque?)
+  (tags pure))
+ ((name . ideque-map)
+  (signature lambda ((procedure? proc) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (proc (lambda (element) *))))
+ ((name . ideque-filter-map)
+  (signature lambda ((procedure? proc) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (proc (lambda (element) *))))
+ ((name . ideque-for-each)
+  (signature lambda ((procedure? proc) (ideque? ideque)) undefined)
+  (subsigs (proc (lambda (element) undefined))))
+ ((name . ideque-for-each-right)
+  (signature lambda ((procedure? proc) (ideque? ideque)) undefined)
+  (subsigs (proc (lambda (element) undefined))))
+ ((name . ideque-fold)
+  (signature lambda ((procedure? proc) nil (ideque? ideque)) *)
+  (tags pure)
+  (subsigs (proc (lambda (element state) *))))
+ ((name . ideque-fold-right)
+  (signature lambda ((procedure? proc) nil (ideque? ideque)) *)
+  (tags pure)
+  (subsigs (proc (lambda (element state) *))))
+ ((name . ideque-append-map)
+  (signature lambda ((procedure? proc) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (proc (lambda (element) list?))))
+ ((name . ideque-filter)
+  (signature lambda ((procedure? pred) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-remove)
+  (signature lambda ((procedure? pred) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-partition)
+  (signature
+   lambda
+   ((procedure? pred) (ideque? ideque))
+   (values ideque? ideque?))
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-find)
+  (signature lambda ((procedure? pred) (ideque? ideque)) *)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-find)
+  (signature
+   lambda
+   ((procedure? pred) (ideque? ideque) (procedure? failure))
+   *)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?)) (failure (lambda () *))))
+ ((name . ideque-find-right)
+  (signature lambda ((procedure? pred) (ideque? ideque)) *)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-find-right)
+  (signature
+   lambda
+   ((procedure? pred) (ideque? ideque) (procedure? failure))
+   *)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?)) (failure (lambda () *))))
+ ((name . ideque-take-while)
+  (signature lambda ((procedure? pred) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-take-while-right)
+  (signature lambda ((procedure? pred) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-drop-while)
+  (signature lambda ((procedure? pred) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-drop-while-right)
+  (signature lambda ((procedure? pred) (ideque? ideque)) ideque?)
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-span)
+  (signature
+   lambda
+   ((procedure? pred) (ideque? ideque))
+   (values ideque? ideque?))
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . ideque-break)
+  (signature
+   lambda
+   ((procedure? pred) (ideque? ideque))
+   (values ideque? ideque?))
+  (tags pure)
+  (subsigs (pred (lambda (element) boolean?))))
+ ((name . list->ideque) (signature lambda ((list? list)) ideque?) (tags pure))
+ ((name . ideque->list)
+  (signature lambda ((ideque? ideque)) list?)
+  (tags pure))
+ ((name . generator->ideque)
+  (signature lambda ((procedure? generator)) ideque?)
+  (subsigs (generator (lambda () *))))
+ ((name . ideque->generator)
+  (signature lambda ((ideque? ideque)) procedure?)
+  (subsigs (return (lambda () *)))))

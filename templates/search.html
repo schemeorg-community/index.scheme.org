@@ -1,7 +1,12 @@
 <html lang="en">
-    {{>head}}
+    {{#head}}
+        {{>head}}
+    {{/head}}
     <body>
-        {{>topnavigation}}
+        {{#navigation}}
+            {{>topnavigation}}
+        {{/navigation}}
+        {{#body}}
         <main class="search-page">
             <aside class="search-controls">
                 <form method="get" action="" class="search-form">
@@ -10,7 +15,7 @@
                         <datalist id="suggestions">
                         </datalist>
                         <button type="submit" aria-label="Search" class="search-button">
-                            <i class="fas fa-search"></i>
+                            <span class="icon-search"></span>
                         </button>
                     </div>
                     <div class="facets">
@@ -22,10 +27,10 @@
                                 <input type="checkbox" 
                                        name="{{ name }}" 
                                        value="{{ value }}" 
-                                       {{# selected }} checked {{/ selected}}
+                                       {{# selected? }} checked {{/ selected? }}
                                        >
                                        <span class="facet-text">
-                                           <span class="facet-value">{{ value }}</span>
+                                           <span class="facet-value">{{ label }}</span>
                                            <span class="facet-count">({{ count }})</span>
                                        </span>
                             </label>
@@ -38,25 +43,26 @@
             <section class="search-result">
                 <div class="funcs">
                     {{# procedures }}
-                    {{> procedure }}
+                        {{> procedure }}
                     {{/ procedures }}
                 </div>
                 <footer class="pager">
                     {{# pages }}
-                    {{# pager-gap }}
-                    <span class="page-gap">...</span>
-                    {{/ pager-gap }}
-                    {{^ pager-gap }}
-                    {{# link }}
-                    <a class="page" href="{{link}}">{{ number }}</a>
-                    {{/ link }}
-                    {{^ link }}
-                    <span class="page active">{{ number }}</span>
-                    {{/ link}}
-                    {{/pager-gap}}
+                        {{# gap? }}
+                            <span class="page-gap">...</span>
+                        {{/ gap? }}
+                        {{^ gap? }}
+                            {{# link }}
+                                <a class="page" href="{{link}}">{{ number }}</a>
+                            {{/ link }}
+                            {{^ link }}
+                                <span class="page active">{{ number }}</span>
+                            {{/ link}}
+                        {{/ gap? }}
                     {{/ pages }}
                 </footer>
             </section>
         </main>
+        {{/body}}
     </body>
 </html>

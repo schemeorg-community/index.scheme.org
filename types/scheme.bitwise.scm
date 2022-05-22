@@ -1,172 +1,134 @@
-(
- 
- (bitwise-not
-   (lambda ((integer? i)) integer?)
-   (pure))
- 
- (bitwise-and
-   (lambda ((integer? i) ...) integer?)
-   (pure))
- 
- (bitwise-ior
-   (lambda ((integer? i) ...) integer?)
-   (pure))
- 
- (bitwise-xor
-   (lambda ((integer? i) ...) integer?)
-   (pure))
- 
- (bitwise-eqv
-   (lambda ((integer? i) ...) integer?)
-   (pure))
- 
- (bitwise-nand
-   (lambda ((integer? i) (integer? j)) integer?)
-   (pure))
- 
- (bitwise-nor
-   (lambda ((integer? i) (integer? j)) integer?)
-   (pure))
- 
- (bitwise-andc1
-   (lambda ((integer? i) (integer? j)) integer?)
-   (pure))
- 
- (bitwise-andc2
-   (lambda ((integer? i) (integer? j)) integer?)
-   (pure))
- 
- (bitwise-orc1
-   (lambda ((integer? i) (integer? j)) integer?)
-   (pure))
- 
- (bitwise-orc2
-   (lambda ((integer? i) (integer? j)) integer?)
-   (pure))
- 
- (arithmetic-shift
-   (lambda ((integer? i) (integer? count)) integer?)
-   (pure))
- 
- (bit-count
-   (lambda ((integer? i)) integer?)
-   (pure))
- 
- (integer-length
-   (lambda ((integer? i)) integer?)
-   (pure))
- 
- (bitwise-if
-   (lambda ((integer? mask) (integer? i) (integer? j)) integer?)           
-   (pure))
- 
- (bit-set?
-   (lambda ((integer? index) (integer? i)) boolean?)
-   (pure))
- 
- (copy-bit
-   (lambda ((integer? index) (integer? i) (boolean? boolean)) integer?)
-   (pure))
- 
- (bit-swap
-   (lambda ((integer? index1) (integer? index2) (integer? i)) integer?)
-   (pure))
- 
- (any-bit-set?
-   (lambda ((integer? test-bits) (integer? i)) boolean?)
-   (pure))
- 
- (every-bit-set?
-   (lambda ((integer? test-bits) (integer? i)) boolean?)
-   (pure))
- 
- (first-set-bit
-   (lambda ((integer? i)) integer?)
-   (pure))
- 
- (bit-field
-   (lambda ((integer? i) (integer? start) (integer? end)) integer?)
-   (pure))
- 
- (bit-field-any?
-   (lambda ((integer? i) (integer? start) (integer? end)) boolean?)
-   (pure))
- 
- (bit-field-every?
-   (lambda ((integer? i) (integer? start) (integer? end)) boolean?)
-   (pure))
- 
- (bit-field-clear
-   (lambda ((integer? i) (integer? start) (integer? end)) integer?)
-   (pure))
- 
- (bit-field-set
-   (lambda ((integer? i) (integer? start) (integer? end)) integer?)
-   (pure))
- 
- (bit-field-replace
-   (lambda ((integer? dest) (integer? source) (integer? start) (integer? end)) integer?)
-   (pure))
- 
- (bit-field-replace-same
-   (lambda ((integer? dest) (integer? source) (integer? start) (integer? end)) integer?)
-   (pure))
- 
- (bit-field-rotate
-   (lambda ((integer? i) (integer? count) (integer? start) (integer? end)) integer?)
-   (pure))
- 
- (bit-field-reverse
-   (lambda ((integer? i) (integer? start) (integer? end)) integer?)
-   (pure))
- 
- (bits->list
-   (lambda ((integer? i)) list?)
-   (pure))
- 
- (bits->list
-   (lambda ((integer? i) (integer? len)) list?)
-   (pure))
- 
- (bits->vector
-   (lambda ((integer? i)) vector?)
-   (pure))
- 
- (bits->vector
-   (lambda ((integer? i) (integer? len)) vector?)
-   (pure))
- 
- (list->bits
-   (lambda ((list? list)) integer?)
-   (pure))
-
- (vector->bits
-   (lambda ((vector? vector)) integer?)
-   (pure))
- 
- (bits
-   (lambda ((boolean? bool) ...) integer?)
-   (pure))
- 
- (bitwise-fold
-   (lambda ((procedure? proc) seed (integer? i)) *)
-   (pure)
-   ((proc (lambda ((boolean? bit) state) *))))
- 
- (bitwise-for-each
-   (lambda ((procedure? proc) (integer? i)) undefined)
-   ()
-   ((proc (lambda ((boolean? bit)) undefined))))
- 
- (bitwise-unfold
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed) integer?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) boolean?))
-    (successor (lambda (seed) *))))
- 
- (make-bitwise-generator
-   (lambda ((integer? i)) procedure?)
-   ()
-   ((return (lambda () boolean?))))
- )
+(((name . bitwise-not) (signature lambda ((integer? i)) integer?) (tags pure))
+ ((name . bitwise-and)
+  (signature lambda ((integer? i) ...) integer?)
+  (tags pure))
+ ((name . bitwise-ior)
+  (signature lambda ((integer? i) ...) integer?)
+  (tags pure))
+ ((name . bitwise-xor)
+  (signature lambda ((integer? i) ...) integer?)
+  (tags pure))
+ ((name . bitwise-eqv)
+  (signature lambda ((integer? i) ...) integer?)
+  (tags pure))
+ ((name . bitwise-nand)
+  (signature lambda ((integer? i) (integer? j)) integer?)
+  (tags pure))
+ ((name . bitwise-nor)
+  (signature lambda ((integer? i) (integer? j)) integer?)
+  (tags pure))
+ ((name . bitwise-andc1)
+  (signature lambda ((integer? i) (integer? j)) integer?)
+  (tags pure))
+ ((name . bitwise-andc2)
+  (signature lambda ((integer? i) (integer? j)) integer?)
+  (tags pure))
+ ((name . bitwise-orc1)
+  (signature lambda ((integer? i) (integer? j)) integer?)
+  (tags pure))
+ ((name . bitwise-orc2)
+  (signature lambda ((integer? i) (integer? j)) integer?)
+  (tags pure))
+ ((name . arithmetic-shift)
+  (signature lambda ((integer? i) (integer? count)) integer?)
+  (tags pure))
+ ((name . bit-count) (signature lambda ((integer? i)) integer?) (tags pure))
+ ((name . integer-length)
+  (signature lambda ((integer? i)) integer?)
+  (tags pure))
+ ((name . bitwise-if)
+  (signature lambda ((integer? mask) (integer? i) (integer? j)) integer?)
+  (tags pure))
+ ((name . bit-set?)
+  (signature lambda ((integer? index) (integer? i)) boolean?)
+  (tags pure))
+ ((name . copy-bit)
+  (signature
+   lambda
+   ((integer? index) (integer? i) (boolean? boolean))
+   integer?)
+  (tags pure))
+ ((name . bit-swap)
+  (signature
+   lambda
+   ((integer? index1) (integer? index2) (integer? i))
+   integer?)
+  (tags pure))
+ ((name . any-bit-set?)
+  (signature lambda ((integer? test-bits) (integer? i)) boolean?)
+  (tags pure))
+ ((name . every-bit-set?)
+  (signature lambda ((integer? test-bits) (integer? i)) boolean?)
+  (tags pure))
+ ((name . first-set-bit)
+  (signature lambda ((integer? i)) integer?)
+  (tags pure))
+ ((name . bit-field)
+  (signature lambda ((integer? i) (integer? start) (integer? end)) integer?)
+  (tags pure))
+ ((name . bit-field-any?)
+  (signature lambda ((integer? i) (integer? start) (integer? end)) boolean?)
+  (tags pure))
+ ((name . bit-field-every?)
+  (signature lambda ((integer? i) (integer? start) (integer? end)) boolean?)
+  (tags pure))
+ ((name . bit-field-clear)
+  (signature lambda ((integer? i) (integer? start) (integer? end)) integer?)
+  (tags pure))
+ ((name . bit-field-set)
+  (signature lambda ((integer? i) (integer? start) (integer? end)) integer?)
+  (tags pure))
+ ((name . bit-field-replace)
+  (signature
+   lambda
+   ((integer? dest) (integer? source) (integer? start) (integer? end))
+   integer?)
+  (tags pure))
+ ((name . bit-field-replace-same)
+  (signature
+   lambda
+   ((integer? dest) (integer? source) (integer? start) (integer? end))
+   integer?)
+  (tags pure))
+ ((name . bit-field-rotate)
+  (signature
+   lambda
+   ((integer? i) (integer? count) (integer? start) (integer? end))
+   integer?)
+  (tags pure))
+ ((name . bit-field-reverse)
+  (signature lambda ((integer? i) (integer? start) (integer? end)) integer?)
+  (tags pure))
+ ((name . bits->list) (signature lambda ((integer? i)) list?) (tags pure))
+ ((name . bits->list)
+  (signature lambda ((integer? i) (integer? len)) list?)
+  (tags pure))
+ ((name . bits->vector) (signature lambda ((integer? i)) vector?) (tags pure))
+ ((name . bits->vector)
+  (signature lambda ((integer? i) (integer? len)) vector?)
+  (tags pure))
+ ((name . list->bits) (signature lambda ((list? list)) integer?) (tags pure))
+ ((name . vector->bits)
+  (signature lambda ((vector? vector)) integer?)
+  (tags pure))
+ ((name . bits) (signature lambda ((boolean? bool) ...) integer?) (tags pure))
+ ((name . bitwise-fold)
+  (signature lambda ((procedure? proc) seed (integer? i)) *)
+  (tags pure)
+  (subsigs (proc (lambda ((boolean? bit) state) *))))
+ ((name . bitwise-for-each)
+  (signature lambda ((procedure? proc) (integer? i)) undefined)
+  (subsigs (proc (lambda ((boolean? bit)) undefined))))
+ ((name . bitwise-unfold)
+  (signature
+   lambda
+   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+   integer?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) boolean?))
+   (successor (lambda (seed) *))))
+ ((name . make-bitwise-generator)
+  (signature lambda ((integer? i)) procedure?)
+  (subsigs (return (lambda () boolean?)))))

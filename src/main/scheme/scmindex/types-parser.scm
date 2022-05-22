@@ -6,57 +6,17 @@
           (scheme read)
           (scheme write)
           (only (srfi 1) lset-adjoin lset-difference alist-cons alist-delete delete-duplicates filter)
+          (scmindex domain)
           (arvyy slf4j))
 
   (export read-specs 
           read-spec
           make-type-maps
           flatten-type
-          func->json
-
-          make-func
-          func?
-          func-lib
-          func-name
-          func-param-names
-          func-signature
-          func-param-signatures
-          func-tags
-          func-param-types
-          func-return-types
-          func-supertypes
-
           )
   (begin
 
     (define logger (get-logger "types-parser"))
-
-    (define-record-type <scmindex-function>
-                        (make-func 
-                          lib 
-                          name 
-                          param-names 
-                          signature
-                          param-signatures
-                          tags 
-                          param-types 
-                          return-types
-                          supertypes)
-
-                        func?
-
-                        (lib func-lib)
-                        (name func-name)
-                        (param-names func-param-names)
-                        (signature func-signature)
-                        (param-signatures func-param-signatures)
-                        (tags func-tags)
-                        (param-types func-param-types)
-                        (return-types func-return-types)
-                        (supertypes func-supertypes)
-
-                        )
-
 
     (define (read-specs index-file)
       (log-info logger "Reading specs from index file {}" index-file)
@@ -76,41 +36,48 @@
               lst))
           (apply append funcs*))))
 
-    (define (list-ref/f lst index)
-      (cond
-        ((null? lst) '())
-        ((= index 0) (car lst))
-        (else (list-ref/f (cdr lst) (- index 1)))))
+    (define (assoc* key alist default)
+        (cond
+            ((assoc key alist) => cdr)
+            (else default)))
 
     (define (read-spec lib input)
       (map
         (lambda (entry)
-          (define name (let ((n (list-ref entry 0)))
+          (define name (let ((n (assoc* 'name entry #f)))
+                         (unless n
+                            (error "Missing name attribute"))
                          (log-debug logger "Reading spec {}" n)
                          n))
-          (define signature (list-ref entry 1))
+          (define signature (let ((s (assoc* 'signature entry #f)))
+                                (unless s
+                                    (error "Missing signature attribute"))
+                                s))
           (define-values
-            (supertypes param-names param-types return-types)
+            (supertypes param-names param-types syntax-param-signatures return-types)
             (case (car signature)
               ((lambda)
-               (values (list-ref/f entry 4)
+               (values (assoc* 'supertypes entry '())
                        (extract-param-names signature)
                        (extract-param-types signature)
+                       '()
                        (extract-return-types signature)))
               ((syntax-rules)
                (values '()
                        (extract-syntax-names signature)
-                       '()
-                       '()))
+                       (extract-syntax-param-types (assoc* 'syntax-param-signatures entry '()))
+                       (assoc* 'syntax-param-signatures entry '())
+                       (extract-syntax-return-types signature)))
               ((value)
                (values '()
                        '()
                        '()
+                       '()
                        (list (cadr signature))))
               (else (error (string-append "Unrecognized signature for " (->string name))))))
-          (define tags (list-ref/f entry 2))
-          (define param-signatures (list-ref/f entry 3))
-          (make-func lib name param-names signature param-signatures tags param-types return-types supertypes))
+          (define tags (assoc* 'tags entry '()))
+          (define param-signatures (assoc* 'subsigs entry '()))
+          (make-func lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types supertypes))
         input))
 
     (define (extract-param-names signature)
@@ -148,28 +115,43 @@
              (result (delete-duplicates result equal?)))
         result))
 
+    (define (extract-syntax-return-types signature)
+        (let* ((rules (cddr signature))
+               (rules (filter (lambda (rule) (> (length rule) 1)) rules))
+               (returns (map cadr rules))
+               (types (map parse-type-from-return returns)))
+            (delete-duplicates (apply append types))))
+
+    (define (extract-syntax-param-types param-types)
+        (define types (map
+                        (lambda (param-type)
+                            (parse-type-from-param (cadr param-type)))
+                        param-types))
+        (apply append types))
+
     (define (extract-param-types signature)
       (define params-list (cadr signature))
       (define lst* (map
                      (lambda (param)
                        (cond
                          ((list? param)
-                          (let ((type (car param)))
-                            (cond
-                              ((and (list? type) (equal? 'or (car type)))
-                               (cdr type))
-                              ((list? type) (error (string-append "Bad signature: " (->string signature))))
-                              ((symbol? type) (list type))
-                              ((equal? #f type) (list))
-                              (else (error (string-append "Bad signature: " (->string signature)))))))
+                          (let ((value (car param)))
+                            (parse-type-from-param value)))
                          (else (list))))
                      params-list))
-      (filter
-        symbol?
-        (apply append lst*)))
+      (apply append lst*))
 
-    (define (extract-return-types signature)
-      (define (extract value)
+    (define (parse-type-from-param value)
+        (define types
+            (cond
+                  ((and (list? value) (equal? 'or (car value)))
+                   (cdr value))
+                  ((symbol? value) (list value))
+                  ((equal? #f value) (list))
+                  (else (error "Bad signature"))))
+        (filter symbol? types))
+
+    (define (parse-type-from-return value)
         (cond
           ((or (equal? '* value)
                (equal? '... value)
@@ -180,11 +162,13 @@
           ((and (list? value)
                 (or (equal? 'values (car value))
                     (equal? 'or (car value))))
-           (apply append (map extract (cdr value))))
+           (apply append (map parse-type-from-return (cdr value))))
           (else (list))))
+
+    (define (extract-return-types signature)
       (when (< (length signature) 3)
         (error (string-append "Bad signature: " (->string signature))))
-      (extract (caddr signature)))
+      (parse-type-from-return (caddr signature)))
 
     (define (make-type-maps funcs)
       (define (make-entries strict)
@@ -248,20 +232,11 @@
             (loop (append to-add result)
                   new-q))))
 
+    ;;TODO move to util
     (define (->string obj)
       (define port (open-output-string))
       (write obj port)
       (get-output-string port))
 
-    (define (func->json func)
-      `((lib . ,(->string (func-lib func)))
-        (name . ,(symbol->string (func-name func)))
-        (param_names . ,(list->vector (map ->string (func-param-names func))))
-        (signature . ,(->string (func-signature func)))
-        (param_signatures . ,(->string (func-param-signatures func)))
-        (tags . ,(list->vector (map ->string (func-tags func))))
-        (param_types . ,(list->vector (map ->string (func-param-types func))))
-        (return_types . ,(list->vector (map ->string (func-return-types func))))
-        (super_types . ,(list->vector (map ->string (func-supertypes func))))))
     )
   )

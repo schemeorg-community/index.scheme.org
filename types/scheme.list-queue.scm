@@ -1,126 +1,109 @@
-(
- 
- (make-list-queue
-   (lambda ((list? list)) list-queue?)
-   (pure))
- 
- (make-list-queue
-   (lambda ((list? list) (pair? last)) list-queue?)
-   (pure))
- 
- (list-queue
-   (lambda (element ...) list-queue?)
-   (pure))
- 
- (list-queue
-   (lambda ((list-queue? list-queue)) list-queue?)
-   (pure))
- 
- (list-queue-unfold
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed) list-queue?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (list-queue-unfold
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed (list-queue? queue)) list-queue?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (list-queue-unfold-right
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed) list-queue?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (list-queue-unfold-right
-   (lambda ((procedure? stop?) (procedure? mapper) (procedure? successor) seed (list-queue? queue)) list-queue?)
-   (pure)
-   ((stop? (lambda (seed) boolean?))
-    (mapper (lambda (seed) *))
-    (successor (lambda (seed) *))))
- 
- (list-queue?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (list-queue-empty?
-   (lambda ((list-queue? list-queue)) boolean?)
-   (pure))
- 
- (list-queue-front
-   (lambda ((list-queue? list-queue)) *)
-   (pure))
- 
- (list-queue-back
-   (lambda ((list-queue? list-queue)) *)
-   (pure))
- 
- (list-queue-list
-   (lambda ((list-queue? list-queue)) list?)
-   (pure))
- 
- (list-queue-first-last
-   (lambda ((list-queue? list-queue)) (values list? list?))
-   (pure))
- 
- (list-queue-add-front!
-   (lambda ((list-queue? list-queue) element) undefined)
-   ())
- 
- (list-queue-add-back!
-   (lambda ((list-queue? list-queue) element) undefined)
-   ())
- 
- (list-queue-remove-front!
-   (lambda ((list-queue? list-queue)) *)
-   ())
- 
- (list-queue-remove-back!
-   (lambda ((list-queue? list-queue)) *)
-   ())
- 
- (list-queue-remove-all!
-   (lambda ((list-queue? list-queue)) list?)
-   ())
- 
- (list-queue-set-list!
-   (lambda ((list-queue? list-queue) (list? list)) undefined)
-   ())
- 
- (list-queue-set-list!
-   (lambda ((list-queue? list-queue) (list? list) (pair? last)) undefined)
-   ())
- 
- (list-queue-append
-   (lambda ((list-queue? list-queue) ...) list-queue?)
-   (pure))
- 
- (list-queue-append!
-   (lambda ((list-queue? list-queue) ...) list-queue?)
-   ())
- 
- (list-queue-concatenate
-   (lambda ((list? list-of-list-queues)) list-queue?)
-   (pure))
- 
- (list-queue-map
-   (lambda ((procedure? proc) (list-queue? list-queue)) list-queue?)
-   (pure)
-   ((proc (lambda (element) *))))
- 
- (list-queue-map!
-   (lambda ((procedure? proc) (list-queue? list-queue)) undefined)
-   ()
-   ((proc (lambda (element) *))))
- 
- (list-queue-for-each
-   (lambda ((procedure? proc) (list-queue? list-queue)) undefined)
-   ()
-   ((proc (lambda (element) undefined))))
- 
- )
+(((name . make-list-queue)
+  (signature lambda ((list? list)) list-queue?)
+  (tags pure))
+ ((name . make-list-queue)
+  (signature lambda ((list? list) (pair? last)) list-queue?)
+  (tags pure))
+ ((name . list-queue) (signature lambda (element ...) list-queue?) (tags pure))
+ ((name . list-queue)
+  (signature lambda ((list-queue? list-queue)) list-queue?)
+  (tags pure))
+ ((name . list-queue-unfold)
+  (signature
+   lambda
+   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+   list-queue?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . list-queue-unfold)
+  (signature
+   lambda
+   ((procedure? stop?)
+    (procedure? mapper)
+    (procedure? successor)
+    seed
+    (list-queue? queue))
+   list-queue?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . list-queue-unfold-right)
+  (signature
+   lambda
+   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+   list-queue?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . list-queue-unfold-right)
+  (signature
+   lambda
+   ((procedure? stop?)
+    (procedure? mapper)
+    (procedure? successor)
+    seed
+    (list-queue? queue))
+   list-queue?)
+  (tags pure)
+  (subsigs
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))))
+ ((name . list-queue?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . list-queue-empty?)
+  (signature lambda ((list-queue? list-queue)) boolean?)
+  (tags pure))
+ ((name . list-queue-front)
+  (signature lambda ((list-queue? list-queue)) *)
+  (tags pure))
+ ((name . list-queue-back)
+  (signature lambda ((list-queue? list-queue)) *)
+  (tags pure))
+ ((name . list-queue-list)
+  (signature lambda ((list-queue? list-queue)) list?)
+  (tags pure))
+ ((name . list-queue-first-last)
+  (signature lambda ((list-queue? list-queue)) (values list? list?))
+  (tags pure))
+ ((name . list-queue-add-front!)
+  (signature lambda ((list-queue? list-queue) element) undefined))
+ ((name . list-queue-add-back!)
+  (signature lambda ((list-queue? list-queue) element) undefined))
+ ((name . list-queue-remove-front!)
+  (signature lambda ((list-queue? list-queue)) *))
+ ((name . list-queue-remove-back!)
+  (signature lambda ((list-queue? list-queue)) *))
+ ((name . list-queue-remove-all!)
+  (signature lambda ((list-queue? list-queue)) list?))
+ ((name . list-queue-set-list!)
+  (signature lambda ((list-queue? list-queue) (list? list)) undefined))
+ ((name . list-queue-set-list!)
+  (signature
+   lambda
+   ((list-queue? list-queue) (list? list) (pair? last))
+   undefined))
+ ((name . list-queue-append)
+  (signature lambda ((list-queue? list-queue) ...) list-queue?)
+  (tags pure))
+ ((name . list-queue-append!)
+  (signature lambda ((list-queue? list-queue) ...) list-queue?))
+ ((name . list-queue-concatenate)
+  (signature lambda ((list? list-of-list-queues)) list-queue?)
+  (tags pure))
+ ((name . list-queue-map)
+  (signature lambda ((procedure? proc) (list-queue? list-queue)) list-queue?)
+  (tags pure)
+  (subsigs (proc (lambda (element) *))))
+ ((name . list-queue-map!)
+  (signature lambda ((procedure? proc) (list-queue? list-queue)) undefined)
+  (subsigs (proc (lambda (element) *))))
+ ((name . list-queue-for-each)
+  (signature lambda ((procedure? proc) (list-queue? list-queue)) undefined)
+  (subsigs (proc (lambda (element) undefined)))))

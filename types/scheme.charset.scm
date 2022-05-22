@@ -1,289 +1,201 @@
-(
- 
- (char-set?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (char-set=
-   (lambda ((char-set? cs1) ...) boolean?)
-   (pure))
- 
- (char-set<=
-   (lambda ((char-set? cs1) ...) boolean?)
-   (pure))
- 
- (char-set-hash
-   (lambda ((char-set? cs)) integer?)
-   (pure))
- 
- (char-set-hash
-   (lambda ((char-set? cs) (integer? bound)) integer?)
-   (pure))
- 
- (char-set-cursor
-   (lambda ((char-set? cset)) *))
- 
- (char-set-ref
-   (lambda ((char-set? cset) cursor) char?))
- 
- (char-set-cursor-next
-   (lambda ((char-set? cset) cursor) *))
- 
- (end-of-char-set?
-   (lambda (cursor) boolean?))
- 
- (char-set-fold
-   (lambda ((procedure? kons) knil (char-set? cs)) *)
-   (pure)
-   ((kons (lambda ((char? c) state) *))))
- 
- (char-set-unfold
-   (lambda ((procedure? f) (procedure? p) (procedure? g) seed) char-set?)
-   (pure)
-   ((f (lambda (seed) char?))
-    (p (lambda (seed) boolean?))
-    (g (lambda (seed) *))))
- 
- (char-set-unfold
-   (lambda ((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs)) char-set?)
-   (pure)
-   ((f (lambda (seed) char?))
-    (p (lambda (seed) boolean?))
-    (g (lambda (seed) *))))
- 
- (char-set-unfold!
-   (lambda ((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs)) char-set?)
-   (pure)
-   ((f (lambda (seed) char?))
-    (p (lambda (seed) boolean?))
-    (g (lambda (seed) *))))
- 
- (char-set-for-each
-   (lambda ((procedure? proc) (char-set? cs)) undefined)
-   ()
-   ((proc (lambda ((char? c)) undefined))))
- 
- (char-set-map
-   (lambda ((procedure? proc) (char-set? cs)) char-set?)
-   (pure)
-   ((proc (lambda ((char? c)) char?))))
- 
- (char-set-copy
-   (lambda ((char-set? cs)) char-set?)
-   (pure))
- 
- (char-set
-   (lambda ((char? char1) ...) char-set?)
-   (pure))
- 
- (list->char-set
-   (lambda ((list? char-list)) char-set?)
-   (pure))
- 
- (list->char-set
-   (lambda ((list? char-list) (char-set? base-cs)) char-set?)
-   (pure))
- 
- (list->char-set!
-   (lambda ((list? char-list) (char-set? base-cs)) char-set?)
-   ())
- 
- (string->char-set
-   (lambda ((string? s)) char-set?)
-   (pure))
- 
- (string->char-set
-   (lambda ((string? s) (char-set? base-cs)) char-set?)
-   (pure))
- 
- (string->char-set!
-   (lambda ((string? s) (char-set? base-cs)) char-set?)
-   ())
- 
- (char-set-filter
-   (lambda ((procedure? pred) (char-set? cs)) char-set?)
-   (pure)
-   ((pred (lambda ((char? c)) boolean?))))
- 
- (char-set-filter
-   (lambda ((procedure? pred) (char-set? cs) (char-set? base-cs)) char-set?)
-   (pure)
-   ((pred (lambda ((char? c)) boolean?))))
- 
- (char-set-filter!
-   (lambda ((procedure? pred) (char-set? cs) (char-set? base-cs)) char-set?)
-   ()
-   ((pred (lambda ((char? c)) boolean?))))
- 
- (ucs-range->char-set
-   (lambda ((integer? lower) (integer? upper)) char-set?)
-   (pure))
- 
- (ucs-range->char-set
-   (lambda ((integer? lower) (integer? upper) (boolean? error?)) char-set?)
-   (pure))
- 
- (ucs-range->char-set
-   (lambda ((integer? lower) (integer? upper) (boolean? error?) (char-set? base-cs)) char-set?)
-   (pure))
- 
- (ucs-range->char-set!
-   (lambda ((integer? lower) (integer? upper) (boolean? error?) (char-set? base-cs)) char-set?)
-   ())
- 
- (|->char-set|
-   (lambda ((string? x)) char-set?)
-   (pure))
- 
- (|->char-set|
-   (lambda ((char? x)) char-set?)
-   (pure))
- 
- (|->char-set|
-   (lambda ((char-set? x)) char-set?)
-   (pure))
-
- (char-set-size
-   (lambda ((char-set? cs)) integer?)
-   (pure))
- 
- (char-set-count
-   (lambda ((procedure? pred) (char-set? cs)) integer?)
-   (pure)
-   ((pred (lambda ((char? c)) boolean?))))
- 
- (char-set->list
-   (lambda ((char-set? cs)) list?))
- 
- (char-set->string
-   (lambda ((char-set? cs)) string?))
- 
- (char-set-contains?
-   (lambda ((char-set? cs) (char? char)) boolean?))
- 
- (char-set-every
-   (lambda ((procedure? pred) (char-set? cs)) boolean?)
-   (pure)
-   ((pred (lambda ((char? c)) boolean?))))
- 
- (char-set-any
-   (lambda ((procedure? pred) (char-set? cs)) boolean?)
-   (pure)
-   ((pred (lambda ((char? c)) boolean?))))
- 
- (char-set-adjoin
-   (lambda ((char-set? cs) (char? char1) ...) char-set?)
-   (pure))
- 
- (char-set-delete
-   (lambda ((char-set? cs) (char? char1) ...) char-set?)
-   (pure))
- 
- (char-set-adjoin!
-   (lambda ((char-set? cs) (char? char1) ...) char-set?)
-   ())
- 
- (char-set-delete!
-   (lambda ((char-set? cs) (char? char1) ...) char-set?)
-   ())
- 
- (char-set-complement
-   (lambda ((char-set? cs)) char-set?)
-   (pure))
- 
- (char-set-union
-   (lambda ((char-set? cs1) ...) char-set?)
-   (pure))
- 
- (char-set-intersection
-   (lambda ((char-set? cs1) ...) char-set?)
-   (pure))
- 
- (char-set-difference
-   (lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-   (pure))
- 
- (char-set-xor
-   (lambda ((char-set? cs1) ...) char-set?)
-   (pure))
- 
- (char-set-diff+intersection
-   (lambda ((char-set? cs1) (char-set? cs2) ...) (values char-set? char-set?))
-   (pure))
- 
- (char-set-complement!
-   (lambda ((char-set? cs)) char-set?)
-   ())
- 
- (char-set-union
-   (lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-   ())
- 
- (char-set-intersection!
-   (lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-   ())
- 
- (char-set-difference!
-   (lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-   ())
- 
- (char-set-xor!
-   (lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-   ())
- 
- (char-set-diff+intersection!
-   (lambda ((char-set? cs1) (char-set? cs2) (char-set? cs3) ...) (values char-set? char-set?))
-   ())
-
- (|char-set:lower-case|
-  (value char-set?))
- 
- (|char-set:upper-case|
-  (value char-set?))
- 
- (|char-set:title-case|
-  (value char-set?))
-
- (|char-set:letter|
-  (value char-set?))
- 
- (|char-set:digit|
-  (value char-set?))
- 
- (|char-set:letter+digit|
-  (value char-set?))
-
- (|char-set:graphic|
-  (value char-set?))
- 
- (|char-set:printing|
-  (value char-set?))
- 
- (|char-set:whitespace|
-  (value char-set?))
- 
- (|char-set:iso-control|
-  (value char-set?))
- 
- (|char-set:punctuation|
-  (value char-set?))
- 
- (|char-set:symbol|
-  (value char-set?))
- 
- (|char-set:hex-digit|
-  (value char-set?))
- 
- (|char-set:blank|
-  (value char-set?))
- 
- (|char-set:ascii|
-  (value char-set?))
- 
- (|char-set:empty|
-  (value char-set?))
- 
- (|char-set:full|
-  (value char-set?))
- 
- )
+(((name . char-set?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . char-set=)
+  (signature lambda ((char-set? cs1) ...) boolean?)
+  (tags pure))
+ ((name . char-set<=)
+  (signature lambda ((char-set? cs1) ...) boolean?)
+  (tags pure))
+ ((name . char-set-hash)
+  (signature lambda ((char-set? cs)) integer?)
+  (tags pure))
+ ((name . char-set-hash)
+  (signature lambda ((char-set? cs) (integer? bound)) integer?)
+  (tags pure))
+ ((name . char-set-cursor) (signature lambda ((char-set? cset)) *))
+ ((name . char-set-ref) (signature lambda ((char-set? cset) cursor) char?))
+ ((name . char-set-cursor-next) (signature lambda ((char-set? cset) cursor) *))
+ ((name . end-of-char-set?) (signature lambda (cursor) boolean?))
+ ((name . char-set-fold)
+  (signature lambda ((procedure? kons) knil (char-set? cs)) *)
+  (tags pure)
+  (subsigs (kons (lambda ((char? c) state) *))))
+ ((name . char-set-unfold)
+  (signature
+   lambda
+   ((procedure? f) (procedure? p) (procedure? g) seed)
+   char-set?)
+  (tags pure)
+  (subsigs
+   (f (lambda (seed) char?))
+   (p (lambda (seed) boolean?))
+   (g (lambda (seed) *))))
+ ((name . char-set-unfold)
+  (signature
+   lambda
+   ((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs))
+   char-set?)
+  (tags pure)
+  (subsigs
+   (f (lambda (seed) char?))
+   (p (lambda (seed) boolean?))
+   (g (lambda (seed) *))))
+ ((name . char-set-unfold!)
+  (signature
+   lambda
+   ((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs))
+   char-set?)
+  (tags pure)
+  (subsigs
+   (f (lambda (seed) char?))
+   (p (lambda (seed) boolean?))
+   (g (lambda (seed) *))))
+ ((name . char-set-for-each)
+  (signature lambda ((procedure? proc) (char-set? cs)) undefined)
+  (subsigs (proc (lambda ((char? c)) undefined))))
+ ((name . char-set-map)
+  (signature lambda ((procedure? proc) (char-set? cs)) char-set?)
+  (tags pure)
+  (subsigs (proc (lambda ((char? c)) char?))))
+ ((name . char-set-copy)
+  (signature lambda ((char-set? cs)) char-set?)
+  (tags pure))
+ ((name . char-set)
+  (signature lambda ((char? char1) ...) char-set?)
+  (tags pure))
+ ((name . list->char-set)
+  (signature lambda ((list? char-list)) char-set?)
+  (tags pure))
+ ((name . list->char-set)
+  (signature lambda ((list? char-list) (char-set? base-cs)) char-set?)
+  (tags pure))
+ ((name . list->char-set!)
+  (signature lambda ((list? char-list) (char-set? base-cs)) char-set?))
+ ((name . string->char-set)
+  (signature lambda ((string? s)) char-set?)
+  (tags pure))
+ ((name . string->char-set)
+  (signature lambda ((string? s) (char-set? base-cs)) char-set?)
+  (tags pure))
+ ((name . string->char-set!)
+  (signature lambda ((string? s) (char-set? base-cs)) char-set?))
+ ((name . char-set-filter)
+  (signature lambda ((procedure? pred) (char-set? cs)) char-set?)
+  (tags pure)
+  (subsigs (pred (lambda ((char? c)) boolean?))))
+ ((name . char-set-filter)
+  (signature
+   lambda
+   ((procedure? pred) (char-set? cs) (char-set? base-cs))
+   char-set?)
+  (tags pure)
+  (subsigs (pred (lambda ((char? c)) boolean?))))
+ ((name . char-set-filter!)
+  (signature
+   lambda
+   ((procedure? pred) (char-set? cs) (char-set? base-cs))
+   char-set?)
+  (subsigs (pred (lambda ((char? c)) boolean?))))
+ ((name . ucs-range->char-set)
+  (signature lambda ((integer? lower) (integer? upper)) char-set?)
+  (tags pure))
+ ((name . ucs-range->char-set)
+  (signature
+   lambda
+   ((integer? lower) (integer? upper) (boolean? error?))
+   char-set?)
+  (tags pure))
+ ((name . ucs-range->char-set)
+  (signature
+   lambda
+   ((integer? lower) (integer? upper) (boolean? error?) (char-set? base-cs))
+   char-set?)
+  (tags pure))
+ ((name . ucs-range->char-set!)
+  (signature
+   lambda
+   ((integer? lower) (integer? upper) (boolean? error?) (char-set? base-cs))
+   char-set?))
+ ((name . ->char-set) (signature lambda ((string? x)) char-set?) (tags pure))
+ ((name . ->char-set) (signature lambda ((char? x)) char-set?) (tags pure))
+ ((name . ->char-set) (signature lambda ((char-set? x)) char-set?) (tags pure))
+ ((name . char-set-size)
+  (signature lambda ((char-set? cs)) integer?)
+  (tags pure))
+ ((name . char-set-count)
+  (signature lambda ((procedure? pred) (char-set? cs)) integer?)
+  (tags pure)
+  (subsigs (pred (lambda ((char? c)) boolean?))))
+ ((name . char-set->list) (signature lambda ((char-set? cs)) list?))
+ ((name . char-set->string) (signature lambda ((char-set? cs)) string?))
+ ((name . char-set-contains?)
+  (signature lambda ((char-set? cs) (char? char)) boolean?))
+ ((name . char-set-every)
+  (signature lambda ((procedure? pred) (char-set? cs)) boolean?)
+  (tags pure)
+  (subsigs (pred (lambda ((char? c)) boolean?))))
+ ((name . char-set-any)
+  (signature lambda ((procedure? pred) (char-set? cs)) boolean?)
+  (tags pure)
+  (subsigs (pred (lambda ((char? c)) boolean?))))
+ ((name . char-set-adjoin)
+  (signature lambda ((char-set? cs) (char? char1) ...) char-set?)
+  (tags pure))
+ ((name . char-set-delete)
+  (signature lambda ((char-set? cs) (char? char1) ...) char-set?)
+  (tags pure))
+ ((name . char-set-adjoin!)
+  (signature lambda ((char-set? cs) (char? char1) ...) char-set?))
+ ((name . char-set-delete!)
+  (signature lambda ((char-set? cs) (char? char1) ...) char-set?))
+ ((name . char-set-complement)
+  (signature lambda ((char-set? cs)) char-set?)
+  (tags pure))
+ ((name . char-set-union)
+  (signature lambda ((char-set? cs1) ...) char-set?)
+  (tags pure))
+ ((name . char-set-intersection)
+  (signature lambda ((char-set? cs1) ...) char-set?)
+  (tags pure))
+ ((name . char-set-difference)
+  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
+  (tags pure))
+ ((name . char-set-xor)
+  (signature lambda ((char-set? cs1) ...) char-set?)
+  (tags pure))
+ ((name . char-set-diff+intersection)
+  (signature
+   lambda
+   ((char-set? cs1) (char-set? cs2) ...)
+   (values char-set? char-set?))
+  (tags pure))
+ ((name . char-set-complement!) (signature lambda ((char-set? cs)) char-set?))
+ ((name . char-set-union)
+  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+ ((name . char-set-intersection!)
+  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+ ((name . char-set-difference!)
+  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+ ((name . char-set-xor!)
+  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+ ((name . char-set-diff+intersection!)
+  (signature
+   lambda
+   ((char-set? cs1) (char-set? cs2) (char-set? cs3) ...)
+   (values char-set? char-set?)))
+ ((name . |char-set:lower-case|) (signature value char-set?))
+ ((name . |char-set:upper-case|) (signature value char-set?))
+ ((name . |char-set:title-case|) (signature value char-set?))
+ ((name . |char-set:letter|) (signature value char-set?))
+ ((name . |char-set:digit|) (signature value char-set?))
+ ((name . |char-set:letter+digit|) (signature value char-set?))
+ ((name . |char-set:graphic|) (signature value char-set?))
+ ((name . |char-set:printing|) (signature value char-set?))
+ ((name . |char-set:whitespace|) (signature value char-set?))
+ ((name . |char-set:iso-control|) (signature value char-set?))
+ ((name . |char-set:punctuation|) (signature value char-set?))
+ ((name . |char-set:symbol|) (signature value char-set?))
+ ((name . |char-set:hex-digit|) (signature value char-set?))
+ ((name . |char-set:blank|) (signature value char-set?))
+ ((name . |char-set:ascii|) (signature value char-set?))
+ ((name . |char-set:empty|) (signature value char-set?))
+ ((name . |char-set:full|) (signature value char-set?)))

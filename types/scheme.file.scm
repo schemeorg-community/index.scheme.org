@@ -1,39 +1,22 @@
-(
- (call-with-input-file
-   (lambda ((string? string) (procedure? proc)) *)
-   ()
-   ((proc (lambda ((input-port? port)) *))))
- 
- (call-with-output-file
-   (lambda ((string? string) (procedure? proc)) *)
-   ()
-   ((proc (lambda ((output-port? port)) *))))
- 
- (delete-file
-   (lambda ((string? filename)) undefined))
- 
- (file-exists?
-   (lambda ((string? filename)) boolean?))
- 
- (open-binary-input-file
-   (lambda ((string? string)) input-port?))
- 
- (open-binary-output-file
-   (lambda ((string? string)) output-port?))
- 
- (open-input-file
-   (lambda ((string? string)) input-port?))
- 
- (open-output-file
-   (lambda ((string? string)) output-port?))
- 
- (with-input-from-file
-   (lambda ((string? string) (procedure? thunk)) *)
-   (parameterized)
-   ((thunk (lambda () *))))
- 
- (with-output-to-file
-   (lambda ((string? string) (procedure? thunk)) *)
-   (parameterized)
-   ((thunk (lambda () *))))
- )
+(((name . call-with-input-file)
+  (signature lambda ((string? string) (procedure? proc)) *)
+  (subsigs (proc (lambda ((input-port? port)) *))))
+ ((name . call-with-output-file)
+  (signature lambda ((string? string) (procedure? proc)) *)
+  (subsigs (proc (lambda ((output-port? port)) *))))
+ ((name . delete-file) (signature lambda ((string? filename)) undefined))
+ ((name . file-exists?) (signature lambda ((string? filename)) boolean?))
+ ((name . open-binary-input-file)
+  (signature lambda ((string? string)) input-port?))
+ ((name . open-binary-output-file)
+  (signature lambda ((string? string)) output-port?))
+ ((name . open-input-file) (signature lambda ((string? string)) input-port?))
+ ((name . open-output-file) (signature lambda ((string? string)) output-port?))
+ ((name . with-input-from-file)
+  (signature lambda ((string? string) (procedure? thunk)) *)
+  (tags parameterized)
+  (subsigs (thunk (lambda () *))))
+ ((name . with-output-to-file)
+  (signature lambda ((string? string) (procedure? thunk)) *)
+  (tags parameterized)
+  (subsigs (thunk (lambda () *)))))

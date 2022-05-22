@@ -1,279 +1,260 @@
-(
- 
- (make-vector
-   (lambda ((integer? k)) vector?)
-   ())
-
- (make-vector
-   (lambda ((integer? k) fill) vector?)
-   (pure))
- 
- (vector
-   (lambda (obj ...) vector?)
-   (pure))
- 
- (vector-unfold
-   (lambda ((procedure? f) (integer? length) initial-seed ...) vector?)
-   (pure)
-   ((f (lambda ((integer? index) seed ...) (values * * ...)))))
- 
- (vector-unfold-right
-   (lambda ((procedure? f) (integer? length) initial-seed ...) vector?)
-   (pure)
-   ((f (lambda ((integer? index) seed ...) (values * * ...)))))
- 
- (vector-copy
-   (lambda ((vector? vector)) vector?)
-   (pure))
-
- (vector-copy
-   (lambda ((vector? vector) (integer? start)) vector?)
-   (pure))
-
- (vector-copy
-   (lambda ((vector? vector) (integer? start) (integer? end)) vector?)
-   (pure))
- 
- (vector-reverse-copy
-   (lambda ((vector? vector)) vector?)
-   (pure))
-
- (vector-reverse-copy
-   (lambda ((vector? vector) (integer? start)) vector?)
-   (pure))
-
- (vector-reverse-copy
-   (lambda ((vector? vector) (integer? start) (integer? end)) vector?)
-   (pure))
- 
- (vector-append
-   (lambda ((vector? vector) ...) vector?)
-   (pure))
- 
- (vector-concatenate
-   (lambda ((list? list-of-vectors) ...) vector?)
-   (pure))
- 
- (vector-append-subvectors
-   (lambda ((vector? vec1) (integer? start1) (integer? end1) ...) vector?)
-   (pure))
- 
- (vector?
-   (lambda (obj) boolean?)
-   (pure predicate))
- 
- (vector-empty?
-   (lambda ((vector? vec)) boolean?)
-   (pure))
- 
- (vector=
-   (lambda ((procedure? elt=?) (vector? vec) ...) boolean?)
-   (pure)
-   ((elt=? (lambda (a b) boolean?))))
- 
- (vector-ref
-   (lambda ((vector? vector) (integer? k)) *)
-   (pure))
- 
- (vector-length
-   (lambda ((vector? vector)) integer?)
-   (pure))
- 
- (vector-fold
-   (lambda ((procedure? kons) knil (vector? vec1) (vector? vec2) ...) *)
-   (pure)
-   ((kons (lambda (state obj1 obj2 ...) *))))
- 
- (vector-fold-right
-   (lambda ((procedure? kons) knil (vector? vec1) (vector? vec2) ...) *)
-   (pure)
-   ((kons (lambda (state obj1 obj2 ...) *))))
- 
- (vector-map
-   (lambda ((procedure? proc) (vector? vector1) (vector? vector2) ...) vector?)
-   (pure)
-   ((proc (lambda (obj ...) *))))
- 
- (vector-map!
-   (lambda ((procedure? proc) (vector? vector1) (vector? vector2) ...) undefined)
-   ()
-   ((proc (lambda (obj ...) *))))
- 
- (vector-for-each
-   (lambda ((procedure? proc) (vector? vector1) (vector? vector2) ...) undefined)
-   ()
-   ((proc (lambda (obj ...) undefined))))
- 
- (vector-count
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) integer?)
-   (pure)
-   ((pred? (lambda (obj1 obj2 ...) *))))
- 
- (vector-cumulate
-   (lambda ((procedure? f) knil (vector? vec)) vector?)
-   (pure)
-   ((f (lambda (obj1 obj2) *))))
- 
- (vector-index
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
-   (pure)
-   ((pred? (lambda (obj1 obj2 ...) *))))
- 
- (vector-index-right
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
-   (pure)
-   ((pred? (lambda (obj1 obj2 ...) *))))
- 
- (vector-skip
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
-   (pure)
-   ((pred? (lambda (obj1 obj2 ...) *))))
- 
- (vector-skip-right
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) (or integer? #f))
-   (pure)
-   ((pred? (lambda (obj1 obj2 ...) *))))
- 
- (vector-binary-search
-   (lambda ((vector? vec) value (procedure? cmp)) (or integer? #f))
-   (pure)
-   ((cmp (lambda (a b) integer?))))
- 
- (vector-any
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) *)
-   (pure)
-   ((pred? (lambda (obj1 obj2 ...) *))))
- 
- (vector-every
-   (lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) *)
-   (pure)
-   ((pred? (lambda (obj1 obj2 ...) *))))
- 
- (vector-partition
-   (lambda ((procedure? pred?) (vector? vec) ) (values vector? integer?))
-   (pure)
-   ((pred? (lambda (obj) boolean?))))
- 
- (vector-set!
-   (lambda ((vector? vector) (integer? k) obj) undefined)
-   ())
- 
- (vector-swap!
-   (lambda ((vector? vector) (integer? i) (integer? j)) undefined)
-   ())
-
- (vector-fill!
-   (lambda ((vector? vector) fill) undefined) 
-   ())
-
- (vector-fill!
-   (lambda ((vector? vector) fill (integer? start)) undefined) 
-   ())
-
- (vector-fill!
-   (lambda ((vector? vector) fill (integer? start) (integer? end)) undefined) 
-   ())
-
- (vector-reverse!
-   (lambda ((vector? vector)) undefined) 
-   ())
-
- (vector-reverse!
-   (lambda ((vector? vector) (integer? start)) undefined) 
-   ())
-
- (vector-reverse!
-   (lambda ((vector? vector) (integer? start) (integer? end)) undefined) 
-   ())
-
- (vector-copy!
-   (lambda ((vector? to) (integer? at) (vector? from)) undefined)
-   ())
-
- (vector-copy!
-   (lambda ((vector? to) (integer? at) (vector? from) (integer? start)) undefined)
-   ())
-
- (vector-copy!
-   (lambda ((vector? to) (integer? at) (vector? from) (integer? start) (integer? end)) undefined)
-   ())
- 
- (vector-reverse-copy!
-   (lambda ((vector? to) (integer? at) (vector? from)) undefined)
-   ())
-
- (vector-reverse-copy!
-   (lambda ((vector? to) (integer? at) (vector? from) (integer? start)) undefined)
-   ())
-
- (vector-reverse-copy!
-   (lambda ((vector? to) (integer? at) (vector? from) (integer? start) (integer? end)) undefined)
-   ())
- 
- (vector-unfold!
-   (lambda ((procedure? f) (vector? vec) (integer? start) (integer? end) initial-seed ...) undefined)
-   ()
-   ((f (lambda ((integer? index) seed ...) (values * * ...)))))
- 
- (vector-unfold-right!
-   (lambda ((procedure? f) (vector? vec) (integer? start) (integer? end) initial-seed ...) undefined)
-   ()
-   ((f (lambda ((integer? index) seed ...) (values * * ...)))))
- 
- (vector->list
-   (lambda ((vector? vector)) list?)
-   (pure))
-
- (vector->list
-   (lambda ((vector? vector) (integer? start)) list?)
-   (pure))
-
- (vector->list
-   (lambda ((vector? vector) (integer? start) (integer? end)) list?)
-   (pure))
- 
- (reverse-vector->list
-   (lambda ((vector? vector)) list?)
-   (pure))
-
- (reverse-vector->list
-   (lambda ((vector? vector) (integer? start)) list?)
-   (pure))
-
- (reverse-vector->list
-   (lambda ((vector? vector) (integer? start) (integer? end)) list?)
-   (pure))
- 
- (list->vector
-   (lambda ((list? list)) vector?)
-   (pure))
- 
- (reverse-list->vector
-   (lambda ((list? list)) vector?)
-   (pure))
- 
- (string->vector
-   (lambda ((string? string)) vector?)
-   (pure))
-
- (string->vector
-   (lambda ((string? string) (integer? start)) vector?)
-   (pure))
-
- (string->vector
-   (lambda ((string? string) (integer? start) (integer? end)) vector?)
-   (pure))
- 
- (vector->string
-   (lambda ((vector? vector)) string?)
-   (pure))
-
- (vector->string
-   (lambda ((vector? vector) (integer? start)) string?)
-   (pure))
-
- (vector->string
-   (lambda ((vector? vector) (integer? start) (integer? end)) string?)
-   (pure))
- 
- )
+(((name . make-vector) (signature lambda ((integer? k)) vector?))
+ ((name . make-vector)
+  (signature lambda ((integer? k) fill) vector?)
+  (tags pure))
+ ((name . vector) (signature lambda (obj ...) vector?) (tags pure))
+ ((name . vector-unfold)
+  (signature
+   lambda
+   ((procedure? f) (integer? length) initial-seed ...)
+   vector?)
+  (tags pure)
+  (subsigs (f (lambda ((integer? index) seed ...) (values * * ...)))))
+ ((name . vector-unfold-right)
+  (signature
+   lambda
+   ((procedure? f) (integer? length) initial-seed ...)
+   vector?)
+  (tags pure)
+  (subsigs (f (lambda ((integer? index) seed ...) (values * * ...)))))
+ ((name . vector-copy)
+  (signature lambda ((vector? vector)) vector?)
+  (tags pure))
+ ((name . vector-copy)
+  (signature lambda ((vector? vector) (integer? start)) vector?)
+  (tags pure))
+ ((name . vector-copy)
+  (signature lambda ((vector? vector) (integer? start) (integer? end)) vector?)
+  (tags pure))
+ ((name . vector-reverse-copy)
+  (signature lambda ((vector? vector)) vector?)
+  (tags pure))
+ ((name . vector-reverse-copy)
+  (signature lambda ((vector? vector) (integer? start)) vector?)
+  (tags pure))
+ ((name . vector-reverse-copy)
+  (signature lambda ((vector? vector) (integer? start) (integer? end)) vector?)
+  (tags pure))
+ ((name . vector-append)
+  (signature lambda ((vector? vector) ...) vector?)
+  (tags pure))
+ ((name . vector-concatenate)
+  (signature lambda ((list? list-of-vectors) ...) vector?)
+  (tags pure))
+ ((name . vector-append-subvectors)
+  (signature
+   lambda
+   ((vector? vec1) (integer? start1) (integer? end1) ...)
+   vector?)
+  (tags pure))
+ ((name . vector?) (signature lambda (obj) boolean?) (tags pure predicate))
+ ((name . vector-empty?)
+  (signature lambda ((vector? vec)) boolean?)
+  (tags pure))
+ ((name . vector=)
+  (signature lambda ((procedure? elt=?) (vector? vec) ...) boolean?)
+  (tags pure)
+  (subsigs (elt=? (lambda (a b) boolean?))))
+ ((name . vector-ref)
+  (signature lambda ((vector? vector) (integer? k)) *)
+  (tags pure))
+ ((name . vector-length)
+  (signature lambda ((vector? vector)) integer?)
+  (tags pure))
+ ((name . vector-fold)
+  (signature
+   lambda
+   ((procedure? kons) knil (vector? vec1) (vector? vec2) ...)
+   *)
+  (tags pure)
+  (subsigs (kons (lambda (state obj1 obj2 ...) *))))
+ ((name . vector-fold-right)
+  (signature
+   lambda
+   ((procedure? kons) knil (vector? vec1) (vector? vec2) ...)
+   *)
+  (tags pure)
+  (subsigs (kons (lambda (state obj1 obj2 ...) *))))
+ ((name . vector-map)
+  (signature
+   lambda
+   ((procedure? proc) (vector? vector1) (vector? vector2) ...)
+   vector?)
+  (tags pure)
+  (subsigs (proc (lambda (obj ...) *))))
+ ((name . vector-map!)
+  (signature
+   lambda
+   ((procedure? proc) (vector? vector1) (vector? vector2) ...)
+   undefined)
+  (subsigs (proc (lambda (obj ...) *))))
+ ((name . vector-for-each)
+  (signature
+   lambda
+   ((procedure? proc) (vector? vector1) (vector? vector2) ...)
+   undefined)
+  (subsigs (proc (lambda (obj ...) undefined))))
+ ((name . vector-count)
+  (signature
+   lambda
+   ((procedure? pred?) (vector? vec1) (vector? vec2) ...)
+   integer?)
+  (tags pure)
+  (subsigs (pred? (lambda (obj1 obj2 ...) *))))
+ ((name . vector-cumulate)
+  (signature lambda ((procedure? f) knil (vector? vec)) vector?)
+  (tags pure)
+  (subsigs (f (lambda (obj1 obj2) *))))
+ ((name . vector-index)
+  (signature
+   lambda
+   ((procedure? pred?) (vector? vec1) (vector? vec2) ...)
+   (or integer? #f))
+  (tags pure)
+  (subsigs (pred? (lambda (obj1 obj2 ...) *))))
+ ((name . vector-index-right)
+  (signature
+   lambda
+   ((procedure? pred?) (vector? vec1) (vector? vec2) ...)
+   (or integer? #f))
+  (tags pure)
+  (subsigs (pred? (lambda (obj1 obj2 ...) *))))
+ ((name . vector-skip)
+  (signature
+   lambda
+   ((procedure? pred?) (vector? vec1) (vector? vec2) ...)
+   (or integer? #f))
+  (tags pure)
+  (subsigs (pred? (lambda (obj1 obj2 ...) *))))
+ ((name . vector-skip-right)
+  (signature
+   lambda
+   ((procedure? pred?) (vector? vec1) (vector? vec2) ...)
+   (or integer? #f))
+  (tags pure)
+  (subsigs (pred? (lambda (obj1 obj2 ...) *))))
+ ((name . vector-binary-search)
+  (signature lambda ((vector? vec) value (procedure? cmp)) (or integer? #f))
+  (tags pure)
+  (subsigs (cmp (lambda (a b) integer?))))
+ ((name . vector-any)
+  (signature lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) *)
+  (tags pure)
+  (subsigs (pred? (lambda (obj1 obj2 ...) *))))
+ ((name . vector-every)
+  (signature lambda ((procedure? pred?) (vector? vec1) (vector? vec2) ...) *)
+  (tags pure)
+  (subsigs (pred? (lambda (obj1 obj2 ...) *))))
+ ((name . vector-partition)
+  (signature
+   lambda
+   ((procedure? pred?) (vector? vec))
+   (values vector? integer?))
+  (tags pure)
+  (subsigs (pred? (lambda (obj) boolean?))))
+ ((name . vector-set!)
+  (signature lambda ((vector? vector) (integer? k) obj) undefined))
+ ((name . vector-swap!)
+  (signature lambda ((vector? vector) (integer? i) (integer? j)) undefined))
+ ((name . vector-fill!) (signature lambda ((vector? vector) fill) undefined))
+ ((name . vector-fill!)
+  (signature lambda ((vector? vector) fill (integer? start)) undefined))
+ ((name . vector-fill!)
+  (signature
+   lambda
+   ((vector? vector) fill (integer? start) (integer? end))
+   undefined))
+ ((name . vector-reverse!) (signature lambda ((vector? vector)) undefined))
+ ((name . vector-reverse!)
+  (signature lambda ((vector? vector) (integer? start)) undefined))
+ ((name . vector-reverse!)
+  (signature
+   lambda
+   ((vector? vector) (integer? start) (integer? end))
+   undefined))
+ ((name . vector-copy!)
+  (signature lambda ((vector? to) (integer? at) (vector? from)) undefined))
+ ((name . vector-copy!)
+  (signature
+   lambda
+   ((vector? to) (integer? at) (vector? from) (integer? start))
+   undefined))
+ ((name . vector-copy!)
+  (signature
+   lambda
+   ((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
+   undefined))
+ ((name . vector-reverse-copy!)
+  (signature lambda ((vector? to) (integer? at) (vector? from)) undefined))
+ ((name . vector-reverse-copy!)
+  (signature
+   lambda
+   ((vector? to) (integer? at) (vector? from) (integer? start))
+   undefined))
+ ((name . vector-reverse-copy!)
+  (signature
+   lambda
+   ((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
+   undefined))
+ ((name . vector-unfold!)
+  (signature
+   lambda
+   ((procedure? f)
+    (vector? vec)
+    (integer? start)
+    (integer? end)
+    initial-seed
+    ...)
+   undefined)
+  (subsigs (f (lambda ((integer? index) seed ...) (values * * ...)))))
+ ((name . vector-unfold-right!)
+  (signature
+   lambda
+   ((procedure? f)
+    (vector? vec)
+    (integer? start)
+    (integer? end)
+    initial-seed
+    ...)
+   undefined)
+  (subsigs (f (lambda ((integer? index) seed ...) (values * * ...)))))
+ ((name . vector->list)
+  (signature lambda ((vector? vector)) list?)
+  (tags pure))
+ ((name . vector->list)
+  (signature lambda ((vector? vector) (integer? start)) list?)
+  (tags pure))
+ ((name . vector->list)
+  (signature lambda ((vector? vector) (integer? start) (integer? end)) list?)
+  (tags pure))
+ ((name . reverse-vector->list)
+  (signature lambda ((vector? vector)) list?)
+  (tags pure))
+ ((name . reverse-vector->list)
+  (signature lambda ((vector? vector) (integer? start)) list?)
+  (tags pure))
+ ((name . reverse-vector->list)
+  (signature lambda ((vector? vector) (integer? start) (integer? end)) list?)
+  (tags pure))
+ ((name . list->vector) (signature lambda ((list? list)) vector?) (tags pure))
+ ((name . reverse-list->vector)
+  (signature lambda ((list? list)) vector?)
+  (tags pure))
+ ((name . string->vector)
+  (signature lambda ((string? string)) vector?)
+  (tags pure))
+ ((name . string->vector)
+  (signature lambda ((string? string) (integer? start)) vector?)
+  (tags pure))
+ ((name . string->vector)
+  (signature lambda ((string? string) (integer? start) (integer? end)) vector?)
+  (tags pure))
+ ((name . vector->string)
+  (signature lambda ((vector? vector)) string?)
+  (tags pure))
+ ((name . vector->string)
+  (signature lambda ((vector? vector) (integer? start)) string?)
+  (tags pure))
+ ((name . vector->string)
+  (signature lambda ((vector? vector) (integer? start) (integer? end)) string?)
+  (tags pure)))

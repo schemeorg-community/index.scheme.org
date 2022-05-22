@@ -55,6 +55,7 @@ nav {
 }
 
 .facet-count {
+    font-size: 0.8em;
     color: var(--text-color-muted);
 }
 
@@ -117,6 +118,7 @@ nav {
 .lib {
     font-size: 0.8em;
     grid-area: lib;
+    margin-bottom: 0.8em;
 }
 
 .lib-link {
@@ -133,9 +135,12 @@ nav {
     grid-area: sig;
 }
 
-.param-signatures, .subsyntax-signatures {
+.param-signatures, .subsyntax-signatures-block {
     grid-area: param-sig;
-    padding-top: 0.5em;
+}
+
+.param-signatures, .subsyntax-signatures-block, .syntax-param-signatures {
+    margin-top: 0.8em;
 }
 
 .subsyntax-signatures {
@@ -207,14 +212,14 @@ nav {
 }
 
 .procedure:first-child {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 .procedure:last-child {
     border-bottom: 1px gray solid;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .chunk {
@@ -222,9 +227,14 @@ nav {
     margin-left: 5px;
 }
 
+.settings-group {
+    margin-top: 0.5em;
+}
+
 .settings-group-value,
 .facet-option {
     display: block;
+    padding: 0.1em;
     vertical-align: middle;
     cursor: pointer;
 }
@@ -309,8 +319,8 @@ nav {
     color: var(--text-color-muted);
     font-weight: bold;
     background-color: var(--bg-color2);
-    width: 1.5em;
-    height: 1.5em;
+    min-width: 1.5em;
+    padding: 0.2em;
     line-height: 1.5em;
     text-align: center;
     border-top: solid gray 1px;
@@ -343,8 +353,8 @@ nav {
 .page-gap {
     color: var(--text-color-muted);
     background-color: var(--bg-color2);
-    width: 1.5em;
-    height: 1.5em;
+    min-width: 1.5em;
+    padding: 0.2em;
     line-height: 1.5em;
     text-align: center;
     border-top: solid gray 1px;
@@ -384,6 +394,7 @@ h1, h2 {
 
 fieldset {
     border: 1px gray solid;
+    border-radius: 5px;
 }
 
 
@@ -455,6 +466,11 @@ fieldset {
 
 .muted-type {
     font-weight: bold;
+    color: var(--text-color-muted);
+}
+
+.result-item-block-header {
+    font-size: 0.8em;
     color: var(--text-color-muted);
 }
 

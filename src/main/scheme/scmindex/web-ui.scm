@@ -9,6 +9,7 @@
       (arvyy mustache)
       (arvyy solr-embedded)
       (arvyy solrj)
+      (scmindex domain)
       (scmindex types-parser)
       (scmindex mustache)
       (scmindex solr)
@@ -41,7 +42,9 @@
 (define (get/html path handler)
   (get path (lambda (req resp)
               (define-values (name data) (handler req resp))
-              (execute (get-template name) data))))
+              (parameterize ((current-lookup data-lookup)
+                             (current-collection list-collection))
+                (execute (get-template name) data)))))
 
 (define (get/rest path handler)
   (get path (lambda (req resp)
@@ -59,20 +62,10 @@
               (resp/set-header! resp "Access-Control-Allow-Origin" "*")
               (get-output-string payload))))
 
-(define (make-tpl-getter name)
-  (if (deploy-setting/cache-templates config)
-      (let ((tpl (compile name partial-locator)))
-       (lambda () tpl))
-      (lambda () (compile name partial-locator))))
-
 (define solr-url (string-append (deploy-setting/solr-url config) "/solr/" (deploy-setting/solr-core config)))
 (define solr-search-url (string-append solr-url "/search"))
 (define solr-suggest-url (string-append solr-url "/suggest"))
 (define default-page-size (deploy-setting/page-size config))
-
-(define (make-head-data req)
-  `((light-theme . ,(user-setting/light-theme? req))
-    (ctrlf-override . ,(user-setting/ctrl-f-override req))))
 
 (port (deploy-setting/port config))
 
@@ -81,18 +74,11 @@
 
 (get/html "/"
           (lambda (req resp)
-            (values "index"
-                    `((page-title . "Home")
-                       ,@(make-mustache-nav-data 'index)
-                       ,@(make-head-data req)))))
+            (render-home-page req)))
 
 (get/html "/settings"
      (lambda (req resp)
-       (values "settings"
-               `((page-title . "Settings")
-                 ,@(make-mustache-nav-data 'settings)
-                 ,@(make-head-data req)
-                 ,@(mustache-settings-data req)))))
+       (render-settings-page req)))
 
 (post "/settings"
       (lambda (req resp)
@@ -102,7 +88,7 @@
             (if value
                 (resp/set-cookie! resp opt value)
                 (resp/remove-cookie! resp opt)))
-          settings-options)
+          settings-cookies)
         (resp/redirect resp "/settings")))
 
 (get/html "/search"
@@ -120,35 +106,7 @@
        (define return-types (or (req/query-param-values req "return") '()))
        (define tags (or (req/query-param-values req "tag") '()))
        (define data (exec-solr-query solr-client solr-core start page-size query libs param-types return-types tags filter-params-loose?))
-       (define search-data
-         (make-mustache-search-data
-           page
-           page-size
-           query
-           libs
-           param-types
-           return-types
-           tags
-           data))
-       (values "search"
-               `((page-title . "Search")
-                 ,@search-data
-                 ,@(make-mustache-nav-data 'search)
-                 ,@(make-head-data req)))))
-
-(get/html "/userguide"
-          (lambda (req resp)
-            (values "userguide"
-                    `((page-title . "User guide")
-                      ,@(make-mustache-nav-data 'userguide)
-                      ,@(make-head-data req)))))
-
-(get/html "/restapi"
-     (lambda (req resp)
-       (values "restapi"
-               `((page-title . "REST api")
-                 ,@(make-mustache-nav-data 'restapi)
-                 ,@(make-head-data req)))))
+       (render-search-page req page page-size query libs tags param-types return-types data)))
 
 (get/rest "/suggest"
      (lambda (req resp)
@@ -182,7 +140,10 @@
              (define return-types (or (req/query-param-values req "return") '()))
              (define tags (or (req/query-param-values req "tag") '()))
              (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
-             (exec-solr-query solr-client solr-core start rows query libs param-types return-types tags filter-params-loose?))))
+             (define search-result (exec-solr-query solr-client solr-core start rows query libs param-types return-types tags filter-params-loose?))
+             (search-result->json search-result))))
+
+
         )
 
 
