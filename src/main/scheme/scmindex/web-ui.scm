@@ -9,6 +9,7 @@
       (arvyy mustache)
       (arvyy solr-embedded)
       (arvyy solrj)
+      (scmindex domain)
       (scmindex types-parser)
       (scmindex mustache)
       (scmindex solr)
@@ -61,20 +62,10 @@
               (resp/set-header! resp "Access-Control-Allow-Origin" "*")
               (get-output-string payload))))
 
-(define (make-tpl-getter name)
-  (if (deploy-setting/cache-templates config)
-      (let ((tpl (compile name partial-locator)))
-       (lambda () tpl))
-      (lambda () (compile name partial-locator))))
-
 (define solr-url (string-append (deploy-setting/solr-url config) "/solr/" (deploy-setting/solr-core config)))
 (define solr-search-url (string-append solr-url "/search"))
 (define solr-suggest-url (string-append solr-url "/suggest"))
 (define default-page-size (deploy-setting/page-size config))
-
-(define (make-head-data req)
-  `((light-theme . ,(user-setting/light-theme? req))
-    (ctrlf-override . ,(user-setting/ctrl-f-override req))))
 
 (port (deploy-setting/port config))
 
@@ -149,7 +140,10 @@
              (define return-types (or (req/query-param-values req "return") '()))
              (define tags (or (req/query-param-values req "tag") '()))
              (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
-             (exec-solr-query solr-client solr-core start rows query libs param-types return-types tags filter-params-loose?))))
+             (define search-result (exec-solr-query solr-client solr-core start rows query libs param-types return-types tags filter-params-loose?))
+             (search-result->json search-result))))
+
+
         )
 
 

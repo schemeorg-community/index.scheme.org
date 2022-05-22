@@ -134,9 +134,12 @@ nav {
     grid-area: sig;
 }
 
-.param-signatures, .subsyntax-signatures {
+.param-signatures, .subsyntax-signatures-block {
     grid-area: param-sig;
-    padding-top: 0.5em;
+}
+
+.param-signatures, .subsyntax-signatures-block, .syntax-param-signatures {
+    margin-top: 0.8em;
 }
 
 .subsyntax-signatures {
@@ -456,6 +459,11 @@ fieldset {
 
 .muted-type {
     font-weight: bold;
+    color: var(--text-color-muted);
+}
+
+.result-item-block-header {
+    font-size: 0.8em;
     color: var(--text-color-muted);
 }
 

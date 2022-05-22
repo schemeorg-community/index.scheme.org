@@ -1,5 +1,5 @@
 (((name . delay) (signature syntax-rules () ((_ expression) promise?)))
- ((name . delay-force) (signature lambda (expression) promise?) (tags syntax))
+ ((name . delay-force) (signature syntax-rules () ((_ expression) promise?)) (tags))
  ((name . force) (signature lambda ((promise? promise)) *))
  ((name . make-promise) (signature lambda (obj) promise?) (tags pure))
  ((name . promise?) (signature lambda (obj) boolean?) (tags pure predicate)))

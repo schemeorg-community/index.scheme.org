@@ -98,12 +98,12 @@
 
     (define-mustache-record-type <result-item>
         result-item-lookup
-        (make-result-item signature param-signatures subsyntax-signatures extra-type-signatures tags lib)
+        (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib)
         result-item?
         (signature result-item-signature)
         (param-signatures result-item-param-signatures)
         (subsyntax-signatures result-item-subsyntax-signatures)
-        (extra-type-signatures result-item-extra-type-signatures)
+        (syntax-param-signatures result-item-syntax-param-signatures)
         (tags result-item-tags)
         (lib result-item-lib))
 
@@ -147,6 +147,14 @@
         (name syntax-rule-name)
         (rules syntax-rule-rules))
 
+    (define (result-item-extra-lookup obj name found not-found)
+        (cond
+            ((not (result-item? obj)) (not-found))
+            ((equal? "has-param-signatures?" name) (found (not (null? (result-item-param-signatures obj)))))
+            ((equal? "has-subsyntax-signatures?" name) (found (not (null? (result-item-subsyntax-signatures obj)))))
+            ((equal? "has-syntax-param-signatures?" name) (found (not (null? (result-item-syntax-param-signatures obj)))))
+            (else (not-found))))
+
     (define data-lookup
         (compose-lookups
             sexpr-el-lookup
@@ -161,7 +169,8 @@
             setting-lookup
             setting-option-lookup
             page-lookup
-            syntax-rule-lookup))
+            syntax-rule-lookup
+            result-item-extra-lookup))
 
     (define make-mustache-nav-data
         (let ((pages '(("Home" "/" index)
@@ -251,8 +260,6 @@
                         (setting-default-value s)
                         options))
         settings-data))
-
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
     (define (make-mustache-search-data page page-size query libs tags param-types return-types search-result)
 
@@ -393,14 +400,14 @@
                    (make-value-signature-sexpr-data (func-name doc)
                                                     signature
                                                     make-link)))))
-      ;;TODO
-      (define extra-type-signatures
-        '())
+      (define syntax-param-signatures
+        (make-syntax-param-signatures (func-syntax-param-signatures doc)))
+
       (make-result-item
         signature-sd
         param-signatures
         subsyntax-signatures
-        extra-type-signatures
+        syntax-param-signatures
         (func-tags doc)
         (func-lib doc)))
     
@@ -419,6 +426,19 @@
                       (make-sexpr-el "&#x27E9" #f #f #f #f))))))
       (make-sexpr-el #f #f "sexpr-flex" #f (make-sexpr-data (cons rule '()) term-handler 1)))
 
+  (define (make-syntax-param-signatures params)
+    (map
+        (lambda (param)
+            (define name (symbol->string (car param)))
+            (define type (cadr param))
+            (make-sexpr-el #f #f "sexpr-flex" #f
+                (list
+                    paren-open-sd
+                    (make-param-type-sd type #f make-link)
+                    spacer-sd
+                    (make-sexpr-el #f name "muted" #f #f)
+                    paren-close-sd)))
+        params))
 
   (define (make-link type param?)
     (if param?
@@ -494,8 +514,6 @@
          (list))
         (else (error sexpr))))
     
-    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
       (define spacer-sd
         (make-sexpr-el #f #f "spacer" #f #f))
 
@@ -507,6 +525,8 @@
 
       (define long-arrow-sd
         (make-sexpr-el "&DoubleLongRightArrow;" #f "muted" #f #f))
+
+      (define slash (make-sexpr-el #f "/" "muted-type" #f #f))
 
     (define (make-return-sd returns link-maker sub?)
         (define (return-value->sd value)
@@ -529,29 +549,30 @@
                     (cdr value))
                 ,paren-close-sd)))))
         (make-sexpr-el #f #f "sexpr-flex" #f (list spacer-sd long-arrow-sd spacer-sd (return-value->sd returns))))
+
+    (define (make-param-type-sd type sub? link-maker)
+      (cond
+        ((symbol? type)
+         (make-sexpr-el #f type (if sub? "muted-type" "bright-type") (link-maker type #t) #f))
+        ((equal? #f type)
+         (make-sexpr-el #f "#f" (if sub? "muted-type" "bright-syntax") #f #f))
+        ((list? type)
+         (let loop ((types (cdr type))
+                    (sds '()))
+           (cond
+             ((null? types)
+              (make-sexpr-el #f #f "sexpr-flex" #f (cdr sds)))
+             (else (let* ((type (car types))
+                          (sd (make-param-type-sd type sub? link-maker)))
+                     (loop (cdr types)
+                           (append (list slash sd) sds)))))))))
     
     (define (make-signature-sexpr-data name sig link-maker sub?)
 
       (define name-sd (make-sexpr-el #f name (if sub? "muted-name" "bright-name") #f #f))
-      (define slash (make-sexpr-el #f "/" "muted-type" #f #f))
-      
+
       (define (make-param-sds params)
-        (define (make-type-sd type)
-          (cond
-            ((symbol? type)
-             (make-sexpr-el #f type (if sub? "muted-type" "bright-type") (link-maker type #t) #f))
-            ((equal? #f type)
-             (make-sexpr-el #f "#f" (if sub? "muted-type" "bright-syntax") #f #f))
-            ((list? type)
-             (let loop ((types (cdr type))
-                        (sds '()))
-               (cond 
-                 ((null? types)
-                  (make-sexpr-el #f #f "sexpr-flex" #f (cdr sds)))
-                 (else (let* ((type (car types))
-                              (sd (make-type-sd type)))
-                         (loop (cdr types)
-                               (append (list slash sd) sds)))))))))
+
         (let loop ((params params)
                    (last (null? (cdr (cadr sig))))
                    (result '()))
@@ -562,7 +583,7 @@
                (make-sexpr-el #f #f "sexpr-flex" #f
                  `(,spacer-sd
                    ,paren-open-sd
-                   ,(make-type-sd (car param))
+                   ,(make-param-type-sd (car param) sub? link-maker)
                    ,spacer-sd
                    ,(make-sexpr-el #f (cadr param) "muted" #f #f)
                    ,paren-close-sd
@@ -572,13 +593,13 @@
                  `(,spacer-sd
                    ,(make-sexpr-el #f (symbol->string param) "muted" #f #f)
                    ,@(if last (list paren-close-sd) (list)))))))
-          
+
           (if last
               (reverse (cons sd result))
               (loop (cdr params)
                     (null? (cddr params))
                     (cons sd result)))))
-      
+
       (define params (cadr sig))
       (define return-sd (make-return-sd (caddr sig) link-maker sub?))
       

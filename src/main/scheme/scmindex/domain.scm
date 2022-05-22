@@ -26,6 +26,7 @@
           func-param-names
           func-signature
           func-param-signatures
+          func-syntax-param-signatures
           func-tags
           func-param-types
           func-return-types
@@ -33,6 +34,7 @@
 
           func->json
           json->func
+          search-result->json
     )
     (begin
 
@@ -43,6 +45,7 @@
                           param-names
                           signature
                           param-signatures
+                          syntax-param-signatures
                           tags
                           param-types
                           return-types
@@ -55,6 +58,7 @@
                         (param-names func-param-names)
                         (signature func-signature)
                         (param-signatures func-param-signatures)
+                        (syntax-param-signatures func-syntax-param-signatures)
                         (tags func-tags)
                         (param-types func-param-types)
                         (return-types func-return-types)
@@ -76,6 +80,7 @@
         (param_names . ,(list->vector (map ->string (func-param-names func))))
         (signature . ,(->string (func-signature func)))
         (param_signatures . ,(->string (func-param-signatures func)))
+        (syntax_param_signatures . ,(->string (func-syntax-param-signatures func)))
         (tags . ,(list->vector (map ->string (func-tags func))))
         (param_types . ,(list->vector (map ->string (func-param-types func))))
         (return_types . ,(list->vector (map ->string (func-return-types func))))
@@ -98,6 +103,7 @@
             (get 'param_names 'symbol-lst '())
             (get 'signature 'sexpr #f)
             (get 'param_signatures 'sexpr '())
+            (get 'syntax_param_signatures 'sexpr '())
             (get 'tags 'symbol-lst '())
             (get 'param_types 'symbol-lst '())
             (get 'return_types 'symbol-lst '())
@@ -119,4 +125,16 @@
         (value search-result-facet-value)
         (count search-result-facet-count))
 
-        ))
+    (define (search-result->json sr)
+        `((items . ,(list->vector (map func->json (search-result-items sr))))
+          (total . ,(search-result-total sr))
+          (libs . ,(list->vector (map search-result-facet->json (search-result-libs sr))))
+          (params . ,(list->vector (map search-result-facet->json (search-result-params sr))))
+          (returns . ,(list->vector (map search-result-facet->json (search-result-returns sr))))
+          (tags . ,(list->vector (map search-result-facet->json (search-result-tags sr))))))
+
+    (define (search-result-facet->json f)
+        `((value . ,(->string (search-result-facet-value f)))
+          (count . ,(search-result-facet-count f))))
+
+))
