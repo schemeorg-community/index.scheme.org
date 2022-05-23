@@ -126,14 +126,14 @@ Core application behavior is managed using a scm configuration file, containing 
 Running the application, first argument is interpreted as a path to configuration file. If not set, it defaults to `./config/configuration.scm`
 
 The following is exhaustive list of valid properties
-[cols="1,3,1"]
+[cols="1l,3,1l"]
 |===
 | Property
 | Description
 | Default
 
 | solr-embed
-| Specify whether embed solr / lucene index inside the application itself (if #t), or connect to a standalone solr instance (if #f)
+| Specify whether embed solr / lucene index inside the application itself (if `#t`), or connect to a standalone solr instance (if `#f`)
 | #t
 
 | solr-home
@@ -141,7 +141,7 @@ The following is exhaustive list of valid properties
 | "./solrhome"
 
 | solr-url
-| Solr url to connect to. Relevant only if solr-embed is #f
+| Solr url to connect to. Relevant only if solr-embed is `#f`
 | "http://localhost:8983/solr"
 
 | solr-core
@@ -153,15 +153,15 @@ The following is exhaustive list of valid properties
 | #t
 
 | port
-| Which port to use. Relevant only if enable-web is #t
+| Which port to use. Relevant only if enable-web is `#t`
 | 8080
 
 | cache-templates
-| Whether templates should be cached (ie compiled once and remembered). Use #f in development, so that you don't need to restart the app to see changes
+| Whether templates should be cached (ie compiled once and remembered). Use `#f` in development, so that you don't need to restart the app to see changes
 | #t
 
 | serve-static
-| Whether application should serve static resources from ./static folder. Use #f if you have some other web server (eg nginx in front) serving the content.
+| Whether application should serve static resources from ./static folder. Use `#f` if you have some other web server (eg nginx in front) serving the content.
 | #t
 
 | enable-repl
@@ -186,150 +186,73 @@ Index should be a list of pairs - where `car` is a symbolic library name, and `c
 )
 ```
 
-Each library file is a list of entries, where each entry itself is a list and consists of 2 - 5 elements. An entry may be defining a function, a syntax macro, or a plain value.
+Each library file is a list of entries, where each entry is an association list, using symbols as keys. An entry may be defining a function, a syntax macro, or a plain value.
 
-==== Function format
+[cols="1m,3a"]
+|===
+| key 
+| description
 
-1. name.
-+
-Note, that the name doesn't have to be unique -- if the function has multiple overloaded signatures, simply create multiple definition for each possible option.
+| name
+| The name of the function / syntax / value. The name doesn't have to be unique - in particular with procedures, definition is repeated for all possible invocation overloads with different parameter counts. Required.
 
-2. signature, in the form of `(lambda (<parameter> ...) <return type>)`
-+
+| signature
+| S-expr defining signature. The format depends on a type (function / syntax / value) being described.
+
+== Function
+
+In case of function, the format is `(lambda (<parameter> ...) <return type>)`
+
 Each parameter is either of the form `(<type> param-name)` or just `param-name`, when type is "any". Each parameter may be succeeded by a `...` literal to indicate varargs / repetition.
-+
+
 Parameter type is either:
 
 * a predicate name (eg. `list?`);
+
 * a type union in the form of `(or <type> ...)` (eg. `(or list? number?)`). When using `or`, `#f` might be used as a type inside of it due to its common appearance as a "null" value.
 
-+
 Return type can be same as parameter type described above, plus:
 
 * `undefined`, indicating a value that shouldn't be used in portable code (eg. result of `for-each`);
+
 * `*`, indicating a useful value but of unknown type.
+
 * `(values <type> ...)` form when the function returns more than one value.
 
-3. list of tags
-+
-One of `pure`, `parameterized`, `parameter`, `predicate`, `syntax`, `deprecated`.
+== Syntax
 
-4. list of parameter signatures, in case this is a higher order function.
-+
-Each entry in this list is a list, where first element is a parameter name (must match one of parameters in main signature), and second parameter
-is its signature of same format as a main function's signature definition. To describe return value's signature, use `return` as a name.
+In case of syntax, the format is `(syntax-rules (<keyword> ...) (<pattern> <optional-return-type>) ...)`
 
-5. list of associated types. Only applicable when this function is a predicate and logically describes a type.
-+
-All elements in the associated types list should be predicate function names.
-If the list has just one entry, then said entry corresponds to logical supertype of currently defined function / type.
-If the list has more than one entry, then currently defined function / type is a union of those types.
+Pattern should be: symbol, `.`, `...`, or grouping of patterns inside `()`. If optional return type is provided, it describes
+the resultant type when syntax is used as an expression. As a hatch to rendering outside of parens, use `(_append )` form, which concatenates its arguments.
 
-Some examples:
+== Value
 
-```
-(
-    ;; type definition of a union
-    (list?
-       (lambda (obj) boolean?)
-       (pure predicate)
-       ()
-       (pair? null?))
-
-    ;; parameters with types, parameter signature
-    (map
-       (lambda ((procedure? proc) (list? list1) (list? list2) ...) list?)
-       (pure)
-       ((proc (lambda (obj1 obj2 ...) *))))
-
-    ;; use of `values`
-    (exact-integer-sqrt
-       (lambda ((integer? k)) (values integer? integer?))
-       (pure))
-
-    ;; use of `or`, use of overloading same name
-    (assoc
-       (lambda (obj (list? alist)) (or pair? #f))
-       (pure))
-
-    (assoc
-       (lambda (obj (list? alist) (procedure? =)) (or pair? #f))
-       (pure)
-       ((= (lambda (a b) *))))
-)
-```
-
-==== Syntax macro format
-
-1. name
-
-2. signature, in the form of `(syntax-rules (<keyword> ...) (<pattern>) ...)`
-+
-Pattern should be: symbol, `.`, `...`, or grouping of patterns inside `()`. As a hatch to rendering outside of parens,
-use `(_append )` form, which concatenates its arguments (see an example below).
-
-3. tags
-
-4. list of subpattern signatures
-
-Each entry in this list is a list, in the form of `(name <pattern> ...)`, where name should match one of identifiers
-in other signature, and the pattern is as described in 2.
-
-Some examples:
-
-```
-(
-
-    (cond
-      (syntax-rules (else =>)
-        ((_ clause1 clause2 ...)))
-      ()
-      ((clause (test expression1 ...)
-               (test => expression)
-               (else expression1 expression2 ...))))
-
-    (syntax-rules
-       (syntax-rules ()
-         ((_ (literal ...) syntax-rule ...))
-         ((_ ellipsis (literal ...) syntax-rule ...)))
-       ()
-       ((syntax-rule (pattern template))
-        (pattern identifier
-                 constant
-                 (pattern ...)
-                 (pattern pattern ... . pattern)
-                 (pattern ... pattern ellipsis pattern ...)
-                 (pattern ... pattern ellipsis pattern ... . pattern)
-                 (_append |#| (pattern ...))
-                 (_append |#| (pattern ... pattern ellipsis pattern ...)))
-        (template identifier
-                  constant
-                  (element ...)
-                  (element element ... . template)
-                  (ellipsis template)
-                  (_append |#| (element ...)))
-        (element template
-                 (_append template ellipsis))))
-)
-```
-
-==== Value format
-
-
-1. name.
-
-2. signature, in the form of `(value <type>)`
+In case of simple value, the format is `(value <type>)`
 
 where type is same as described under functions.
 
-Some examples:
+| tags
+| A list of symbols. Tags don't have inherent special treatment (ie., definition can make use of any tag it wants). 
+Currently used tags are described in <<Tags>>
 
-```
-(
-    (stream-null
-       (value stream-null?))
-)
-```
+| subsigs
+| Signatures of parameter / return functions in case of a higher order function; or syntax definition of pattern variables in case of syntax
+
+== Function
+
+Each entry in this list is a list, where first element is a parameter name (must match one of parameters in main signature), and second parameter
+is its signature of same format as a main function's signature definition. To describe return value's signature, use `return` as a name.
+
+== Syntax
+
+Each entry in this list is a list, in the form of `(name <pattern> ...)`, where name should match one of identifiers
+in other signature, and the pattern is as described in `signature`.
+
+| syntax-param-signatures
+| Applicable only to syntax type. The value is a list, where each element is itself a 2 element list. First element is a symbol, matching one of the symbols in the signature.
+Second argument is parameter type definition, as described under functions. This allows annotating syntax when it expects to receive values of certain types for specific places in the pattern. 
+|===
 
 
 === Logging
@@ -349,33 +272,235 @@ All of the following endpoints accept `wt` query parameter.
 If the parameter's value is `sexpr`, the results are returned as if with `write`, using scheme-json convention
 as defined in srfi 180. Otherwise, results are returned as json.
 
-`/rest/libs` returns array of libraries found in index as strings;
+'''
 
-`/rest/tags` returns array of tags found in index as strings;
+=== `/rest/libs`
 
-`/rest/returns` returns array of types, which were used as a return type, found in index as strings;
+Libraries found in index as strings.
 
-`/rest/params` returns array of types, which were used as a parameter type, found in index as strings;
+JSON schema
+[source,json]
+----
+{
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
+}
+----
 
-`/rest/procedures` returns found items with faceting meta data. The endpoint accepts following query parameters:
+Example response
+[source,json]
+----
+["(scheme base)", "(scheme file)"]
+----
 
+'''
 
-* `query` text search parameter.
+=== `/rest/tags` 
 
-* `start` result offset (pagination).
+Tags found in index as strings.
 
-* `rows` size of returned result list. Defaults to 40 if unspecified.
+JSON schema
+[source,json]
+----
+{
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
+}
+----
 
-* `lib` library filter. Possible values returned in `/rest/libs`. The parameter can appear multiple times, and the result will include procedures from any of given libraries.
+Example response
+[source,json]
+----
+["pure", "deprecated"]
+----
 
-* `tag` tag filter. Possible values returned in `/rest/tags`. The parameter can appear multiple times, and the result will include procedures which contain all given tags.
+'''
 
-* `param` param type filter. Possible values returned in `/rest/params`. The parameter can appear multiple times, and the result will include procedures which contain all given parameter types.
+=== `/rest/returns`
 
-* `filter_loose` whether enable loose filtering as described in <<Filtering logic>>
+Types, which were used as a return type, found in index as strings.
 
-* `return` return type filter. Possible values returned in `/rest/returns`. The parameter can appear multiple times, and the result will include procedures which contain all given return types.
+JSON schema
+[source,json]
+----
+{
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
+}
+----
 
-Note that current REST api is unstable, and subject to change without a warning.
+Example response
+[source,json]
+----
+["list?", "pair?"]
+----
+
+'''
+
+=== `/rest/params`
+
+Types, which were used as a parameter type, found in index as strings.
+
+JSON schema
+[source,json]
+----
+{
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
+}
+----
+
+Example response
+[source,json]
+----
+["list?", "pair?"]
+----
+
+'''
+
+=== `/rest/search` 
+
+Returns found identifiers and faceting meta data.
+
+Query parameters
+
+[cols="1l,3"]
+|===
+| query
+| text search parameter. Query is parsed using edismax, and therefore some text tokens have special meaning
+
+| start
+| result offset (pagination).
+
+| rows
+| size of returned result list. Defaults to 40 if unspecified. 
+
+| lib
+| library filter. Possible values returned in `/rest/libs`. The parameter can appear multiple times, and the result will include procedures from any of given libraries.
+
+| tag
+| tag filter. Possible values returned in `/rest/tags`. The parameter can appear multiple times, and the result will include procedures which contain all given tags.
+
+| param
+| param type filter. Possible values returned in `/rest/params`. The parameter can appear multiple times, and the result will include procedures which contain all given parameter types.
+
+| filter_loose
+| whether enable loose filtering as described in <<Filtering logic>>
+
+| return
+| return type filter. Possible values returned in `/rest/returns`. The parameter can appear multiple times, and the result will include procedures which contain all given return types.
+|===
+
+JSON schema
+[source,json]
+----
+{
+    "type": "object",
+    "properties": {
+        "total": { "type": "integer" },
+        "libs": { "$ref": "#/$defs/facet" },
+        "params": { "$ref": "#/$defs/facet" },
+        "returns": { "$ref": "#/$defs/facet" },
+        "tags": { "$ref": "#/$defs/facet" },
+        "items": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/search-item" }
+        }
+    },
+    "$defs": {
+        "facet": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/facet-value"}
+        },
+        "facet-value": {
+            "type": "object",
+            "properties": {
+                "value": { "type": "string" },
+                "count": { "type": "integer" }
+            }
+        },
+        "search-item": {
+            "type": "object",
+            "properties": {
+                "lib": { "type": "string" },
+                "name": { "type": "string" },
+                "param_names": { 
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "signature": { "type": "string" },
+                "param_signatures": { "type": "string" },
+                "syntax_param_signatures": { "type": "string" },
+                "tags": { 
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "param_types": { 
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "return_types": { 
+                    "type": "array",
+                    "items": { "type": "string" }
+                },
+                "super_types": { 
+                    "type": "array",
+                    "items": { "type": "string" }
+                }
+            }
+        }
+    }
+}
+----
+
+Example response
+
+[source,json]
+----
+{"items":[{"lib":"(scheme base)","name":"*","param_names":["z"],"signature":"(lambda ((number? z) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"+","param_names":["z"],"signature":"(lambda ((number? z) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"-","param_names":["z"],"signature":"(lambda ((number? z) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"\/","param_names":["z1","z2"],"signature":"(lambda ((number? z1) (number? z2) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?","number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"<","param_names":["x1","x2","x3"],"signature":"(lambda ((real? x1) (real? x2) (real? x3) ...) boolean?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["real?","real?","real?"],"return_types":["boolean?"],"super_types":[]}],"total":2170,"libs":[{"value":"(scheme base)","count":295},{"value":"(scheme bitwise)","count":41},{"value":"(scheme box)","count":4},{"value":"(scheme bytevector)","count":66},{"value":"(scheme case-lambda)","count":1},{"value":"(scheme char)","count":22},{"value":"(scheme charset)","count":73},{"value":"(scheme comparator)","count":35},{"value":"(scheme complex)","count":6},{"value":"(scheme cxr)","count":24},{"value":"(scheme division)","count":18},{"value":"(scheme ephemeron)","count":6},{"value":"(scheme eval)","count":2},{"value":"(scheme file)","count":10},{"value":"(scheme fixnum)","count":44},{"value":"(scheme flonum)","count":124},{"value":"(scheme generator)","count":55},{"value":"(scheme hash-table)","count":60},{"value":"(scheme ideque)","count":49},{"value":"(scheme ilist)","count":154},{"value":"(scheme inexact)","count":13},{"value":"(scheme lazy)","count":5},{"value":"(scheme list)","count":186},{"value":"(scheme list-queue)","count":27},{"value":"(scheme load)","count":2},{"value":"(scheme lseq)","count":30},{"value":"(scheme mapping hash)","count":72},{"value":"(scheme mapping)","count":104},{"value":"(scheme process-context)","count":7},{"value":"(scheme read)","count":2},{"value":"(scheme repl)","count":1},{"value":"(scheme rlist)","count":53},{"value":"(scheme set)","count":113},{"value":"(scheme show)","count":107},{"value":"(scheme sort)","count":50},{"value":"(scheme stream)","count":41},{"value":"(scheme text)","count":193},{"value":"(scheme time)","count":3},{"value":"(scheme vector)","count":64},{"value":"(scheme write)","count":8}],"params":[{"value":"bag?","count":56},{"value":"boolean?","count":20},{"value":"box?","count":2},{"value":"bytevector?","count":90},{"value":"char-set?","count":46},{"value":"char?","count":53},{"value":"circular-list?","count":11},{"value":"comparator?","count":65},{"value":"complex?","count":4},{"value":"dotted-ilist?","count":7},{"value":"dotted-list?","count":12},{"value":"ephemeron?","count":3},{"value":"error-object?","count":2},{"value":"fixnum?","count":36},{"value":"flonum?","count":77},{"value":"formatter","count":37},{"value":"hash-table?","count":43},{"value":"hashmap?","count":68},{"value":"ideque?","count":42},{"value":"ilist?","count":68},{"value":"input-port?","count":16},{"value":"integer?","count":498},{"value":"ipair?","count":46},{"value":"list-queue?","count":20},{"value":"list?","count":199},{"value":"lseq?","count":28},{"value":"mapping?","count":94},{"value":"number?","count":57},{"value":"output-port?","count":19},{"value":"pair?","count":89},{"value":"port?","count":2},{"value":"procedure?","count":503},{"value":"promise?","count":1},{"value":"rational?","count":2},{"value":"real?","count":29},{"value":"rlist?","count":8},{"value":"rpair?","count":33},{"value":"set?","count":46},{"value":"stream-pair?","count":2},{"value":"stream?","count":18},{"value":"string?","count":101},{"value":"symbol?","count":39},{"value":"text?","count":3},{"value":"textual?","count":158},{"value":"vector?","count":125}],"returns":[{"value":"bag?","count":37},{"value":"boolean?","count":264},{"value":"box?","count":1},{"value":"bytevector?","count":36},{"value":"char-set?","count":55},{"value":"char?","count":12},{"value":"circular-list?","count":7},{"value":"comparator?","count":23},{"value":"complex?","count":2},{"value":"dotted-ilist?","count":2},{"value":"dotted-list?","count":2},{"value":"eof-object?","count":17},{"value":"ephemeron?","count":1},{"value":"exact?","count":1},{"value":"fixnum?","count":24},{"value":"flonum?","count":99},{"value":"formatter","count":87},{"value":"formatter-variable","count":14},{"value":"hash-table?","count":17},{"value":"hashmap?","count":46},{"value":"ideque?","count":30},{"value":"ilist?","count":51},{"value":"inexact?","count":1},{"value":"input-port?","count":5},{"value":"integer?","count":207},{"value":"ipair?","count":12},{"value":"list-queue?","count":12},{"value":"list?","count":171},{"value":"lseq?","count":17},{"value":"mapping?","count":66},{"value":"number?","count":19},{"value":"output-port?","count":6},{"value":"pair?","count":15},{"value":"procedure?","count":52},{"value":"promise?","count":3},{"value":"rational?","count":1},{"value":"real?","count":12},{"value":"rlist?","count":8},{"value":"rpair?","count":3},{"value":"set?","count":29},{"value":"stream-null?","count":1},{"value":"stream-pair?","count":1},{"value":"stream?","count":24},{"value":"string?","count":44},{"value":"symbol?","count":2},{"value":"text?","count":89},{"value":"vector?","count":57}],"tags":[{"value":"deprecated","count":18},{"value":"parameter","count":3},{"value":"parameterized","count":24},{"value":"predicate","count":66},{"value":"pure","count":1564}]}
+----
 
 == STDIO API
+
+When enabled (see <<Configuration>>), program starts a repl, reading request from standard input, and returning response in standard output. The exchange is very similar to REST api, just through different medium. Therefore this section only describes how to call it, for the response format see REST description.
+
+Each call should be a list, where a `car` denotes the endpoint. Possible endpoint values: `tags`, `params`, `returns`, `libs`, `search`. First 4 endpoints do not take any parameters, therefore the call consists of a list of single element. `search` endpoint takes parameters by reading from alist in `cdr` position of the request list. Possible parameters : `start`, `rows`, `query`, `libs`, `param-types`, `return-types`, `tags`, `filter-param-loose?`.
+
+The response scheme object denoting json (in accordance with srfi 180), returned as if with `write`. In case of an error, a list will be returned in a form of `(error <cause>)`.
+
+Some examples
+
+[source, scheme]
+----
+; request
+(libs)
+
+; response
+#("(scheme base)")
+----
+
+[source, scheme]
+----
+; request
+(search (rows . 1) (tags pure))
+
+; response
+((items . #(...)) (total . 2000) (libs . #(...)))
+----
+
+[source, scheme]
+----
+; request
+(foo)
+
+; response
+(error "#<ERROR unknown request endpoint>")
+----

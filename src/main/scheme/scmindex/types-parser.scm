@@ -37,22 +37,22 @@
           (apply append funcs*))))
 
     (define (assoc* key alist default)
-        (cond
-            ((assoc key alist) => cdr)
-            (else default)))
+      (cond
+        ((assoc key alist) => cdr)
+        (else default)))
 
     (define (read-spec lib input)
       (map
         (lambda (entry)
           (define name (let ((n (assoc* 'name entry #f)))
                          (unless n
-                            (error "Missing name attribute"))
+                           (error "Missing name attribute"))
                          (log-debug logger "Reading spec {}" n)
                          n))
           (define signature (let ((s (assoc* 'signature entry #f)))
-                                (unless s
-                                    (error "Missing signature attribute"))
-                                s))
+                              (unless s
+                                (error "Missing signature attribute"))
+                              s))
           (define-values
             (supertypes param-names param-types syntax-param-signatures return-types)
             (case (car signature)
@@ -116,18 +116,18 @@
         result))
 
     (define (extract-syntax-return-types signature)
-        (let* ((rules (cddr signature))
-               (rules (filter (lambda (rule) (> (length rule) 1)) rules))
-               (returns (map cadr rules))
-               (types (map parse-type-from-return returns)))
-            (delete-duplicates (apply append types))))
+      (let* ((rules (cddr signature))
+             (rules (filter (lambda (rule) (> (length rule) 1)) rules))
+             (returns (map cadr rules))
+             (types (map parse-type-from-return returns)))
+        (delete-duplicates (apply append types))))
 
     (define (extract-syntax-param-types param-types)
-        (define types (map
-                        (lambda (param-type)
-                            (parse-type-from-param (cadr param-type)))
-                        param-types))
-        (apply append types))
+      (define types (map
+                      (lambda (param-type)
+                        (parse-type-from-param (cadr param-type)))
+                      param-types))
+      (apply append types))
 
     (define (extract-param-types signature)
       (define params-list (cadr signature))
@@ -142,28 +142,28 @@
       (apply append lst*))
 
     (define (parse-type-from-param value)
-        (define types
-            (cond
-                  ((and (list? value) (equal? 'or (car value)))
-                   (cdr value))
-                  ((symbol? value) (list value))
-                  ((equal? #f value) (list))
-                  (else (error "Bad signature"))))
-        (filter symbol? types))
+      (define types
+        (cond
+          ((and (list? value) (equal? 'or (car value)))
+           (cdr value))
+          ((symbol? value) (list value))
+          ((equal? #f value) (list))
+          (else (error "Bad signature"))))
+      (filter symbol? types))
 
     (define (parse-type-from-return value)
-        (cond
-          ((or (equal? '* value)
-               (equal? '... value)
-               (equal? 'undefined value)
-               (equal? #f value))
-           (list))
-          ((symbol? value) (list value))
-          ((and (list? value)
-                (or (equal? 'values (car value))
-                    (equal? 'or (car value))))
-           (apply append (map parse-type-from-return (cdr value))))
-          (else (list))))
+      (cond
+        ((or (equal? '* value)
+             (equal? '... value)
+             (equal? 'undefined value)
+             (equal? #f value))
+         (list))
+        ((symbol? value) (list value))
+        ((and (list? value)
+              (or (equal? 'values (car value))
+                  (equal? 'or (car value))))
+         (apply append (map parse-type-from-return (cdr value))))
+        (else (list))))
 
     (define (extract-return-types signature)
       (when (< (length signature) 3)
@@ -238,5 +238,4 @@
       (write obj port)
       (get-output-string port))
 
-    )
-  )
+))
