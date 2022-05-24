@@ -4,7 +4,7 @@
  ((name . rx)
   (signature syntax-rules (* one-or-more ? optional = exactly at-least ** repeated |\|| or : seq $ submatch -> sumatch-named w/case w/nocase w/unicode
                            w/ascii w/nocapture bos eos bol eol bog eog grapheme bow eow nwb word word+
-                           ?? non-greedy-optional *? non-greedy-zero-or-mode **? non-greedy-repeated look-ahead look-behind
+                           ?? non-greedy-optional *? non-greedy-zero-or-more **? non-greedy-repeated look-ahead look-behind
                            neg-look-ahead neg-look-behind backref) 
              ((_ sre ...) regexp?))
   (tags pure)
