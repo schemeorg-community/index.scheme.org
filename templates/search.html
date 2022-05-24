@@ -20,19 +20,29 @@
                     </div>
                     <div class="facets">
                         {{# facets }}
-                        <fieldset class="facet">
+                        <fieldset class="facet" id="facet-{{name}}">
                             <legend>{{ title }}</legend>
+                            {{# show-facet-controls? }}
+                            <div class="facet-controls">
+                                <button onclick="collapseFacet(event, 'facet-{{name}}')" class="facet-collapse-btn" aria-label="Collapse {{title}} facet">
+                                    <span class="icon-folder-open" aria-hidden="true"></span>
+                                </button>
+                                <button onclick="expandFacet(event, 'facet-{{name}}')" class="facet-expand-btn" aria-label="Collapse {{title}} facet">
+                                    <span class="icon-folder" aria-hidden="true"></span>
+                                </button>
+                                <input class="facet-search" oninput="searchFacet(event, 'facet-{{name}}')" placeholder="Filter {{title}} facet ...">
+                            </div>
+                            {{/ show-facet-controls? }}
                             {{# options }}
                             <label class="facet-option">
                                 <input type="checkbox" 
                                        name="{{ name }}" 
                                        value="{{ value }}" 
-                                       {{# selected? }} checked {{/ selected? }}
-                                       >
-                                       <span class="facet-text">
-                                           <span class="facet-value">{{ label }}</span>
-                                           <span class="facet-count">({{ count }})</span>
-                                       </span>
+                                       {{# selected? }} checked {{/ selected? }}>
+                               <span class="facet-text">
+                                   <span class="facet-value">{{ label }}</span>
+                                   <span class="facet-count">({{ count }})</span>
+                               </span>
                             </label>
                             {{/ options }}
                         </fieldset>

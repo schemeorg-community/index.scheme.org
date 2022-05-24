@@ -161,6 +161,12 @@
         ((equal? "has-syntax-param-signatures?" name) (found (not (null? (result-item-syntax-param-signatures obj)))))
         (else (not-found))))
 
+    (define (facet-extra-lookup obj name found not-found)
+      (cond
+        ((not (facet? obj)) (not-found))
+        ((equal? "show-facet-controls?" name) (found (> (length (facet-options obj)) 10)))
+        (else (not-found))))
+
     (define data-lookup
       (compose-lookups
         sexpr-el-lookup
@@ -176,7 +182,8 @@
         setting-option-lookup
         page-lookup
         syntax-rule-lookup
-        result-item-extra-lookup))
+        result-item-extra-lookup
+        facet-extra-lookup))
 
     (define make-mustache-nav-data
       (let ((pages '(("Home" "icon-home3" "/" index)

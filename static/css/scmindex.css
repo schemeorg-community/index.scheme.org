@@ -39,7 +39,6 @@ nav {
 
 .nav-link-active {
     color: var(--accent-color);
-    font-weight: bold;
     background-color: var(--bg-color2);
 }
 
@@ -83,6 +82,45 @@ nav {
 .facets {
     margin-top: 10px;
     overflow-y: auto;
+}
+
+.facet-expand-btn {
+    display: none;
+}
+
+.facet.collapsed .facet-expand-btn {
+    display: initial;
+}
+
+.facet.collapsed .facet-search,
+.facet.collapsed .facet-option,
+.facet.collapsed .facet-collapse-btn
+{
+    display: none;
+}
+
+.facet-collapse-btn, .facet-expand-btn {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    margin-right: 5px;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.facet-collapse-btn:hover, .facet-expand-btn:hover {
+    background-color: var(--accent-color-hover);
+}
+
+.facet-controls {
+    display: flex;
+    align-items: stretch;
+    padding-bottom: 10px;
+}
+
+.facet-option.filtered {
+    display: none;
 }
 
 .facet legend {
@@ -270,6 +308,7 @@ nav {
 }
 
 .query-cnt {
+    margin-top: 10px;
     display: flex;
     align-items: stretch;
 }
@@ -296,7 +335,7 @@ nav {
     margin-top: 1em;
 }
 
-.query {
+.query, .facet-search {
     min-width: 0;
     flex: 1;
     border: solid gray 1px;
@@ -501,8 +540,13 @@ fieldset {
     color: var(--text-color-muted);
 }
 
+
 .examples-tip {
     color: var(--text-color-muted);
+}
+
+.examples-list li {
+    margin-top: 10px;
 }
 
 .settings-tip {
@@ -515,4 +559,8 @@ fieldset {
 
 .text-link {
     color: var(--secondary-color);
+}
+
+input::placeholder {
+    color: var(--text-color-muted);
 }
