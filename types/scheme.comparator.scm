@@ -128,4 +128,5 @@
    syntax-rules
    ()
    ((_ comparator object1 object2 less-than equal-to greater-than))
-   ((_ object1 object2 less-than equal-to greater-than)))))
+   ((_ object1 object2 less-than equal-to greater-than)))
+  (syntax-param-signatures (comparator comparator?))))

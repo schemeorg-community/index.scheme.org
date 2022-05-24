@@ -43,7 +43,7 @@
  ((scheme flonum) . "types/scheme.flonum.scm")
  ((scheme mapping) . "types/scheme.mapping.scm")
  ((scheme mapping hash) . "types/scheme.mapping.hash.scm")
- ;((scheme regex) . "types/scheme.regex.scm")
+ ((scheme regex) . "types/scheme.regex.scm")
  ((scheme show) . "types/scheme.show.scm")
  ;((scheme vector base) . "types/scheme.vector.base.scm")
  ;((scheme vector u8) . "types/scheme.vector.u8.scm")

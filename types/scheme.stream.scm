@@ -19,7 +19,7 @@
   (signature lambda ((stream-pair? stream)) stream?)
   (tags pure))
  ((name . stream-lambda)
-  (signature syntax-rules () ((_ formals body)))
+  (signature syntax-rules () ((_ formals body) procedure?))
   (subsigs
    (formals
     (variable1 ...)
@@ -88,9 +88,10 @@
   (signature syntax-rules (_) ((_ stream clause ...)))
   (subsigs
    (clause () (pat0 pat1 ...) (pat0 pat1 ... . pat_rest) pat)
-   (pat identifier _)))
+   (pat identifier _))
+  (syntax-param-signatures (stream stream?)))
  ((name . stream-of)
-  (signature syntax-rules (in is) ((_ expr clause ...)))
+  (signature syntax-rules (in is) ((_ expr clause ...) stream?))
   (subsigs (clause (var in stream-expr) (var is expr) (pred? expr))))
  ((name . stream-range)
   (signature lambda ((real? first) (real? past)) stream?)

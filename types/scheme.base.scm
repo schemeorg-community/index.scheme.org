@@ -206,7 +206,8 @@
    (field (field-name accessor-name)
           (field-name accessor-name modifier-name))))
  ((name . define-syntax)
-  (signature syntax-rules () ((_ keyword transformer-spec))))
+  (signature syntax-rules () ((_ keyword transformer-spec)))
+  (syntax-param-signatures (transformer-spec transformer-spec)))
  ((name . define-values)
   (signature syntax-rules () ((_ formals expression)))
   (subsigs
@@ -329,7 +330,7 @@
   (subsigs)
   (supertypes rational?))
  ((name . lambda)
-  (signature syntax-rules () ((_ formals body)))
+  (signature syntax-rules () ((_ formals body) procedure?))
   (subsigs
    (formals
     (variable1 ...)
@@ -353,7 +354,8 @@
     (variable1 ... variable_n . variable_n+1))))
  ((name . let-syntax)
   (signature syntax-rules () ((_ bindings body)))
-  (subsigs (bindings ((keyword transformer-spec) ...))))
+  (subsigs (bindings ((keyword transformer-spec) ...)))
+  (syntax-param-signatures (transformer-spec transformer-spec)))
  ((name . let-values)
   (signature syntax-rules () ((_ mv-binding-spec body)))
   (subsigs
@@ -709,8 +711,8 @@
   (signature
    syntax-rules
    ()
-   ((_ (literal ...) syntax-rule ...))
-   ((_ ellipsis (literal ...) syntax-rule ...)))
+   ((_ (literal ...) syntax-rule ...) transformer-spec)
+   ((_ ellipsis (literal ...) syntax-rule ...)  transformer-spec))
   (subsigs
    (syntax-rule (pattern template))
    (pattern

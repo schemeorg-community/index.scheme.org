@@ -1,5 +1,5 @@
 (((name . case-lambda)
-  (signature syntax-rules () ((_ clause ...)))
+  (signature syntax-rules () ((_ clause ...) procedure?))
   (subsigs
    (clause (formals body))
    (formals
