@@ -150,7 +150,7 @@ nav {
     grid-template-areas:
         "lib tags"
         "sig sig"
-        "param-sig param-sig"
+        "extra-info extra-info"
 }
 
 .lib {
@@ -173,12 +173,16 @@ nav {
     grid-area: sig;
 }
 
-.param-signatures, .subsyntax-signatures-block {
-    grid-area: param-sig;
+.extra-info {
+    grid-area: extra-info;
 }
 
-.param-signatures, .subsyntax-signatures-block, .syntax-param-signatures {
+.param-signatures, .subsyntax-signatures-block, .syntax-param-signatures, .parameterized-by-block {
     margin-top: 0.8em;
+}
+
+.parameterized-by-item {
+    font-family: monospace;
 }
 
 .subsyntax-signatures {

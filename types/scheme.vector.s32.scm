@@ -307,6 +307,6 @@
   (signature value comparator?))
  ((name . write-s32vector)
   (signature lambda ((s32vector vec)) undefined)
-  (tags parameterized))
+  (parameterized-by "(scheme base) current-output-port"))
  ((name . write-s32vector)
   (signature lambda ((s32vector vec) (output-port? port)) undefined)))

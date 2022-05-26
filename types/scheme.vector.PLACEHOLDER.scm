@@ -307,6 +307,6 @@
   (signature value comparator?))
  ((name . write-@vector)
   (signature lambda ((@vector vec)) undefined)
-  (tags parameterized))
+  (parameterized-by "(scheme base) current-output-port"))
  ((name . write-@vector)
   (signature lambda ((@vector vec) (output-port? port)) undefined)))

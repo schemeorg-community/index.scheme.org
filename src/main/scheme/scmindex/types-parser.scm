@@ -76,8 +76,9 @@
                        (list (cadr signature))))
               (else (error (string-append "Unrecognized signature for " (->string name))))))
           (define tags (assoc* 'tags entry '()))
+          (define parameterized-by (assoc* 'parameterized-by entry '()))
           (define param-signatures (assoc* 'subsigs entry '()))
-          (make-func lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types supertypes))
+          (make-func lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types parameterized-by supertypes))
         input))
 
     (define (extract-param-names signature)

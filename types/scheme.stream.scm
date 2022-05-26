@@ -34,7 +34,7 @@
  ((name . list->stream)
   (signature lambda ((list? list-of-objects)) stream?)
   (tags pure))
- ((name . port->stream) (signature lambda () stream?) (tags parameterized))
+ ((name . port->stream) (signature lambda () stream?) (parameterized-by "(scheme base) current-input-port"))
  ((name . port->stream) (signature lambda ((input-port? port)) stream?))
  ((name . stream) (signature syntax-rules () ((_ object ...) stream?)) (tags pure))
  ((name . stream->list)

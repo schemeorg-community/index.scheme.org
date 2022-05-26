@@ -7,43 +7,57 @@
             {{> sexpr }}
         {{/ signature}}
     </div>
-    {{# has-param-signatures? }}
-    <div class="param-signatures">
-        <div class="result-item-block-header">Expanded typing of parameters / returns</div>
-        {{# param-signatures }}
-        <div class="param-signature">
-            {{> sexpr }}
-        </div>
-        {{/ param-signatures }}
-    </div>
-    {{/ has-param-signatures? }}
 
-    {{# has-subsyntax-signatures? }}
-    <div class="subsyntax-signatures-block">
-        <div class="result-item-block-header">Syntax fragments' format</div>
-        <div class="subsyntax-signatures">
-            {{# subsyntax-signatures }}
-            <span class="subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
-            <div class="subsyntax-rules">
-                {{# rules }}
-                    {{> sexpr }}
-                {{/ rules }}
+    <div class="extra-info">
+        {{# has-param-signatures? }}
+        <div class="param-signatures">
+            <div class="result-item-block-header">Expanded typing of parameters / returns</div>
+            {{# param-signatures }}
+            <div class="param-signature">
+                {{> sexpr }}
             </div>
-            {{/ subsyntax-signatures }}
+            {{/ param-signatures }}
         </div>
-    </div>
-    {{/ has-subsyntax-signatures? }}
+        {{/ has-param-signatures? }}
 
-    {{# has-syntax-param-signatures? }}
-    <div class="syntax-param-signatures">
-        <div class="result-item-block-header">Syntax fragments' expected runtime types</div>
-        {{# syntax-param-signatures}}
-        <div class="param-signature">
-            {{> sexpr }}
+        {{# has-subsyntax-signatures? }}
+        <div class="subsyntax-signatures-block">
+            <div class="result-item-block-header">Syntax fragments' format</div>
+            <div class="subsyntax-signatures">
+                {{# subsyntax-signatures }}
+                <span class="subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
+                <div class="subsyntax-rules">
+                    {{# rules }}
+                        {{> sexpr }}
+                    {{/ rules }}
+                </div>
+                {{/ subsyntax-signatures }}
+            </div>
         </div>
-        {{/ syntax-param-signatures}}
+        {{/ has-subsyntax-signatures? }}
+
+        {{# has-syntax-param-signatures? }}
+        <div class="syntax-param-signatures">
+            <div class="result-item-block-header">Syntax fragments' expected runtime types</div>
+            {{# syntax-param-signatures}}
+            <div class="param-signature">
+                {{> sexpr }}
+            </div>
+            {{/ syntax-param-signatures}}
+        </div>
+        {{/ has-syntax-param-signatures? }}
+
+        {{# has-parameterized-by? }}
+        <div class="parameterized-by-block">
+            <div class="result-item-block-header">Parameterized by</div>
+            {{# parameterized-by }}
+            <div class="parameterized-by-item">
+                {{.}}
+            </div>
+            {{/ parameterized-by }}
+        </div>
+        {{/ has-parameterized-by? }}
     </div>
-    {{/ has-syntax-param-signatures? }}
 
     <div class="tags">
         {{# tags }}

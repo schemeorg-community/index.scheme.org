@@ -34,6 +34,7 @@
     <field name="param_subtypes_loose" type="strings" indexed="true" stored="true" />
     <field name="return_types" type="strings" indexed="true" stored="true" />
     <field name="return_supertypes" type="strings" indexed="true" stored="true" />
+    <field name="parameterized_by" type="strings" indexed="true" stored="true" />
     <field name="super_types" type="strings" indexed="true" stored="true" />
 
 

@@ -105,8 +105,9 @@
                   (define param-types (or (req/query-param-values req "param") '()))
                   (define return-types (or (req/query-param-values req "return") '()))
                   (define tags (or (req/query-param-values req "tag") '()))
-                  (define data (exec-solr-query solr-client solr-core start page-size query libs param-types return-types tags filter-params-loose?))
-                  (render-search-page req page page-size query libs tags param-types return-types data)))
+                  (define parameterized-by (or (req/query-param-values req "parameterized") '()))
+                  (define data (exec-solr-query solr-client solr-core start page-size query libs param-types return-types parameterized-by tags filter-params-loose?))
+                  (render-search-page req page page-size query libs tags param-types return-types parameterized-by data)))
 
       (get/rest "/suggest"
                 (lambda (req resp)
@@ -130,6 +131,10 @@
                       (lambda (req resp)
                         (list->vector (solr-facet-values solr-client solr-core 'tags))))
 
+            (get/rest "/parameterized"
+                      (lambda (req resp)
+                        (list->vector (solr-facet-values solr-client solr-core 'parameterized_by))))
+
             (get/rest "/search"
                       (lambda (req resp)
                         (define start (or (req/query-param req "start") 0))
@@ -139,8 +144,9 @@
                         (define param-types (or (req/query-param-values req "param") '()))
                         (define return-types (or (req/query-param-values req "return") '()))
                         (define tags (or (req/query-param-values req "tag") '()))
+                        (define parameterized-by (or (req/query-param-values req "parameterized") '()))
                         (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
-                        (define search-result (exec-solr-query solr-client solr-core start rows query libs param-types return-types tags filter-params-loose?))
+                        (define search-result (exec-solr-query solr-client solr-core start rows query libs param-types return-types parameterized-by tags filter-params-loose?))
                         (search-result->json search-result)))))
 
 

@@ -56,12 +56,12 @@
           search-result-facet-value
           facet-values))
 
-    (define (exec-solr-query solr-client core start page-size text libs params returns tags filter-params-loose?)
-      (define body (build-solr-query start page-size text libs params returns tags filter-params-loose?))
+    (define (exec-solr-query solr-client core start page-size text libs params returns parameterized-by tags filter-params-loose?)
+      (define body (build-solr-query start page-size text libs params returns parameterized-by tags filter-params-loose?))
       (define solr-resp (query solr-client core "/search" body))
       (parse-solr-response solr-resp))
 
-    (define (build-solr-query start page-size text libs params returns tags filter-params-loose?)
+    (define (build-solr-query start page-size text libs params returns parameterized-by tags filter-params-loose?)
       (define fq-lib
         (if (and libs (not (null? libs)))
             (let loop ((libs libs)
@@ -82,6 +82,11 @@
           (lambda (r)
             (string-append "return_supertypes: \"" (escape-solr-spec r) "\""))
           returns))
+      (define fq-parameterized-by
+        (map
+          (lambda (p)
+            (string-append "parameterized_by: \"" (escape-solr-spec p) "\""))
+          parameterized-by))
       (define fq-tags
         (map
           (lambda (t)
@@ -103,7 +108,7 @@
             '()
             `((bq . ,(list->vector bq-params)))))
       (define fq
-        (let ((vals (list->vector (append fq-returns fq-params fq-lib fq-tags))))
+        (let ((vals (list->vector (append fq-returns fq-params fq-parameterized-by fq-lib fq-tags))))
           (if (= (vector-length vals) 0)
               '()
               `((fq . ,vals)))))
@@ -124,6 +129,7 @@
       (define lib-facets (fold-facet-values (cdr (assoc 'lib facet-fields))))
       (define param-facets (fold-facet-values (cdr (assoc 'param_types facet-fields))))
       (define return-facets (fold-facet-values (cdr (assoc 'return_types facet-fields))))
+      (define parameterized-by-facets (fold-facet-values (cdr (assoc 'parameterized_by facet-fields))))
       (define tag-facets (fold-facet-values (cdr (assoc 'tags facet-fields))))
 
       (make-search-result
@@ -132,7 +138,8 @@
         lib-facets
         param-facets
         tag-facets
-        return-facets))
+        return-facets
+        parameterized-by-facets))
 
     (define (fold-facet-values vals)
       (map

@@ -104,14 +104,15 @@
 
     (define-mustache-record-type <result-item>
                                  result-item-lookup
-                                 (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib)
+                                 (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib parameterized-by)
                                  result-item?
                                  (signature result-item-signature)
                                  (param-signatures result-item-param-signatures)
                                  (subsyntax-signatures result-item-subsyntax-signatures)
                                  (syntax-param-signatures result-item-syntax-param-signatures)
                                  (tags result-item-tags)
-                                 (lib result-item-lib))
+                                 (lib result-item-lib)
+                                 (parameterized-by result-item-parameterized-by))
 
     (define-mustache-record-type <page-head>
                                  page-head-lookup
@@ -159,6 +160,7 @@
         ((equal? "has-param-signatures?" name) (found (not (null? (result-item-param-signatures obj)))))
         ((equal? "has-subsyntax-signatures?" name) (found (not (null? (result-item-subsyntax-signatures obj)))))
         ((equal? "has-syntax-param-signatures?" name) (found (not (null? (result-item-syntax-param-signatures obj)))))
+        ((equal? "has-parameterized-by?" name) (found (not (null? (result-item-parameterized-by obj)))))
         (else (not-found))))
 
     (define (facet-extra-lookup obj name found not-found)
@@ -274,7 +276,7 @@
                         options))
         settings-data))
 
-    (define (make-mustache-search-data page page-size query libs tags param-types return-types search-result)
+    (define (make-mustache-search-data page page-size query libs tags param-types return-types parameterized-by search-result)
 
       (define (remove-parens str)
         (list->string
@@ -305,7 +307,11 @@
           (map
             (lambda (tag)
               (cons 'tag tag)) 
-            tags)))
+            tags)
+          (map
+            (lambda (tag)
+              (cons 'parameterized tag)) 
+            parameterized-by)))
 
       (make-search-result-mustache
         query
@@ -313,7 +319,8 @@
           (make-facet "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
           (make-facet "tag" "Tag" (parse-facet-options (search-result-tags search-result) tags #f))
           (make-facet "param" "Parameter type" (parse-facet-options (search-result-params search-result) param-types #f))
-          (make-facet "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f)))
+          (make-facet "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f))
+          (make-facet "parameterized" "Parameterized by" (parse-facet-options (search-result-parameterized-by search-result) parameterized-by #f)))
         (make-pager-data page (ceiling (/ (search-result-total search-result) page-size)) current-query)
         (map make-doc-data (search-result-items search-result))))
 
@@ -430,7 +437,8 @@
         subsyntax-signatures
         syntax-param-signatures
         (func-tags doc)
-        (func-lib doc)))
+        (func-lib doc)
+        (func-parameterized-by doc)))
 
     (define (make-subsyntax-signature-sexpr-data literals rule)
       (define (term-handler term)
@@ -655,13 +663,13 @@
           (make-navigation (make-mustache-nav-data 'index))
           #f)))
 
-    (define (render-search-page req page page-size query libs tags param-types return-types search-result)
+    (define (render-search-page req page page-size query libs tags param-types return-types parameterized-by search-result)
       (values
         "search"
         (make-page
           (get-page-head "Search" req)
           (make-navigation (make-mustache-nav-data 'search))
-          (make-mustache-search-data page page-size query libs tags param-types return-types search-result))))
+          (make-mustache-search-data page page-size query libs tags param-types return-types parameterized-by search-result))))
 
     (define (render-settings-page req)
       (values

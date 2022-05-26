@@ -42,7 +42,6 @@ Result items might have one or more of following tags
 
 * pure - this procedure is referentially transparent (as long as whatever procedure parameters it has are also referentially transparent). Procedures that return undefined value cannot be marked as pure;
 * predicate - this procedure that takes any object and returns a boolean. Such procedure may be used as a type;
-* parameterized - the behavior of the procedure depends on a dynamic parameter (ie, uses procedure created with "make-parameter");
 * parameter - this procedure was created with "make-parameter" and may be used in parameterize form;
 * deprecated - not recommended to be used, exists only for backwards compatibility with older SRFIs.
 
@@ -289,12 +288,6 @@ JSON schema
 }
 ----
 
-Example response
-[source,json]
-----
-["(scheme base)", "(scheme file)"]
-----
-
 '''
 
 === `/rest/tags` 
@@ -310,12 +303,6 @@ JSON schema
         "type": "string"
     }
 }
-----
-
-Example response
-[source,json]
-----
-["pure", "deprecated"]
 ----
 
 '''
@@ -335,12 +322,6 @@ JSON schema
 }
 ----
 
-Example response
-[source,json]
-----
-["list?", "pair?"]
-----
-
 '''
 
 === `/rest/params`
@@ -358,10 +339,21 @@ JSON schema
 }
 ----
 
-Example response
+'''
+
+=== `/rest/parameterized`
+
+Dynamic parameters (ie., ones created with `make-parameter`) that affect procedures in the index.
+
+JSON schema
 [source,json]
 ----
-["list?", "pair?"]
+{
+    "type": "array",
+    "items": {
+        "type": "string"
+    }
+}
 ----
 
 '''
@@ -397,6 +389,9 @@ Query parameters
 
 | return
 | return type filter. Possible values returned in `/rest/returns`. The parameter can appear multiple times, and the result will include procedures which contain all given return types.
+
+| parameterized
+| return parameterization filter. Possible values returned in `/rest/parameterized`. The parameter can appear multiple times, and the result will include procedures which are parameterized by all values.
 |===
 
 JSON schema
@@ -410,6 +405,7 @@ JSON schema
         "params": { "$ref": "#/$defs/facet" },
         "returns": { "$ref": "#/$defs/facet" },
         "tags": { "$ref": "#/$defs/facet" },
+        "parameterized": { "$ref": "#/$defs/facet" },
         "items": {
             "type": "array",
             "items": { "$ref": "#/$defs/search-item" }
@@ -455,24 +451,21 @@ JSON schema
                     "type": "array",
                     "items": { "type": "string" }
                 }
+                "parameterized_by": { 
+                    "type": "array",
+                    "items": { "type": "string" }
+                }
             }
         }
     }
 }
 ----
 
-Example response
-
-[source,json]
-----
-{"items":[{"lib":"(scheme base)","name":"*","param_names":["z"],"signature":"(lambda ((number? z) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"+","param_names":["z"],"signature":"(lambda ((number? z) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"-","param_names":["z"],"signature":"(lambda ((number? z) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"\/","param_names":["z1","z2"],"signature":"(lambda ((number? z1) (number? z2) ...) number?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["number?","number?"],"return_types":["number?"],"super_types":[]},{"lib":"(scheme base)","name":"<","param_names":["x1","x2","x3"],"signature":"(lambda ((real? x1) (real? x2) (real? x3) ...) boolean?)","param_signatures":"()","syntax_param_signatures":"()","tags":["pure"],"param_types":["real?","real?","real?"],"return_types":["boolean?"],"super_types":[]}],"total":2170,"libs":[{"value":"(scheme base)","count":295},{"value":"(scheme bitwise)","count":41},{"value":"(scheme box)","count":4},{"value":"(scheme bytevector)","count":66},{"value":"(scheme case-lambda)","count":1},{"value":"(scheme char)","count":22},{"value":"(scheme charset)","count":73},{"value":"(scheme comparator)","count":35},{"value":"(scheme complex)","count":6},{"value":"(scheme cxr)","count":24},{"value":"(scheme division)","count":18},{"value":"(scheme ephemeron)","count":6},{"value":"(scheme eval)","count":2},{"value":"(scheme file)","count":10},{"value":"(scheme fixnum)","count":44},{"value":"(scheme flonum)","count":124},{"value":"(scheme generator)","count":55},{"value":"(scheme hash-table)","count":60},{"value":"(scheme ideque)","count":49},{"value":"(scheme ilist)","count":154},{"value":"(scheme inexact)","count":13},{"value":"(scheme lazy)","count":5},{"value":"(scheme list)","count":186},{"value":"(scheme list-queue)","count":27},{"value":"(scheme load)","count":2},{"value":"(scheme lseq)","count":30},{"value":"(scheme mapping hash)","count":72},{"value":"(scheme mapping)","count":104},{"value":"(scheme process-context)","count":7},{"value":"(scheme read)","count":2},{"value":"(scheme repl)","count":1},{"value":"(scheme rlist)","count":53},{"value":"(scheme set)","count":113},{"value":"(scheme show)","count":107},{"value":"(scheme sort)","count":50},{"value":"(scheme stream)","count":41},{"value":"(scheme text)","count":193},{"value":"(scheme time)","count":3},{"value":"(scheme vector)","count":64},{"value":"(scheme write)","count":8}],"params":[{"value":"bag?","count":56},{"value":"boolean?","count":20},{"value":"box?","count":2},{"value":"bytevector?","count":90},{"value":"char-set?","count":46},{"value":"char?","count":53},{"value":"circular-list?","count":11},{"value":"comparator?","count":65},{"value":"complex?","count":4},{"value":"dotted-ilist?","count":7},{"value":"dotted-list?","count":12},{"value":"ephemeron?","count":3},{"value":"error-object?","count":2},{"value":"fixnum?","count":36},{"value":"flonum?","count":77},{"value":"formatter","count":37},{"value":"hash-table?","count":43},{"value":"hashmap?","count":68},{"value":"ideque?","count":42},{"value":"ilist?","count":68},{"value":"input-port?","count":16},{"value":"integer?","count":498},{"value":"ipair?","count":46},{"value":"list-queue?","count":20},{"value":"list?","count":199},{"value":"lseq?","count":28},{"value":"mapping?","count":94},{"value":"number?","count":57},{"value":"output-port?","count":19},{"value":"pair?","count":89},{"value":"port?","count":2},{"value":"procedure?","count":503},{"value":"promise?","count":1},{"value":"rational?","count":2},{"value":"real?","count":29},{"value":"rlist?","count":8},{"value":"rpair?","count":33},{"value":"set?","count":46},{"value":"stream-pair?","count":2},{"value":"stream?","count":18},{"value":"string?","count":101},{"value":"symbol?","count":39},{"value":"text?","count":3},{"value":"textual?","count":158},{"value":"vector?","count":125}],"returns":[{"value":"bag?","count":37},{"value":"boolean?","count":264},{"value":"box?","count":1},{"value":"bytevector?","count":36},{"value":"char-set?","count":55},{"value":"char?","count":12},{"value":"circular-list?","count":7},{"value":"comparator?","count":23},{"value":"complex?","count":2},{"value":"dotted-ilist?","count":2},{"value":"dotted-list?","count":2},{"value":"eof-object?","count":17},{"value":"ephemeron?","count":1},{"value":"exact?","count":1},{"value":"fixnum?","count":24},{"value":"flonum?","count":99},{"value":"formatter","count":87},{"value":"formatter-variable","count":14},{"value":"hash-table?","count":17},{"value":"hashmap?","count":46},{"value":"ideque?","count":30},{"value":"ilist?","count":51},{"value":"inexact?","count":1},{"value":"input-port?","count":5},{"value":"integer?","count":207},{"value":"ipair?","count":12},{"value":"list-queue?","count":12},{"value":"list?","count":171},{"value":"lseq?","count":17},{"value":"mapping?","count":66},{"value":"number?","count":19},{"value":"output-port?","count":6},{"value":"pair?","count":15},{"value":"procedure?","count":52},{"value":"promise?","count":3},{"value":"rational?","count":1},{"value":"real?","count":12},{"value":"rlist?","count":8},{"value":"rpair?","count":3},{"value":"set?","count":29},{"value":"stream-null?","count":1},{"value":"stream-pair?","count":1},{"value":"stream?","count":24},{"value":"string?","count":44},{"value":"symbol?","count":2},{"value":"text?","count":89},{"value":"vector?","count":57}],"tags":[{"value":"deprecated","count":18},{"value":"parameter","count":3},{"value":"parameterized","count":24},{"value":"predicate","count":66},{"value":"pure","count":1564}]}
-----
-
 == STDIO API
 
 When enabled (see <<Configuration>>), program starts a repl, reading request from standard input, and returning response in standard output. The exchange is very similar to REST api, just through different medium. Therefore this section only describes how to call it, for the response format see REST description.
 
-Each call should be a list, where a `car` denotes the endpoint. Possible endpoint values: `tags`, `params`, `returns`, `libs`, `search`. First 4 endpoints do not take any parameters, therefore the call consists of a list of single element. `search` endpoint takes parameters by reading from alist in `cdr` position of the request list. Possible parameters : `start`, `rows`, `query`, `libs`, `param-types`, `return-types`, `tags`, `filter-param-loose?`.
+Each call should be a list, where a `car` denotes the endpoint. Possible endpoint values: `tags`, `params`, `returns`, `libs`, `parameterized`, `search`. First 5 endpoints do not take any parameters, therefore the call consists of a list of single element. `search` endpoint takes parameters by reading from alist in `cdr` position of the request list. Possible parameters : `start`, `rows`, `query`, `libs`, `param-types`, `return-types`, `tags`, `filter-param-loose?`, `parameterized`.
 
 The response scheme object denoting json (in accordance with srfi 180), returned as if with `write`. In case of an error, a list will be returned in a form of `(error <cause>)`.
 
