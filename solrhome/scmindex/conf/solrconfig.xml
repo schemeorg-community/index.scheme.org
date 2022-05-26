@@ -82,7 +82,7 @@
            <int name="rows">20</int>
            <str name="defType">edismax</str>
            <str name="wt">json</str>
-           <str name="q.alt">*:*</str>
+           <str name="q.alt">{!func}rord(name_precise)</str>
            <str name="qf">name_precise^5 name^2 param_names</str>
            <str name="facet">true</str>
            <str name="facet.sort">index</str>
