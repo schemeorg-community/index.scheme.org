@@ -34,11 +34,11 @@
         (list->vector
           (map
             (lambda (f)
-              (define json (func->json f))
+              (define json (index-entry->json f))
               (define extra
-                `((param_subtypes_loose . ,(list->vector (map symbol->string (flatten-type subtype-loose-map (func-param-types f)))))
-                  (param_subtypes . ,(list->vector (map symbol->string (flatten-type subtype-strict-map (func-param-types f)))))
-                  (return_supertypes . ,(list->vector (map symbol->string (flatten-type supertype-map (func-return-types f)))))))
+                `((param_subtypes_loose . ,(list->vector (map symbol->string (flatten-type subtype-loose-map (index-entry-param-types f)))))
+                  (param_subtypes . ,(list->vector (map symbol->string (flatten-type subtype-strict-map (index-entry-param-types f)))))
+                  (return_supertypes . ,(list->vector (map symbol->string (flatten-type supertype-map (index-entry-return-types f)))))))
               (append extra json))
             funcs)))
       (parameterize ((commit-within 10))

@@ -6,6 +6,7 @@
           (scheme read)
           (scheme write)
           (only (srfi 1) lset-adjoin lset-difference alist-cons alist-delete delete-duplicates filter)
+          (scmindex util)
           (scmindex domain)
           (arvyy slf4j))
 
@@ -78,7 +79,7 @@
           (define tags (assoc* 'tags entry '()))
           (define parameterized-by (assoc* 'parameterized-by entry '()))
           (define param-signatures (assoc* 'subsigs entry '()))
-          (make-func lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types parameterized-by supertypes))
+          (make-index-entry lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types parameterized-by supertypes))
         input))
 
     (define (extract-param-names signature)
@@ -176,8 +177,8 @@
         (define entries*
           (map
             (lambda (func)
-              (define supertypes (func-supertypes func))
-              (define type (func-name func))
+              (define supertypes (index-entry-supertypes func))
+              (define type (index-entry-name func))
               (cond
                 ((or (not supertypes) (null? supertypes)) '())
                 ((and strict (not (null? (cdr supertypes)))) '())
@@ -232,11 +233,5 @@
             result
             (loop (append to-add result)
                   new-q))))
-
-    ;;TODO move to util
-    (define (->string obj)
-      (define port (open-output-string))
-      (write obj port)
-      (get-output-string port))
 
 ))

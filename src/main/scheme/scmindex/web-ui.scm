@@ -72,6 +72,9 @@
       (when (deploy-setting/serve-static config)
         (static-files/external-location "static"))
 
+      (not-found (lambda (req resp) (resp/redirect resp "/404.html")))
+      (internal-server-error (lambda (req resp) (resp/redirect resp "/500.html")))
+
       (get/html "/"
                 (lambda (req resp)
                   (render-home-page req)))

@@ -4,14 +4,10 @@
           (scheme read)
           (scheme write)
           (scmindex domain)
-          (scmindex solr))
+          (scmindex solr)
+          (scmindex util))
   (export init-repl-ui)
   (begin
-    ;;TODO move to util
-    (define (->string obj)
-      (define port (open-output-string))
-      (write obj port)
-      (get-output-string port))
     (define (init-repl-ui config solr-client solr-core)
       (let loop ()
         (define value (read))

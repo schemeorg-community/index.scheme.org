@@ -11,6 +11,6 @@
   (test-assert (> (string-length json-str) 10000))
   (vector-for-each
     (lambda (doc)
-      (test-assert (not (null? (make-doc-data doc)))))
+      (test-assert (not (null? (render-index-entry doc)))))
     specs))
 
