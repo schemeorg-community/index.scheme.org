@@ -123,7 +123,7 @@
     (define (parse-solr-response response)
       (define resp (cdr (assoc 'response response)))
       (define total (cdr (assoc 'num-found resp)))
-      (define docs (map json->func (vector->list (cdr (assoc 'docs resp)))))
+      (define docs (map json->index-entry (vector->list (cdr (assoc 'docs resp)))))
       (define facet-counts (cdr (assoc 'facet_counts response)))
       (define facet-fields (cdr (assoc 'facet_fields facet-counts)))
       (define lib-facets (fold-facet-values (cdr (assoc 'lib facet-fields))))

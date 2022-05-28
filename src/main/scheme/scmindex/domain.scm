@@ -36,7 +36,7 @@
     index-entry-supertypes
 
     index-entry->json
-    json->func
+    json->index-entry
     search-result->json)
 
   (begin
@@ -86,7 +86,7 @@
         (parameterized_by . ,(list->vector (index-entry-parameterized-by func)))
         (super_types . ,(list->vector (map symbol->string (index-entry-supertypes func))))))
 
-    (define (json->func json)
+    (define (json->index-entry json)
       (define (get field type default)
         (cond
           ((assoc field json) =>

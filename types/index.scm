@@ -58,5 +58,20 @@
  ((scheme vector f64) . "types/scheme.vector.f64.scm")
  ((scheme vector c64) . "types/scheme.vector.c64.scm")
  ((scheme vector c128) . "types/scheme.vector.c128.scm")
- 
+
+ ;; misc srfi, added in order of popularity according to https://misc.lassi.io/2019/srfi-implementation-counts.scm
+ ;; omitting anything added to r7rs small / large
+ ((srfi 2) . "types/srfi.2.scm")
+ ;((srfi 13) . "types/srfi.13.scm")
+ ;((srfi 17) . "types/srfi.17.scm")
+ ((srfi 8) . "types/srfi.8.scm")
+ ;((srfi 19) . "types/srfi.19.scm")
+ ((srfi 26) . "types/srfi.26.scm")
+ ((srfi 27) . "types/srfi.27.scm")
+ ((srfi 28) . "types/srfi.28.scm")
+ ;((srfi 60) . "types/srfi.60.scm")
+ ((srfi 31) . "types/srfi.31.scm")
+ ;((srfi 42) . "types/srfi.42.scm")
+ ;((srfi 69) . "types/srfi.69.scm")
+
  )
