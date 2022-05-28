@@ -326,12 +326,17 @@
 
     (define (parse-facet-options facet-result selected-values label-transformer)
       (define fn (if label-transformer label-transformer (lambda (x) x)))
-      (map
-        (lambda (f)
-          (define value (search-result-facet-value f))
-          (define selected? (member value selected-values))
-          (make-facet-option value (fn value) (search-result-facet-count f) selected?))
-        facet-result))
+      (define options
+        (map
+          (lambda (f)
+            (define value (search-result-facet-value f))
+            (define selected? (member value selected-values))
+            (make-facet-option value (fn value) (search-result-facet-count f) selected?))
+          facet-result))
+      (filter
+        (lambda (opt)
+          (or (facet-option-selected? opt) (> (facet-option-count opt) 0)))
+        options))
 
     (define percent-encoding
       '((#\space . "%20")
