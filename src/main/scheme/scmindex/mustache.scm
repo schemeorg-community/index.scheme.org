@@ -315,14 +315,21 @@
 
       (make-search-result-mustache
         query
-        (list
-          (make-facet "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
-          (make-facet "tag" "Tag" (parse-facet-options (search-result-tags search-result) tags #f))
-          (make-facet "param" "Parameter type" (parse-facet-options (search-result-params search-result) param-types #f))
-          (make-facet "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f))
-          (make-facet "parameterized" "Parameterized by" (parse-facet-options (search-result-parameterized-by search-result) parameterized-by #f)))
+        (append
+          (make-facet* "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
+          (make-facet* "tag" "Tag" (parse-facet-options (search-result-tags search-result) tags #f))
+          (make-facet* "param" "Parameter type" (parse-facet-options (search-result-params search-result) param-types #f))
+          (make-facet* "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f))
+          (make-facet* "parameterized" "Parameterized by" (parse-facet-options (search-result-parameterized-by search-result) parameterized-by #f)))
         (render-pager page (ceiling (/ (search-result-total search-result) page-size)) current-query)
         (map render-index-entry (search-result-items search-result))))
+
+    ;; returns a list of one element if facet to be shown
+    ;; returns an empty list if facet should be hidden due to not having visible options
+    (define (make-facet* name title options)
+      (if (null? options)
+          '()
+          (list (make-facet name title options))))
 
     (define (parse-facet-options facet-result selected-values label-transformer)
       (define fn (if label-transformer label-transformer (lambda (x) x)))
