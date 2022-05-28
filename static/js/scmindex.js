@@ -40,3 +40,11 @@ function searchFacet(event, id) {
         }
     }
 }
+
+function hideSearchControls(id) {
+    document.getElementById(id).classList.add('hidden');
+}
+
+function showSearchControls(id) {
+    document.getElementById(id).classList.remove('hidden');
+}

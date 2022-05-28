@@ -72,6 +72,67 @@ nav {
     flex: 1;
     padding: 5px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    transition-property: flex;
+    transition-duration: 0.2s;
+}
+
+.search-controls-hidden-header {
+    padding-top: 10px;
+    flex: 1;
+    align-self: start;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    background-color: var(--accent-color);
+}
+
+.search-controls.hidden {
+    padding-top: 10px;
+    flex: 0;
+    min-width: unset;
+    overflow: visible;
+    background-color: var(--bg-color);
+}
+
+.search-controls-open,
+.search-controls-close {
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.search-controls-open {
+    color: var(--text-color-against-accent);
+}
+
+.search-controls-close {
+    color: var(--accent-color);
+    transform: rotate(180deg);
+}
+
+.search-controls-hidden-header-text {
+    color: var(--text-color-against-accent);
+    margin-top: 1em;
+    writing-mode: vertical-lr; 
+    transform: rotate(180deg);
+}
+
+.search-controls.hidden .search-controls-hidden-header {
+    display: flex;
+}
+
+.search-controls.hidden .search-form,
+.search-controls.hidden .search-controls-close
+{
+    display: none;
+}
+
+.search-controls-close {
+    align-self: end;
 }
 
 .search-form {

@@ -7,8 +7,18 @@
             {{>topnavigation}}
         {{/navigation}}
         {{#body}}
+        <h1 aria-label="Search" style="font-size: 0"></h1>
         <main class="search-page">
-            <aside class="search-controls">
+            <aside class="search-controls" aria-label="Search controls" id="search-controls">
+                <div class="search-controls-hidden-header">
+                    <button class="search-controls-open" onclick="showSearchControls('search-controls')" aria-label="Expand search controls">
+                        <span class="icon-circle-right"></span>
+                    </button>
+                    <span class="search-controls-hidden-header-text">Search controls</span>
+                </div>
+                <button class="search-controls-close" onclick="hideSearchControls('search-controls')" aria-label="Collapse search controls">
+                    <span class="icon-circle-right"></span>
+                </button>
                 <form method="get" action="" class="search-form">
                     <div class="query-cnt">
                         <input id="query-field" name="query" autocomplete="off" value="{{query}}" class="query" placeholder="Search ..." list="suggestions" oninput="updateSuggestions(this.value, 'suggestions')" aria-label="Search text">
@@ -30,7 +40,7 @@
                                 <button onclick="expandFacet(event, 'facet-{{name}}')" class="facet-expand-btn" aria-label="Collapse {{title}} facet">
                                     <span class="icon-folder" aria-hidden="true"></span>
                                 </button>
-                                <input class="facet-search" oninput="searchFacet(event, 'facet-{{name}}')" placeholder="Filter {{title}} facet ...">
+                                <input class="facet-search" oninput="searchFacet(event, 'facet-{{name}}')" placeholder="Filter {{title}} facet ..." aria-label="Filter {{title}} facet">
                             </div>
                             {{/ show-facet-controls? }}
                             {{# options }}
@@ -50,13 +60,13 @@
                     </div>
                 </form>
             </aside>
-            <section class="search-result">
+            <section class="search-result" aria-label="Search results">
                 <div class="funcs">
                     {{# procedures }}
                         {{> procedure }}
                     {{/ procedures }}
                 </div>
-                <footer class="pager">
+                <footer class="pager" aria-label="Pager">
                     {{# pages }}
                         {{# gap? }}
                             <span class="page-gap">...</span>
