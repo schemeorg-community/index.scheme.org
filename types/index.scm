@@ -71,7 +71,7 @@
  ((srfi 28) . "types/srfi.28.scm")
  ;((srfi 60) . "types/srfi.60.scm")
  ((srfi 31) . "types/srfi.31.scm")
- ;((srfi 42) . "types/srfi.42.scm")
+ ((srfi 42) . "types/srfi.42.scm")
  ;((srfi 69) . "types/srfi.69.scm")
 
  )

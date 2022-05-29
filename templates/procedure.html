@@ -11,7 +11,7 @@
     <div class="extra-info">
         {{# has-param-signatures? }}
         <div class="param-signatures">
-            <div class="result-item-block-header">Expanded typing of parameters / returns</div>
+            <div class="result-item-block-header">Typing of parameters and result</div>
             {{# param-signatures }}
             <div class="param-signature">
                 {{> sexpr }}
@@ -22,7 +22,7 @@
 
         {{# has-subsyntax-signatures? }}
         <div class="subsyntax-signatures-block">
-            <div class="result-item-block-header">Syntax fragments' format</div>
+            <div class="result-item-block-header">Fragments' format</div>
             <div class="subsyntax-signatures">
                 {{# subsyntax-signatures }}
                 <span class="subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
@@ -38,7 +38,7 @@
 
         {{# has-syntax-param-signatures? }}
         <div class="syntax-param-signatures">
-            <div class="result-item-block-header">Syntax fragments' expected runtime types</div>
+            <div class="result-item-block-header">Fragments' types</div>
             {{# syntax-param-signatures}}
             <div class="param-signature">
                 {{> sexpr }}

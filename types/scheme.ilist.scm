@@ -1,4 +1,5 @@
-(((name . ipair) (signature lambda (a d) ipair?) (tags pure))
+(((name . iq) (signature syntax-rules () ((_ datum ...) ilist?)))
+ ((name . ipair) (signature lambda (a d) ipair?) (tags pure))
  ((name . ilist) (signature lambda (object ...) ilist?) (tags pure))
  ((name . xipair) (signature lambda (d a) ipair?) (tags pure))
  ((name . ipair*) (signature lambda (elt1 elt2 ...) *))
