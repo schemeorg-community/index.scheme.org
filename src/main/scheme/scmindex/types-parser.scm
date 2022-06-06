@@ -1,3 +1,6 @@
+#|
+    Module responsible for parsing index entries encoded in sexpr format
+|#
 (define-library
   (scmindex types-parser)
   (import (scheme base)

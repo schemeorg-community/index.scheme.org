@@ -1,3 +1,6 @@
+#|
+    Misc util methods
+|#
 (define-library
   (scmindex util)
   (import (scheme base)

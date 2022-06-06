@@ -102,6 +102,8 @@ docker run -p 8080:8080 --init r7rs-index
 
 The built image has same structure as a native build inside the `/app` path.
 
+Alternatively, you can pull latest version deployted to the web from docker hub `arvyy/r7rs-index:master`.
+
 === Running for development
 
 First, install dependencies under kawa-web-collection submodule

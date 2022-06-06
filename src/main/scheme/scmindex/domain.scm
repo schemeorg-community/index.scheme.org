@@ -1,3 +1,7 @@
+#|
+    This module contains core domain entities / records,
+    and misc conversion methods to and from json.
+|#
 (define-library
   (scmindex domain)
   (import (scheme base)

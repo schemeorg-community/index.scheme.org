@@ -198,7 +198,7 @@ nav {
     align-items: stretch;
 }
 
-.procedure {
+.search-item {
     background-color: var(--bg-color2);
     padding: 0.5em;
     border-top: 1px gray solid;
@@ -314,12 +314,12 @@ nav {
     opacity: 0.7;
 }
 
-.procedure:first-child {
+.search-item:first-child {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
 }
 
-.procedure:last-child {
+.search-item:last-child {
     border-bottom: 1px gray solid;
     border-bottom-left-radius: 5px;
     border-bottom-right-radius: 5px;

@@ -1,3 +1,7 @@
+#|
+    Main entry point of the software
+    Reads configuration, parses and indexes the types, launches web and/or repl APIs.
+|#
 (import 
   (scheme base)
   (scheme read)

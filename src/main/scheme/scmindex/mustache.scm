@@ -1,3 +1,7 @@
+#|
+    Module for "rendering" page data -- returns data structures and appopriate lookup procedure
+    to be used interpolating html templates with mustache.
+|#
 (define-library
   (scmindex mustache)
   (import (scheme base)
@@ -11,18 +15,27 @@
           (only (srfi 1) iota filter find))
   
   (export
+
+    ;; render page functions -- each returning 2 values: template name and template data
     render-home-page
     render-search-page
     render-settings-page
+
+    ;; list of cookies settings uses
     settings-cookies
+
+    ;; mustache lookup function, so that mustache knows how to render here defined records
     data-lookup
+    
+    ;; return user settings as saved in the cookies
     user-setting/page-size
     user-setting/param-filter-loose
 
-    ;; exported for testing
+    ;; exported for testing only
     render-index-entry)
   (begin
 
+    ;; creates mustache lookup from a given alist mapping
     (define (make-lookup pred alist)
       (lambda (obj name found not-found)
         (cond
@@ -33,6 +46,7 @@
              (found ((cdr e) obj))))
           (else (not-found)))))
 
+    ;; same as define-record-type, but additionally also creates a lookup binding
     (define-syntax define-mustache-record-type
       (syntax-rules ()
         ((_ type lookup constructor pred (field getter) ...)
@@ -43,22 +57,26 @@
                (make-lookup pred getter-map)))))))
 
 
+    ;; data representing a fragment of sexpr code, forming a tree
     (define-mustache-record-type <sexpr-el>
                                  sexpr-el-lookup
                                  (make-sexpr-el html text class link sub-exprs)
                                  sexpr-el?
                                  (html sexpr-el-html)
-                                 (text sexpr-el-text)
-                                 (class sexpr-el-class)
-                                 (link sexpr-el-link)
-                                 (sub-exprs sexpr-el-sub-exprs))
+                                 (text sexpr-el-text) ;; unlike html field, text is properly escaped
+                                 (class sexpr-el-class) ;; css class to be attached
+                                 (link sexpr-el-link) ;; anchro href link
+                                 (sub-exprs sexpr-el-sub-exprs) ;; children expressions
+                                 )
 
+    ;; navigation data
     (define-mustache-record-type <navigation>
                                  navigation-lookup
                                  (make-navigation items)
                                  navigation?
                                  (items navigation-items))
 
+    ;;navigation entry data
     (define-mustache-record-type <nav-item>
                                  nav-item-lookup
                                  (make-nav-item label icon-cls link active?)
@@ -68,14 +86,17 @@
                                  (link nav-item-link)
                                  (active? nav-item-active?))
 
+    ;; paging bar data
     (define-mustache-record-type <pager-btn>
                                  pager-button-lookup
                                  (make-pager-button number link gap?)
                                  pager-button?
                                  (number pager-button-number)
                                  (link pager-button-link)
+                                 ;; #t if this is a button showing `...` to indicate a gap between visible range and first / last page.
                                  (gap? pager-button-gap?))
 
+    ;; facet filter, eg "library filter"
     (define-mustache-record-type <facet>
                                  facet-lookup
                                  (make-facet name title options)
@@ -84,6 +105,7 @@
                                  (title facet-title)
                                  (options facet-options))
 
+    ;; facet filter's possible options
     (define-mustache-record-type <facet-option>
                                  facet-option-lookup
                                  (make-facet-option value label count selected?)
@@ -93,27 +115,34 @@
                                  (count facet-option-count)
                                  (selected? facet-option-selected?))
 
+    ;; search result page data
     (define-mustache-record-type <search-result-mustache>
                                  search-result-mustache-lookup
-                                 (make-search-result-mustache query facets pages procedures)
+                                 (make-search-result-mustache query facets pages search-items)
                                  search-result-mustache?
                                  (query search-result-mustache-query)
                                  (facets search-result-mustache-facets)
                                  (pages search-result-mustache-pages)
-                                 (procedures search-result-mustache-procedures))
+                                 (search-items search-result-mustache-search-items))
 
+    ;; result item corresponding to a search-item / index-item in domain
     (define-mustache-record-type <result-item>
                                  result-item-lookup
                                  (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib parameterized-by)
                                  result-item?
+                                 ;; sexpr of main signature
                                  (signature result-item-signature)
+                                 ;; list of sexprs of parameter signatures
                                  (param-signatures result-item-param-signatures)
+                                 ;; list of sexprs of signatures of types in syntax
                                  (subsyntax-signatures result-item-subsyntax-signatures)
+                                 ;; list of sexprs of macro subpatterns
                                  (syntax-param-signatures result-item-syntax-param-signatures)
                                  (tags result-item-tags)
                                  (lib result-item-lib)
                                  (parameterized-by result-item-parameterized-by))
 
+    ;; data used in <head>
     (define-mustache-record-type <page-head>
                                  page-head-lookup
                                  (make-page-head title light-theme ctrlf-override)
@@ -122,6 +151,7 @@
                                  (light-theme page-head-light-theme)
                                  (ctrlf-override page-head-ctrlf-override))
 
+    ;; setting block in settings page
     (define-mustache-record-type <setting>
                                  setting-lookup
                                  (make-setting name legend description default-value options)
@@ -132,6 +162,7 @@
                                  (default-value setting-default-value)
                                  (options setting-options))
 
+    ;; settings block's option
     (define-mustache-record-type <setting-option>
                                  setting-option-lookup
                                  (make-setting-option value selected?)
@@ -139,6 +170,7 @@
                                  (value setting-option-value)
                                  (selected? setting-option-selected?))
 
+    ;; top level page data wrapper
     (define-mustache-record-type <page>
                                  page-lookup
                                  (make-page head navigation body)
@@ -154,6 +186,7 @@
                                  (name syntax-rule-name)
                                  (rules syntax-rule-rules))
 
+    ;; additional lookup names, mostly "null?" predicates
     (define (result-item-extra-lookup obj name found not-found)
       (cond
         ((not (result-item? obj)) (not-found))
@@ -163,12 +196,14 @@
         ((equal? "has-parameterized-by?" name) (found (not (null? (result-item-parameterized-by obj)))))
         (else (not-found))))
 
+    ;; hide faceting controls (search / expand / collapse) if there are only < 10 choices
     (define (facet-extra-lookup obj name found not-found)
       (cond
         ((not (facet? obj)) (not-found))
         ((equal? "show-facet-controls?" name) (found (> (length (facet-options obj)) 10)))
         (else (not-found))))
 
+    ;; compose all lookup procedures into one
     (define data-lookup
       (compose-lookups
         sexpr-el-lookup

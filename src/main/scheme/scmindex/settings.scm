@@ -1,3 +1,6 @@
+#|
+    Module for reading settings values
+|#
 (define-library
   (scmindex settings)
   (import (scheme base)
@@ -15,8 +18,7 @@
     deploy-setting/solr-core
     deploy-setting/cache-templates
     deploy-setting/page-size
-    deploy-setting/serve-static
-    )
+    deploy-setting/serve-static)
 
   (begin
 
@@ -38,4 +40,4 @@
     (define deploy-setting/serve-static (cut get-property <> 'serve-static #t))
 
 
-    ))
+))

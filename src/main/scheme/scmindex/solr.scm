@@ -1,3 +1,8 @@
+#|
+    The module for interacting with solr.
+    The intent is to make interaction opaque, and resulting values shouldn't be tied to solr
+    but converted to domain entities.
+|#
 (define-library
   (scmindex solr)
   (import (scheme base)

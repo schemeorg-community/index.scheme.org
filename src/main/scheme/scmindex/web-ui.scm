@@ -1,3 +1,6 @@
+#|
+    This module defines http / rest interaction through spark
+|#
 (define-library
   (scmindex web-ui)
   (import
@@ -19,9 +22,12 @@
   (begin
 
     (define (init-web-ui config solr-client solr-core)
+
+      ;; load templates from ./templates
       (define (partial-locator name)
         (open-input-file (string-append "templates/" name ".html")))
 
+      ;; compile and cache templates for future invocations
       (define get-template/cached
         (let ((cache '()))
           (lambda (name)
@@ -31,14 +37,18 @@
                       (set! cache (cons (cons name tpl) cache))
                       tpl))))))
 
+      ;; recompile template on each fetch. Useful for development
       (define (get-template/uncached name)
         (compile name partial-locator))
 
+      ;; choose between caching and uncached template fetching functions
       (define get-template
         (if (deploy-setting/cache-templates config)
             get-template/cached
             get-template/uncached))
 
+      ;; utility function for defining endpoint for a mustache rendered page
+      ;; handler is expected to return two values -- template name and template data
       (define (get/html path handler)
         (get path (lambda (req resp)
                     (define-values (name data) (handler req resp))
@@ -46,6 +56,10 @@
                                    (current-collection list-collection))
                       (execute (get-template name) data)))))
 
+      ;; utility function for defining a RESTful get endpoint
+      ;; handler is expected to return sexpr representation of json response (as in srfi 180)
+      ;; handles response type header, also handles actual return content -- returns sexpr as with write if
+      ;; request param wt = sexpr, otherwise returns json.
       (define (get/rest path handler)
         (get path (lambda (req resp)
                     (define result (handler req resp))
@@ -112,11 +126,13 @@
                   (define data (exec-solr-query solr-client solr-core start page-size query libs param-types return-types parameterized-by tags filter-params-loose?))
                   (render-search-page req page page-size query libs tags param-types return-types parameterized-by data)))
 
+      ;; type ahead, triggered while writing in search textfield
       (get/rest "/suggest"
                 (lambda (req resp)
                   (define text (req/query-param req "text"))
                   (solr-get-suggestions solr-client solr-core text)))
 
+      ;; REST api
       (path "/rest"
             (get/rest "/libs"
                       (lambda (req resp)
@@ -153,4 +169,4 @@
                         (search-result->json search-result)))))
 
 
-    ))
+))

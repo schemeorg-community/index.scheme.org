@@ -7,7 +7,7 @@
             {{>topnavigation}}
         {{/navigation}}
         {{#body}}
-        <h1 aria-label="Search" style="font-size: 0"></h1>
+        <h1 style="font-size: 0">Search</h1>
         <main class="search-page">
             <aside class="search-controls" aria-label="Search controls" id="search-controls">
                 <div class="search-controls-hidden-header">
@@ -61,10 +61,11 @@
                 </form>
             </aside>
             <section class="search-result" aria-label="Search results">
-                <div class="funcs">
-                    {{# procedures }}
-                        {{> procedure }}
-                    {{/ procedures }}
+                {{! extra div wrapping, so that last search-item gets proper styling }}
+                <div>
+                    {{# search-items }}
+                        {{> search-item }}
+                    {{/ search-items }}
                 </div>
                 <footer class="pager" aria-label="Pager">
                     {{# pages }}

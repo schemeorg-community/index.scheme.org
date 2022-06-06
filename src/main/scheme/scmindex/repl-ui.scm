@@ -1,3 +1,6 @@
+#|
+    This module defines repl interaction loop through standard input / output
+|#
 (define-library
   (scmindex repl-ui)
   (import (scheme base)
