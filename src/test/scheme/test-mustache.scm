@@ -13,4 +13,3 @@
     (lambda (doc)
       (test-assert (not (null? (render-index-entry doc)))))
     specs))
-

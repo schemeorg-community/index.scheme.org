@@ -652,7 +652,7 @@
    ((procedure? proc) (string? string1) (string? string2) ...)
    string?)
   (tags pure)
-  (subsigs (proc (lambda ((string? string) ...) char?))))
+  (subsigs (proc (lambda ((char? c1) ...) char?))))
  ((name . string-ref)
   (signature lambda ((string? string) (integer? k)) char?)
   (tags pure))

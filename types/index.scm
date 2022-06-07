@@ -62,7 +62,7 @@
  ;; misc srfi, added in order of popularity according to https://misc.lassi.io/2019/srfi-implementation-counts.scm
  ;; omitting anything added to r7rs small / large
  ((srfi 2) . "types/srfi.2.scm")
- ;((srfi 13) . "types/srfi.13.scm")
+ ((srfi 13) . "types/srfi.13.scm")
  ;((srfi 17) . "types/srfi.17.scm")
  ((srfi 8) . "types/srfi.8.scm")
  ;((srfi 19) . "types/srfi.19.scm")
