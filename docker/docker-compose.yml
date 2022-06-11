@@ -1,6 +1,6 @@
 services:
   app:
-    image: "arvyy/r7rs-index:master"
+    image: "arvyy/scheme-index:master"
     volumes:
       - "statics:/app/static"
       - type: bind
