@@ -13,4 +13,4 @@ RUN ant
 FROM openjdk:11
 WORKDIR app
 COPY --from=0 /app/dist .
-CMD java -jar r7rs-index.jar
+CMD java -jar scheme-index.jar

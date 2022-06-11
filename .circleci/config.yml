@@ -26,9 +26,9 @@ jobs:
           git submodule update --init
           cd ..
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker build -t arvyy/r7rs-index:$CIRCLE_BRANCH -f docker/Dockerfile .
+          docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/Dockerfile .
 
-      - run: docker push arvyy/r7rs-index:$CIRCLE_BRANCH
+      - run: docker push arvyy/scheme-index:$CIRCLE_BRANCH
 
   deploy:
     machine: true

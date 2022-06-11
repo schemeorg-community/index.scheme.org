@@ -5,13 +5,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.arvyy</groupId>
-    <artifactId>r7rs-index</artifactId>
-    <version>0.0.1</version>
+    <artifactId>scheme-index</artifactId>
+    <version>0.0.2</version>
 
-    <name>R7RS Index</name>
-    <description>
-        Index of scheme procedures
-    </description>
+    <name>Scheme Index</name>
 
     <licenses>
         <license>
@@ -158,6 +155,7 @@
                             <mainClass>main</mainClass>
                         </transformer>
                     </transformers>
+                    <finalName>scheme-index</finalName>
                 </configuration>
                 <executions>
                     <execution>

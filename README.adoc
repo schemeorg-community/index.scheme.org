@@ -1,12 +1,12 @@
-= R7RS index
+= Scheme index
 :toc: left
 
-R7RS index is a tool for indexing and searching through procedures and syntax from R7RS-small and R7RS-large libraries.
-R7RS index can be used in 3 ways - as a site (https://r7rsindex.com), through REST API, or through stdio API
+Scheme index is a tool for indexing and searching through procedures and syntax from R7RS-small, R7RS-large, select SRFI libraries.
+The index may be used through a site (https://index.scheme.org), through REST API, or through stdio API.
 
 == Userguide for site visitors
 
-R7RS index search consists of control pane on the left, and result list in the center. 
+Scheme index search consists of control pane on the left, and result list in the center. 
 
 === Control pane
 
@@ -14,11 +14,11 @@ In the control pane, optionally select values from the filter list, optionally e
 
 === Result list
 
-Each result item can be either a procedure, a macro, or a value. At the top it shows a library it is exported from. Note, that some identifiers are exported from multiple libraries. The library name can be pressed, which will result in starting new search using said library as a filter. On the right side top, associated list of tags with the result is shown. Like with library, tags are also clickable, and start a search using the clicked tag as a filter.
+Each result item is one of procedure, a macro, or a value. At the top it shows a library it is exported from. Note, that some identifiers are exported from multiple libraries. The library name can be clicked, which will result in starting new search using said library as a filter. On the right side top, associated list of tags with the result is shown. Like with library, tags are also clickable, and start a search using the clicked tag as a filter.
 
-Procedure, procedure-like macros and value names are rendered in *red*. Procedures are distinguished by being surrounded with parenthesis, as if being called. Following the name until the "=>" sign are parameters. If parameter is just a name, it means it has an unspecified type. Otherwise, parameter may be a list of type and name. Types are represented as predicate procedures. After the "=>" sign is the return type. The return can be one of: 
+Procedures and value names are rendered in *red*. Procedures are distinguished by being surrounded with parenthesis, as if being called. Following the name until the "=>" sign are parameters. If parameter is just a name, it means it has an unspecified type. Otherwise, parameter may be a list of type and name. Types are usually represented as predicate procedures (sometimes a type may be opaque or logical, and without a disjoint predicate function to distinguish it). It can also be a logical "or" of multiple types, separated by `/`. Due to its pervasiveness as a `NULL`, `#f` literal is also used as a type sometimes, usually as a part of the "or". 
 
-* predicate procedure name (just like parameter type); 
+After the "=>" sign is the return type. The return type is same as parameter type, and additionally may contain: 
 
 * a "*" symbol (meaning it returns a value of unknown type); 
 
@@ -26,15 +26,15 @@ Procedure, procedure-like macros and value names are rendered in *red*. Procedur
 
 * a list with "values" word in car position (meaning it has a multivalue return); 
 
-* a list with "or" word in car position (meaning the return type is a union between given types). 
-
 Types expressed as predicates in *blue* are links. Pressing on a type in parameter position will search using that type as *return value* filter; pressing on a type in return value position will search using that type as *parameter* filter.
 
-Scheme is a functional language and thus it'd be useful to specify taken / returned procedure values. Therefore, if one of parameters is *procedure?*, it's signature is defined below the main procedure's signature, using parameter's name in car position. Likewise same is done if return value is a procedure; but in that case word "return" is used as a name.
+If one of parameters is *procedure?*, it's signature is defined below the main procedure's signature, using parameter's name in car position. Likewise same is done if return value is a procedure; but in that case word "return" is used as a name.
 
 Procedures can have more than one entry, even from same library. This occurs, if the procedures is has optional parameters and therefore can be called in multiple ways; or if the result type can be determined more precisely under more specific input parameters.
 
 Macros are rendered in *green*. If macro is complex, some parts of it are grouped, and the syntax of those groups shown below the syntax of whole macro. Macro literals are also rendered in green. To make parenthesis more obvious, auxiliary parenthesis coloring is used, however this coloring doesn't signify any information.
+
+Macros may also contain typing definition, signifying expected type during macro expansion or runtime. Unlike with procedures though, such definitions are shown in separate block as to not confuse which parenthesis are part of macro syntax, and which are used for type grouping. 
 
 === Tags
 
@@ -62,11 +62,17 @@ Selecting multiple return types will return results that match *all* of the give
 The text query is parsed by edismax parser, and is used to filter by name and parameter / subsyntax names. This means it supports and interprets common searching syntax, such as using "-" in front of the word to exclude results containing said word. This has its disadvantages; eg. if you tried to search for coercion functions and typed "->string" (without quotes) into the search input field, you wouldn't find anything interesting, because the leading minus was interpreted specially. Instead, you'd have to search using "exact phrase", by putting double quotes around the search.
 
 
-== Building and running
+== Obtaining and running index locally
 
-=== Natively
+=== Download
 
-You can build R7RS index by running `ant` from the root of the source directory. Note that the build process required following executables to be on path
+Prebuilt versions are available at https://github.com/arvyy/r7rs-index-site/releases
+
+Docker image (corresponding to latest deployed version) may be pulled from `arvyy/scheme-index:master`.
+
+=== Building native
+
+Build processes requires executables on path:
 
 * `ant` - Apache Ant build tool
 
@@ -74,39 +80,46 @@ You can build R7RS index by running `ant` from the root of the source directory.
 
 * `asciidoctor` - Asciidoctor documentation compiler
 
-After the build successfully completes, you should find everything R7RS index needs in `dist` directory.
+You can build scheme index by running `ant` from the root of the source directory.
 
-Alternatively, you may find release zip available for downloads at https://github.com/arvyy/r7rs-index-site/releases.
+After the build successfully completes, you should find everything scheme index needs in `dist` directory.
 
-Once you have the built version, you can run it using:
+=== Running native
+
+Once you have obtained a built version, you can run it using:
 
 ```
-java -jar r7rs-index.jar
+java -jar scheme-index.jar
 ```
+
+Note that working directory is important; type files, configuration are resolved relative to the working dir, not relative to jar file.
 
 See <<Configuration>> section for configuring the application behavior.
 
-=== Using docker
+=== Building docker
 
-If you prefer using docker, you can build a docker image using
-
-```
-docker build -t r7rs-index -f docker/Dockerfile .
-```
-
-which can the be run with 
+Build a docker image using
 
 ```
-docker run -p 8080:8080 --init r7rs-index
+docker build -t scheme-index -f docker/Dockerfile .
 ```
 
-The built image has same structure as a native build inside the `/app` path.
+The built image has same structure as a native build, under path `/app` inside the image.
 
-Alternatively, you can pull latest version deployted to the web from docker hub `arvyy/r7rs-index:master`.
+=== Running with docker
+
+To run with docker, execute
+
+```
+docker run -p 8080:8080 --init scheme-index
+```
+
+The application resides in `/app` location. Consult rest of the documentation for details, but in particular you might want to mount a volume 
+to `/app/logs` to catch log files, or a volume file to `/app/config/configuration.scm` to overwrite index config.
 
 === Running for development
 
-First, install dependencies under kawa-web-collection submodule
+First, install dependencies under kawa-web-collection submodule (make sure the git submodule is initialized / updated)
 
 ```
 cd kawa-web-collection
@@ -258,11 +271,11 @@ Second argument is parameter type definition, as described under functions. This
 
 === Logging
 
-R7RS index uses logback for logging. By default (as defined in `src/main/resources/logback.xml`) it only does rolling file logging into `./logs` directory, and not into standard output.
+Scheme index uses logback for logging. By default (as defined in `src/main/resources/logback.xml`) it only does rolling file logging into `./logs` directory, and not into standard output.
 You can provide custom logging configuration by running
 
 ```
-java -Dlogback.configurationFile=/path/to/config.xml -jar r7rs-index.jar
+java -Dlogback.configurationFile=/path/to/config.xml -jar scheme-index.jar
 ```
 
 Consult logback documentation for details.
@@ -452,7 +465,7 @@ JSON schema
                 "super_types": { 
                     "type": "array",
                     "items": { "type": "string" }
-                }
+                },
                 "parameterized_by": { 
                     "type": "array",
                     "items": { "type": "string" }

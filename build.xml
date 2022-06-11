@@ -58,7 +58,7 @@
             <fileset dir="templates"/>
         </copy>
         <copy file="config/configuration-dist.scm" tofile="dist/config/configuration.scm"/>
-        <copy file="target/r7rs-index-0.0.1.jar" tofile="dist/r7rs-index.jar"/>
+        <copy file="target/scheme-index.jar" tofile="dist/scheme-index.jar"/>
         <copy file="README.adoc" tofile="dist/README.adoc"/>
         <copy file="README.html" tofile="dist/README.html"/>
         <copy file="README.html" tofile="dist/static/README.html"/>
