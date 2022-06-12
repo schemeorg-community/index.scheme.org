@@ -8,4 +8,7 @@
     --accent-color-hover: #fdd;
     --secondary-color: #338;
     --tertary-color: #161;
+
+    --nav-bg-color: var(--bg-color);
+    --nav-text-color: var(--text-color-against-bg);
 }

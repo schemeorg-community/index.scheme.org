@@ -24,8 +24,7 @@ nav {
     display: flex;
     align-items: end;
     align-self: stretch;
-    padding-top: 5px;
-    background-color: var(--accent-color);
+    background-color: var(--nav-bg-color);
 }
 
 .nav-link, .nav-link-active {
@@ -34,23 +33,25 @@ nav {
 
 .nav-link {
     text-decoration: none;
-    color: var(--text-color-against-accent);
+    color: var(--nav-text-color);
 }
 
-.nav-link-active {
+.nav-link-active,
+.nav-link:hover
+{
     color: var(--accent-color);
     background-color: var(--bg-color2);
 }
 
 .index-page,
-.settings-page,
-.userguide-page,
-.restapi-page {
+.settings-page
+{
     background-color: var(--bg-color2);
     max-width: 960px;
     padding: 20px;
     display: flex;
     flex-direction: column;
+    margin-top: 2em;
 }
 
 .facet-count {
@@ -87,7 +88,7 @@ nav {
     display: none;
     flex-direction: column;
     align-items: center;
-    background-color: var(--accent-color);
+    background-color: var(--nav-bg-color);
 }
 
 .search-controls.hidden {
@@ -106,7 +107,7 @@ nav {
 }
 
 .search-controls-open {
-    color: var(--text-color-against-accent);
+    color: var(--nav-text-color);
 }
 
 .search-controls-close {
@@ -115,7 +116,7 @@ nav {
 }
 
 .search-controls-hidden-header-text {
-    color: var(--text-color-against-accent);
+    color: var(--nav-text-color);
     margin-top: 1em;
     writing-mode: vertical-lr; 
     transform: rotate(180deg);
@@ -499,11 +500,6 @@ nav {
 
 h1, h2 {
     color: var(--accent-color);
-}
-
-.restapi-page .rest-url {
-    font-family: monospace;
-    background-color: var(--bg-color);
 }
 
 .index-page .search {
