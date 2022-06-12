@@ -845,7 +845,13 @@
    lambda
    ((list? textual-list) (textual? delimiter) (symbol? grammar))
    text?)
-  (tags pure))
+  (tags pure)
+  (spec-values
+    (grammar
+      ("'infix" "infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty text.")
+      ("'strict-infix" "same as 'infix if the textual-list is non-empty, but will signal an error if given an empty list. (This avoids an ambiguity)")
+      ("'suffix" "suffix or terminator grammar: insert the delimiter after every list element.")
+      ("'prefix" "prefix grammar: insert the delimiter before every list element."))))
  ((name . textual-fold)
   (signature lambda ((procedure? kons) knil (textual? textual)) *)
   (tags pure)
@@ -1010,13 +1016,25 @@
    lambda
    ((textual? textual) (textual? delimiter) (symbol? grammar))
    list?)
-  (tags pure))
+  (tags pure)
+  (spec-values
+    (grammar
+      ("'infix" "infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty text.")
+      ("'strict-infix" "same as 'infix if the textual-list is non-empty, but will signal an error if given an empty list. (This avoids an ambiguity)")
+      ("'suffix" "suffix or terminator grammar: insert the delimiter after every list element.")
+      ("'prefix" "prefix grammar: insert the delimiter before every list element."))))
  ((name . textual-split)
   (signature
    lambda
    ((textual? textual) (textual? delimiter) (symbol? grammar) (integer? limit))
    list?)
-  (tags pure))
+  (tags pure)
+  (spec-values
+    (grammar
+      ("'infix" "infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty text.")
+      ("'strict-infix" "same as 'infix if the textual-list is non-empty, but will signal an error if given an empty list. (This avoids an ambiguity)")
+      ("'suffix" "suffix or terminator grammar: insert the delimiter after every list element.")
+      ("'prefix" "prefix grammar: insert the delimiter before every list element."))))
  ((name . textual-split)
   (signature
    lambda
@@ -1026,7 +1044,13 @@
     (integer? limit)
     (integer? start))
    list?)
-  (tags pure))
+  (tags pure)
+  (spec-values
+    (grammar
+      ("'infix" "infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty text.")
+      ("'strict-infix" "same as 'infix if the textual-list is non-empty, but will signal an error if given an empty list. (This avoids an ambiguity)")
+      ("'suffix" "suffix or terminator grammar: insert the delimiter after every list element.")
+      ("'prefix" "prefix grammar: insert the delimiter before every list element."))))
  ((name . textual-split)
   (signature
    lambda
@@ -1037,4 +1061,10 @@
     (integer? start)
     (integer? end))
    list?)
-  (tags pure)))
+  (tags pure)
+  (spec-values
+    (grammar
+      ("'infix" "infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty text.")
+      ("'strict-infix" "same as 'infix if the textual-list is non-empty, but will signal an error if given an empty list. (This avoids an ambiguity)")
+      ("'suffix" "suffix or terminator grammar: insert the delimiter after every list element.")
+      ("'prefix" "prefix grammar: insert the delimiter before every list element.")))))
