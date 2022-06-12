@@ -64,7 +64,13 @@
  ((name . string-join)
   ;;TODO need way to specify grammar is one of infix, strict-infix, suffix, prefix
   (signature lambda ((list? string-list) (string? delimiter) (symbol? grammar)) string?)
-  (tags pure))
+  (tags pure)
+  (spec-values
+    (grammar
+      ("'infix" "infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty string -- note, however, that parsing an empty string with an infix or separator grammar is ambiguous. Is it an empty list, or a list of one element, the empty string?")
+      ("'strict-infix" "same as 'infix, but will raise an error if given an empty list.")
+      ("'suffix" "suffix or terminator grammar: insert the delimiter after every list element. This grammar has no ambiguities.")
+      ("'prefix" "prefix grammar: insert the delimiter before every list element. This grammar has no ambiguities."))))
  ((name . string-length)
   (signature lambda ((string? string)) integer?)
   (tags pure))

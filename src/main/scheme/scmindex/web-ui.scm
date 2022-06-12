@@ -8,6 +8,7 @@
     (scheme write)
     (scheme read)
     (scheme file)
+    (arvyy slf4j)
     (arvyy kawa-spark)
     (arvyy mustache)
     (arvyy solr-embedded)
@@ -22,6 +23,8 @@
   (begin
 
     (define (init-web-ui config solr-client solr-core)
+
+      (define logger (get-logger "web-ui"))
 
       ;; load templates from ./templates
       (define (partial-locator name)
@@ -87,7 +90,15 @@
         (static-files/external-location "static"))
 
       (not-found (lambda (req resp) (resp/redirect resp "/404.html")))
-      (internal-server-error (lambda (req resp) (resp/redirect resp "/500.html")))
+      ;(internal-server-error (lambda (req resp) (resp/redirect resp "/500.html")))
+      (exception (lambda (exception req resp)
+                   (log-info logger "TEST\nTEST\n")
+                   (log-info logger "TEST\nTEST\n")
+                   (log-info logger "TEST\nTEST\n")
+                   (log-info logger "TEST\nTEST\n")
+                   (log-info logger "TEST\nTEST\n")
+                   (log-info logger "Error handling request" exception)
+                   (resp/redirect resp "/500.html")))
 
       (get/html "/"
                 (lambda (req resp)

@@ -266,6 +266,13 @@ in other signature, and the pattern is as described in `signature`.
 | syntax-param-signatures
 | Applicable only to syntax type. The value is a list, where each element is itself a 2 element list. First element is a symbol, matching one of the symbols in the signature.
 Second argument is parameter type definition, as described under functions. This allows annotating syntax when it expects to receive values of certain types for specific places in the pattern. 
+
+| parameterized-by
+| List of strings, denoting parameters created by `make-parameter` that influence behavior of this entry
+
+| spec-values
+| Sometimes procedures have very limited input set for specific parameter (eg. using symbols as a union). Sometimes procedures handle values with specific logic when it detects specific format in it (eg. printf format specifier). In both cases it's sensible to list these special handlings, and this is what this field is for. The value of spec-values is an alist, where car corresponds to parameter name, and cdr is a list. Each element in said list is also a list - where first element corresponds to specific value (written as a string), and cadr corresponds to the value's description (also a string).
+
 |===
 
 
@@ -438,6 +445,22 @@ JSON schema
                 "count": { "type": "integer" }
             }
         },
+        "spec-value-block": {
+            "type": "object",
+            "properties": {
+                "field": { "type": "string" },
+                "values": { 
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "value": { "type": "string" },
+                            "desc": { "type": "string" }
+                        }
+                    }
+                }
+            }
+        },
         "search-item": {
             "type": "object",
             "properties": {
@@ -469,6 +492,10 @@ JSON schema
                 "parameterized_by": { 
                     "type": "array",
                     "items": { "type": "string" }
+                },
+                "spec_values": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/spec-value-block" }
                 }
             }
         }

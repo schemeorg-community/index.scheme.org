@@ -47,6 +47,22 @@
         </div>
         {{/ has-syntax-param-signatures? }}
 
+        {{# has-spec-values? }}
+        <div class="spec-values-blocks">
+            {{# spec-values }}
+            <div class="spec-values-block">
+                <span class="spec-value-field-name">{{name}}</span>
+                <div class="spec-value-field-values">
+                    {{# values }}
+                    <div class="spec-value-field-value">{{value}}</div>
+                    <div class="spec-value-field-value-desc">{{description}}</div>
+                    {{/ values }}
+                </div>
+            </div>
+            {{/ spec-values }}
+        </div>
+        {{/ has-spec-values? }}
+
         {{# has-parameterized-by? }}
         <div class="parameterized-by-block">
             <div class="result-item-block-header">Parameterized by</div>

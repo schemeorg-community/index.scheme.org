@@ -238,8 +238,35 @@ nav {
     grid-area: extra-info;
 }
 
-.param-signatures, .subsyntax-signatures-block, .syntax-param-signatures, .parameterized-by-block {
+.param-signatures, .subsyntax-signatures-block, .syntax-param-signatures, .parameterized-by-block, .spec-values-blocks {
     margin-top: 0.8em;
+}
+
+.spec-value-field-name {
+    color: var(--text-color-muted);
+    font-weight: bold;
+}
+
+.spec-value-field-values {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: 1em;
+    row-gap: 0.5em;
+}
+
+@media (max-width: 600px) {
+    .spec-value-field-values {
+        grid-template-columns: 1fr;
+    }
+}
+
+.spec-value-field-value {
+    color: var(--tertary-color);
+    font-weight: bold;
+}
+
+.spec-value-field-value-desc {
+    color: var(--text-color-muted);
 }
 
 .parameterized-by-item {

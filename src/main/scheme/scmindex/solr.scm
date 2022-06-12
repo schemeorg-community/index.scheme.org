@@ -8,7 +8,9 @@
   (import (scheme base)
           (arvyy solrj)
           (scmindex domain)
-          (scmindex types-parser))
+          (scmindex types-parser)
+          (scmindex util)
+          (srfi 180))
 
   (export
     index-types
@@ -44,6 +46,11 @@
                 `((param_subtypes_loose . ,(list->vector (map symbol->string (flatten-type subtype-loose-map (index-entry-param-types f)))))
                   (param_subtypes . ,(list->vector (map symbol->string (flatten-type subtype-strict-map (index-entry-param-types f)))))
                   (return_supertypes . ,(list->vector (map symbol->string (flatten-type supertype-map (index-entry-return-types f)))))))
+              (let ((e (assoc 'spec_values json)))
+                (when e
+                  (let ((port (open-output-string)))
+                    (json-write (cdr e) port)
+                    (set-cdr! e (get-output-string port)))))
               (append extra json))
             funcs)))
       (parameterize ((commit-within 10))
@@ -128,7 +135,17 @@
     (define (parse-solr-response response)
       (define resp (cdr (assoc 'response response)))
       (define total (cdr (assoc 'num-found resp)))
-      (define docs (map json->index-entry (vector->list (cdr (assoc 'docs resp)))))
+      (define docs 
+        (let ((docs* (vector->list (cdr (assoc 'docs resp)))))
+          (for-each
+            (lambda (json)
+              (define e (assoc 'spec_values json))
+              (when e
+                (let* ((str (cdr e))
+                       (port (open-input-string str)))
+                  (set-cdr! e (json-read port)))))
+            docs*)
+          (map json->index-entry docs*)))
       (define facet-counts (cdr (assoc 'facet_counts response)))
       (define facet-fields (cdr (assoc 'facet_fields facet-counts)))
       (define lib-facets (fold-facet-values (cdr (assoc 'lib facet-fields))))

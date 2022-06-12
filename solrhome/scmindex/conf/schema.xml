@@ -36,6 +36,7 @@
     <field name="return_supertypes" type="strings" indexed="true" stored="true" />
     <field name="parameterized_by" type="strings" indexed="true" stored="true" />
     <field name="super_types" type="strings" indexed="true" stored="true" />
+    <field name="spec_values" type="string" indexed="false" stored="true" />
 
 
     <copyField source="name" dest="name_precise"/>

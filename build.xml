@@ -1,4 +1,4 @@
-<project name="r7rs-index" default="dist" basedir=".">
+<project name="scheme-index" default="dist" basedir=".">
 
     <condition property="isWindows">
         <os family="windows" />

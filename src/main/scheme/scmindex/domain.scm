@@ -38,6 +38,7 @@
     index-entry-return-types
     index-entry-parameterized-by
     index-entry-supertypes
+    index-entry-spec-values
 
     index-entry->json
     json->index-entry
@@ -57,6 +58,7 @@
         param-types
         return-types
         parameterized-by
+        spec-values
         supertypes)
 
       index-entry?
@@ -71,11 +73,8 @@
       (param-types index-entry-param-types)
       (return-types index-entry-return-types)
       (parameterized-by index-entry-parameterized-by)
+      (spec-values index-entry-spec-values)
       (supertypes index-entry-supertypes))
-
-    (define (read* str)
-      (define port (open-input-string str))
-      (read port))
 
     (define (index-entry->json func)
       `((lib . ,(->string (index-entry-lib func)))
@@ -88,7 +87,17 @@
         (param_types . ,(list->vector (map symbol->string (index-entry-param-types func))))
         (return_types . ,(list->vector (map symbol->string (index-entry-return-types func))))
         (parameterized_by . ,(list->vector (index-entry-parameterized-by func)))
+        (spec_values . ,(list->vector (map spec-value->json (index-entry-spec-values func))))
         (super_types . ,(list->vector (map symbol->string (index-entry-supertypes func))))))
+
+    (define (spec-value->json block)
+      (define vals 
+        (map (lambda (e)
+               `((value . ,(car e))
+                 (desc . ,(cadr e))))
+          (cdr block)))
+      `((field . ,(symbol->string (car block)))
+        (values . ,(list->vector vals))))
 
     (define (json->index-entry json)
       (define (get field type default)
@@ -113,7 +122,23 @@
         (get 'param_types 'symbol-lst '())
         (get 'return_types 'symbol-lst '())
         (get 'parameterized_by 'string-lst '())
+        (cond
+          ((assoc 'spec_values json) => (lambda (value)
+                                          (map
+                                            json->spec-value
+                                            (vector->list (cdr value)))))
+          (else '()))
         (get 'supertypes 'symbol-lst '())))
+
+    (define (json->spec-value block)
+      (define vals
+        (map
+          (lambda (e)
+            (list (cdr (assoc 'value e))
+                  (cdr (assoc 'desc e))))
+          (vector->list (cdr (assoc 'values block)))))
+      (define field (string->symbol (cdr (assoc 'field block))))
+      (cons field vals))
 
     (define-record-type <search-result>
       (make-search-result items total libs params tags returns parameterized-by)

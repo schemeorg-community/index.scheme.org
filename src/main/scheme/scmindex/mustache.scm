@@ -128,7 +128,7 @@
     ;; result item corresponding to a search-item / index-item in domain
     (define-mustache-record-type <result-item>
                                  result-item-lookup
-                                 (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib parameterized-by)
+                                 (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib parameterized-by spec-values)
                                  result-item?
                                  ;; sexpr of main signature
                                  (signature result-item-signature)
@@ -140,7 +140,8 @@
                                  (syntax-param-signatures result-item-syntax-param-signatures)
                                  (tags result-item-tags)
                                  (lib result-item-lib)
-                                 (parameterized-by result-item-parameterized-by))
+                                 (parameterized-by result-item-parameterized-by)
+                                 (spec-values result-item-spec-values))
 
     ;; data used in <head>
     (define-mustache-record-type <page-head>
@@ -186,6 +187,20 @@
                                  (name syntax-rule-name)
                                  (rules syntax-rule-rules))
 
+    (define-mustache-record-type <spec-value-fieldblock>
+                                 spec-value-fieldblock-lookup
+                                 (make-spec-value-fieldblock name values)
+                                 spec-value-fieldblock?
+                                 (name spec-value-fieldblock-name)
+                                 (values spec-value-fieldblock-values))
+
+    (define-mustache-record-type <spec-value-fieldentry>
+                                 spec-value-fieldentry-lookup
+                                 (make-spec-value-fieldentry value description)
+                                 spec-value-fieldentry?
+                                 (value spec-value-fieldentry-value)
+                                 (description spec-value-fieldentry-description))
+
     ;; additional lookup names, mostly "null?" predicates
     (define (result-item-extra-lookup obj name found not-found)
       (cond
@@ -194,6 +209,7 @@
         ((equal? "has-subsyntax-signatures?" name) (found (not (null? (result-item-subsyntax-signatures obj)))))
         ((equal? "has-syntax-param-signatures?" name) (found (not (null? (result-item-syntax-param-signatures obj)))))
         ((equal? "has-parameterized-by?" name) (found (not (null? (result-item-parameterized-by obj)))))
+        ((equal? "has-spec-values?" name) (found (not (null? (result-item-spec-values obj)))))
         (else (not-found))))
 
     ;; hide faceting controls (search / expand / collapse) if there are only < 10 choices
@@ -220,7 +236,9 @@
         page-lookup
         syntax-rule-lookup
         result-item-extra-lookup
-        facet-extra-lookup))
+        facet-extra-lookup
+        spec-value-fieldblock-lookup
+        spec-value-fieldentry-lookup))
 
     (define make-mustache-nav-data
       (let ((pages '(("Home" "icon-home3" "/" index)
@@ -508,6 +526,9 @@
       (define syntax-param-signatures
         (render-param-signatures (index-entry-syntax-param-signatures index-entry)))
 
+      (define spec-values
+        (render-spec-values (index-entry-spec-values index-entry)))
+
       (make-result-item
         signature-sd
         param-signatures
@@ -515,7 +536,19 @@
         syntax-param-signatures
         (index-entry-tags index-entry)
         (index-entry-lib index-entry)
-        (index-entry-parameterized-by index-entry)))
+        (index-entry-parameterized-by index-entry)
+        spec-values))
+
+    (define (render-spec-values spec-values)
+      (map 
+        (lambda (block)
+          (define vals
+            (map
+              (lambda (val)
+                (make-spec-value-fieldentry (car val) (cadr val)))
+              (cdr block)))
+          (make-spec-value-fieldblock (car block) vals))
+        spec-values))
 
     (define (render-syntax-signature-signature literals rule)
       (define (term-handler term)

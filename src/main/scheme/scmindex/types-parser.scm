@@ -82,7 +82,8 @@
           (define tags (assoc* 'tags entry '()))
           (define parameterized-by (assoc* 'parameterized-by entry '()))
           (define param-signatures (assoc* 'subsigs entry '()))
-          (make-index-entry lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types parameterized-by supertypes))
+          (define spec-values (assoc* 'spec-values entry '()))
+          (make-index-entry lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types parameterized-by spec-values supertypes))
         input))
 
     (define (extract-param-names signature)
