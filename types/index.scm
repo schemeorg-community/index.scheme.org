@@ -90,7 +90,7 @@
  ;; srfi 43 -- part of r7rs large
  ;; srfi 30 -- non-sexpr syntax. Also part of r7rs small
  ((srfi 45) . "types/srfi.45.scm")
- ;;((srfi 61) . "types/srfi.61.scm") TODO
+ ((srfi 61) . "types/srfi.61.scm")
  ;;((srfi 25) . "types/srfi.25.scm") TODO
  ;; srfi 34 -- part of r7rs small
  ;; srfi 62 -- non-sexpr syntax

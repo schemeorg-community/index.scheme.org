@@ -167,8 +167,10 @@
   (subsigs
    (clause
     (test expression1 ...)
-    (test => expression)
-    (else expression1 expression2 ...))))
+    (test => receiver)
+    (else expression1 expression2 ...)))
+  (syntax-param-signatures
+    (receiver procedure?)))
  ((name . cond-expand)
   (signature
    syntax-rules

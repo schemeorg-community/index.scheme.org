@@ -8,4 +8,4 @@
  ((name . force)
   (signature lambda ((promise? expression)) *))
  ((name . eager)
-  (signature lambda ((expression)) promise?)))
+  (signature lambda (expression) promise?)))
