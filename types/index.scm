@@ -94,7 +94,7 @@
  ((srfi 25) . "types/srfi.25.scm")
  ;; srfi 34 -- part of r7rs small
  ;; srfi 62 -- non-sexpr syntax
- ;;((srfi 78) . "types/srfi.78.scm") TODO
+ ((srfi 78) . "types/srfi.78.scm")
  ;;((srfi 18) . "types/srfi.18.scm") TODO
  ;;((srfi 48) . "types/srfi.48.scm") TODO
  ;;((srfi 64) . "types/srfi.64.scm") TODO
