@@ -29,7 +29,7 @@
   (tags pure))
  ((name . array-set!)
   (signature lambda ((array? shape) (integer? k) ... obj) undefined))
- ((name . array-ref)
+ ((name . array-set!)
   (signature lambda ((array? shape) ((or vector? array?) index) obj) undefined))
  ((name . share-array)
   (signature lambda ((array? array) (array? shape) (procedure? proc)) array?)
