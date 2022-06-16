@@ -96,7 +96,7 @@
  ;; srfi 62 -- non-sexpr syntax
  ((srfi 78) . "types/srfi.78.scm")
  ((srfi 18) . "types/srfi.18.scm")
- ;((srfi 48) . "types/srfi.48.scm") TODO
+ ((srfi 48) . "types/srfi.48.scm")
  ;;((srfi 64) . "types/srfi.64.scm") TODO
 
 
