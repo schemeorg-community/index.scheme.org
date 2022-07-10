@@ -18,7 +18,10 @@
     deploy-setting/solr-core
     deploy-setting/cache-templates
     deploy-setting/page-size
-    deploy-setting/serve-static)
+    deploy-setting/serve-static
+    deploy-setting/filterset-index
+    deploy-setting/sqlite-location
+    )
 
   (begin
 
@@ -38,6 +41,8 @@
     (define deploy-setting/cache-templates (cut get-property <> 'cache-templates #t))
     (define deploy-setting/page-size (cut get-property <> 'page-size 40))
     (define deploy-setting/serve-static (cut get-property <> 'serve-static #t))
+    (define deploy-setting/filterset-index (cut get-property <> 'filterset-index "filters/index.scm"))
+    (define deploy-setting/sqlite-location (cut get-property <> 'sqlite-data "sqlitedb"))
 
 
 ))

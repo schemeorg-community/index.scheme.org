@@ -21,14 +21,53 @@ p {
 /* NAVIGATION */
 
 nav {
-    display: flex;
-    align-items: end;
     align-self: stretch;
     background-color: var(--nav-bg-color);
 }
 
+nav ul {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+nav ul.top-level {
+    display: flex;
+    align-items: end;
+}
+
+nav li {
+    position: relative;
+    display: inline-block;
+}
+
+nav ul.nested-level {
+    display: none;
+}
+
+nav ul.nested-level li,
+nav ul.nested-level li .nav-link,
+nav ul.nested-level li .nav-link-active
+{
+    width: 100%;
+}
+
+nav ul.top-level li:hover ul,
+nav ul.top-level li:hover li
+{
+    display: block;
+    position: absolute;
+    width: 100%;
+    top: 100%;
+}
+
+nav li {
+    list-style: none;
+}
+
 .nav-link, .nav-link-active {
     padding: 5px;
+    display: inline-block;
 }
 
 .nav-link {
@@ -40,6 +79,14 @@ nav {
 .nav-link:hover
 {
     color: var(--accent-color);
+    background-color: var(--bg-color2);
+}
+
+nav ul.top-level li:hover {
+    background-color: var(--bg-color2);
+}
+
+nav ul.nested-level li {
     background-color: var(--bg-color2);
 }
 

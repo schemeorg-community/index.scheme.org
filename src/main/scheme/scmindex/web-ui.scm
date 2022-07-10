@@ -11,20 +11,19 @@
     (arvyy slf4j)
     (arvyy kawa-spark)
     (arvyy mustache)
-    (arvyy solr-embedded)
-    (arvyy solrj)
     (scmindex domain)
     (scmindex types-parser)
     (scmindex mustache)
-    (scmindex solr)
     (scmindex settings)
     (srfi 180))
   (export init-web-ui)
   (begin
 
-    (define (init-web-ui config solr-client solr-core)
+    (define (init-web-ui config searcher filterset-store)
 
       (define logger (get-logger "web-ui"))
+
+      (define filtersets (name-list filterset-store))
 
       ;; load templates from ./templates
       (define (partial-locator name)
@@ -79,9 +78,6 @@
                     (resp/set-header! resp "Access-Control-Allow-Origin" "*")
                     (get-output-string payload))))
 
-      (define solr-url (string-append (deploy-setting/solr-url config) "/solr/" (deploy-setting/solr-core config)))
-      (define solr-search-url (string-append solr-url "/search"))
-      (define solr-suggest-url (string-append solr-url "/suggest"))
       (define default-page-size (deploy-setting/page-size config))
 
       (port (deploy-setting/port config))
@@ -97,11 +93,11 @@
 
       (get/html "/"
                 (lambda (req resp)
-                  (render-home-page req)))
+                  (render-home-page req filtersets)))
 
       (get/html "/settings"
                 (lambda (req resp)
-                  (render-settings-page req)))
+                  (render-settings-page req filtersets)))
 
       (post "/settings"
             (lambda (req resp)
@@ -114,8 +110,9 @@
                 settings-cookies)
               (resp/redirect resp "/settings")))
 
-      (get/html "/search"
+      (get/html "/filterset/:filterset/search"
                 (lambda (req resp)
+                  (define filterset (req/param req "filterset"))
                   (define page-size (user-setting/page-size req))
                   (define filter-params-loose?  (user-setting/param-filter-loose req))
                   (define page (let ((value (req/query-param req "page")))
@@ -125,54 +122,74 @@
                   (define start (* page-size (- page 1)))
                   (define query (req/query-param req "query"))
                   (define libs (req/query-param-values req "lib"))
+                  (define libs* (transform-request-libraries filterset-store filterset libs))
                   (define param-types (or (req/query-param-values req "param") '()))
                   (define return-types (or (req/query-param-values req "return") '()))
                   (define tags (or (req/query-param-values req "tag") '()))
                   (define parameterized-by (or (req/query-param-values req "parameterized") '()))
-                  (define data (exec-solr-query solr-client solr-core start page-size query libs param-types return-types parameterized-by tags filter-params-loose?))
-                  (render-search-page req page page-size query libs tags param-types return-types parameterized-by data)))
-
-      ;; type ahead, triggered while writing in search textfield
-      (get/rest "/suggest"
-                (lambda (req resp)
-                  (define text (req/query-param req "text"))
-                  (solr-get-suggestions solr-client solr-core text)))
+                  (define search-result (query-index searcher start page-size query libs* param-types return-types parameterized-by tags filter-params-loose?))
+                  (define search-result* (transform-result-libraries filterset-store filterset search-result))
+                  (render-search-page req filtersets page page-size query libs tags param-types return-types parameterized-by search-result)))
 
       ;; REST api
       (path "/rest"
-            (get/rest "/libs"
-                      (lambda (req resp)
-                        (list->vector (solr-facet-values solr-client solr-core 'lib))))
 
-            (get/rest "/params"
+            (get/rest "/filterset"
                       (lambda (req resp)
-                        (list->vector (solr-facet-values solr-client solr-core 'param_types))))
+                        (list->vector (name-list filterset-store))))
 
-            (get/rest "/returns"
-                      (lambda (req resp)
-                        (list->vector (solr-facet-values solr-client solr-core 'return_types))))
+            (path "/filterset/:filterset"
 
-            (get/rest "/tags"
-                      (lambda (req resp)
-                        (list->vector (solr-facet-values solr-client solr-core 'tags))))
+                  (get/rest "/libs"
+                            (lambda (req resp)
+                              (define filterset (req/param req "filterset"))
+                              (define libs (source-list filterset-store filterset))
+                              (list->vector (facet-values searcher libs 'lib))))
 
-            (get/rest "/parameterized"
-                      (lambda (req resp)
-                        (list->vector (solr-facet-values solr-client solr-core 'parameterized_by))))
+                  (get/rest "/params"
+                            (lambda (req resp)
+                              (define filterset (req/param req "filterset"))
+                              (define libs (source-list filterset-store filterset))
+                              (list->vector (facet-values searcher libs 'param_types))))
 
-            (get/rest "/search"
-                      (lambda (req resp)
-                        (define start (or (req/query-param req "start") 0))
-                        (define rows (or (req/query-param req "rows") default-page-size))
-                        (define query (req/query-param req "query"))
-                        (define libs (req/query-param-values req "lib"))
-                        (define param-types (or (req/query-param-values req "param") '()))
-                        (define return-types (or (req/query-param-values req "return") '()))
-                        (define tags (or (req/query-param-values req "tag") '()))
-                        (define parameterized-by (or (req/query-param-values req "parameterized") '()))
-                        (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
-                        (define search-result (exec-solr-query solr-client solr-core start rows query libs param-types return-types parameterized-by tags filter-params-loose?))
-                        (search-result->json search-result)))))
+                  (get/rest "/returns"
+                            (lambda (req resp)
+                              (define filterset (req/param req "filterset"))
+                              (define libs (source-list filterset-store filterset))
+                              (list->vector (facet-values searcher libs 'return_types))))
+
+                  (get/rest "/tags"
+                            (lambda (req resp)
+                              (define filterset (req/param req "filterset"))
+                              (define libs (source-list filterset-store filterset))
+                              (list->vector (facet-values searcher libs 'tags))))
+
+                  (get/rest "/parameterized"
+                            (lambda (req resp)
+                              (define filterset (req/param req "filterset"))
+                              (define libs (source-list filterset-store filterset))
+                              (list->vector (facet-values searcher libs 'parameterized_by))))
+
+                  (get/rest "/search"
+                            (lambda (req resp)
+                              (define filterset (req/param req "filterset"))
+                              (define start (or (req/query-param req "start") 0))
+                              (define rows (or (req/query-param req "rows") default-page-size))
+                              (define query (req/query-param req "query"))
+                              (define libs (req/query-param-values req "lib"))
+                              (define libs* (transform-request-libraries filterset-store filterset libs))
+                              (define param-types (or (req/query-param-values req "param") '()))
+                              (define return-types (or (req/query-param-values req "return") '()))
+                              (define tags (or (req/query-param-values req "tag") '()))
+                              (define parameterized-by (or (req/query-param-values req "parameterized") '()))
+                              (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
+                              (define search-result (query-index searcher start rows query libs* param-types return-types parameterized-by tags filter-params-loose?))
+                              (define search-result* (transform-result-libraries filterset-store filterset search-result))
+                              (search-result->json search-result)))
+
+                  )
+
+            ))
 
 
 ))
