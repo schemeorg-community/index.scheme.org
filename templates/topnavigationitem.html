@@ -1,0 +1,20 @@
+<li class="navbar__list-item">
+    {{#active?}}
+        <span class="navbar__link navbar__link--active"><span class="{{icon-cls}}"></span>&nbsp;{{label}}</span>
+    {{/active?}}
+    {{^active?}}
+        {{# link }}
+            <a href="{{link}}" class="navbar__link navbar__link--clickable"><span class="{{icon-cls}}"></span>&nbsp;{{label}}</a>
+        {{/ link }}
+        {{^ link }}
+            <span class="navbar__link"><span class="{{icon-cls}}"></span>&nbsp;{{label}}</span>
+        {{/ link }}
+    {{/active?}}
+    {{# has-items? }}
+        <ul class="navbar__list navbar__list--nestedlevel">
+            {{# items }}
+                {{> topnavigationitem }}
+            {{/ items }}
+        </ul>
+    {{/ has-items? }}
+</li>
