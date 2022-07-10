@@ -8,8 +8,6 @@
           (srfi 26)
           (arvyy kawa-spark))
   (export
-    deploy-setting/enable-repl
-    deploy-setting/enable-web
     deploy-setting/port
     deploy-setting/spec-index
     deploy-setting/solr-embed
@@ -30,8 +28,6 @@
         ((assoc prop deploy-settings) => cdr)
         (else default-value)))
 
-    (define deploy-setting/enable-repl (cut get-property <> 'enable-repl #f))
-    (define deploy-setting/enable-web (cut get-property <> 'enable-web #t))
     (define deploy-setting/port (cut get-property <> 'port 8080))
     (define deploy-setting/spec-index (cut get-property <> 'spec-index "types/index.scm"))
     (define deploy-setting/solr-embed (cut get-property <> 'solr-embed #t))

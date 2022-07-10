@@ -6,6 +6,7 @@
   (scmindex domain)
   (import (scheme base)
           (scheme read)
+          (only (srfi 1) filter)
           (arvyy interface)
           (scheme write)
           (scmindex util))
@@ -239,10 +240,21 @@
               (index-entry-spec-values item)
               (index-entry-supertypes item)))
           (search-result-items search-result)))
+      (define new-lib-facets
+        (filter
+          (lambda (f) f)
+          (map
+            (lambda (lib-facet)
+              (define t (get-target filterset-store filtername (search-result-facet-value lib-facet)))
+              (if t
+                  (make-search-result-facet t
+                                            (search-result-facet-count lib-facet))
+                  #f))
+            (search-result-libs search-result))))
       (make-search-result
         new-items
         (search-result-total  search-result)
-        (search-result-libs search-result)
+        new-lib-facets
         (search-result-params search-result)
         (search-result-tags search-result)
         (search-result-returns search-result)

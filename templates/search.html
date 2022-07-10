@@ -18,9 +18,12 @@
                     </button>
                     <span class="search-page__controls-hidden-header-text">Search controls</span>
                 </div>
-                <button class="search-page__controls-close" onclick="hideSearchControls('search-controls')" aria-label="Collapse search controls">
-                    <span class="icon-circle-right"></span>
-                </button>
+                <div class="search-page__controls-visible-header">
+                    <h2 class="search-page__controls-visible-header-text">{{filterset}}</h2>
+                    <button class="search-page__controls-close" onclick="hideSearchControls('search-controls')" aria-label="Collapse search controls">
+                        <span class="icon-circle-right"></span>
+                    </button>
+                </div>
                 <form method="get" action="" class="search-page__filter-form">
                     <div class="search-page__query-cnt">
                         <input id="query-field" name="query" autocomplete="off" value="{{query}}" class="search-page__query" placeholder="Search ..." aria-label="Search text">

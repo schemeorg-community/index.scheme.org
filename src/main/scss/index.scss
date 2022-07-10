@@ -30,17 +30,24 @@
     }
 
     &__filterset {
+        color: var(--accent-color);
         border: solid 3px var(--accent-color);
         border-radius: 10px;
         box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
+        font-weight: bold;
+        height: 5em;
+        display: flex;
+        align-items: center;
     }
 
-    &__filterset-link {
-        display: block;
+    &__filterset--fake {
+        color: var(--text-color-muted);
+        border-color: var(--text-color-muted);
+    }
+
+    &__filterset-text {
         text-align: center;
-        padding: 2em;
-        color: var(--accent-color);
-        font-weight: bold;
+        flex: 1;
     }
 
 

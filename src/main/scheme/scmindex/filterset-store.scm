@@ -17,7 +17,8 @@
                     source text,
                     target text)")
           (update qr "create index if not exists filterset_name_source on filterset (name, source)")
-          (update qr "create index if not exists filterset_name_target on filterset (name, target)"))))
+          (update qr "create index if not exists filterset_name_target on filterset (name, target)")
+          (commit))))
 
     (define (save-filterset-entries* qr entries)
       (call-in-transaction qr #t (lambda ()
@@ -46,10 +47,16 @@
         result))
 
     (define (get-target* qr filtername source)
-      (query qr "select target from filterset where name = ? and source = ?" (handler/scalar) filtername source))
+      (define result (query qr "select target from filterset where name = ? and source = ?" (handler/list-of (row-handler/vector)) filtername source))
+      (if (null? result)
+          #f
+          (vector-ref (car result) 0)))
 
     (define (get-source* qr filtername target)
-      (query qr "select source from filterset where name = ? and target = ?" (handler/scalar) filtername target))
+      (define result (query qr "select source from filterset where name = ? and target = ?" (handler/list-of (row-handler/vector)) filtername target))
+      (if (null? result)
+          #f
+          (vector-ref (car result) 0)))
 
     (define (make-sqlite-filterset-store location)
       (define qr (make-query-runner "org.sqlite.JDBC" (string-append "jdbc:sqlite:" location) "" ""))

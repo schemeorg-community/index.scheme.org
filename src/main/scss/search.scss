@@ -28,7 +28,7 @@
         background-color: var(--bg-color);
 
         .search-page__filter-form,
-        .search-page__controls-close {
+        .search-page__controls-visible-header {
             display: none;
         }
 
@@ -52,6 +52,17 @@
         margin-top: 1em;
         writing-mode: vertical-lr; 
         transform: rotate(180deg);
+    }
+
+    &__controls-visible-header {
+        display: flex;
+    }
+
+    &__controls-visible-header-text {
+        flex: 1;
+        color: var(--accent-color);
+        font-size: 1em;
+        margin: 0;
     }
 
     &__controls-open,
@@ -124,6 +135,11 @@
 
     &__facet-legend {
         color: var(--accent-color);
+    }
+
+    &__facet-count {
+        font-size: 0.8em;
+        color: var(--text-color-muted);
     }
 
     &__search-result {

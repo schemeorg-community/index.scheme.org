@@ -1,6 +1,6 @@
 #|
     Main entry point of the software
-    Reads configuration, parses and indexes the types, launches web and/or repl APIs.
+    Reads configuration, parses and indexes the types, launches web APIs.
 |#
 (import 
   (scheme base)
@@ -13,8 +13,7 @@
   (scmindex filterset-store)
   (scmindex solr)
   (scmindex settings)
-  (scmindex web-ui)
-  (scmindex repl-ui))
+  (scmindex web-ui))
 
 (define config-file
   (cond
@@ -40,8 +39,4 @@
 (let ((filters (read-filters (deploy-setting/filterset-index config))))
   (save-filterset-entries sqlite-filterset-store filters))
 
-(when (deploy-setting/enable-web config)
-  (init-web-ui config solr-searcher sqlite-filterset-store))
-
-(when (deploy-setting/enable-repl config)
-  (init-repl-ui config solr-searcher sqlite-filterset-store))
+(init-web-ui config solr-searcher sqlite-filterset-store)

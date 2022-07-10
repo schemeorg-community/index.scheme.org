@@ -129,7 +129,7 @@
                   (define parameterized-by (or (req/query-param-values req "parameterized") '()))
                   (define search-result (query-index searcher start page-size query libs* param-types return-types parameterized-by tags filter-params-loose?))
                   (define search-result* (transform-result-libraries filterset-store filterset search-result))
-                  (render-search-page req filtersets page page-size query libs tags param-types return-types parameterized-by search-result)))
+                  (render-search-page req filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result*)))
 
       ;; REST api
       (path "/rest"
@@ -183,7 +183,7 @@
                         (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
                         (define search-result (query-index searcher start rows query libs* param-types return-types parameterized-by tags filter-params-loose?))
                         (define search-result* (transform-result-libraries filterset-store filterset search-result))
-                        (search-result->json search-result)))
+                        (search-result->json search-result*)))
 
             ))
 

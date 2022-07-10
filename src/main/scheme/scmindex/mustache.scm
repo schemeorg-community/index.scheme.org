@@ -119,8 +119,9 @@
     ;; search result page data
     (define-mustache-record-type <search-result-mustache>
                                  search-result-mustache-lookup
-                                 (make-search-result-mustache query facets pages search-items)
+                                 (make-search-result-mustache filterset query facets pages search-items)
                                  search-result-mustache?
+                                 (filterset search-result-mustache-filterset)
                                  (query search-result-mustache-query)
                                  (facets search-result-mustache-facets)
                                  (pages search-result-mustache-pages)
@@ -336,7 +337,7 @@
                         options))
         settings-data))
 
-    (define (render-search-result page page-size query libs tags param-types return-types parameterized-by search-result)
+    (define (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result)
 
       (define (remove-parens str)
         (list->string
@@ -374,6 +375,7 @@
             parameterized-by)))
 
       (make-search-result-mustache
+        filterset
         query
         (append
           (make-facet* "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
@@ -782,13 +784,13 @@
           (make-navigation (make-mustache-nav-data 'index filtersets))
           filtersets)))
 
-    (define (render-search-page req filtersets page page-size query libs tags param-types return-types parameterized-by search-result)
+    (define (render-search-page req filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
       (values
         "search"
         (make-page
           (get-page-head "Search" req)
           (make-navigation (make-mustache-nav-data 'search filtersets))
-          (render-search-result page page-size query libs tags param-types return-types parameterized-by search-result))))
+          (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result))))
 
     (define (render-settings-page req filtersets)
       (values

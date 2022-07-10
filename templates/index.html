@@ -15,14 +15,17 @@
 
             <div class="index-page__filtersets">
                 {{# body }}
-                <div class="index-page__filterset">
-                    <a href="/filterset/{{{.}}}/search" class="index-page__filterset-link">{{.}}</a>
-                </div>
+                <a href="/filterset/{{{.}}}/search" class="index-page__filterset">
+                    <span class="index-page__filterset-text">{{.}}</span>
+                </a>
                 {{/ body }}
+                <span class="index-page__filterset index-page__filterset--fake">
+                    <span class="index-page__filterset-text">More to come...</span>
+                </span>
             </div>
 
-            <h2 class="index-page__header">API (rest, stdin)</h2>
-            <p>Scheme index provides multiple options for integrating its search component with other software. Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>
+            <h2 class="index-page__header">REST API</h2>
+            <p>Scheme index provides REST API integration. Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>
 
             <h2 class="index-page__header">Report an issue</h2>
             <p>Please report any issues or suggestions you may have at <a class="index-page__text-link" href="https://github.com/arvyy/r7rs-index-site/issues">github</a>.</p>
