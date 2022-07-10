@@ -6,8 +6,6 @@
   (scmindex domain)
   (import (scheme base)
           (scheme read)
-          (only (srfi 1) filter)
-          (arvyy interface)
           (scheme write)
           (scmindex util))
   (export
@@ -42,30 +40,9 @@
     index-entry-supertypes
     index-entry-spec-values
 
-    make-filter-entry
-    filter-entry?
-    filter-entry-filter
-    filter-entry-source
-    filter-entry-target
-
     index-entry->json
     json->index-entry
-    search-result->json
-    
-    make-searcher
-    save-index-entries
-    query-index
-    facet-values
-
-    make-filterset-store
-    save-filterset-entries
-    name-list
-    source-list
-    get-target
-    get-source
-    
-    transform-request-libraries
-    transform-result-libraries)
+    search-result->json)
 
   (begin
 
@@ -180,13 +157,6 @@
       (value search-result-facet-value)
       (count search-result-facet-count))
 
-    (define-record-type <filter-entry>
-      (make-filter-entry filter source target)
-      filter-entry?
-      (filter filter-entry-filter)
-      (source filter-entry-source)
-      (target filter-entry-target))
-
     (define (search-result->json sr)
       `((items . ,(list->vector (map index-entry->json (search-result-items sr))))
         (total . ,(search-result-total sr))
@@ -199,65 +169,5 @@
     (define (search-result-facet->json f)
       `((value . ,(search-result-facet-value f))
         (count . ,(search-result-facet-count f))))
-
-    (define-interface 
-      make-searcher
-      (save-index-entries entries)
-      (query-index start page-size query libs param-types return-types parameterized-by tags filter-params-loose?)
-      (facet-values libs facet))
-
-    (define-interface
-      make-filterset-store
-      (save-filterset-entries entries)
-      (name-list)
-      (source-list filtername)
-      (get-target filtername source)
-      (get-source filtername target))
-
-    (define (transform-request-libraries filterset-store filtername libraries)
-      (if (null? libraries)
-          (source-list filterset-store filtername)
-          (map
-            (lambda (lib)
-              (get-source filterset-store filtername lib))
-            libraries)))
-
-    (define (transform-result-libraries filterset-store filtername search-result)
-      (define new-items
-        (map
-          (lambda (item)
-            (make-index-entry
-              (get-target filterset-store filtername (index-entry-lib item))
-              (index-entry-name item)
-              (index-entry-param-names item)
-              (index-entry-signature item)
-              (index-entry-param-signatures item)
-              (index-entry-syntax-param-signatures item)
-              (index-entry-tags item)
-              (index-entry-param-types item)
-              (index-entry-return-types item)
-              (index-entry-parameterized-by item)
-              (index-entry-spec-values item)
-              (index-entry-supertypes item)))
-          (search-result-items search-result)))
-      (define new-lib-facets
-        (filter
-          (lambda (f) f)
-          (map
-            (lambda (lib-facet)
-              (define t (get-target filterset-store filtername (search-result-facet-value lib-facet)))
-              (if t
-                  (make-search-result-facet t
-                                            (search-result-facet-count lib-facet))
-                  #f))
-            (search-result-libs search-result))))
-      (make-search-result
-        new-items
-        (search-result-total  search-result)
-        new-lib-facets
-        (search-result-params search-result)
-        (search-result-tags search-result)
-        (search-result-returns search-result)
-        (search-result-parameterized-by search-result)))
 
 ))

@@ -38,13 +38,7 @@
         </exec>
     </target>
 
-    <target name="compile-css" depends="prepare_unix, prepare_windows">
-        <exec dir="." executable="${exec}">
-            <arg line="${args} 'sass src/main/scss/main.scss static/css/scmindex.css'"/>
-        </exec>
-    </target>
-
-    <target name="dist" depends="compile-jar, compile-doc, compile-css">
+    <target name="dist" depends="compile-jar, compile-doc">
         <delete dir="dist" failonerror="false"/>
         <mkdir dir="dist"/>
         <copy todir="dist/solrhome">
@@ -59,9 +53,6 @@
         </copy>
         <copy todir="dist/types">
             <fileset dir="types"/>
-        </copy>
-        <copy todir="dist/filters">
-            <fileset dir="filters"/>
         </copy>
         <copy todir="dist/templates">
             <fileset dir="templates"/>

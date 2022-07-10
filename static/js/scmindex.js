@@ -21,30 +21,30 @@ function updateSuggestions(text, datalistId) {
 
 function collapseFacet(event, id) {
     event.preventDefault();
-    document.getElementById(id).classList.add('search-page__facet--collapsed');
+    document.getElementById(id).classList.add('collapsed');
 }
 
 function expandFacet(event, id) {
     event.preventDefault();
-    document.getElementById(id).classList.remove('search-page__facet--collapsed');
+    document.getElementById(id).classList.remove('collapsed');
 }
 
 function searchFacet(event, id) {
-    for (let option of document.getElementById(id).querySelectorAll('.search-page__facet-option')) {
-        let text = option.querySelector('.search-page__facet-value');
+    for (let option of document.getElementById(id).querySelectorAll('.facet-option')) {
+        let text = option.querySelector('.facet-value');
         let visible = !event.target.value || text.textContent.indexOf(event.target.value) != -1;
         if (visible) {
-            option.classList.remove('search-page__facet-option--filtered');
+            option.classList.remove('filtered');
         } else {
-            option.classList.add('search-page__facet-option--filtered');
+            option.classList.add('filtered');
         }
     }
 }
 
 function hideSearchControls(id) {
-    document.getElementById(id).classList.add('search-page__controls--hidden');
+    document.getElementById(id).classList.add('hidden');
 }
 
 function showSearchControls(id) {
-    document.getElementById(id).classList.remove('search-page__controls--hidden');
+    document.getElementById(id).classList.remove('hidden');
 }

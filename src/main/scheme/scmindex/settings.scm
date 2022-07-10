@@ -8,6 +8,8 @@
           (srfi 26)
           (arvyy kawa-spark))
   (export
+    deploy-setting/enable-repl
+    deploy-setting/enable-web
     deploy-setting/port
     deploy-setting/spec-index
     deploy-setting/solr-embed
@@ -16,10 +18,7 @@
     deploy-setting/solr-core
     deploy-setting/cache-templates
     deploy-setting/page-size
-    deploy-setting/serve-static
-    deploy-setting/filterset-index
-    deploy-setting/sqlite-location
-    )
+    deploy-setting/serve-static)
 
   (begin
 
@@ -28,6 +27,8 @@
         ((assoc prop deploy-settings) => cdr)
         (else default-value)))
 
+    (define deploy-setting/enable-repl (cut get-property <> 'enable-repl #f))
+    (define deploy-setting/enable-web (cut get-property <> 'enable-web #t))
     (define deploy-setting/port (cut get-property <> 'port 8080))
     (define deploy-setting/spec-index (cut get-property <> 'spec-index "types/index.scm"))
     (define deploy-setting/solr-embed (cut get-property <> 'solr-embed #t))
@@ -37,8 +38,6 @@
     (define deploy-setting/cache-templates (cut get-property <> 'cache-templates #t))
     (define deploy-setting/page-size (cut get-property <> 'page-size 40))
     (define deploy-setting/serve-static (cut get-property <> 'serve-static #t))
-    (define deploy-setting/filterset-index (cut get-property <> 'filterset-index "filters/index.scm"))
-    (define deploy-setting/sqlite-location (cut get-property <> 'sqlite-data "sqlitedb"))
 
 
 ))

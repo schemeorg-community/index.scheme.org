@@ -79,13 +79,12 @@
     ;;navigation entry data
     (define-mustache-record-type <nav-item>
                                  nav-item-lookup
-                                 (make-nav-item label icon-cls link active? items)
+                                 (make-nav-item label icon-cls link active?)
                                  nav-item?
                                  (label nav-item-label)
                                  (icon-cls nav-item-icon-cls)
                                  (link nav-item-link)
-                                 (active? nav-item-active?)
-                                 (items nav-item-items))
+                                 (active? nav-item-active?))
 
     ;; paging bar data
     (define-mustache-record-type <pager-btn>
@@ -119,9 +118,8 @@
     ;; search result page data
     (define-mustache-record-type <search-result-mustache>
                                  search-result-mustache-lookup
-                                 (make-search-result-mustache filterset query facets pages search-items)
+                                 (make-search-result-mustache query facets pages search-items)
                                  search-result-mustache?
-                                 (filterset search-result-mustache-filterset)
                                  (query search-result-mustache-query)
                                  (facets search-result-mustache-facets)
                                  (pages search-result-mustache-pages)
@@ -221,19 +219,12 @@
         ((equal? "show-facet-controls?" name) (found (> (length (facet-options obj)) 10)))
         (else (not-found))))
 
-    (define (nav-item-extra-lookup obj name found not-found)
-      (cond
-        ((not (nav-item? obj)) (not-found))
-        ((equal? "has-items?" name) (found (not (null? (nav-item-items obj)))))
-        (else (not-found))))
-
     ;; compose all lookup procedures into one
     (define data-lookup
       (compose-lookups
         sexpr-el-lookup
         navigation-lookup
         nav-item-lookup
-        nav-item-extra-lookup
         pager-button-lookup
         facet-lookup
         facet-option-lookup
@@ -249,16 +240,17 @@
         spec-value-fieldblock-lookup
         spec-value-fieldentry-lookup))
 
-    (define (make-mustache-nav-data page filtersets)
-      (list
-        (make-nav-item "Home" "icon-home3" "/" (equal? page 'index) '())
-        (make-nav-item "Search" "icon-search" #f (equal? page 'search)
-                       (map
-                         (lambda (f)
-                           (make-nav-item f "" (string-append "/filterset/" f "/search") #f '()))
-                         filtersets))
-        (make-nav-item "Settings" "icon-cog" "/settings" (equal? page 'settings) '())
-        (make-nav-item "Documentation" "icon-file-text2" "/README.html" (equal? page 'docs) '())))
+    (define make-mustache-nav-data
+      (let ((pages '(("Home" "icon-home3" "/" index)
+                     ("Search" "icon-search" "/search" search)
+                     ("Settings" "icon-cog" "/settings" settings)
+                     ("Documentation" "icon-file-text2" "/README.html" docs))))
+        (lambda (page)
+          (map
+            (lambda (p)
+              (define active? (equal? (list-ref p 3) page))
+              (make-nav-item (list-ref p 0) (list-ref p 1) (list-ref p 2) active?))
+            pages))))
 
     (define settings-data
       (list
@@ -337,7 +329,7 @@
                         options))
         settings-data))
 
-    (define (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result)
+    (define (render-search-result page page-size query libs tags param-types return-types parameterized-by search-result)
 
       (define (remove-parens str)
         (list->string
@@ -375,7 +367,6 @@
             parameterized-by)))
 
       (make-search-result-mustache
-        filterset
         query
         (append
           (make-facet* "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
@@ -776,28 +767,28 @@
     (define (get-page-head title req)
       (make-page-head title (user-setting/light-theme? req) (user-setting/ctrl-f-override req)))
 
-    (define (render-home-page req filtersets)
+    (define (render-home-page req)
       (values
         "index"
         (make-page
           (get-page-head #f req)
-          (make-navigation (make-mustache-nav-data 'index filtersets))
-          filtersets)))
+          (make-navigation (make-mustache-nav-data 'index))
+          #f)))
 
-    (define (render-search-page req filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
+    (define (render-search-page req page page-size query libs tags param-types return-types parameterized-by search-result)
       (values
         "search"
         (make-page
           (get-page-head "Search" req)
-          (make-navigation (make-mustache-nav-data 'search filtersets))
-          (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result))))
+          (make-navigation (make-mustache-nav-data 'search))
+          (render-search-result page page-size query libs tags param-types return-types parameterized-by search-result))))
 
-    (define (render-settings-page req filtersets)
+    (define (render-settings-page req)
       (values
         "settings"
         (make-page
           (get-page-head "Settings" req)
-          (make-navigation (make-mustache-nav-data 'settings filtersets))
+          (make-navigation (make-mustache-nav-data 'settings))
           (render-settings req))))
 
 ))

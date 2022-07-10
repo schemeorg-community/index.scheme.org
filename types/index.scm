@@ -98,28 +98,6 @@
  ((srfi 18) . "types/srfi.18.scm")
  ((srfi 48) . "types/srfi.48.scm")
  ((srfi 64) . "types/srfi.64.scm")
- ;;((srfi 95) . "types/srfi.95.scm") TODO
- ;; srfi 22 -- non-sexpr syntax
- ;; srfi 55 -- ??
- ;;((srfi 67) . "types/srfi.67.scm") TODO
- ;;((srfi 87) . "types/srfi.87.scm") TODO
- ;; srfi 128 -- part of r7rs large
- ;; srfi 7 -- ??
- ;; srfi 10 -- non-sexrp syntax
- ;;((srfi 35) . "types/srfi.35.scm") TODO
- ;;((srfi 63) . "types/srfi.63.scm") TODO
- ;;((srfi 66) . "types/srfi.66.scm") TODO
- ;;((srfi 99) . "types/srfi.99.scm") TODO
- ;; srfi 111 -- part of r7rs large
- ;; srfi 117 -- part of r7rs large
- ;; srfi 125 -- part of r7rs large
- ;; srfi 127 -- part of r7rs large
- ;; srfi 133 -- part of r7rs large
- ;;((srfi 5) . "types/srfi.5.scm") TODO
-
-
-
-
 
 
 

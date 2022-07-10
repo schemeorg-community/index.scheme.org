@@ -2,35 +2,38 @@
     {{#head}}
         {{>head}}
     {{/head}}
-    <body class="body">
-        <div class="body__navbar">
-            {{#navigation}}
-                {{>topnavigation}}
-            {{/navigation}}
-        </div>
-        <main class="body__content index-page">
-            <h1 class="index-page__header">Scheme index</h1>
-            <p>Scheme index allows searching for Scheme procedures, syntax and constants through types, tags, and names. Please see <a class="index-page__text-link" href="/README.html#_userguide_for_site_visitors">user guide</a> for details.
-            <p>Select one of options below to get started.
+    <body>
+        {{#navigation}}
+            {{>topnavigation}}
+        {{/navigation}}
+        <main class="index-page">
+            <h1>Scheme index</h1>
+            <p>Scheme index allows searching for R7RS and SRFI procedures, syntax and constants through types, tags, and names. Please see <a class="text-link" href="/README.html#_userguide_for_site_visitors">user guide</a> for details
+            <form method="GET" action="/search" class="search">
+                <input name="query" autocomplete="off" placeholder="Search ..." class="query" list="suggestions" oninput="updateSuggestions(this.value, 'suggestions')" aria-label="Search text">
+                <datalist id="suggestions">
+                </datalist>
+                <button type="submit" class="search-button" aria-label="Search">
+                    <span class="icon-search"></span>
+                </button>
+            </form>
 
-            <div class="index-page__filtersets">
-                {{# body }}
-                <a href="/filterset/{{{.}}}/search" class="index-page__filterset">
-                    <span class="index-page__filterset-text">{{.}}</span>
-                </a>
-                {{/ body }}
-                <span class="index-page__filterset index-page__filterset--fake">
-                    <span class="index-page__filterset-text">More to come...</span>
-                </span>
-            </div>
+            <p class="examples-tip">Handful examples
+            <ul class="examples-list">
+                <li>What's the syntax for `do` again? <br><a href="/search?query=do" class="example-link">Query by phrase "do"</a></li>
+                <li>What does (scheme set) library has to offer?<br><a href="/search?lib=(scheme+set)" class="example-link">Query by library "(scheme set)"</a></li>
+                <li>I have a list, how can I functionally transform it?<br><a href="/search?tag=pure&param=list%3F&return=list%3F" class="example-link">Query by tag "pure", parameter type "list?", return type "list?"</a></li>
+            </ul>
 
-            <h2 class="index-page__header">REST API</h2>
-            <p>Scheme index provides REST API integration. Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>
+            </hr>
 
-            <h2 class="index-page__header">Report an issue</h2>
-            <p>Please report any issues or suggestions you may have at <a class="index-page__text-link" href="https://github.com/arvyy/r7rs-index-site/issues">github</a>.</p>
+            <h2>API (rest, stdin)</h2>
+            <p>Scheme index provides multiple options for integrating its search component with other software. Please consult <a class="example-link" href="/README.html">documentation</a> for details.</p>
 
-            <div class="index-page__footer">
+            <h2>Report an issue</h2>
+            <p>Please report any issues or suggestions you may have at <a class="text-link" href="https://github.com/arvyy/r7rs-index-site/issues">github</a>.</p>
+
+            <div class="footer">
                 <span>Copyright 2022 Arvydas Silanskas</span>
             </div>
         </main>

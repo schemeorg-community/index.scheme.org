@@ -1,19 +1,19 @@
 <article class="search-item">
-    <div class="search-item__lib">
-        <span class="search-item__muted">(import </span><a href="?lib={{lib}}" class="search-item__lib-link">{{lib}}</a><span class="search-item__muted">)</span>
+    <div class="lib">
+        <span class="muted">(import </span><a href="?lib={{lib}}" class="lib-link">{{lib}}</a><span class="muted">)</span>
     </div>
-    <div class="search-item__main-signature">
+    <div class="main-signature">
         {{# signature}}
             {{> sexpr }}
         {{/ signature}}
     </div>
 
-    <div class="search-item__extra-info">
+    <div class="extra-info">
         {{# has-param-signatures? }}
-        <div class="search-item__block search-item__block--params">
-            <div class="search-item__result-item-block-header">Typing of parameters and result</div>
+        <div class="param-signatures">
+            <div class="result-item-block-header">Typing of parameters and result</div>
             {{# param-signatures }}
-            <div class="search-item__param-signature">
+            <div class="param-signature">
                 {{> sexpr }}
             </div>
             {{/ param-signatures }}
@@ -21,12 +21,12 @@
         {{/ has-param-signatures? }}
 
         {{# has-subsyntax-signatures? }}
-        <div class="search-item__block search-item__block--subsyntax">
-            <div class="search-item__block-header">Fragments' format</div>
-            <div class="search-item__subsyntax-signatures">
+        <div class="subsyntax-signatures-block">
+            <div class="result-item-block-header">Fragments' format</div>
+            <div class="subsyntax-signatures">
                 {{# subsyntax-signatures }}
-                <span class="search-item__subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
-                <div class="search-item__subsyntax-rules">
+                <span class="subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
+                <div class="subsyntax-rules">
                     {{# rules }}
                         {{> sexpr }}
                     {{/ rules }}
@@ -37,10 +37,10 @@
         {{/ has-subsyntax-signatures? }}
 
         {{# has-syntax-param-signatures? }}
-        <div class="search-item__block search-item__block--syntax-params">
-            <div class="search-item__block-header">Fragments' types</div>
+        <div class="syntax-param-signatures">
+            <div class="result-item-block-header">Fragments' types</div>
             {{# syntax-param-signatures}}
-            <div class="search-item__param-signature">
+            <div class="param-signature">
                 {{> sexpr }}
             </div>
             {{/ syntax-param-signatures}}
@@ -48,14 +48,14 @@
         {{/ has-syntax-param-signatures? }}
 
         {{# has-spec-values? }}
-        <div class="search-item__block search-item__block--spec-values">
+        <div class="spec-values-blocks">
             {{# spec-values }}
-            <div>
-                <span class="search-item__spec-value-field-name">{{name}}</span>
-                <div class="search-item__spec-value-field-values">
+            <div class="spec-values-block">
+                <span class="spec-value-field-name">{{name}}</span>
+                <div class="spec-value-field-values">
                     {{# values }}
-                    <div class="search-item__spec-value-field-value">{{value}}</div>
-                    <div class="search-item__spec-value-field-value-desc">{{description}}</div>
+                    <div class="spec-value-field-value">{{value}}</div>
+                    <div class="spec-value-field-value-desc">{{description}}</div>
                     {{/ values }}
                 </div>
             </div>
@@ -64,10 +64,10 @@
         {{/ has-spec-values? }}
 
         {{# has-parameterized-by? }}
-        <div class="search-item__block search-item__block--parameterized">
-            <div class="search-item__block-header">Parameterized by</div>
+        <div class="parameterized-by-block">
+            <div class="result-item-block-header">Parameterized by</div>
             {{# parameterized-by }}
-            <div class="search-item__parameterized-by">
+            <div class="parameterized-by-item">
                 {{.}}
             </div>
             {{/ parameterized-by }}
@@ -75,9 +75,9 @@
         {{/ has-parameterized-by? }}
     </div>
 
-    <div class="search-item__tags">
+    <div class="tags">
         {{# tags }}
-            <a class="search-item__tag search-item__tag-{{.}}" href="?tag={{.}}">{{ . }}</a>
+            <a class="tag tag-{{.}}" href="?tag={{.}}">{{ . }}</a>
         {{/ tags }}
     </div>
 </article>

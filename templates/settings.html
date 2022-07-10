@@ -2,34 +2,31 @@
     {{#head}}
         {{> head }}
     {{/head}}
-    <body class="body">
-        <div class="body__navbar">
-            {{#navigation}}
-                {{>topnavigation}}
-            {{/navigation}}
-        </div>
-        <main class="body__content settings-page">
-            <h1 class="settings-page__header">Settings</h1>
-            <p class="settings-page__tip settings-page__tip--general">Here you can customize certain behavior aspects of the site. The choices are stored in cookies upon pressing "Save".
-            <form action="/settings" method="POST" class="settings-page__form">
+    <body>
+        {{#navigation}}
+            {{>topnavigation}}
+        {{/navigation}}
+        <main class="settings-page">
+            <h1>Settings</h1>
+            <p class="settings-tip">Here you can customize certain behavior aspects of the site. The choices are stored in cookies upon pressing "Save".
+            <form action="/settings" method="POST" class="settings-form">
                 {{# body }}
-                <fieldset class="settings-page__group">
-                    <legend class="settings-page__group-legend">{{ legend }}</legend>
-                    <span class="settings-page__tip">{{description}}</span>
+                <fieldset class="settings-group">
+                    <legend>{{ legend }}</legend>
+                    <span class="settings-group-tip">{{description}}</span>
                     {{# options }}
-                    <label class="settings-page__value checklist-item">
+                    <label class="settings-group-value">
                         <input type="radio" 
                                name="{{ name }}" 
-                               value="{{ value }}"
-                               class="checklist-item__value-input"
+                               value="{{ value }}" 
                                {{# selected? }} checked {{/ selected? }}
                                >
-                               <span class="checklist-item__value-text">{{ value }}</span>
+                               <span class="settings-group-value-text">{{ value }}</span>
                     </label>
                     {{/ options }}
                 </fieldset>
                 {{/ body }}
-                <button type="submit" class="settings-page__save primary-button">Save</button>
+                <button type="submit" class="save-preferences-button">Save</button>
             </form>
         </main>
     </body>

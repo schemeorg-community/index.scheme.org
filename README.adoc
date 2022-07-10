@@ -2,7 +2,7 @@
 :toc: left
 
 Scheme index is a tool for indexing and searching through procedures and syntax from R7RS-small, R7RS-large, select SRFI libraries.
-The index may be used through a site (https://index.scheme.org) or through REST API.
+The index may be used through a site (https://index.scheme.org), through REST API, or through stdio API.
 
 == Userguide for site visitors
 
@@ -79,8 +79,6 @@ Build processes requires executables on path:
 * `mvn` - Apache maven project tool
 
 * `asciidoctor` - Asciidoctor documentation compiler
-
-* `sass` - SCSS compiler
 
 You can build scheme index by running `ant` from the root of the source directory.
 
@@ -164,6 +162,10 @@ The following is exhaustive list of valid properties
 | Solr core to use
 | "scmindex"
 
+| enable-web
+| Whether enable web ui and REST api
+| #t
+
 | port
 | Which port to use. Relevant only if enable-web is `#t`
 | 8080
@@ -176,17 +178,13 @@ The following is exhaustive list of valid properties
 | Whether application should serve static resources from ./static folder. Use `#f` if you have some other web server (eg nginx in front) serving the content.
 | #t
 
+| enable-repl
+| Whether to enable stdio repl api
+| #f
+
 | spec-index
 | Index of definitions to load (see Types definitions section)
 | "./types/index.scm"
-
-| filterset-index 
-| Index of filtersets to load (see Filterset definitions section)
-| "filters/index.scm"
-
-| sqlite-data
-| File to use for sqlite data
-| "sqlitedb"
 |===
 
 === Types definitions
@@ -277,15 +275,6 @@ Second argument is parameter type definition, as described under functions. This
 
 |===
 
-=== Filterset definitions
-
-Filterset is a coarse filter, and defines which libraries to include (and optionally how to rename them). Filterset definitions are structured into files one for each filterset option, and a single root index file which defines names and paths to those files.
-
-The index file is specified in configuration under `filterset-index` property, with a default value "./filters/index.scm".
-
-Index should be a list of pairs - where `car` is a string corresponding to filterset name, and `cdr` is the file to load its definitions from.
-
-Filterset definition file should be a list of pairs. `car` is a symbolic library name (matching what is defined in index for types definitions). `cdr` is either a symbolic library name (in which case, all the usages of library in `car` are renamed to what is in `cdr`), or a `#t` value (indicating to include library in `car` as is, without a rename).
 
 === Logging
 
@@ -304,24 +293,9 @@ All of the following endpoints accept `wt` query parameter.
 If the parameter's value is `sexpr`, the results are returned as if with `write`, using scheme-json convention
 as defined in srfi 180. Otherwise, results are returned as json.
 
-=== `/rest/filterset`
-
-List of filtersets as strings. For all endpoints below, `{filterset name}` must correspond to one of the values returned here.
-
-JSON schema
-[source,json]
-----
-{
-    "type": "array",
-    "items": {
-        "type": "string"
-    }
-}
-----
-
 '''
 
-=== `/rest/filterset/{filterset name}/libs`
+=== `/rest/libs`
 
 Libraries found in index as strings.
 
@@ -338,7 +312,7 @@ JSON schema
 
 '''
 
-=== `/rest/filterset/{filterset name}/tags` 
+=== `/rest/tags` 
 
 Tags found in index as strings.
 
@@ -355,7 +329,7 @@ JSON schema
 
 '''
 
-=== `/rest/filterset/{filterset name}/returns`
+=== `/rest/returns`
 
 Types, which were used as a return type, found in index as strings.
 
@@ -372,7 +346,7 @@ JSON schema
 
 '''
 
-=== `/rest/filterset/{filterset name}/params`
+=== `/rest/params`
 
 Types, which were used as a parameter type, found in index as strings.
 
@@ -389,7 +363,7 @@ JSON schema
 
 '''
 
-=== `/rest/filterset/{filterset name}/parameterized`
+=== `/rest/parameterized`
 
 Dynamic parameters (ie., ones created with `make-parameter`) that affect procedures in the index.
 
@@ -406,7 +380,7 @@ JSON schema
 
 '''
 
-=== `/rest/filterset/{filterset name}/search` 
+=== `/rest/search` 
 
 Returns found identifiers and faceting meta data.
 
@@ -527,4 +501,41 @@ JSON schema
         }
     }
 }
+----
+
+== STDIO API
+
+When enabled (see <<Configuration>>), program starts a repl, reading request from standard input, and returning response in standard output. The exchange is very similar to REST api, just through different medium. Therefore this section only describes how to call it, for the response format see REST description.
+
+Each call should be a list, where a `car` denotes the endpoint. Possible endpoint values: `tags`, `params`, `returns`, `libs`, `parameterized`, `search`. First 5 endpoints do not take any parameters, therefore the call consists of a list of single element. `search` endpoint takes parameters by reading from alist in `cdr` position of the request list. Possible parameters : `start`, `rows`, `query`, `libs`, `param-types`, `return-types`, `tags`, `filter-param-loose?`, `parameterized`.
+
+The response scheme object denoting json (in accordance with srfi 180), returned as if with `write`. In case of an error, a list will be returned in a form of `(error <cause>)`.
+
+Some examples
+
+[source, scheme]
+----
+; request
+(libs)
+
+; response
+#("(scheme base)")
+----
+
+[source, scheme]
+----
+; request
+(search (rows . 1) (tags pure))
+
+; response
+((items . #(...)) (total . 2000) (libs . #(...)))
+----
+
+[source, scheme]
+----
+; request
+(foo)
+
+; response
+(error "#<ERROR unknown request endpoint>")
 ----

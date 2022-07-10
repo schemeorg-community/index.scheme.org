@@ -1,7 +1,10 @@
-<nav class="navbar">
-    <ul class="navbar__list navbar__list--toplevel">
+<nav>
     {{# items }}
-        {{> topnavigationitem }}
+        {{#active?}}
+                <span class="nav-link-active"><span class="{{icon-cls}}"></span>&nbsp;{{label}}</span>
+        {{/active?}}
+        {{^active?}}
+                <a href="{{link}}" class="nav-link"><span class="{{icon-cls}}"></span>&nbsp;{{label}}</a>
+        {{/active?}}
     {{/items}}
-    </ul>
 </nav>
