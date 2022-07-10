@@ -1,17 +1,19 @@
 #|
     Main entry point of the software
-    Reads configuration, parses and indexes the types, launches web and/or repl APIs.
+    Reads configuration, parses and indexes the types, launches web APIs.
 |#
 (import 
   (scheme base)
   (scheme read)
   (arvyy solr-embedded)
   (arvyy solrj)
+  (scmindex domain)
   (scmindex types-parser)
+  (scmindex filterset-parser)
+  (scmindex filterset-store)
   (scmindex solr)
   (scmindex settings)
-  (scmindex web-ui)
-  (scmindex repl-ui))
+  (scmindex web-ui))
 
 (define config-file
   (cond
@@ -26,11 +28,15 @@
     ((deploy-setting/solr-embed config) (create-embedded-solr-client (deploy-setting/solr-home config) solr-core))
     (else (create-http-solr-client (deploy-setting/solr-url config)))))
 
-(let ((funcs (read-specs (deploy-setting/spec-index config))))
-  (index-types solr-client solr-core funcs))
+(define solr-searcher (make-solr-searcher solr-client solr-core))
 
-(when (deploy-setting/enable-web config)
-  (init-web-ui config solr-client solr-core))
+(define sqlite-location (deploy-setting/sqlite-location config))
+(define sqlite-filterset-store (make-sqlite-filterset-store sqlite-location))
 
-(when (deploy-setting/enable-repl config)
-  (init-repl-ui config solr-client solr-core))
+(let ((specs (read-specs (deploy-setting/spec-index config))))
+  (save-index-entries solr-searcher specs))
+
+(let ((filters (read-filters (deploy-setting/filterset-index config))))
+  (save-filterset-entries sqlite-filterset-store filters))
+
+(init-web-ui config solr-searcher sqlite-filterset-store)

@@ -102,9 +102,29 @@
 
         <dependency>
             <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>interface</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
             <artifactId>srfi-180</artifactId>
             <version>0.0.1</version>
             <type>kawalib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.arvyy.kawa-web-collection</groupId>
+            <artifactId>dbutils</artifactId>
+            <version>0.0.1</version>
+            <type>kawalib</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.32.3.2</version>
         </dependency>
 
         <dependency>
@@ -125,6 +145,22 @@
             <plugin>
                 <groupId>com.github.arvyy</groupId>
                 <artifactId>kawa-maven-plugin</artifactId>
+                    <version>0.0.8</version>
+					<extensions>true</extensions>
+                    <executions>
+                        <execution>
+                            <id>test</id>
+                            <goals>
+                                <goal>test</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>compile</id>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -167,29 +203,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>com.github.arvyy</groupId>
-                    <artifactId>kawa-maven-plugin</artifactId>
-                    <version>0.0.7</version>
-					<extensions>true</extensions>
-                    <executions>
-                        <execution>
-                            <id>test</id>
-                            <goals>
-                                <goal>test</goal>
-                            </goals>
-                        </execution>
-                        <execution>
-                            <id>compile</id>
-                            <goals>
-                                <goal>compile</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-            </plugins>
-        </pluginManagement>
     </build>
 </project>
