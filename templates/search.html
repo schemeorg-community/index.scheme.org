@@ -2,56 +2,57 @@
     {{#head}}
         {{>head}}
     {{/head}}
-    <body>
+    <body class="body">
+        <div class="body__navbar">
         {{#navigation}}
             {{>topnavigation}}
         {{/navigation}}
+        </div>
         {{#body}}
         <h1 style="font-size: 0">Search</h1>
-        <main class="search-page">
-            <aside class="search-controls" aria-label="Search controls" id="search-controls">
-                <div class="search-controls-hidden-header">
-                    <button class="search-controls-open" onclick="showSearchControls('search-controls')" aria-label="Expand search controls">
+        <main class="body__content search-page">
+            <aside class="search-page__controls" aria-label="Search controls" id="search-controls">
+                <div class="search-page__controls-hidden-header">
+                    <button class="search-page__controls-open" onclick="showSearchControls('search-controls')" aria-label="Expand search controls">
                         <span class="icon-circle-right"></span>
                     </button>
-                    <span class="search-controls-hidden-header-text">Search controls</span>
+                    <span class="search-page__controls-hidden-header-text">Search controls</span>
                 </div>
-                <button class="search-controls-close" onclick="hideSearchControls('search-controls')" aria-label="Collapse search controls">
+                <button class="search-page__controls-close" onclick="hideSearchControls('search-controls')" aria-label="Collapse search controls">
                     <span class="icon-circle-right"></span>
                 </button>
-                <form method="get" action="" class="search-form">
-                    <div class="query-cnt">
-                        <input id="query-field" name="query" autocomplete="off" value="{{query}}" class="query" placeholder="Search ..." list="suggestions" oninput="updateSuggestions(this.value, 'suggestions')" aria-label="Search text">
-                        <datalist id="suggestions">
-                        </datalist>
-                        <button type="submit" aria-label="Search" class="search-button">
+                <form method="get" action="" class="search-page__filter-form">
+                    <div class="search-page__query-cnt">
+                        <input id="query-field" name="query" autocomplete="off" value="{{query}}" class="search-page__query" placeholder="Search ..." aria-label="Search text">
+                        <button type="submit" aria-label="Search" class="primary-button">
                             <span class="icon-search"></span>
                         </button>
                     </div>
-                    <div class="facets">
+                    <div class="search-page__facets">
                         {{# facets }}
-                        <fieldset class="facet" id="facet-{{name}}">
-                            <legend>{{ title }}</legend>
+                        <fieldset class="search-page__facet" id="facet-{{name}}">
+                            <legend class="search-page__facet-legend">{{ title }}</legend>
                             {{# show-facet-controls? }}
-                            <div class="facet-controls">
-                                <button onclick="collapseFacet(event, 'facet-{{name}}')" class="facet-collapse-btn" aria-label="Collapse {{title}} facet">
+                            <div class="search-page__facet-controls">
+                                <button onclick="collapseFacet(event, 'facet-{{name}}')" class="search-page__facet-button search-page__facet-button--expanded" aria-label="Collapse {{title}} facet">
                                     <span class="icon-folder-open" aria-hidden="true"></span>
                                 </button>
-                                <button onclick="expandFacet(event, 'facet-{{name}}')" class="facet-expand-btn" aria-label="Collapse {{title}} facet">
+                                <button onclick="expandFacet(event, 'facet-{{name}}')" class="search-page__facet-button search-page__facet-button--collapsed" aria-label="Collapse {{title}} facet">
                                     <span class="icon-folder" aria-hidden="true"></span>
                                 </button>
-                                <input class="facet-search" oninput="searchFacet(event, 'facet-{{name}}')" placeholder="Filter {{title}} facet ..." aria-label="Filter {{title}} facet">
+                                <input class="search-page__facet-search" oninput="searchFacet(event, 'facet-{{name}}')" placeholder="Filter {{title}} facet ..." aria-label="Filter {{title}} facet">
                             </div>
                             {{/ show-facet-controls? }}
                             {{# options }}
-                            <label class="facet-option">
+                            <label class="search-page__facet-option checklist-item">
                                 <input type="checkbox" 
                                        name="{{ name }}" 
                                        value="{{ value }}" 
+                                       class="checklist-item__value-input"
                                        {{# selected? }} checked {{/ selected? }}>
-                               <span class="facet-text">
-                                   <span class="facet-value">{{ label }}</span>
-                                   <span class="facet-count">({{ count }})</span>
+                               <span class="checklist-item__value-text">
+                                   <span class="search-page__facet-value">{{ label }}</span>
+                                   <span class="search-page__facet-count">({{ count }})</span>
                                </span>
                             </label>
                             {{/ options }}
@@ -60,7 +61,7 @@
                     </div>
                 </form>
             </aside>
-            <section class="search-result" aria-label="Search results">
+            <section class="search-page__search-result" aria-label="Search results">
                 {{! extra div wrapping, so that last search-item gets proper styling }}
                 <div>
                     {{# search-items }}
@@ -70,14 +71,14 @@
                 <footer class="pager" aria-label="Pager">
                     {{# pages }}
                         {{# gap? }}
-                            <span class="page-gap">...</span>
+                            <span class="pager__gap">...</span>
                         {{/ gap? }}
                         {{^ gap? }}
                             {{# link }}
-                                <a class="page" href="{{link}}">{{ number }}</a>
+                                <a class="pager__page" href="{{link}}">{{ number }}</a>
                             {{/ link }}
                             {{^ link }}
-                                <span class="page active">{{ number }}</span>
+                                <span class="pager__page pager__page--active">{{ number }}</span>
                             {{/ link}}
                         {{/ gap? }}
                     {{/ pages }}

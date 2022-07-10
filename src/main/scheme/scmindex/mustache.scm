@@ -780,7 +780,7 @@
         (make-page
           (get-page-head #f req)
           (make-navigation (make-mustache-nav-data 'index filtersets))
-          #f)))
+          filtersets)))
 
     (define (render-search-page req filtersets page page-size query libs tags param-types return-types parameterized-by search-result)
       (values

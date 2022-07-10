@@ -138,56 +138,52 @@
                       (lambda (req resp)
                         (list->vector (name-list filterset-store))))
 
-            (path "/filterset/:filterset"
+            (get/rest "/filterset/:filterset/libs"
+                      (lambda (req resp)
+                        (define filterset (req/param req "filterset"))
+                        (define libs (source-list filterset-store filterset))
+                        (list->vector (facet-values searcher libs 'lib))))
 
-                  (get/rest "/libs"
-                            (lambda (req resp)
-                              (define filterset (req/param req "filterset"))
-                              (define libs (source-list filterset-store filterset))
-                              (list->vector (facet-values searcher libs 'lib))))
+            (get/rest "/filterset/:filterset/params"
+                      (lambda (req resp)
+                        (define filterset (req/param req "filterset"))
+                        (define libs (source-list filterset-store filterset))
+                        (list->vector (facet-values searcher libs 'param_types))))
 
-                  (get/rest "/params"
-                            (lambda (req resp)
-                              (define filterset (req/param req "filterset"))
-                              (define libs (source-list filterset-store filterset))
-                              (list->vector (facet-values searcher libs 'param_types))))
+            (get/rest "/filterset/:filterset/returns"
+                      (lambda (req resp)
+                        (define filterset (req/param req "filterset"))
+                        (define libs (source-list filterset-store filterset))
+                        (list->vector (facet-values searcher libs 'return_types))))
 
-                  (get/rest "/returns"
-                            (lambda (req resp)
-                              (define filterset (req/param req "filterset"))
-                              (define libs (source-list filterset-store filterset))
-                              (list->vector (facet-values searcher libs 'return_types))))
+            (get/rest "/filterset/:filterset/tags"
+                      (lambda (req resp)
+                        (define filterset (req/param req "filterset"))
+                        (define libs (source-list filterset-store filterset))
+                        (list->vector (facet-values searcher libs 'tags))))
 
-                  (get/rest "/tags"
-                            (lambda (req resp)
-                              (define filterset (req/param req "filterset"))
-                              (define libs (source-list filterset-store filterset))
-                              (list->vector (facet-values searcher libs 'tags))))
+            (get/rest "/filterset/:filterset/parameterized"
+                      (lambda (req resp)
+                        (define filterset (req/param req "filterset"))
+                        (define libs (source-list filterset-store filterset))
+                        (list->vector (facet-values searcher libs 'parameterized_by))))
 
-                  (get/rest "/parameterized"
-                            (lambda (req resp)
-                              (define filterset (req/param req "filterset"))
-                              (define libs (source-list filterset-store filterset))
-                              (list->vector (facet-values searcher libs 'parameterized_by))))
-
-                  (get/rest "/search"
-                            (lambda (req resp)
-                              (define filterset (req/param req "filterset"))
-                              (define start (or (req/query-param req "start") 0))
-                              (define rows (or (req/query-param req "rows") default-page-size))
-                              (define query (req/query-param req "query"))
-                              (define libs (req/query-param-values req "lib"))
-                              (define libs* (transform-request-libraries filterset-store filterset libs))
-                              (define param-types (or (req/query-param-values req "param") '()))
-                              (define return-types (or (req/query-param-values req "return") '()))
-                              (define tags (or (req/query-param-values req "tag") '()))
-                              (define parameterized-by (or (req/query-param-values req "parameterized") '()))
-                              (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
-                              (define search-result (query-index searcher start rows query libs* param-types return-types parameterized-by tags filter-params-loose?))
-                              (define search-result* (transform-result-libraries filterset-store filterset search-result))
-                              (search-result->json search-result)))
-
-                  )
+            (get/rest "/filterset/:filterset/search"
+                      (lambda (req resp)
+                        (define filterset (req/param req "filterset"))
+                        (define start (or (req/query-param req "start") 0))
+                        (define rows (or (req/query-param req "rows") default-page-size))
+                        (define query (req/query-param req "query"))
+                        (define libs (req/query-param-values req "lib"))
+                        (define libs* (transform-request-libraries filterset-store filterset libs))
+                        (define param-types (or (req/query-param-values req "param") '()))
+                        (define return-types (or (req/query-param-values req "return") '()))
+                        (define tags (or (req/query-param-values req "tag") '()))
+                        (define parameterized-by (or (req/query-param-values req "parameterized") '()))
+                        (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
+                        (define search-result (query-index searcher start rows query libs* param-types return-types parameterized-by tags filter-params-loose?))
+                        (define search-result* (transform-result-libraries filterset-store filterset search-result))
+                        (search-result->json search-result)))
 
             ))
 

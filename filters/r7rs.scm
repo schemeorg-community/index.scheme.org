@@ -1,3 +1,0 @@
-(
- ((scheme base) . #t)
-)

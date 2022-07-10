@@ -11,6 +11,7 @@
           (scmindex domain)
           (scmindex types-parser)
           (scmindex util)
+          (only (srfi 1) filter)
           (srfi 180))
 
   (export make-solr-searcher)
@@ -65,7 +66,10 @@
       (define facet-values (fold-facet-values (cdr (assoc facet facet-fields))))
       (map
           search-result-facet-value
-          facet-values))
+          (filter
+            (lambda (f)
+              (> (search-result-facet-count f) 0))
+            facet-values)))
 
     (define (exec-solr-query solr-client core start page-size text libs params returns parameterized-by tags filter-params-loose?)
       (define body (build-solr-query start page-size text libs params returns parameterized-by tags filter-params-loose?))
