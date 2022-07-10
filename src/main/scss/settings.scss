@@ -1,0 +1,41 @@
+.settings-page {
+
+    background-color: var(--bg-color2);
+    max-width: 960px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 2em;
+
+    &__group {
+        margin-top: 0.5em;
+    }
+
+    &__save {
+        margin-top: 1em;
+    }
+
+    &__form {
+        display: flex;
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    &__value {
+        flex: 1;
+    }
+
+    &__tip {
+        font-size: 0.9em;
+        color: var(--text-color-muted);
+    }
+
+    &__tip--general {
+        margin-bottom: 1em;
+    }
+
+    &__header {
+        color: var(--accent-color);
+    }
+
+}

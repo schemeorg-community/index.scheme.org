@@ -28,7 +28,7 @@
         index-file
         (lambda ()
           (define lst (read))
-          (define funcs*
+          (define specs*
             (map
               (lambda (entry)
                 (log-info logger "Reading specs from data file {} for lib {}" (cdr entry) (car entry))
@@ -38,7 +38,7 @@
                     (read-spec (car entry)
                                (read)))))
               lst))
-          (apply append funcs*))))
+          (apply append specs*))))
 
     (define (assoc* key alist default)
       (cond
@@ -57,28 +57,30 @@
                               (unless s
                                 (error "Missing signature attribute"))
                               s))
-          (define-values
-            (supertypes param-names param-types syntax-param-signatures return-types)
+          (define supertypes
             (case (car signature)
-              ((lambda)
-               (values (assoc* 'supertypes entry '())
-                       (extract-param-names signature)
-                       (extract-param-types signature)
-                       '()
-                       (extract-return-types signature)))
-              ((syntax-rules)
-               (values '()
-                       (extract-syntax-names signature)
-                       (extract-syntax-param-types (assoc* 'syntax-param-signatures entry '()))
-                       (assoc* 'syntax-param-signatures entry '())
-                       (extract-syntax-return-types signature)))
-              ((value)
-               (values '()
-                       '()
-                       '()
-                       '()
-                       (list (cadr signature))))
-              (else (error (string-append "Unrecognized signature for " (->string name))))))
+              ((lambda) (assoc* 'supertypes entry '()))
+              (else '())))
+          (define param-names
+            (case (car signature)
+              ((lambda) (extract-param-names signature))
+              ((syntax-rules) (extract-syntax-names signature))
+              (else '())))
+          (define param-types
+            (case (car signature)
+              ((lambda) (extract-param-types signature))
+              ((syntax-rules) (extract-syntax-param-types (assoc* 'syntax-param-signatures entry '())))
+              (else '())))
+          (define syntax-param-signatures
+            (case (car signature)
+              ((syntax-rules) (assoc* 'syntax-param-signatures entry '()))
+              (else '())))
+          (define return-types
+            (case (car signature)
+              ((lambda) (extract-return-types signature))
+              ((syntax-rules) (extract-syntax-return-types signature))
+              ((value) (list (cadr signature)))
+              (else '())))
           (define tags (assoc* 'tags entry '()))
           (define parameterized-by (assoc* 'parameterized-by entry '()))
           (define param-signatures (assoc* 'subsigs entry '()))
@@ -176,13 +178,13 @@
         (error (string-append "Bad signature: " (->string signature))))
       (parse-type-from-return (caddr signature)))
 
-    (define (make-type-maps funcs)
+    (define (make-type-maps specs)
       (define (make-entries strict)
         (define entries*
           (map
-            (lambda (func)
-              (define supertypes (index-entry-supertypes func))
-              (define type (index-entry-name func))
+            (lambda (spec)
+              (define supertypes (index-entry-supertypes spec))
+              (define type (index-entry-name spec))
               (cond
                 ((or (not supertypes) (null? supertypes)) '())
                 ((and strict (not (null? (cdr supertypes)))) '())
@@ -190,7 +192,7 @@
                         (lambda (supertype)
                           (cons type supertype))
                         supertypes))))
-            funcs))
+            specs))
         (apply append entries*))
       (define entries-strict (make-entries #t))
       (define entries-loose (make-entries #f))

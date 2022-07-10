@@ -6,32 +6,26 @@
 (define-library
   (scmindex solr)
   (import (scheme base)
+          (scheme write)
           (arvyy solrj)
           (scmindex domain)
           (scmindex types-parser)
           (scmindex util)
+          (only (srfi 1) filter)
           (srfi 180))
 
-  (export
-    index-types
-    build-solr-query
-    exec-solr-query
-    parse-solr-response
-    solr-facet-values
-    solr-get-suggestions)
+  (export make-solr-searcher)
 
   (begin
 
-    (define (solr-get-suggestions solr-client core text)
-      (define resp (query solr-client core "/suggest" `((q . ,text))))
-      (define suggest (cdr (assoc 'suggest resp)))
-      (define nameSuggester (cdar suggest))
-      (define value (cdar nameSuggester))
-      (define suggestions (cdr (assoc 'suggestions value)))
-      (vector-map
-        (lambda (s)
-          (cdr (assoc 'term s)))
-        suggestions))
+    (define (make-solr-searcher solr-client core)
+      (make-searcher
+        ((save-index-entries entries)
+         (index-types solr-client core entries))
+        ((query-index start page-size text libs params returns parameterized-by tags filter-params-loose?)
+         (exec-solr-query solr-client core start page-size text libs params returns parameterized-by tags filter-params-loose?))
+        ((facet-values libs facet)
+         (solr-facet-values solr-client core libs facet))))
 
     (define (index-types solr-client core funcs)
       (define-values
@@ -58,15 +52,24 @@
         (add solr-client core payload)
         (commit solr-client core)))
 
-    (define (solr-facet-values solr-client core facet)
-      (define solr-query `((rows . 0)))
+    (define (solr-facet-values solr-client core libs facet)
+      (define fq (let loop ((libs libs)
+                            (str "lib: ("))
+                   (if (null? (cdr libs))
+                       (list (string-append str "\"" (escape-solr-spec (car libs)) "\")"))
+                       (loop (cdr libs)
+                             (string-append str "\"" (escape-solr-spec (car libs)) "\" OR ")))))
+      (define solr-query `((rows . 0) (fq . ,fq)))
       (define solr-resp (query solr-client core "/search" solr-query))
       (define facet-counts (cdr (assoc 'facet_counts solr-resp)))
       (define facet-fields (cdr (assoc 'facet_fields facet-counts)))
       (define facet-values (fold-facet-values (cdr (assoc facet facet-fields))))
       (map
           search-result-facet-value
-          facet-values))
+          (filter
+            (lambda (f)
+              (> (search-result-facet-count f) 0))
+            facet-values)))
 
     (define (exec-solr-query solr-client core start page-size text libs params returns parameterized-by tags filter-params-loose?)
       (define body (build-solr-query start page-size text libs params returns parameterized-by tags filter-params-loose?))
