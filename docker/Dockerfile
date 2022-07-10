@@ -1,5 +1,5 @@
 FROM maven:3.8-openjdk-11
-RUN apt-get update && apt-get -y install ant asciidoctor
+RUN apt-get update && apt-get -y install ant asciidoctor ruby-sass
 WORKDIR /app
 COPY kawa-web-collection kawa-web-collection
 WORKDIR /app/kawa-web-collection
