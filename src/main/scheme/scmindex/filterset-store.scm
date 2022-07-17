@@ -33,7 +33,7 @@
                                    (commit))))
 
     (define (name-list* qr)
-      (define result (query qr "select distinct name from filterset" (handler/list-of (row-handler/vector))))
+      (define result (query qr "select distinct name from filterset order by name asc" (handler/list-of (row-handler/vector))))
       (map
         (lambda (r)
           (vector-ref r 0))

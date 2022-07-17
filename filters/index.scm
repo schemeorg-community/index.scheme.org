@@ -4,4 +4,6 @@
  ("R7RS large + SRFIs" . "filters/portable.scm")
  ("Chibi" . "filters/chibi.scm")
  ("Kawa" . "filters/kawa.scm")
+ ("Chicken" . "filters/chicken.scm")
+ ("Gauche" . "filters/gauche.scm")
 )
