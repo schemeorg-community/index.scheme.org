@@ -1,4 +1,9 @@
 (
+ ;; r6rs
+ ((rnrs base (6)) . "types/rnrs.base.6.scm")
+ ((rnrs lists (6)) . "types/rnrs.lists.6.scm")
+ ((rnrs unicode (6)) . "types/rnrs.unicode.6.scm")
+
  ;; r7rs small
  ((scheme base) . "types/scheme.base.scm")
  ((scheme case-lambda) . "types/scheme.case-lambda.scm")
