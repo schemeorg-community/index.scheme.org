@@ -1,7 +1,12 @@
 (
  ;; r6rs
  ((rnrs base (6)) . "types/rnrs.base.6.scm")
+ ((rnrs control (6)) . "types/rnrs.control.6.scm")
  ((rnrs lists (6)) . "types/rnrs.lists.6.scm")
+ ((rnrs records inspection (6)) . "types/rnrs.records.inspection.6.scm")
+ ((rnrs records procedural (6)) . "types/rnrs.records.procedural.6.scm")
+ ((rnrs records syntactic (6)) . "types/rnrs.records.syntactic.6.scm")
+ ((rnrs sorting (6)) . "types/rnrs.sorting.6.scm")
  ((rnrs unicode (6)) . "types/rnrs.unicode.6.scm")
 
  ;; r7rs small
