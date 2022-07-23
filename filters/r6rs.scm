@@ -4,6 +4,8 @@
  ((scheme bytevector) . (rnrs bytevectors (6)))
  ((rnrs conditions (6)) . #t)
  ((rnrs control (6)) . #t)
+ ((rnrs io ports (6)) . #t)
+ ((rnrs io simple (6)) . #t)
  ((rnrs exceptions (6)) . #t)
  ((rnrs lists (6)) . #t)
  ((rnrs records inspection (6)) . #t)
