@@ -1,13 +1,16 @@
 (
  ;; r6rs
  ((rnrs base (6)) . "types/rnrs.base.6.scm")
+ ((rnrs arithmetic fixnum (6)) . "types/rnrs.arithmetic.fixnum.6.scm")
  ;;rnrs bytevector is under r7rs tangerine (scheme bytevectors)
  ((rnrs conditions (6)) . "types/rnrs.conditions.6.scm")
  ((rnrs control (6)) . "types/rnrs.control.6.scm")
  ((rnrs exceptions (6)) . "types/rnrs.exceptions.6.scm")
+ ((rnrs files (6)) . "types/rnrs.files.6.scm")
  ((rnrs io ports (6)) . "types/rnrs.io.ports.6.scm")
  ((rnrs io simple (6)) . "types/rnrs.io.simple.6.scm")
  ((rnrs lists (6)) . "types/rnrs.lists.6.scm")
+ ((rnrs programs (6)) . "types/rnrs.programs.6.scm")
  ((rnrs records inspection (6)) . "types/rnrs.records.inspection.6.scm")
  ((rnrs records procedural (6)) . "types/rnrs.records.procedural.6.scm")
  ((rnrs records syntactic (6)) . "types/rnrs.records.syntactic.6.scm")
