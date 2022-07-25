@@ -1,4 +1,5 @@
 (
+ ("R6RS" . "filters/r6rs.scm")
  ("R7RS small" . "filters/r7rs-small.scm")
  ("R7RS large" . "filters/r7rs-large.scm")
  ("R7RS large + SRFIs" . "filters/portable.scm")

@@ -12,6 +12,7 @@
           (arvyy mustache)
           (arvyy kawa-spark)
           (scmindex domain)
+          (scmindex util)
           (only (srfi 1) iota filter find))
   
   (export
@@ -565,8 +566,10 @@
           ((find (lambda (el) (equal? term el)) literals)
            (make-sexpr-el #f (symbol->string term) "bright-syntax" #f #f))
           ((or (equal? '... term)
-               (equal? '|#| term))
-           (make-sexpr-el #f (symbol->string term) "muted" #f #f))
+               (equal? '|#| term)
+               (boolean? term)
+               (number? term))
+           (make-sexpr-el #f (->string term) "muted" #f #f))
           (else
             (make-sexpr-el #f #f "sexpr-flex muted" #f
                            (list (make-sexpr-el "&#x27E8" #f #f #f #f)
@@ -649,7 +652,9 @@
                          (lambda (el)
                            (render-sexpr (cons el '()) term-handler depth))
                          (cdar sexpr))))
-        ((symbol? sexpr) 
+        ((or (symbol? sexpr)
+             (boolean? sexpr)
+             (number? sexpr)) 
          (list (term-handler sexpr)))
         ((and (pair? sexpr) (symbol? (cdr sexpr)))
          `(,@(wrap-list (car sexpr))

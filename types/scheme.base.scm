@@ -712,12 +712,13 @@
  ((name . syntax-rules)
   (signature
    syntax-rules
-   ()
+   (_)
    ((_ (literal ...) syntax-rule ...) transformer-spec)
    ((_ ellipsis (literal ...) syntax-rule ...)  transformer-spec))
   (subsigs
    (syntax-rule (pattern template))
    (pattern
+    _
     identifier
     constant
     (pattern ...)
