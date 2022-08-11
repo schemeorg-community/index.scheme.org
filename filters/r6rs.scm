@@ -7,7 +7,7 @@
  ((scheme bytevector) . (rnrs bytevectors (6)))
  ((rnrs conditions (6)) . #t)
  ((rnrs control (6)) . #t)
- ((scheme eval) . (rnrs control (6)))
+ ((scheme eval) . (rnrs eval (6)))
  ((rnrs files (6)) . #t)
  ((rnrs hashtables (6)) . #t)
  ((rnrs io ports (6)) . #t)
