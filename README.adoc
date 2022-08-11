@@ -134,6 +134,12 @@ Afterwards, run the application with
 mvn kawa:run
 ```
 
+Launch sass compiler with
+
+```
+sass -w src/main/scss/main.scss static/css/scmindex.css
+```
+
 == Configuration
 
 === Config.scm

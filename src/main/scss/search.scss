@@ -190,21 +190,21 @@
         border-left: solid gray 1px;
         border-bottom: solid gray 1px;
 
-        &:hover {
-            background-color: var(--accent-color-hover);
-        }
+    }
 
-        &:first-child {
-            border-bottom-left-radius: 10px;
-            border-top-left-radius: 10px;
-        }
+    &__page--inactive:hover {
+        background-color: var(--accent-color-hover);
+    }
 
-        &:last-child {
-            border-right: solid gray 1px;
-            border-bottom-right-radius: 10px;
-            border-top-right-radius: 10px;
-        }
+    &__page:first-child {
+        border-bottom-left-radius: 10px;
+        border-top-left-radius: 10px;
+    }
 
+    &__page:last-child {
+        border-right: solid gray 1px;
+        border-bottom-right-radius: 10px;
+        border-top-right-radius: 10px;
     }
 
     &__page--active {
