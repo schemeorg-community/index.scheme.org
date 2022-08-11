@@ -2,8 +2,8 @@
     --text-color-against-accent: black;
     --text-color-against-bg: white;
     --text-color-muted: #ccc;
-    --bg-color: #555;
-    --bg-color2: #333;
+    --bg-color: #303030;
+    --bg-color2: #404040;
     --accent-color: #e77;
     --accent-color-hover: #c44;
     --secondary-color: #aae;
@@ -11,4 +11,7 @@
 
     --nav-bg-color: var(--bg-color);
     --nav-text-color: var(--text-color-against-bg);
+
+    --tag-color: white;
+    --tag-bg-color: #555;
 }

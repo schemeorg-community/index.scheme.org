@@ -30,6 +30,10 @@
             }
         }
     }
+
+    &__value-text {
+        color: var(--text-color-muted);
+    }
 }
 
 .primary-button {

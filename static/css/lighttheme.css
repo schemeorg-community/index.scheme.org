@@ -11,4 +11,7 @@
 
     --nav-bg-color: var(--bg-color);
     --nav-text-color: var(--text-color-against-bg);
+
+    --tag-color: white;
+    --tag-bg-color: #555;
 }

@@ -33,40 +33,42 @@
                     </div>
                     <div class="search-page__facets">
                         {{# facets }}
-                        <fieldset class="search-page__facet" id="facet-{{name}}">
-                            <legend class="search-page__facet-legend">{{ title }}</legend>
-                            {{# show-facet-controls? }}
-                            <div class="search-page__facet-controls">
-                                <button onclick="collapseFacet(event, 'facet-{{name}}')" class="search-page__facet-button search-page__facet-button--expanded" aria-label="Collapse {{title}} facet">
-                                    <span class="icon-folder-open" aria-hidden="true"></span>
-                                </button>
-                                <button onclick="expandFacet(event, 'facet-{{name}}')" class="search-page__facet-button search-page__facet-button--collapsed" aria-label="Collapse {{title}} facet">
-                                    <span class="icon-folder" aria-hidden="true"></span>
-                                </button>
-                                <input class="search-page__facet-search" oninput="searchFacet(event, 'facet-{{name}}')" placeholder="Filter {{title}} facet ..." aria-label="Filter {{title}} facet">
-                            </div>
-                            {{/ show-facet-controls? }}
-                            {{# options }}
-                            <label class="search-page__facet-option checklist-item">
-                                <input type="checkbox" 
-                                       name="{{ name }}" 
-                                       value="{{ value }}" 
-                                       class="checklist-item__value-input"
-                                       {{# selected? }} checked {{/ selected? }}>
-                               <span class="checklist-item__value-text">
-                                   <span class="search-page__facet-value">{{ label }}</span>
-                                   <span class="search-page__facet-count">({{ count }})</span>
-                               </span>
-                            </label>
-                            {{/ options }}
-                        </fieldset>
+                        <div class="search-page__facet-wrap">
+                            <fieldset class="search-page__facet" id="facet-{{name}}">
+                                <legend class="search-page__facet-legend">{{ title }}</legend>
+                                {{# show-facet-controls? }}
+                                <div class="search-page__facet-controls">
+                                    <button onclick="collapseFacet(event, 'facet-{{name}}')" class="search-page__facet-button search-page__facet-button--expanded" aria-label="Collapse {{title}} facet">
+                                        <span class="icon-folder-open" aria-hidden="true"></span>
+                                    </button>
+                                    <button onclick="expandFacet(event, 'facet-{{name}}')" class="search-page__facet-button search-page__facet-button--collapsed" aria-label="Collapse {{title}} facet">
+                                        <span class="icon-folder" aria-hidden="true"></span>
+                                    </button>
+                                    <input class="search-page__facet-search" oninput="searchFacet(event, 'facet-{{name}}')" placeholder="Filter {{title}} facet ..." aria-label="Filter {{title}} facet">
+                                </div>
+                                {{/ show-facet-controls? }}
+                                {{# options }}
+                                <label class="search-page__facet-option checklist-item">
+                                    <input type="checkbox" 
+                                           name="{{ name }}" 
+                                           value="{{ value }}" 
+                                           class="checklist-item__value-input"
+                                           {{# selected? }} checked {{/ selected? }}>
+                                   <span class="checklist-item__value-text">
+                                       <span class="search-page__facet-value">{{ label }}</span>
+                                       <span class="search-page__facet-count">({{ count }})</span>
+                                   </span>
+                                </label>
+                                {{/ options }}
+                            </fieldset>
+                        </div>
                         {{/ facets }}
                     </div>
                 </form>
             </aside>
             <section class="search-page__search-result" aria-label="Search results">
-                {{! extra div wrapping, so that last search-item gets proper styling }}
-                <div>
+                {{! extra div wrapping for shadow }}
+                <div class="search-page__search-result-list">
                     {{# search-items }}
                         {{> search-item }}
                     {{/ search-items }}
