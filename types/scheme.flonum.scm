@@ -61,7 +61,7 @@
   (signature lambda ((flonum? x)) integer?)
   (tags pure))
  ((name . flnormalized-fraction-exponent)
-  (signature lambda ((flonum? x)) (flonum? integer?))
+  (signature lambda ((flonum? x)) (values flonum? integer?))
   (tags pure))
  ((name . flsign-bit) (signature lambda ((flonum? x)) integer?) (tags pure))
  ((name . flonum?)
