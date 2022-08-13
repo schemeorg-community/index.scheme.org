@@ -7,4 +7,5 @@
  ("Kawa" . "filters/kawa.scm")
  ("Chicken" . "filters/chicken.scm")
  ("Gauche" . "filters/gauche.scm")
+ ("Gambit" . "filters/gambit.scm")
 )
