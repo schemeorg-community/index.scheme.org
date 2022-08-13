@@ -18,6 +18,7 @@
  ((rnrs mutable-pairs (6)) . #t)
  ((rnrs mutable-strings (6)) . #t)
  ((rnrs programs (6)) . #t)
+ ((rnrs r5rs (6)) . #t)
  ((rnrs records inspection (6)) . #t)
  ((rnrs records procedural (6)) . #t)
  ((rnrs records syntactic (6)) . #t)

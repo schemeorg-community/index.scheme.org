@@ -17,6 +17,7 @@
  ((rnrs mutable-pairs (6)) . "types/rnrs.mutable-pairs.6.scm")
  ((rnrs mutable-strings (6)) . "types/rnrs.mutable-strings.6.scm")
  ((rnrs programs (6)) . "types/rnrs.programs.6.scm")
+ ((rnrs r5rs (6)) . "types/rnrs.r5rs.6.scm")
  ((rnrs records inspection (6)) . "types/rnrs.records.inspection.6.scm")
  ((rnrs records procedural (6)) . "types/rnrs.records.procedural.6.scm")
  ((rnrs records syntactic (6)) . "types/rnrs.records.syntactic.6.scm")
@@ -107,7 +108,7 @@
  ((srfi 42) . "types/srfi.42.scm")
  ;((srfi 69) . "types/srfi.69.scm") TODO? 125 is upwards compatible to 69
  ;; srfi 98 -- part of r7rs small
- ;; srfi 4 -- superceded in r7rs large
+ ;; srfi 4 -- superceded in r7rs large TODO
  ((srfi 17) . "types/srfi.17.scm")
  ((srfi 37) . "types/srfi.37.scm")
  ;; srfi 41 -- part of r7rs large

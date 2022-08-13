@@ -1,0 +1,28 @@
+(((name . exact->inexact) (signature lambda ((number? z)) inexact?) (tags pure))
+ ((name . inexact->exact) (signature lambda ((number? z)) exact?) (tags pure))
+ ((name . quotient)
+  (signature lambda ((integer? n1) (integer? n2)) integer?)
+  (tags pure))
+ ((name . remainder)
+  (signature lambda ((integer? n1) (integer? n2)) integer?)
+  (tags pure))
+ ((name . modulo)
+  (signature lambda ((integer? n1) (integer? n2)) integer?)
+  (tags pure))
+ ((name . delay) (signature syntax-rules () ((_ expression) promise?)))
+ ((name . force) (signature lambda ((promise? promise)) *))
+ ((name . null-environment)
+  (signature lambda ((integer? n)) environment)
+  (tags pure))
+ ((name . null-environment)
+  (signature lambda ((integer? n)) environment)
+  (spec-values
+    (n
+      ("5" "N must be the exact integer object 5")))
+  (tags pure))
+ ((name . scheme-report-environment)
+  (signature lambda ((integer? n)) environment)
+  (spec-values
+    (n
+      ("5" "N must be the exact integer object 5")))
+  (tags pure)))
