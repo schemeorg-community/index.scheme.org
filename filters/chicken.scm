@@ -68,6 +68,7 @@
  ((srfi 38) . #t)
  ((srfi 31) . #t)
  ((srfi 42) . #t)
+ ((srfi 69) . #t)
  ((srfi 17) . #t)
  ((srfi 37) . #t)
  ((srfi 45) . #t)

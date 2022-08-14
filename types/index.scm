@@ -106,7 +106,7 @@
  ((srfi 38) . "types/srfi.38.scm")
  ((srfi 31) . "types/srfi.31.scm")
  ((srfi 42) . "types/srfi.42.scm")
- ;((srfi 69) . "types/srfi.69.scm") TODO? 125 is upwards compatible to 69
+ ((srfi 69) . "types/srfi.69.scm")
  ;; srfi 98 -- part of r7rs small
  ;; srfi 4 -- superceded in r7rs large TODO
  ((srfi 17) . "types/srfi.17.scm")
