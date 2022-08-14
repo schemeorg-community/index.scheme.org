@@ -108,7 +108,8 @@
         cursor: pointer;
 
         &:hover {
-            background-color: var(--accent-color-hover);
+            background-color: var(--accent-color);
+            color: var(--text-color-against-accent);
         }
 
         &--collapsed {
@@ -199,7 +200,8 @@
     }
 
     &__page--inactive:hover {
-        background-color: var(--accent-color-hover);
+        background-color: var(--accent-color);
+        color: var(--text-color-against-accent);
     }
 
     &__page:first-child {
