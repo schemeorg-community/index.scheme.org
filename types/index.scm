@@ -123,7 +123,7 @@
  ((srfi 18) . "types/srfi.18.scm")
  ((srfi 48) . "types/srfi.48.scm")
  ((srfi 64) . "types/srfi.64.scm")
- ;;((srfi 95) . "types/srfi.95.scm") TODO
+ ((srfi 95) . "types/srfi.95.scm")
  ;; srfi 22 -- non-sexpr syntax
  ;; srfi 55 -- ??
  ;;((srfi 67) . "types/srfi.67.scm") TODO
