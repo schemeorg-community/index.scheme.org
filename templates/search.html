@@ -2,7 +2,7 @@
     {{#head}}
         {{>head}}
     {{/head}}
-    <body class="body">
+    <body class="body preload">
         <div class="body__navbar">
         {{#navigation}}
             {{>topnavigation}}
@@ -13,18 +13,18 @@
         <main class="body__content search-page">
             <aside class="search-page__controls" aria-label="Search controls" id="search-controls">
                 <div class="search-page__controls-hidden-header">
-                    <button class="search-page__controls-open" onclick="showSearchControls('search-controls')" aria-label="Expand search controls">
+                    <button class="search-page__controls-open" onclick="showSearchControls()" aria-label="Expand search controls">
                         <span class="icon-circle-right"></span>
                     </button>
                     <span class="search-page__controls-hidden-header-text">Search controls</span>
                 </div>
                 <div class="search-page__controls-visible-header">
                     <h2 class="search-page__controls-visible-header-text">{{filterset}}</h2>
-                    <button class="search-page__controls-close" onclick="hideSearchControls('search-controls')" aria-label="Collapse search controls">
+                    <button class="search-page__controls-close" onclick="hideSearchControls()" aria-label="Collapse search controls">
                         <span class="icon-circle-right"></span>
                     </button>
                 </div>
-                <form method="get" action="" class="search-page__filter-form">
+                <form method="get" action="" class="search-page__filter-form" id="search-form" onsubmit="collapseControlsForSmallScreen()">
                     <div class="search-page__query-cnt">
                         <input id="query-field" name="query" autocomplete="off" value="{{query}}" class="search-page__query" placeholder="Search ..." aria-label="Search text">
                         <button type="submit" aria-label="Search" class="primary-button">

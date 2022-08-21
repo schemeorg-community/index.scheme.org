@@ -1,23 +1,4 @@
-let suggestTimeout = null;
-function updateSuggestions(text, datalistId) {
-    clearTimeout(suggestTimeout);
-    suggestTimeout = setTimeout(() => {
-        let base = window.location.protocol + '//' + window.location.host;
-        let url = new URL('/suggest', base);
-        url.searchParams.append('text', text)
-        fetch(url)
-            .then(resp => resp.json())
-            .then(data => {
-                let newOptions = data.map(d => {
-                    let e = document.createElement('option');
-                    e.setAttribute('value', d);
-                    return e;
-                });
-                let datalist = document.getElementById(datalistId);
-                datalist.replaceChildren(...newOptions);
-            });
-    }, 200);
-}
+const controlsId = 'search-controls';
 
 function collapseFacet(event, id) {
     event.preventDefault();
@@ -41,10 +22,31 @@ function searchFacet(event, id) {
     }
 }
 
-function hideSearchControls(id) {
-    document.getElementById(id).classList.add('search-page__controls--hidden');
+function handleControlsVisibilityOnLoad() {
+    if (localStorage.getItem('collapsed') == 'true' && document.getElementById(controlsId)) {
+        hideSearchControls();
+    }
 }
 
-function showSearchControls(id) {
-    document.getElementById(id).classList.remove('search-page__controls--hidden');
+function hideSearchControls() {
+    document.getElementById(controlsId).classList.add('search-page__controls--hidden');
+    localStorage.setItem('collapsed', 'true');
 }
+
+function showSearchControls() {
+    document.getElementById(controlsId).classList.remove('search-page__controls--hidden');
+    localStorage.setItem('collapsed', 'false');
+}
+
+function collapseControlsForSmallScreen() {
+    if (window.innerWidth <= 600) {
+        hideSearchControls();
+    }
+}
+
+window.addEventListener('load', () => {
+    handleControlsVisibilityOnLoad();
+    setTimeout(() => {
+        document.body.classList.remove('preload');
+    }, 0);
+});
