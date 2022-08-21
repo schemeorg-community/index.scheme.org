@@ -1,5 +1,5 @@
 services:
   nginx:
     volumes:
-      - "./nginx.conf:/etc/nginx/nginx.conf"
       - "./devcert/:/etc/letsencrypt/live/r7rsindex.com"
+      - "./devcert/:/etc/letsencrypt/live/index.scheme.org"
