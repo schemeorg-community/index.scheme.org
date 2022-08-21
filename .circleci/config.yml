@@ -26,9 +26,12 @@ jobs:
           git submodule update --init
           cd ..
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/Dockerfile .
+          docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/scheme-index/Dockerfile .
+          docker build -t arvyy/scheme-index-nginx:$CIRCLE_BRANCH -f docker/nginx/Dockerfile .
 
-      - run: docker push arvyy/scheme-index:$CIRCLE_BRANCH
+      - run: |
+          docker push arvyy/scheme-index:$CIRCLE_BRANCH
+          docker push arvyy/scheme-index-nginx:$CIRCLE_BRANCH
 
   deploy:
     machine: true
@@ -45,6 +48,10 @@ workflows:
       - build:
           requires:
             - test
+          filters:
+            branches:
+              only:
+                - master
       - deploy:
           requires:
             - build
