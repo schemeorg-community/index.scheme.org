@@ -55,6 +55,7 @@
 
 .body {
     display: flex;
+    align-items: stretch;
     flex-direction: column;
     font-family: Roboto;
     background-color: var(--bg-color);
@@ -62,11 +63,14 @@
     height: 100%;
     margin: 0;
 
-    &__navbar {
-        align-self: stretch;
-    }
-
     &__content {
-        align-self: center;
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
     }
+}
+
+.preload * {
+    transition-duration: 0s !important;
+    display: none;
 }

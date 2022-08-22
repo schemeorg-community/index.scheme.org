@@ -5,7 +5,10 @@
     padding: 20px;
     display: flex;
     flex-direction: column;
+    margin-left: auto;
+    margin-right: auto;
     margin-top: 2em;
+    margin-bottom: 2em;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 24px;
 
     &__group-wrap {
