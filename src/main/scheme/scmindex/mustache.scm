@@ -250,16 +250,18 @@
         spec-value-fieldblock-lookup
         spec-value-fieldentry-lookup))
 
-    (define (make-mustache-nav-data page filtersets)
-      (list
-        (make-nav-item "Home" "icon-home3" "/" (equal? page 'index) '())
-        (make-nav-item "Search" "icon-search" #f (equal? page 'search)
-                       (map
-                         (lambda (f)
-                           (make-nav-item f "" (string-append "/filterset/" f "/search") #f '()))
-                         filtersets))
-        (make-nav-item "Settings" "icon-cog" "/settings" (equal? page 'settings) '())
-        (make-nav-item "Documentation" "icon-file-text2" "/README.html" (equal? page 'docs) '())))
+    (define (make-mustache-nav-data page filtersets show-settings?)
+      (filter
+        (lambda (x) x)
+        (list
+          (make-nav-item "Home" "icon-home3" "/" (equal? page 'index) '())
+          (make-nav-item "Search" "icon-search" #f (equal? page 'search)
+                         (map
+                           (lambda (f)
+                             (make-nav-item f "" (string-append "/filterset/" f "/search") #f '()))
+                           filtersets))
+          (if show-settings? (make-nav-item "Settings" "icon-cog" "/settings" (equal? page 'settings) '()) #f)
+          (make-nav-item "Documentation" "icon-file-text2" "/README.html" (equal? page 'docs) '()))))
 
     (define settings-data
       (list
@@ -292,30 +294,6 @@
                       '("yes" "no"))))
 
     (define settings-cookies '("overrideCtrlF" "theme" "pageSize" "filterParamsLoose"))
-
-    (define (user-setting/page-size req)
-      (cond
-        ((assoc 'pageSize (req/cookies req)) => (lambda (e)
-                                                  (string->number (cdr e))))
-        (else 40)))
-
-    (define (user-setting/light-theme? req)
-      (cond
-        ((assoc 'theme (req/cookies req)) => (lambda (e)
-                                               (equal? "light" (cdr e))))
-        (else #t)))
-
-    (define (user-setting/ctrl-f-override req)
-      (cond
-        ((assoc 'overrideCtrlF (req/cookies req)) => (lambda (e)
-                                                       (equal? "yes" (cdr e))))
-        (else #f)))
-
-    (define (user-setting/param-filter-loose req)
-      (cond
-        ((assoc 'filterParamsLoose (req/cookies req)) => (lambda (e)
-                                                           (equal? "yes" (cdr e))))
-        (else #t)))
 
     (define (render-settings req)
       (define cookies (req/cookies req))
@@ -780,31 +758,31 @@
                            spacer-sd
                            (make-sexpr-el #f (symbol->string (cadr sig)) "bright-type" (make-link (cadr sig) #f) #f))))
 
-    (define (get-page-head title req)
-      (make-page-head title (user-setting/light-theme? req) (user-setting/ctrl-f-override req)))
+    (define (get-page-head title settings)
+      (make-page-head title (user-setting/light-theme? settings) (user-setting/ctrl-f-override settings)))
 
-    (define (render-home-page req filtersets)
+    (define (render-home-page settings filtersets)
       (values
         "index"
         (make-page
-          (get-page-head #f req)
-          (make-navigation (make-mustache-nav-data 'index filtersets))
+          (get-page-head #f settings)
+          (make-navigation (make-mustache-nav-data 'index filtersets (deploy-setting/enable-user-settings settings)))
           filtersets)))
 
-    (define (render-search-page req filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
+    (define (render-search-page settings filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
       (values
         "search"
         (make-page
-          (get-page-head "Search" req)
-          (make-navigation (make-mustache-nav-data 'search filtersets))
+          (get-page-head "Search" settings)
+          (make-navigation (make-mustache-nav-data 'search filtersets (deploy-setting/enable-user-settings settings)))
           (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result))))
 
-    (define (render-settings-page req filtersets)
+    (define (render-settings-page req settings filtersets)
       (values
         "settings"
         (make-page
-          (get-page-head "Settings" req)
-          (make-navigation (make-mustache-nav-data 'settings filtersets))
+          (get-page-head "Settings" settings)
+          (make-navigation (make-mustache-nav-data 'settings filtersets (deploy-setting/enable-user-settings settings)))
           (render-settings req))))
 
 ))

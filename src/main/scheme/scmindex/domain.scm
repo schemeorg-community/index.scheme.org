@@ -58,6 +58,24 @@
     query-index
     facet-values
 
+    make-settings
+    deploy-setting/port
+    deploy-setting/spec-index
+    deploy-setting/solr-embed
+    deploy-setting/solr-home
+    deploy-setting/solr-url
+    deploy-setting/solr-core
+    deploy-setting/cache-templates
+    deploy-setting/page-size
+    deploy-setting/serve-static
+    deploy-setting/filterset-index
+    deploy-setting/sqlite-location
+    deploy-setting/enable-user-settings
+    user-setting/page-size
+    user-setting/param-filter-loose
+    user-setting/light-theme?
+    user-setting/ctrl-f-override
+
     make-filterset-store
     save-filterset-entries
     name-list
@@ -214,6 +232,26 @@
       (source-list filtername)
       (get-target filtername source)
       (get-source filtername target))
+
+    (define-interface
+      make-settings
+      (deploy-setting/port)
+      (deploy-setting/spec-index)
+      (deploy-setting/solr-embed)
+      (deploy-setting/solr-home)
+      (deploy-setting/solr-url)
+      (deploy-setting/solr-core)
+      (deploy-setting/cache-templates)
+      (deploy-setting/page-size)
+      (deploy-setting/serve-static)
+      (deploy-setting/filterset-index)
+      (deploy-setting/sqlite-location)
+      (deploy-setting/enable-user-settings)
+      (user-setting/page-size)
+      (user-setting/param-filter-loose)
+      (user-setting/light-theme?)
+      (user-setting/ctrl-f-override)
+      )
 
     (define (transform-request-libraries filterset-store filtername libraries)
       (if (null? libraries)

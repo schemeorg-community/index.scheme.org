@@ -3,4 +3,5 @@
  (enable-repl . #t)
  (page-size . 40)
  (cache-templates . #t)
- (serve-static . #t))
+ (serve-static . #t)
+ (enable-user-settings . #f))

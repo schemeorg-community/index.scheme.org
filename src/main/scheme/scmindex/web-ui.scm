@@ -16,12 +16,14 @@
     (scmindex mustache)
     (scmindex settings)
     (srfi 180))
-  (export init-web-ui)
+  (export init-web-ui
+          current-request)
   (begin
 
-    (define (init-web-ui config searcher filterset-store)
+    (define current-request (make-parameter #f))
+    (define logger (get-logger "web-ui"))
 
-      (define logger (get-logger "web-ui"))
+    (define (init-web-ui settings searcher filterset-store)
 
       (define filtersets (name-list filterset-store))
 
@@ -45,7 +47,7 @@
 
       ;; choose between caching and uncached template fetching functions
       (define get-template
-        (if (deploy-setting/cache-templates config)
+        (if (deploy-setting/cache-templates settings)
             get-template/cached
             get-template/uncached))
 
@@ -53,10 +55,11 @@
       ;; handler is expected to return two values -- template name and template data
       (define (get/html path handler)
         (get path (lambda (req resp)
-                    (define-values (name data) (handler req resp))
-                    (parameterize ((current-lookup data-lookup)
-                                   (current-collection list-collection))
-                      (execute (get-template name) data)))))
+                    (parameterize ((current-request req))
+                      (define-values (name data) (handler req resp))
+                      (parameterize ((current-lookup data-lookup)
+                                     (current-collection list-collection))
+                        (execute (get-template name) data)) ))))
 
       ;; utility function for defining a RESTful get endpoint
       ;; handler is expected to return sexpr representation of json response (as in srfi 180)
@@ -78,11 +81,11 @@
                     (resp/set-header! resp "Access-Control-Allow-Origin" "*")
                     (get-output-string payload))))
 
-      (define default-page-size (deploy-setting/page-size config))
+      (define default-page-size (deploy-setting/page-size settings))
 
-      (port (deploy-setting/port config))
+      (port (deploy-setting/port settings))
 
-      (when (deploy-setting/serve-static config)
+      (when (deploy-setting/serve-static settings)
         (static-files/external-location "static"))
 
       (not-found (lambda (req resp) (resp/redirect resp "/404.html")))
@@ -93,11 +96,13 @@
 
       (get/html "/"
                 (lambda (req resp)
-                  (render-home-page req filtersets)))
+                  (render-home-page settings filtersets)))
 
       (get/html "/settings"
                 (lambda (req resp)
-                  (render-settings-page req filtersets)))
+                  (if (deploy-setting/enable-user-settings settings)
+                      (render-settings-page req settings filtersets)
+                      (resp/redirect resp "/404.html"))))
 
       (post "/settings"
             (lambda (req resp)
@@ -113,8 +118,8 @@
       (get/html "/filterset/:filterset/search"
                 (lambda (req resp)
                   (define filterset (req/param req "filterset"))
-                  (define page-size (user-setting/page-size req))
-                  (define filter-params-loose?  (user-setting/param-filter-loose req))
+                  (define page-size (user-setting/page-size settings))
+                  (define filter-params-loose?  (user-setting/param-filter-loose settings))
                   (define page (let ((value (req/query-param req "page")))
                                  (if value
                                      (string->number value)
@@ -129,7 +134,7 @@
                   (define parameterized-by (or (req/query-param-values req "parameterized") '()))
                   (define search-result (query-index searcher start page-size query libs* param-types return-types parameterized-by tags filter-params-loose?))
                   (define search-result* (transform-result-libraries filterset-store filterset search-result))
-                  (render-search-page req filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result*)))
+                  (render-search-page settings filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result*)))
 
       ;; REST api
       (path "/rest"

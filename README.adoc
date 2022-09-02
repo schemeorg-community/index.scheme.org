@@ -193,6 +193,10 @@ The following is exhaustive list of valid properties
 | sqlite-data
 | File to use for sqlite data
 | "sqlitedb"
+
+| enable-user-settings
+| Allow user to save certain settings in cookies and show settings page
+| #t
 |===
 
 === Types definitions
