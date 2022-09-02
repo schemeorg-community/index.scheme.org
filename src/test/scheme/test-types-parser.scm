@@ -81,6 +81,26 @@
   (test-equal '(integer? string?) (index-entry-return-types (list-ref specs 5))))
 
 (test-group
+  "Test syntax return type parsing"
+  (define specs
+    (read-spec '(test-lib)
+               `(((name . s1)
+                  (signature syntax-rules ()
+                             ((_ test))))
+                 ((name . s2)
+                  (signature syntax-rules ()
+                             ((_ test1))
+                             ((_ test2) foo?)))
+                 ((name . s3)
+                  (signature syntax-rules ()
+                             ((_ test1) foo?)
+                             ((_ test2) bar?))))))
+
+  (test-equal '() (index-entry-return-types (list-ref specs 0)))
+  (test-equal '(foo?) (index-entry-return-types (list-ref specs 1)))
+  (test-equal '(foo? bar?) (index-entry-return-types (list-ref specs 2))))
+
+(test-group
   "Test subtyping"
   ;;
   ;;  A?  B?

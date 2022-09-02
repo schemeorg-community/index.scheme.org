@@ -87,6 +87,7 @@
            <str name="facet">true</str>
            <str name="facet.sort">index</str>
            <str name="facet.mincount">0</str>
+           <str name="facet.limit">100000</str>
            <str name="facet.field">tags</str>
            <str name="facet.field">lib</str>
            <str name="facet.field">param_types</str>
