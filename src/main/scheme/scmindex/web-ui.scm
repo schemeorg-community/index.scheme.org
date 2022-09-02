@@ -14,7 +14,6 @@
     (scmindex domain)
     (scmindex types-parser)
     (scmindex mustache)
-    (scmindex settings)
     (srfi 180))
   (export init-web-ui
           current-request)
