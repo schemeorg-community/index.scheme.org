@@ -175,7 +175,7 @@
 
     (define (extract-return-types signature)
       (when (< (length signature) 3)
-        (error (string-append "Bad signature: " (->string signature))))
+        (error (string-append "Bad signature: " (write* signature))))
       (parse-type-from-return (caddr signature)))
 
     (define (make-type-maps specs)

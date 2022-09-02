@@ -6,11 +6,10 @@
   (import (scheme base)
           (scheme read)
           (scheme write))
-  (export ->string read*)
+  (export write* read*)
   (begin
 
-    ;;TODO rename to write*
-    (define (->string obj)
+    (define (write* obj)
       (define port (open-output-string))
       (write obj port)
       (get-output-string port))

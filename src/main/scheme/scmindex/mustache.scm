@@ -565,11 +565,12 @@
         (cond
           ((find (lambda (el) (equal? term el)) literals)
            (make-sexpr-el #f (symbol->string term) "bright-syntax" #f #f))
+          ((string? term)
+           (make-sexpr-el #f term "muted" #f #f))
           ((or (equal? '... term)
-               (equal? '|#| term)
                (boolean? term)
                (number? term))
-           (make-sexpr-el #f (->string term) "muted" #f #f))
+           (make-sexpr-el #f (write* term) "muted" #f #f))
           (else
             (make-sexpr-el #f #f "sexpr-flex muted" #f
                            (list (make-sexpr-el "&#x27E8" #f #f #f #f)
@@ -654,6 +655,7 @@
                          (cdar sexpr))))
         ((or (symbol? sexpr)
              (boolean? sexpr)
+             (string? sexpr)
              (number? sexpr)) 
          (list (term-handler sexpr)))
         ((and (pair? sexpr) (symbol? (cdr sexpr)))

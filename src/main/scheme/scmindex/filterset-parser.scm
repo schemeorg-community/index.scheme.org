@@ -35,11 +35,11 @@
     (define (read-filter filtername input)
       (map
         (lambda (entry)
-          (define source (->string (car entry)))
+          (define source (write* (car entry)))
           (define target
             (cond
               ((equal? #t (cdr entry)) source)
-              (else (->string (cdr entry)))))
+              (else (write* (cdr entry)))))
           (make-filter-entry filtername source target))
         input))
     

@@ -171,15 +171,15 @@
       (pattern pattern ... . pattern)
       (pattern ... pattern ellipsis pattern ...)
       (pattern ... pattern ellipsis pattern ... . pattern)
-      (_append |#| (pattern ...))
-      (_append |#| (pattern ... pattern ellipsis pattern ...)))
+      (_append "#" (pattern ...))
+      (_append "#" (pattern ... pattern ellipsis pattern ...)))
     (template
       identifier
       constant
       (element ...)
       (element element ... . template)
       (ellipsis template)
-      (_append |#| (element ...)))))
+      (_append "#" (element ...)))))
  ((name . if)
   (signature
    syntax-rules
@@ -435,15 +435,15 @@
     (pattern pattern ... . pattern)
     (pattern ... pattern ellipsis pattern ...)
     (pattern ... pattern ellipsis pattern ... . pattern)
-    (_append |#| (pattern ...))
-    (_append |#| (pattern ... pattern ellipsis pattern ...)))
+    (_append "#" (pattern ...))
+    (_append "#" (pattern ... pattern ellipsis pattern ...)))
    (template
     identifier
     constant
     (element ...)
     (element element ... . template)
     (ellipsis template)
-    (_append |#| (element ...)))
+    (_append "#" (element ...)))
    (element template (_append template ellipsis))))
  ((name . tan) (signature lambda ((number? z)) number?) (tags pure))
  ((name . truncate) (signature lambda ((real? x)) integer?) (tags pure))
