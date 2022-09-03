@@ -85,6 +85,7 @@
           (define parameterized-by (assoc* 'parameterized-by entry '()))
           (define param-signatures (assoc* 'subsigs entry '()))
           (define spec-values (assoc* 'spec-values entry '()))
+          (log-debug logger "Parsed spec {}" name)
           (make-index-entry lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types parameterized-by spec-values supertypes))
         input))
 

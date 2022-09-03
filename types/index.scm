@@ -126,7 +126,7 @@
  ((srfi 95) . "types/srfi.95.scm")
  ;; srfi 22 -- non-sexpr syntax
  ;; srfi 55 -- ??
- ;;((srfi 67) . "types/srfi.67.scm") TODO
+ ((srfi 67) . "types/srfi.67.scm")
  ;;((srfi 87) . "types/srfi.87.scm") TODO
  ;; srfi 128 -- part of r7rs large
  ;; srfi 7 -- ??
