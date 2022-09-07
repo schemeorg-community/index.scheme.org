@@ -50,8 +50,6 @@
        (string->number (get-cookie-property 'pageSize "40")))
       ((user-setting/param-filter-loose)
        (equal? "yes" (get-cookie-property 'filterParamsLoose "yes")))
-      ((user-setting/light-theme?)
-       (equal? "light" (get-cookie-property 'theme "light")))
       ((user-setting/ctrl-f-override)
        (equal? "yes" (get-cookie-property 'overrideCtrlF "yes"))))))
 

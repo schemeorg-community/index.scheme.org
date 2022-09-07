@@ -149,10 +149,9 @@
     ;; data used in <head>
     (define-mustache-record-type <page-head>
                                  page-head-lookup
-                                 (make-page-head title light-theme ctrlf-override)
+                                 (make-page-head title ctrlf-override)
                                  page-head?
                                  (title page-head-title)
-                                 (light-theme page-head-light-theme)
                                  (ctrlf-override page-head-ctrlf-override))
 
     ;; setting block in settings page
@@ -271,12 +270,6 @@
                       "40"
                       '("10" "40" "100"))
 
-        (make-setting "theme"
-                      "Theme"
-                      ""
-                      "light"
-                      '("light" "dark"))
-
         (make-setting "overrideCtrlF"
                       "Override control+f behavior"
                       "If enabled, pressing control+f will highlight and focus search text field"
@@ -293,7 +286,7 @@
                       "yes"
                       '("yes" "no"))))
 
-    (define settings-cookies '("overrideCtrlF" "theme" "pageSize" "filterParamsLoose"))
+    (define settings-cookies '("overrideCtrlF" "pageSize" "filterParamsLoose"))
 
     (define (render-settings req)
       (define cookies (req/cookies req))
@@ -759,7 +752,7 @@
                            (make-sexpr-el #f (symbol->string (cadr sig)) "bright-type" (make-link (cadr sig) #f) #f))))
 
     (define (get-page-head title settings)
-      (make-page-head title (user-setting/light-theme? settings) (user-setting/ctrl-f-override settings)))
+      (make-page-head title (user-setting/ctrl-f-override settings)))
 
     (define (render-home-page settings filtersets)
       (values

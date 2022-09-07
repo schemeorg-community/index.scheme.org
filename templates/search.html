@@ -1,4 +1,4 @@
-<html lang="en">
+<html lang="en" class="theme-default">
     {{#head}}
         {{>head}}
     {{/head}}
@@ -13,14 +13,14 @@
         <main class="body__content search-page">
             <aside class="search-page__controls" aria-label="Search controls" id="search-controls">
                 <div class="search-page__controls-hidden-header">
-                    <button class="search-page__controls-open" onclick="showSearchControls()" aria-label="Expand search controls">
+                    <button id="search-controls-open" class="search-page__controls-open" aria-label="Expand search controls">
                         <span class="icon-circle-right"></span>
                     </button>
                     <span class="search-page__controls-hidden-header-text">Search controls</span>
                 </div>
                 <div class="search-page__controls-visible-header">
                     <h2 class="search-page__controls-visible-header-text">{{filterset}}</h2>
-                    <button class="search-page__controls-close" onclick="hideSearchControls()" aria-label="Collapse search controls">
+                    <button id="search-controls-close" class="search-page__controls-close" aria-label="Collapse search controls">
                         <span class="icon-circle-right"></span>
                     </button>
                 </div>

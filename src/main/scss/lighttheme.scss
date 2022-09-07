@@ -1,0 +1,18 @@
+.theme-light,
+.theme-default
+{
+    --text-color-against-accent: white;
+    --text-color-against-bg: black;
+    --text-color-muted: #444;
+    --bg-color: #eee;
+    --bg-color2: white;
+    --accent-color: #900;
+    --secondary-color: #338;
+    --tertary-color: #161;
+
+    --nav-bg-color: var(--bg-color);
+    --nav-text-color: var(--text-color-against-bg);
+
+    --tag-color: white;
+    --tag-bg-color: #555;
+}

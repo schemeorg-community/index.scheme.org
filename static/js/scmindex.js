@@ -44,9 +44,59 @@ function collapseControlsForSmallScreen() {
     }
 }
 
+function applyTheme() {
+    let theme = window.localStorage.getItem('theme');
+    let themeCls;
+    if (theme == null) {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            themeCls = 'dark';
+        } else {
+            themeCls = 'light';
+        }
+    } else {
+        themeCls = theme;
+    }
+    document.documentElement.className = '';
+    document.documentElement.classList.add('theme-' + themeCls);
+}
+
+//******************************************************
+
 window.addEventListener('load', () => {
     handleControlsVisibilityOnLoad();
+    let openBtn = document.getElementById('search-controls-open');
+    if (openBtn) {
+        openBtn.addEventListener('click', showSearchControls);
+    }
+    let closeBtn = document.getElementById('search-controls-close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideSearchControls);
+    }
+    let themecb = document.getElementById('theme-cb');
+    themecb.value = window.localStorage.getItem('theme') || 'default';
+    themecb.addEventListener('change', e => {
+        let selected = e.target.value;
+        if (selected == 'default') {
+            window.localStorage.removeItem('theme');
+        } else {
+            window.localStorage.setItem('theme', selected);
+        }
+        applyTheme();
+    });
+    applyTheme();
+    document.getElementById('theme-cb-wrapper').classList.remove('hidden');
     setTimeout(() => {
         document.body.classList.remove('preload');
     }, 0);
 });
+
+window.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.keyCode == 70) { 
+        let el = document.getElementById('query-field');
+        if (el) {
+            e.preventDefault();
+            el.select();
+        }
+    }
+});
+document.documentElement.classList.add('js-enabled');

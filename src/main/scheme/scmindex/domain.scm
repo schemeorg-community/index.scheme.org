@@ -73,7 +73,6 @@
     deploy-setting/enable-user-settings
     user-setting/page-size
     user-setting/param-filter-loose
-    user-setting/light-theme?
     user-setting/ctrl-f-override
 
     make-filterset-store
@@ -249,7 +248,6 @@
       (deploy-setting/enable-user-settings)
       (user-setting/page-size)
       (user-setting/param-filter-loose)
-      (user-setting/light-theme?)
       (user-setting/ctrl-f-override)
       )
 

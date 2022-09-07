@@ -452,3 +452,7 @@ $media-breakpoint: 600px;
         color: var(--text-color-muted);
     }
 }
+
+.js-enabled .body.preload * {
+    display: none;
+}

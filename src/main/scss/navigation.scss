@@ -1,5 +1,8 @@
 .navbar {
 
+    display: flex;
+    align-items: flex-start;
+
     background-color: var(--nav-bg-color);
 
     &__list {
@@ -36,8 +39,8 @@
 
     &__link {
         display: block;
-        padding: 5px;
         text-decoration: none;
+        padding: 5px;
         color: var(--nav-text-color);
         cursor: default;
         white-space: nowrap;
@@ -61,4 +64,21 @@
 .navbar__list--toplevel .navbar__list-item:hover .navbar__list--nestedlevel
 {
     display: flex;
+}
+
+#theme-cb-wrapper {
+    margin-left: auto;
+    margin-right: 2em;
+}
+
+#theme-cb-wrapper.hidden {
+    display: none;
+}
+
+#theme-cb {
+    border: none;
+    padding: 5px;
+    color: var(--nav-text-color);
+    background-color: var(--bg-color2);
+    text-align: end;
 }
