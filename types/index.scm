@@ -133,7 +133,7 @@
  ;; srfi 10 -- non-sexrp syntax
  ((srfi 35) . "types/srfi.35.scm")
  ;;((srfi 63) . "types/srfi.63.scm") TODO
- ;;((srfi 66) . "types/srfi.66.scm") TODO
+ ((srfi 66) . "types/srfi.66.scm")
  ;;((srfi 99) . "types/srfi.99.scm") TODO
  ;; srfi 111 -- part of r7rs large
  ;; srfi 117 -- part of r7rs large
