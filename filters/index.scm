@@ -9,4 +9,5 @@
  ("Gauche" . "filters/gauche.scm")
  ("Gambit" . "filters/gambit.scm")
  ("Guile" . "filters/guile.scm")
+ ("MIT" . "filters/mit.scm")
 )
