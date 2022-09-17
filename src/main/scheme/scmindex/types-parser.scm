@@ -123,7 +123,7 @@
                     supertypes)
                   entries)))))
         '()
-        input))
+        (reverse input)))
 
     (define (extract-param-names signature)
       (define params-list (cadr signature))

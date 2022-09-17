@@ -5,7 +5,7 @@
       (signature . (lambda (obj) boolean?))
       (tags . (pure predicate))
       (supertypes . (number?))))
-  (define f (car (read-spec '(test lib) (list spec-raw))))
+  (define f (car (read-spec '(test lib) '() (list spec-raw))))
   (define f* (index-entry->json f))
   (test-equal '(test lib) (index-entry-lib f))
   (test-equal "(test lib)" (cdr (assoc 'lib f*)))
@@ -23,9 +23,24 @@
   (test-equal #("number?") (cdr (assoc 'super_types f*))))
 
 (test-group
+  "Test idenfifier ignored"
+  (define specs
+    (read-spec '(test lib)
+               '(foo)
+               '(((name . f1)
+                  (signature lambda () *))
+                 ((name . foo)
+                  (signature lambda () *))
+                 ((name . f2)
+                  (signature lambda () *)))))
+  (test-equal 2 (length specs))
+  (test-equal '(f1 f2) (map index-entry-name specs)))
+
+(test-group
   "Test function parameter name parsing"
   (define specs
     (read-spec '(test lib)
+               '()
                `(
                  ((name . f1)
                   (signature . (lambda () *)))
@@ -42,6 +57,7 @@
   "Test function parameter type parsing"
   (define specs
     (read-spec '(test lib)
+               '()
                `(
                  ((name . f1)
                   (signature . (lambda () *)))
@@ -60,6 +76,7 @@
   "Test function return type parsing"
   (define specs
     (read-spec '(test lib)
+               '()
                 `(
                   ((name . f1)
                    (signature . (lambda () *)))
@@ -84,6 +101,7 @@
   "Test syntax return type parsing"
   (define specs
     (read-spec '(test-lib)
+               '()
                `(((name . s1)
                   (signature syntax-rules ()
                              ((_ test))))
@@ -111,6 +129,7 @@
   ;;
   (define specs
     (read-spec '(test lib)
+               '()
                `(
                  ((name . A?)
                   (signature . (lambda (obj) boolean?))
@@ -166,6 +185,7 @@
   "Test kawa mangling"
   (define specs
     (read-spec '(test lib)
+               '()
                `(
                  ((name . ->char-set)
                   (signature . (lambda ((char? x)) string?)))
