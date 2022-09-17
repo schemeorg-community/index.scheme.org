@@ -1,6 +1,7 @@
 (((name . acos) (signature lambda ((number? z)) number?) (tags pure))
  ((name . asin) (signature lambda ((number? z)) number?) (tags pure))
  ((name . atan) (signature lambda ((number? z)) number?) (tags pure))
+ ((name . atan) (signature lambda ((real? y) (real? x)) number?) (tags pure))
  ((name . cos) (signature lambda ((number? z)) number?) (tags pure))
  ((name . exp) (signature lambda ((number? z)) number?) (tags pure))
  ((name . finite?) (signature lambda ((number? z)) boolean?) (tags pure))

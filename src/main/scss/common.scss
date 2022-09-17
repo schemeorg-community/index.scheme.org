@@ -70,6 +70,20 @@
     }
 }
 
-.preload * {
-    transition-duration: 0s !important;
+@keyframes animate-enter {
+    0% {
+        opacity: 0.1;
+        transform: translate(0,100px);
+    }
+    100% {
+    }
+}
+
+.animated-enter {
+  animation-duration: 0.7s;
+  animation-name: animate-enter;
+  animation-delay: 0.0s;
+  animation-fill-mode: backwards;
+  animation-timing-function: cubic-bezier(0.13, 0.79, 0.09, 1.03);
+  overflow: hidden;
 }

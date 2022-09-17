@@ -10,6 +10,11 @@
     margin-bottom: 2em;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 24px;
 
+    &__completeness-note {
+        font-size: 0.8em;
+        color: var(--text-color-muted);
+    }
+
     &__header {
         color: var(--accent-color);
     }
@@ -53,6 +58,14 @@
         text-align: center;
         flex: 1;
     }
+}
 
+.codeblock {
+    background-color: var(--bg-color);
+    font-family: monospace;
+}
 
+.codeblock__dollar {
+    color: var(--tertary-color);
+    font-weight: bold;
 }

@@ -149,10 +149,9 @@
     ;; data used in <head>
     (define-mustache-record-type <page-head>
                                  page-head-lookup
-                                 (make-page-head title ctrlf-override)
+                                 (make-page-head title)
                                  page-head?
-                                 (title page-head-title)
-                                 (ctrlf-override page-head-ctrlf-override))
+                                 (title page-head-title))
 
     ;; setting block in settings page
     (define-mustache-record-type <setting>
@@ -270,12 +269,6 @@
                       "40"
                       '("10" "40" "100"))
 
-        (make-setting "overrideCtrlF"
-                      "Override control+f behavior"
-                      "If enabled, pressing control+f will highlight and focus search text field"
-                      "no"
-                      '("yes" "no"))
-
         (make-setting "filterParamsLoose"
                       "Use loose parameter filtering"
                       "When enabled, filtering by parameter of union type, will return results that take parameter of
@@ -286,7 +279,7 @@
                       "yes"
                       '("yes" "no"))))
 
-    (define settings-cookies '("overrideCtrlF" "pageSize" "filterParamsLoose"))
+    (define settings-cookies '("pageSize" "filterParamsLoose"))
 
     (define (render-settings req)
       (define cookies (req/cookies req))
@@ -309,16 +302,15 @@
                         options))
         settings-data))
 
+    (define (remove-parens str)
+      (list->string
+        (filter
+          (lambda (ch)
+            (and (not (eqv? ch #\())
+                 (not (eqv? ch #\)))))
+          (string->list str))))
+
     (define (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result)
-
-      (define (remove-parens str)
-        (list->string
-          (filter
-            (lambda (ch)
-              (and (not (eqv? ch #\())
-                   (not (eqv? ch #\)))))
-            (string->list str))))
-
       (define current-query
         (append
           `((page . ,(number->string page)))
@@ -366,7 +358,7 @@
           (list (make-facet name title options))))
 
     (define (parse-facet-options facet-result selected-values label-transformer)
-      (define fn (if label-transformer label-transformer (lambda (x) x)))
+      (define fn (if label-transformer label-transformer values))
       (define options
         (map
           (lambda (f)
@@ -453,7 +445,6 @@
           (else (list #f total-pages))))
       (define shown-pages
         (append begining near-range ending))
-
       (map
         (lambda (p)
           (if (not p)
@@ -506,10 +497,8 @@
                                                     signature)))))
       (define syntax-param-signatures
         (render-param-signatures (index-entry-syntax-param-signatures index-entry)))
-
       (define spec-values
         (render-spec-values (index-entry-spec-values index-entry)))
-
       (make-result-item
         signature-sd
         param-signatures
@@ -596,7 +585,7 @@
             (define return
               (if (= 1 (length rule))
                   '()
-                  `(,(render-return-type (cadr rule) #f))))
+                  (render-return-type (cadr rule) #f)))
             (make-sexpr-el #f #f "sexpr-flex" #f (append (render-sexpr (cons (car rule) '()) term-handler 0) return)))
           rules))
       (make-sexpr-el #f #f "sexpr-flex-col" #f rules-sds))
@@ -661,7 +650,6 @@
       (define (do-render-return-type value)
         (cond
           ((or (equal? value '...)
-               (equal? value 'undefined)
                (equal? value '*))
            (make-sexpr-el #f (symbol->string value) "muted" #f #f))
           ((equal? value #f)
@@ -677,7 +665,13 @@
                                                         (make-sexpr-el #f #f "sexpr-flex" #f (list spacer-sd (do-render-return-type e))))
                                                       (cdr value))
                                                   ,paren-close-sd)))))
-      (make-sexpr-el #f #f "sexpr-flex" #f (list spacer-sd long-arrow-sd spacer-sd (do-render-return-type returns))))
+      (if (equal? 'undefined returns)
+          (list)
+          (list (make-sexpr-el #f #f "sexpr-flex" #f 
+                               (list spacer-sd 
+                                     long-arrow-sd 
+                                     spacer-sd 
+                                     (do-render-return-type returns))))))
 
     (define (render-param-type type sub?)
       (cond
@@ -697,9 +691,7 @@
                            (append (list slash sd) sds)))))))))
 
     (define (render-procedure-signature name sig sub?)
-
       (define name-sd (make-sexpr-el #f name (if sub? "muted-name" "bright-name") #f #f))
-
       (define (render-params-block params)
         (let loop ((params params)
                    (last (null? (cdr (cadr sig))))
@@ -721,27 +713,24 @@
                                `(,spacer-sd
                                   ,(make-sexpr-el #f (symbol->string param) "muted" #f #f)
                                   ,@(if last (list paren-close-sd) (list)))))))
-
           (if last
               (reverse (cons sd result))
               (loop (cdr params)
                     (null? (cddr params))
                     (cons sd result)))))
-
       (define params (cadr sig))
       (define return-sd (render-return-type (caddr sig) sub?))
-
       (if (null? params)
           (make-sexpr-el #f #f "sexpr-flex" #f
-                         (list paren-open-sd
-                               name-sd
-                               paren-close-sd
-                               return-sd))
+                         `(,paren-open-sd
+                            ,name-sd
+                            ,paren-close-sd
+                            ,@return-sd))
           (make-sexpr-el #f #f "sexpr-flex" #f
-                         (list paren-open-sd
-                               name-sd
-                               (make-sexpr-el #f #f "sexpr-flex sexpr-shrink" #f (render-params-block params))
-                               return-sd))))
+                         `(,paren-open-sd
+                            ,name-sd
+                            ,(make-sexpr-el #f #f "sexpr-flex sexpr-shrink" #f (render-params-block params))
+                            ,@return-sd))))
 
     (define (render-value-signature name sig)
       (make-sexpr-el #f #f "sexpr-flex" #f
@@ -751,14 +740,11 @@
                            spacer-sd
                            (make-sexpr-el #f (symbol->string (cadr sig)) "bright-type" (make-link (cadr sig) #f) #f))))
 
-    (define (get-page-head title settings)
-      (make-page-head title (user-setting/ctrl-f-override settings)))
-
     (define (render-home-page settings filtersets)
       (values
         "index"
         (make-page
-          (get-page-head #f settings)
+          (make-page-head #f)
           (make-navigation (make-mustache-nav-data 'index filtersets (deploy-setting/enable-user-settings settings)))
           filtersets)))
 
@@ -766,7 +752,7 @@
       (values
         "search"
         (make-page
-          (get-page-head "Search" settings)
+          (make-page-head "Search")
           (make-navigation (make-mustache-nav-data 'search filtersets (deploy-setting/enable-user-settings settings)))
           (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result))))
 
@@ -774,7 +760,7 @@
       (values
         "settings"
         (make-page
-          (get-page-head "Settings" settings)
+          (make-page-head "Settings")
           (make-navigation (make-mustache-nav-data 'settings filtersets (deploy-setting/enable-user-settings settings)))
           (render-settings req))))
 

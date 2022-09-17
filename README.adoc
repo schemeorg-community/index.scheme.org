@@ -450,6 +450,9 @@ Query parameters
 
 | parameterized
 | return parameterization filter. Possible values returned in `/rest/parameterized`. The parameter can appear multiple times, and the result will include procedures which are parameterized by all values.
+
+| facet
+| whether to return facet information of the query. Defaults to "true"
 |===
 
 JSON schema

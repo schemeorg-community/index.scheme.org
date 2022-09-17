@@ -127,7 +127,8 @@
    (clause
     ((datum1 ...) expression1 expression2 ...)
     ((datum1 ...) => expression)
-    (else expression1 expression2 ...))))
+    (else expression1 expression2 ...)
+    (else => expression))))
  ((name . cdar) (signature lambda ((pair? pair)) *) (tags pure))
  ((name . cddr) (signature lambda ((pair? pair)) *) (tags pure))
  ((name . cdr) (signature lambda ((pair? pair)) *) (tags pure))

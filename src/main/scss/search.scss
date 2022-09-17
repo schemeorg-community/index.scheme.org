@@ -5,6 +5,7 @@ $media-breakpoint: 600px;
     display: flex;
     flex-direction: row;
     align-self: stretch;
+    overflow: hidden;
 
     &__controls {
         background-color: var(--bg-color2);
@@ -451,8 +452,4 @@ $media-breakpoint: 600px;
         font-size: 0.8em;
         color: var(--text-color-muted);
     }
-}
-
-.js-enabled .body.preload * {
-    display: none;
 }

@@ -14,6 +14,7 @@
     (scmindex domain)
     (scmindex types-parser)
     (scmindex mustache)
+    (only (srfi 1) filter)
     (srfi 180))
   (export init-web-ui
           current-request)
@@ -187,7 +188,15 @@
                         (define filter-params-loose? (equal? (or (req/query-param req "filter_loose") "true") "true"))
                         (define search-result (query-index searcher start rows query libs* param-types return-types parameterized-by tags filter-params-loose?))
                         (define search-result* (transform-result-libraries filterset-store filterset search-result))
-                        (search-result->json search-result*)))
+                        (define include-facets (string=? "true" (or (req/query-param req "facet") "true")))
+                        (define json (search-result->json search-result*))
+                        (if include-facets
+                            json
+                            (filter
+                              (lambda (e)
+                                (member (car e)
+                                        '(items total))) 
+                              json))))
 
             ))
 

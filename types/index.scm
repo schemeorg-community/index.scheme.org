@@ -1,4 +1,5 @@
 (
+ (r5rs . "types/r5rs.scm")
  ;; r6rs
  ((rnrs base (6)) . "types/rnrs.base.6.scm")
  ((rnrs arithmetic bitwise (6)) . "types/rnrs.arithmetic.flonum.6.scm")

@@ -56,6 +56,11 @@
         background-color: var(--bg-color2);
     }
 
+    &__link--schemeorg {
+        font-family: serif;
+        font-style: italic;
+    }
+
     &__list-item:hover &__link {
         background-color: var(--bg-color2);
     }

@@ -2,17 +2,16 @@
     {{#head}}
     {{>head}}
     {{/head}}
-    <body class="body">
+    <body class="body preload">
         <div class="body__navbar">
             {{#navigation}}
             {{>topnavigation}}
             {{/navigation}}
         </div>
         <div class="body__content">
-            <main class="index-page">
+            <main class="index-page animated-enter">
                 <h1 class="index-page__header">Scheme index</h1>
                 <p>Scheme index allows searching for Scheme procedures, syntax and constants through types, tags, and names. Please see <a class="index-page__text-link" href="/README.html#_userguide_for_site_visitors">user guide</a> for details.
-                <p>Select one of options below to get started.
 
                 <div class="index-page__filtersets">
                     {{# body }}
@@ -25,8 +24,16 @@
                     </span>
                 </div>
 
+                <p class="index-page__completeness-note">There are no guarantees about completeness of index for any of the scheme implementations.
+                Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs and implementation specific libraries might be missing.
+
                 <h2 class="index-page__header">REST API</h2>
-                <p>Scheme index provides REST API integration. Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>
+                <p>Scheme index provides REST API integration.
+                <div class="codeblock">
+                    <p><span class="codeblock__dollar">$</span>&nbsp;curl 'https://index.scheme.org/rest/filterset/Chibi/search?query=define-record-type&amp;facet=false'
+                    <p>{"items":[{"lib":"\"(scheme base)\"","name":"define-record-type","param_names":["constructor","pred","field"],"signature":"(syntax-rules () ((name constructor pred field ...)))","param_signatures":"((constructor (constructor-name field-name ...)) (field (field-name accessor-name) (field-name accessor-name modifier-name)))","syntax_param_signatures":"()","tags":[],"param_types":[],"return_types":[],"parameterized_by":[],"spec_values":[],"super_types":[]}],"total":1}
+                </div>
+                <p>Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>
 
                 <h2 class="index-page__header">Report an issue</h2>
                 <p>Please report any issues or suggestions you may have at <a class="index-page__text-link" href="https://github.com/arvyy/r7rs-index-site/issues">github</a>.</p>
