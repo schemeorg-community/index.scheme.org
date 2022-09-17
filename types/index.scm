@@ -41,6 +41,8 @@
  ((scheme repl) . "types/scheme.repl.scm")
  ((scheme time) . "types/scheme.time.scm")
  ((scheme write) . "types/scheme.write.scm")
+ ((scheme r5rs) . ((file . "types/r5rs.scm")
+                   (exclude . (transcript-on transcript-off))))
  
  ; r7rs large red
  ((scheme box) . "types/scheme.box.scm")

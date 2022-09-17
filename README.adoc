@@ -183,7 +183,7 @@ The following is exhaustive list of valid properties
 | #t
 
 | spec-index
-| Index of definitions to load (see Types definitions section)
+| Index of definitions to load (see Identifiers definitions section)
 | "./types/index.scm"
 
 | filterset-index 
@@ -199,20 +199,28 @@ The following is exhaustive list of valid properties
 | #t
 |===
 
-=== Types definitions
+=== Identifiers definitions
 
-Type definitions are structured into type files one for each library, and a single root index file which defines names and paths to those library files.
+Identifiers definitions are grouped into files (mostly one for each library), and a single root index file which defines names and paths to those files.
 The index file is specified in configuration under `spec-index` property, with a default value "./types/index.scm".
 
-Index should be a list of pairs - where `car` is a symbolic library name, and `cdr` is the file to load its definitions from.
+Index should be a list of pairs - where `car` is a symbolic library name, and `cdr` is associated information regarding definitions to load from. `cdr` may be an alist, with following fields:
+
+* `'file` - path from where to load definitions.
+
+* `'exclude` - a list of definitions to ignore from the file. 
+
+Alternatively, `cdr` might be a string, in which case it's treated as a file path.
 
 ```
 (
     ((scheme base) . "types/scheme.base.scm")
+    ((scheme r5rs) . ((file . "types/r5rs.scm")
+                      (exclude . (transcript-on transcript-off))))
 )
 ```
 
-Each library file is a list of entries, where each entry is an association list, using symbols as keys. An entry may be defining a function, a syntax macro, or a plain value.
+Each definitions file is a list of entries, where each entry is an association list, using symbols as keys. An entry may be defining a function, a syntax macro, or a plain value.
 
 [cols="1m,3a"]
 |===
@@ -295,7 +303,7 @@ The index file is specified in configuration under `filterset-index` property, w
 
 Index should be a list of pairs - where `car` is a string corresponding to filterset name, and `cdr` is the file to load its definitions from.
 
-Filterset definition file should be a list of pairs. `car` is a symbolic library name (matching what is defined in index for types definitions). `cdr` is either a symbolic library name (in which case, all the usages of library in `car` are renamed to what is in `cdr`), or a `#t` value (indicating to include library in `car` as is, without a rename).
+Filterset definition file should be a list of pairs. `car` is a symbolic library name (matching what is defined in index for identifiers definitions). `cdr` is either a symbolic library name (in which case, all the usages of library in `car` are renamed to what is in `cdr`), or a `#t` value (indicating to include library in `car` as is, without a rename).
 
 === Logging
 

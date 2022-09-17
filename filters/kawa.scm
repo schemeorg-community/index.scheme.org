@@ -12,6 +12,7 @@
  ((scheme lazy) . #t)
  ((scheme load) . #t)
  ((scheme process-context) . #t)
+ ((scheme r5rs) . #t)
  ((scheme read) . #t)
  ((scheme repl) . #t)
  ((scheme time) . #t)

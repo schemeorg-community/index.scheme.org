@@ -8,7 +8,7 @@
           (scheme file)
           (scheme read)
           (scheme write)
-          (only (srfi 1) lset-adjoin lset-difference alist-cons alist-delete delete-duplicates filter)
+          (only (srfi 1) lset-adjoin lset-difference alist-cons alist-delete delete-duplicates filter fold)
           (scmindex util)
           (scmindex domain)
           (arvyy slf4j))
@@ -22,6 +22,19 @@
 
     (define logger (get-logger "types-parser"))
 
+    (define (parse-spec-entry-data val)
+      (cond
+        ((string? val) (values val '()))
+        ((list? val)
+         (let* ((file (cond
+                        ((assoc 'file val) => cdr)
+                        (else (error "Missing 'file' attribute in spec entry data" val))))
+                (exclude (cond
+                           ((assoc 'exclude val) => cdr)
+                           (else '()))))
+           (values file exclude)))
+        (else (error "Unrecognized spec entry data" val))))
+
     (define (read-specs index-file)
       (log-info logger "Reading specs from index file {}" index-file)
       (with-input-from-file 
@@ -31,11 +44,13 @@
           (define specs*
             (map
               (lambda (entry)
-                (log-info logger "Reading specs from data file {} for lib {}" (cdr entry) (car entry))
+                (define-values (file excluded) (parse-spec-entry-data (cdr entry)))
+                (log-info logger "Reading specs from data file {} for lib {}" file (car entry))
                 (with-input-from-file
-                  (cdr entry)
+                  file
                   (lambda ()
                     (read-spec (car entry)
+                               excluded
                                (read)))))
               lst))
           (apply append specs*))))
@@ -45,9 +60,9 @@
         ((assoc key alist) => cdr)
         (else default)))
 
-    (define (read-spec lib input)
-      (map
-        (lambda (entry)
+    (define (read-spec lib excluded input)
+      (fold
+        (lambda (entry entries)
           (define name (let ((n (assoc* 'name entry #f)))
                          (unless n
                            (error "Missing name attribute"))
@@ -85,8 +100,29 @@
           (define parameterized-by (assoc* 'parameterized-by entry '()))
           (define param-signatures (assoc* 'subsigs entry '()))
           (define spec-values (assoc* 'spec-values entry '()))
-          (log-debug logger "Parsed spec {}" name)
-          (make-index-entry lib name param-names signature param-signatures syntax-param-signatures tags param-types return-types parameterized-by spec-values supertypes))
+          (cond
+            ;; name found in excluded list -- ignore
+            ((member name excluded) 
+             entries)
+            (else
+              (begin
+                (log-debug logger "Parsed spec {}" name)
+                (cons
+                  (make-index-entry 
+                    lib 
+                    name
+                    param-names
+                    signature
+                    param-signatures
+                    syntax-param-signatures
+                    tags
+                    param-types
+                    return-types
+                    parameterized-by
+                    spec-values
+                    supertypes)
+                  entries)))))
+        '()
         input))
 
     (define (extract-param-names signature)
