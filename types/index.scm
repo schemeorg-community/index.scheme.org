@@ -27,6 +27,10 @@
 
  ;; r7rs small
  ((scheme base) . "types/scheme.base.scm")
+ ((scheme base) . "types/srfi.0.scm")
+ ((scheme base) . "types/srfi.6.scm")
+ ((scheme base) . "types/srfi.9.scm")
+ ((scheme base) . "types/srfi.34.scm")
  ((scheme case-lambda) . "types/scheme.case-lambda.scm")
  ((scheme complex) . "types/scheme.complex.scm")
  ((scheme char) . "types/scheme.char.scm")
@@ -88,13 +92,12 @@
  ((scheme vector c128) . "types/scheme.vector.c128.scm")
 
  ;; misc srfi, added in order of popularity according to https://misc.lassi.io/2019/srfi-implementation-counts.scm
- ;; omitting anything added to r7rs small / large
- ;; srfi 1 -- part of r7rs large
+ ;; srfi 1 -- defined as (scheme list)
  ((srfi 8) . "types/srfi.8.scm")
  ((srfi 2) . "types/srfi.2.scm")
- ;; srfi 9 -- part of r7rs small
- ;; srfi 6 -- part of r7rs small
- ;; srfi 0 -- part of r7rs small
+ ((srfi 9) . "types/srfi.9.scm")
+ ((srfi 6) . "types/srfi.6.scm")
+ ((srfi 0) . "types/srfi.0.scm")
  ;; srfi 14 -- part of r7rs large
  ;; srfi 23 -- part of r7rs small
  ((srfi 27) . "types/srfi.27.scm")
@@ -111,16 +114,16 @@
  ((srfi 42) . "types/srfi.42.scm")
  ((srfi 69) . "types/srfi.69.scm")
  ;; srfi 98 -- part of r7rs small
- ;; srfi 4 -- superceded in r7rs large TODO
+ ;; srfi 4 -- superceded in r7rs large (TODO?)
  ((srfi 17) . "types/srfi.17.scm")
  ((srfi 37) . "types/srfi.37.scm")
  ;; srfi 41 -- part of r7rs large
  ;; srfi 43 -- part of r7rs large
- ;; srfi 30 -- non-sexpr syntax. Also part of r7rs small
+ ;; srfi 30 -- non-sexpr syntax
  ((srfi 45) . "types/srfi.45.scm")
  ((srfi 61) . "types/srfi.61.scm")
  ((srfi 25) . "types/srfi.25.scm")
- ;; srfi 34 -- part of r7rs small
+ ((srfi 34) . "types/srfi.34.scm")
  ;; srfi 62 -- non-sexpr syntax
  ((srfi 78) . "types/srfi.78.scm")
  ((srfi 18) . "types/srfi.18.scm")
@@ -147,6 +150,16 @@
 
 
 
+ ;; specific implementation handling
+ (bigloo . "types/r5rs.scm")
+ (bigloo . "types/srfi.0.scm")
+ (bigloo . "types/srfi.2.scm")
+ (bigloo . "types/srfi.6.scm")
+ (bigloo . "types/srfi.8.scm")
+ (bigloo . "types/srfi.9.scm")
+ (bigloo . "types/srfi.18.scm")
+ (bigloo . "types/srfi.28.scm")
+ (bigloo . "types/srfi.34.scm")
 
 
 

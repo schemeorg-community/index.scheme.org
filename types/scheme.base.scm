@@ -1,3 +1,4 @@
+;; not everything contained here; some definitions are stored in srfi
 (((name . *) (signature lambda ((number? z) ...) number?) (tags pure))
  ((name . +) (signature lambda ((number? z) ...) number?) (tags pure))
  ((name . -) (signature lambda ((number? z) ...) number?) (tags pure))
@@ -172,19 +173,6 @@
     (else expression1 expression2 ...)))
   (syntax-param-signatures
     (receiver procedure?)))
- ((name . cond-expand)
-  (signature
-   syntax-rules
-   (library and or not else)
-   ((_ ce-clause1 ce-clause2 ...)))
-  (subsigs
-   (ce-clause (feature-requirement expression ...) (else expression))
-   (feature-requirement
-    feature-identifier
-    (library library-name)
-    (and feature-requirement ...)
-    (or feature-requirement ...)
-    (not feature-requirement))))
  ((name . cons) (signature lambda (obj1 obj2) pair?) (tags pure))
  ((name . current-error-port)
   (signature lambda () output-port?)
@@ -202,12 +190,6 @@
    ((_ variable expression))
    ((_ (variable parameter1 ...) body))
    ((_ (variable parameter1 ... . parameter) body))))
- ((name . define-record-type)
-  (signature syntax-rules () ((name constructor pred field ...)))
-  (subsigs
-   (constructor (constructor-name field-name ...))
-   (field (field-name accessor-name)
-          (field-name accessor-name modifier-name))))
  ((name . define-syntax)
   (signature syntax-rules () ((_ keyword transformer-spec)))
   (syntax-param-signatures (transformer-spec transformer-spec)))
@@ -295,17 +277,6 @@
  ((name . gcd) (signature lambda ((integer? n) ...) integer?) (tags pure))
  ((name . get-output-bytevector)
   (signature lambda ((output-port? port)) bytevector?))
- ((name . get-output-string) (signature lambda ((output-port? port)) string?))
- ((name . guard)
-  (signature
-   syntax-rules
-   (=> else)
-   ((_ (variable cond-clause1 cond-clause2 ...) body)))
-  (subsigs
-   (cond-clause
-    (test expression1 ...)
-    (test => expression)
-    (else expression1 expression2 ...))))
  ((name . if)
   (signature
    syntax-rules
@@ -455,13 +426,9 @@
  ((name . open-input-bytevector)
   (signature lambda ((bytevector? bytevector)) input-port?)
   (tags pure))
- ((name . open-input-string)
-  (signature lambda ((string? string)) input-port?)
-  (tags pure))
  ((name . open-output-bytevector)
   (signature lambda () output-port?)
   (tags pure))
- ((name . open-output-string) (signature lambda () output-port?) (tags pure))
  ((name . or) (signature syntax-rules () ((_ test1 ...))))
  ((name . output-port-open?) (signature lambda ((output-port? port)) boolean?))
  ((name . output-port?)
@@ -490,7 +457,6 @@
  ((name . quotient)
   (signature lambda ((integer? n1) (integer? n2)) integer?)
   (tags pure))
- ((name . raise) (signature lambda (obj) undefined))
  ((name . raise-continuable) (signature lambda (obj) undefined))
  ((name . rational?)
   (signature lambda (obj) boolean?)
@@ -845,9 +811,6 @@
  ((name . vector?) (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . when)
   (signature syntax-rules () ((_ test expression1 expression2 ...))))
- ((name . with-exception-handler)
-  (signature lambda ((procedure? handler) (procedure? thunk)) *)
-  (subsigs (handler (lambda (obj) *)) (thunk (lambda () *))))
  ((name . write-bytevector)
   (signature lambda ((bytevector? bytevector)) undefined)
   (parameterized-by "(scheme base) current-output-port"))

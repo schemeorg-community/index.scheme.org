@@ -1,0 +1,7 @@
+*.swp
+dist
+README.html
+Test.log
+static/css/
+logs
+target

@@ -1,0 +1,5 @@
+(((name . open-input-string)
+  (signature lambda ((string? string)) input-port?)
+  (tags pure))
+ ((name . open-output-string) (signature lambda () output-port?) (tags pure))
+ ((name . get-output-string) (signature lambda ((output-port? port)) string?)))
