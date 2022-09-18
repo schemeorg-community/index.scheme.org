@@ -20,17 +20,27 @@
         index-file
         (lambda ()
           (define lst (read))
+          (define names
+            (map (lambda (entry)
+                   (define code (cdr (assoc 'code entry)))
+                   (define name (cdr (assoc 'name entry)))
+                   (cons code name))
+                 lst))
           (define filters
             (map
               (lambda (entry)
-                (log-info logger "Reading filterset from data file {} for filter {}" (cdr entry) (car entry))
+                (define code (cdr (assoc 'code entry)))
+                (define file (cdr (assoc 'file entry)))
+                (log-info logger "Reading filterset from data file {} for filter {}" code file)
                 (with-input-from-file
-                  (cdr entry)
+                  file
                   (lambda ()
-                    (read-filter (car entry)
+                    (read-filter code
                                  (read)))))
               lst))
-          (apply append filters))))
+          (values 
+            names
+            (apply append filters)))))
 
     (define (read-filter filtername input)
       (map

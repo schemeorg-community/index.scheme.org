@@ -15,8 +15,8 @@
 
                 <div class="index-page__filtersets">
                     {{# body }}
-                    <a href="/filterset/{{{.}}}/search" class="index-page__filterset">
-                        <span class="index-page__filterset-text">{{.}}</span>
+                    <a href="/filterset/{{{code}}}/search" class="index-page__filterset">
+                        <span class="index-page__filterset-text">{{name}}</span>
                     </a>
                     {{/ body }}
                     <span class="index-page__filterset index-page__filterset--fake">
@@ -30,7 +30,7 @@
                 <h2 class="index-page__header">REST API</h2>
                 <p>Scheme index provides REST API integration.
                 <div class="codeblock">
-                    <p><span class="codeblock__dollar">$</span>&nbsp;curl 'https://index.scheme.org/rest/filterset/Chibi/search?query=define-record-type&amp;facet=false'
+                    <p><span class="codeblock__dollar">$</span>&nbsp;curl 'https://index.scheme.org/rest/filterset/chibi/search?query=define-record-type&amp;facet=false'
                     <p>{"items":[{"lib":"\"(scheme base)\"","name":"define-record-type","param_names":["constructor","pred","field"],"signature":"(syntax-rules () ((name constructor pred field ...)))","param_signatures":"((constructor (constructor-name field-name ...)) (field (field-name accessor-name) (field-name accessor-name modifier-name)))","syntax_param_signatures":"()","tags":[],"param_types":[],"return_types":[],"parameterized_by":[],"spec_values":[],"super_types":[]}],"total":1}
                 </div>
                 <p>Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>

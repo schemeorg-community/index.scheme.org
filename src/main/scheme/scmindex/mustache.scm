@@ -202,6 +202,13 @@
                                  (value spec-value-fieldentry-value)
                                  (description spec-value-fieldentry-description))
 
+    (define-mustache-record-type <filterset-entry>
+                                 filterset-entry-lookup
+                                 (make-filterset-entry code name)
+                                 filterset-entry?
+                                 (code filterset-entry-code)
+                                 (name filterset-entry-name))
+
     ;; additional lookup names, mostly "null?" predicates
     (define (result-item-extra-lookup obj name found not-found)
       (cond
@@ -246,17 +253,18 @@
         result-item-extra-lookup
         facet-extra-lookup
         spec-value-fieldblock-lookup
-        spec-value-fieldentry-lookup))
+        spec-value-fieldentry-lookup
+        filterset-entry-lookup))
 
     (define (make-mustache-nav-data page filtersets show-settings?)
       (filter
-        (lambda (x) x)
+        values
         (list
           (make-nav-item "Home" "icon-home3" "/" (equal? page 'index) '())
           (make-nav-item "Search" "icon-search" #f (equal? page 'search)
                          (map
                            (lambda (f)
-                             (make-nav-item f "" (string-append "/filterset/" f "/search") #f '()))
+                             (make-nav-item (cdr f) "" (string-append "/filterset/" (car f) "/search") #f '()))
                            filtersets))
           (if show-settings? (make-nav-item "Settings" "icon-cog" "/settings" (equal? page 'settings) '()) #f)
           (make-nav-item "Documentation" "icon-file-text2" "/README.html" (equal? page 'docs) '()))))
@@ -273,7 +281,7 @@
                       "Use loose parameter filtering"
                       "When enabled, filtering by parameter of union type, will return results that take parameter of
                       a type that composes that union. For example, filtering by `list?` (which is union type of `pair?`
-                                                                                                and `null?`) will find functions that take `pair?` argument. This leads to showing functions
+                      and `null?`) will find functions that take `pair?` argument. This leads to showing functions
                       that searcher is probably interested in, however at the drawback that those functions won't be
                       applicable in general case"
                       "yes"
@@ -746,7 +754,10 @@
         (make-page
           (make-page-head #f)
           (make-navigation (make-mustache-nav-data 'index filtersets (deploy-setting/enable-user-settings settings)))
-          filtersets)))
+          (map
+            (lambda (e)
+              (make-filterset-entry (car e) (cdr e)))
+            filtersets))))
 
     (define (render-search-page settings filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
       (values

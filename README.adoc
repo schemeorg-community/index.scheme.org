@@ -301,7 +301,13 @@ Filterset is a coarse filter, and defines which libraries to include (and option
 
 The index file is specified in configuration under `filterset-index` property, with a default value "./filters/index.scm".
 
-Index should be a list of pairs - where `car` is a string corresponding to filterset name, and `cdr` is the file to load its definitions from.
+Index should be a list of alists. Each alist contains three fields:
+
+* `code` - used in links;
+
+* `name` - displayed text;
+
+* `file` - associated filterset definition file.
 
 Filterset definition file should be a list of pairs. `car` is a symbolic library name (matching what is defined in index for identifiers definitions). `cdr` is either a symbolic library name (in which case, all the usages of library in `car` are renamed to what is in `cdr`), or a `#t` value (indicating to include library in `car` as is, without a rename).
 

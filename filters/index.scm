@@ -1,15 +1,51 @@
-(
- ("R5RS" . "filters/r5rs.scm")
- ("R6RS" . "filters/r6rs.scm")
- ("R7RS small" . "filters/r7rs-small.scm")
- ("R7RS large" . "filters/r7rs-large.scm")
- ("R7RS large + SRFIs" . "filters/portable.scm")
- ("Chibi" . "filters/chibi.scm")
- ("Kawa" . "filters/kawa.scm")
- ("Bigloo" . "filters/bigloo.scm")
- ("Chicken" . "filters/chicken.scm")
- ("Gauche" . "filters/gauche.scm")
- ("Gambit" . "filters/gambit.scm")
- ("Guile" . "filters/guile.scm")
- ("MIT" . "filters/mit.scm")
-)
+(((code . "r5rs")
+  (name . "R5RS")
+  (file . "filters/r5rs.scm"))
+
+ ((code . "r6rs")
+  (name . "R6RS")
+  (file . "filters/r6rs.scm"))
+
+ ((code . "r7rs_small")
+  (name . "R7RS small")
+  (file . "filters/r7rs-small.scm"))
+
+ ((code . "r7rs_large")
+  (name . "R7RS large")
+  (file . "filters/r7rs-large.scm"))
+
+ ((code . "r7rs_all")
+  (name . "R7RS large + SRFIs")
+  (file . "filters/portable.scm"))
+
+ ((code . "bigloo")
+  (name . "Bigloo")
+  (file . "filters/bigloo.scm"))
+
+ ((code . "chibi")
+  (name . "Chibi")
+  (file . "filters/chibi.scm"))
+
+ ((code . "chicken")
+  (name . "Chicken")
+  (file . "filters/chicken.scm"))
+
+ ((code . "gambit")
+  (name . "Gambit")
+  (file . "filters/gambit.scm"))
+
+ ((code . "guile")
+  (name . "Guile")
+  (file . "filters/guile.scm"))
+
+ ((code . "gauche")
+  (name . "Gauche")
+  (file . "filters/gauche.scm"))
+
+ ((code . "kawa")
+  (name . "Kawa")
+  (file . "filters/kawa.scm"))
+
+ ((code . "mit")
+  (name . "MIT")
+  (file . "filters/mit.scm")))

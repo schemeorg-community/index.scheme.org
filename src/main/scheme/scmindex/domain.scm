@@ -77,7 +77,9 @@
 
     make-filterset-store
     save-filterset-entries
-    name-list
+    save-filterset-names
+    get-name
+    code-list
     source-list
     get-target
     get-source
@@ -227,10 +229,12 @@
     (define-interface
       make-filterset-store
       (save-filterset-entries entries)
-      (name-list)
-      (source-list filtername)
-      (get-target filtername source)
-      (get-source filtername target))
+      (save-filterset-names names)
+      (get-name code)
+      (code-list)
+      (source-list code)
+      (get-target code source)
+      (get-source code target))
 
     (define-interface
       make-settings

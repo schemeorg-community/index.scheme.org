@@ -25,7 +25,11 @@
 
     (define (init-web-ui settings searcher filterset-store)
 
-      (define filtersets (name-list filterset-store))
+      (define filtersets (let ((lst (code-list filterset-store)))
+                           (map
+                             (lambda (code)
+                               (cons code (get-name filterset-store code)))
+                             lst)))
 
       ;; load templates from ./templates
       (define (partial-locator name)
@@ -117,31 +121,35 @@
 
       (get/html "/filterset/:filterset/search"
                 (lambda (req resp)
-                  (define filterset (req/param req "filterset"))
-                  (define page-size (user-setting/page-size settings))
-                  (define filter-params-loose?  (user-setting/param-filter-loose settings))
-                  (define page (let ((value (req/query-param req "page")))
-                                 (if value
-                                     (string->number value)
-                                     1)))
-                  (define start (* page-size (- page 1)))
-                  (define query (req/query-param req "query"))
-                  (define libs (req/query-param-values req "lib"))
-                  (define libs* (transform-request-libraries filterset-store filterset libs))
-                  (define param-types (or (req/query-param-values req "param") '()))
-                  (define return-types (or (req/query-param-values req "return") '()))
-                  (define tags (or (req/query-param-values req "tag") '()))
-                  (define parameterized-by (or (req/query-param-values req "parameterized") '()))
-                  (define search-result (query-index searcher start page-size query libs* param-types return-types parameterized-by tags filter-params-loose?))
-                  (define search-result* (transform-result-libraries filterset-store filterset search-result))
-                  (render-search-page settings filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result*)))
+                  (define filterset-code (req/param req "filterset"))
+                  (define filterset-name (get-name filterset-store filterset-code))
+                  (if (not filterset-name)
+                      (resp/redirect resp "/404.html")
+                      (let ()
+                        (define page-size (user-setting/page-size settings))
+                        (define filter-params-loose?  (user-setting/param-filter-loose settings))
+                        (define page (let ((value (req/query-param req "page")))
+                                       (if value
+                                           (string->number value)
+                                           1)))
+                        (define start (* page-size (- page 1)))
+                        (define query (req/query-param req "query"))
+                        (define libs (req/query-param-values req "lib"))
+                        (define libs* (transform-request-libraries filterset-store filterset-code libs))
+                        (define param-types (or (req/query-param-values req "param") '()))
+                        (define return-types (or (req/query-param-values req "return") '()))
+                        (define tags (or (req/query-param-values req "tag") '()))
+                        (define parameterized-by (or (req/query-param-values req "parameterized") '()))
+                        (define search-result (query-index searcher start page-size query libs* param-types return-types parameterized-by tags filter-params-loose?))
+                        (define search-result* (transform-result-libraries filterset-store filterset-code search-result))
+                        (render-search-page settings filtersets filterset-name page page-size query libs tags param-types return-types parameterized-by search-result*)))))
 
       ;; REST api
       (path "/rest"
 
             (get/rest "/filterset"
                       (lambda (req resp)
-                        (list->vector (name-list filterset-store))))
+                        (list->vector (code-list filterset-store))))
 
             (get/rest "/filterset/:filterset/libs"
                       (lambda (req resp)

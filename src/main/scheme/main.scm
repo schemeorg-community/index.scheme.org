@@ -67,7 +67,8 @@
 (let ((specs (read-specs (deploy-setting/spec-index settings))))
   (save-index-entries solr-searcher specs))
 
-(let ((filters (read-filters (deploy-setting/filterset-index settings))))
-  (save-filterset-entries sqlite-filterset-store filters))
+(let-values (((names filters) (read-filters (deploy-setting/filterset-index settings))))
+  (save-filterset-entries sqlite-filterset-store filters)
+  (save-filterset-names sqlite-filterset-store names))
 
 (init-web-ui settings solr-searcher sqlite-filterset-store)
