@@ -35,17 +35,19 @@
         (list->vector
           (map
             (lambda (f)
-              (define json (index-entry->json f))
-              (define extra
-                `((param_subtypes_loose . ,(list->vector (map symbol->string (flatten-type subtype-loose-map (index-entry-param-types f)))))
+              (define jsondata
+                `((name . ,(symbol->string (index-entry-name f)))
+                  (param_names . ,(list->vector (map symbol->string (index-entry-param-names f))))
+                  (lib . ,(index-entry-lib f))
+                  (tags . ,(list->vector (map symbol->string (index-entry-tags f))))
+                  (parameterized_by . ,(list->vector (index-entry-parameterized-by f)))
+                  (param_types . ,(list->vector (map symbol->string (index-entry-param-types f))))
+                  (param_subtypes_loose . ,(list->vector (map symbol->string (flatten-type subtype-loose-map (index-entry-param-types f)))))
                   (param_subtypes . ,(list->vector (map symbol->string (flatten-type subtype-strict-map (index-entry-param-types f)))))
-                  (return_supertypes . ,(list->vector (map symbol->string (flatten-type supertype-map (index-entry-return-types f)))))))
-              (let ((e (assoc 'spec_values json)))
-                (when e
-                  (let ((port (open-output-string)))
-                    (json-write (cdr e) port)
-                    (set-cdr! e (get-output-string port)))))
-              (append extra json))
+                  (return_types . ,(list->vector (map symbol->string (flatten-type supertype-map (index-entry-return-types f)))))
+                  (return_supertypes . ,(list->vector (map symbol->string (flatten-type supertype-map (index-entry-return-types f)))))
+                  (data . ,(write* (index-entry->alist f)))))
+              jsondata)
             funcs)))
       (parameterize ((commit-within 10))
         (delete-by-query solr-client core "*:*")
@@ -139,16 +141,9 @@
       (define resp (cdr (assoc 'response response)))
       (define total (cdr (assoc 'num-found resp)))
       (define docs 
-        (let ((docs* (vector->list (cdr (assoc 'docs resp)))))
-          (for-each
-            (lambda (json)
-              (define e (assoc 'spec_values json))
-              (when e
-                (let* ((str (cdr e))
-                       (port (open-input-string str)))
-                  (set-cdr! e (json-read port)))))
-            docs*)
-          (map json->index-entry docs*)))
+        (map (lambda (doc)
+               (alist->index-entry (read* (cdr (assoc 'data doc))))) 
+             (vector->list (cdr (assoc 'docs resp)))))
       (define facet-counts (cdr (assoc 'facet_counts response)))
       (define facet-fields (cdr (assoc 'facet_fields facet-counts)))
       (define lib-facets (fold-facet-values (cdr (assoc 'lib facet-fields))))

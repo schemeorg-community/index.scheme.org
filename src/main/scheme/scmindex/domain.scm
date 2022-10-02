@@ -6,6 +6,7 @@
   (scmindex domain)
   (import (scheme base)
           (scheme read)
+          (scheme write)
           (only (srfi 1) filter)
           (srfi 95)
           (arvyy interface)
@@ -50,8 +51,9 @@
     filter-entry-target
 
     index-entry->json
-    json->index-entry
     search-result->json
+    index-entry->alist
+    alist->index-entry
     
     make-searcher
     save-index-entries
@@ -120,18 +122,137 @@
       (supertypes index-entry-supertypes))
 
     (define (index-entry->json func)
-      `((lib . ,(write* (index-entry-lib func)))
+      (define type
+        (case (car (index-entry-signature func))
+          ((lambda) 'function)
+          ((syntax-rules) 'syntax)
+          (else 'value)))
+      `((lib . ,(index-entry-lib func))
         (name . ,(symbol->string (index-entry-name func)))
-        (param_names . ,(list->vector (map write* (index-entry-param-names func))))
-        (signature . ,(write* (index-entry-signature func)))
-        (param_signatures . ,(write* (index-entry-param-signatures func)))
-        (syntax_param_signatures . ,(write* (index-entry-syntax-param-signatures func)))
+        (type . ,(symbol->string type))
+        (func_signature . ,(if (equal? 'function type)
+                             (jsonify-signature (index-entry-signature func))
+                             'null))
+        (syntax_signature . ,(if (equal? 'syntax type)
+                             (jsonify-signature (index-entry-signature func))
+                             'null))
+        (func_param_signatures . ,(if (equal? 'function type)
+                                     (jsonify-function-subsigs (index-entry-param-signatures func))
+                                     #()))
+        (syntax_subsyntax_signatures . ,(if (equal? 'syntax type)
+                                           (jsonify-syntax-subsigs (index-entry-param-signatures func))
+                                           #()))
+        (syntax_param_signatures . ,(if (equal? 'syntax type)
+                                        (jsonify-syntax-param-signatures (index-entry-syntax-param-signatures func))
+                                        #()))
         (tags . ,(list->vector (map symbol->string (index-entry-tags func))))
         (param_types . ,(list->vector (map symbol->string (index-entry-param-types func))))
         (return_types . ,(list->vector (map symbol->string (index-entry-return-types func))))
         (parameterized_by . ,(list->vector (index-entry-parameterized-by func)))
         (spec_values . ,(list->vector (map spec-value->json (index-entry-spec-values func))))
         (super_types . ,(list->vector (map symbol->string (index-entry-supertypes func))))))
+
+    (define (index-entry->alist f)
+      `((lib . ,(index-entry-lib f))
+        (name . ,(index-entry-name f))
+        (param-names . ,(index-entry-param-names f))
+        (signature . ,(index-entry-signature f))
+        (param-signatures . ,(index-entry-param-signatures f))
+        (syntax-param-signatures . ,(index-entry-syntax-param-signatures f))
+        (tags . ,(index-entry-tags f))
+        (param-types . ,(index-entry-param-types f))
+        (return-types . ,(index-entry-return-types f))
+        (parameterized-by . ,(index-entry-parameterized-by f))
+        (spec-values . ,(index-entry-spec-values f))
+        (supertypes . ,(index-entry-supertypes f))))
+
+    (define (alist->index-entry a)
+      (make-index-entry
+        (cdr (assoc 'lib a))
+        (cdr (assoc 'name a))
+        (cdr (assoc 'param-names a))
+        (cdr (assoc 'signature a))
+        (cdr (assoc 'param-signatures a))
+        (cdr (assoc 'syntax-param-signatures a))
+        (cdr (assoc 'tags a))
+        (cdr (assoc 'param-types a))
+        (cdr (assoc 'return-types a))
+        (cdr (assoc 'parameterized-by a))
+        (cdr (assoc 'spec-values a))
+        (cdr (assoc 'supertypes a))))
+
+    (define (jsonify-lambda-param p)
+      (cond
+        ((list? p)
+         (let* ((type (car p))
+                (name (symbol->string (cadr p)))
+                (is-or? (and (list? type) (equal? 'or (car type)))))
+           (if is-or?
+               `((name . ,name) (types . ,(list->vector (map write* (cdr type)))))
+               `((name . ,name) (types . #(,(write* type)))))))
+        (else `((name . ,(symbol->string p)) (types . #())))))
+
+    (define (jsonify-lambda-return r)
+      (cond
+        ((list? r)
+         `((kind . ,(symbol->string (car r)))
+           (items . ,(list->vector (map jsonify-lambda-return (cdr r))))
+           (type . "")))
+        (else `((kind . "return") (items . #()) (type . ,(write* r))))))
+
+    (define (jsonify-signature sig)
+      (define (jsonify-lambda l)
+        `((params . ,(list->vector (map jsonify-lambda-param (car l))))
+          (return . ,(jsonify-lambda-return (cadr l)))))
+      (define (jsonify-syntax s)
+        (define literals (list->vector (map symbol->string (car s))))
+        (define patterns (list->vector (map (lambda (pattern)
+                                              `((pattern . ,(write* (car pattern)))
+                                                (type . ,(if (> (length pattern) 1)
+                                                             (write* (cadr pattern))
+                                                             'null))))
+                                            (cdr s))))
+        `((literals . ,literals)
+          (patterns . ,patterns)))
+      (case (car sig)
+        ((lambda) (jsonify-lambda (cdr sig)))
+        ((syntax-rules) (jsonify-syntax (cdr sig)))
+        (else #f)))
+
+    (define (jsonify-function-subsigs subsigs)
+      (list->vector (map (lambda (e)
+                           (define name (symbol->string (car e)))
+                           (define sig (jsonify-signature (cadr e)))
+                           `((name . ,name)
+                             (signature . ,sig))) 
+                         subsigs)))
+
+    (define (pattern->string pattern)
+      (define p (open-output-string))
+      (if (and (list? pattern)
+               (not (null? pattern))
+               (equal? '_append (car pattern)))
+          (for-each
+            (lambda (fragment)
+              (display fragment p)
+              (display " " p))
+            (cdr pattern))
+          (display pattern p))
+      (get-output-string p))
+
+    (define (jsonify-syntax-subsigs subsigs)
+      (list->vector (map (lambda (e)
+                           (define name (symbol->string (car e)))
+                           (define patterns (list->vector (map pattern->string (cdr e))))
+                           `((name . ,name)
+                             (patterns . ,patterns))) 
+                         subsigs)))
+
+    (define (jsonify-syntax-param-signatures syntax-sigs)
+      (list->vector (map (lambda (e)
+                           `((name . ,(symbol->string (car e)))
+                             (type . ,(symbol->string (cadr e))))) 
+                         syntax-sigs)))
 
     (define (spec-value->json block)
       (define vals 
@@ -141,37 +262,6 @@
           (cdr block)))
       `((field . ,(symbol->string (car block)))
         (values . ,(list->vector vals))))
-
-    (define (json->index-entry json)
-      (define (get field type default)
-        (cond
-          ((assoc field json) =>
-                              (lambda (value)
-                                (case type
-                                  ((sexpr) (read* (cdr value)))
-                                  ((symbol) (string->symbol (cdr value)))
-                                  ((symbol-lst) (map string->symbol (vector->list (cdr value))))
-                                  ((string-lst) (vector->list (cdr value)))
-                                  (else (cdr value)))))
-          (else default)))
-      (make-index-entry
-        (get 'lib 'sexpr #f)
-        (get 'name 'symbol #f)
-        (get 'param_names 'symbol-lst '())
-        (get 'signature 'sexpr #f)
-        (get 'param_signatures 'sexpr '())
-        (get 'syntax_param_signatures 'sexpr '())
-        (get 'tags 'symbol-lst '())
-        (get 'param_types 'symbol-lst '())
-        (get 'return_types 'symbol-lst '())
-        (get 'parameterized_by 'string-lst '())
-        (cond
-          ((assoc 'spec_values json) => (lambda (value)
-                                          (map
-                                            json->spec-value
-                                            (vector->list (cdr value)))))
-          (else '()))
-        (get 'supertypes 'symbol-lst '())))
 
     (define (json->spec-value block)
       (define vals
@@ -208,7 +298,7 @@
       (target filter-entry-target))
 
     (define (search-result->json sr)
-      `((items . ,(list->vector (map index-entry->json (search-result-items sr))))
+      `((items . ,(list->vector (map (lambda (e) (index-entry->json e)) (search-result-items sr))))
         (total . ,(search-result-total sr))
         (libs . ,(list->vector (map search-result-facet->json (search-result-libs sr))))
         (params . ,(list->vector (map search-result-facet->json (search-result-params sr))))

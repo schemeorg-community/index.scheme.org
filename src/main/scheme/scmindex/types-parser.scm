@@ -61,6 +61,12 @@
         (else default)))
 
     (define (read-spec lib excluded input)
+      (define lib-string
+        (if (string? lib)
+            lib
+            (let ((port (open-output-string)))
+              (display lib port)
+              (get-output-string port))))
       (fold
         (lambda (entry entries)
           (define name (let ((n (assoc* 'name entry #f)))
@@ -109,7 +115,7 @@
                 (log-debug logger "Parsed spec {}" name)
                 (cons
                   (make-index-entry 
-                    lib 
+                    lib-string 
                     name
                     param-names
                     signature
