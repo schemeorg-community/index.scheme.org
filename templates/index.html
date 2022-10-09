@@ -27,11 +27,26 @@
                 <p class="index-page__completeness-note">There are no guarantees about completeness of index for any of the scheme implementations.
                 Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs and implementation specific libraries might be missing.
 
+                <h2 class="index-page__header">Command line application</h2>
+                <p>Command line executable (thin rest client) <a class="index-page__text-link" href="http://github.com/arvyy/scheme-index-client/releases">is available here</a>.
+                It provides an interactive (REPL) mode, as well as non-interactive execution mode. 
+                The later can be integrated with your editor of choice. For example; if you use vim, add following to your 
+                .vimrc to be able to lookup signature of an identifier under the cursor using "\?".
+                <div class="codeblock">
+                    <p class="codeblock__preformatted">let g:scmindexFilterset="r7rs_small"
+fu! ScmIndexGet()
+    let wordUnderCursor = expand("&lt;cword&gt;")
+    let result = system("scmindex -f " . g:scmindexFilterset . " -q " . wordUnderCursor . " -s")
+    echo result
+endfunc
+nnoremap &lt;silent&gt; &lt;leader&gt;? :call ScmIndexGet()&lt;cr&gt;</p>
+                </div>
+
                 <h2 class="index-page__header">REST API</h2>
                 <p>Scheme index provides REST API integration.
                 <div class="codeblock">
                     <p><span class="codeblock__dollar">$</span>&nbsp;curl 'https://index.scheme.org/rest/filterset/chibi/search?query=define-record-type&amp;facet=false'
-                    <p>{"items":[{"lib":"\"(scheme base)\"","name":"define-record-type","param_names":["constructor","pred","field"],"signature":"(syntax-rules () ((name constructor pred field ...)))","param_signatures":"((constructor (constructor-name field-name ...)) (field (field-name accessor-name) (field-name accessor-name modifier-name)))","syntax_param_signatures":"()","tags":[],"param_types":[],"return_types":[],"parameterized_by":[],"spec_values":[],"super_types":[]}],"total":1}
+                    <p>{"items":[{"lib":"(scheme base)","name":"define-record-type","type":"syntax","func_signature":null,"syntax_signature":{"literals":[],"patterns":[{"pattern":"(name constructor pred field ...)","type":null}]},"func_param_signatures":[],"syntax_subsyntax_signatures":[{"name":"constructor","patterns":["(constructor-name field-name ...)"]},{"name":"field","patterns":["(field-name accessor-name)","(field-name accessor-name modifier-name)"]}],"syntax_param_signatures":[],"tags":[],"param_types":[],"return_types":[],"parameterized_by":[],"spec_values":[],"super_types":[]}],"total":1}
                 </div>
                 <p>Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>
 
