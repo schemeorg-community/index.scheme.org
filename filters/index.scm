@@ -22,6 +22,10 @@
   (name . "Bigloo")
   (file . "filters/bigloo.scm"))
 
+ ((code . "chez")
+  (name . "ChezScheme")
+  (file . "filters/chez.scm"))
+
  ((code . "chibi")
   (name . "Chibi")
   (file . "filters/chibi.scm"))
@@ -48,4 +52,8 @@
 
  ((code . "mit")
   (name . "MIT")
-  (file . "filters/mit.scm")))
+  (file . "filters/mit.scm"))
+ 
+ ((code . "sagittarius")
+  (name . "Sagittarius")
+  (file . "filters/sagittarius.scm")))

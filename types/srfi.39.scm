@@ -1,0 +1,7 @@
+(((name . make-parameter) (signature lambda (obj) procedure?) (tags pure))
+ ((name . make-parameter)
+  (signature lambda (obj (procedure? converter)) procedure?)
+  (tags pure)
+  (subsigs (converter (lambda (obj) *))))
+ ((name . parameterize)
+  (signature syntax-rules () ((_ ((param1 value1) ...) body)))))

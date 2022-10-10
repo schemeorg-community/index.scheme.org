@@ -98,27 +98,27 @@
  ((srfi 9) . "types/srfi.9.scm")
  ((srfi 6) . "types/srfi.6.scm")
  ((srfi 0) . "types/srfi.0.scm")
- ;; srfi 14 -- part of r7rs large
- ;; srfi 23 -- part of r7rs small
+ ;; srfi 14 -- defined as (scheme charset)
+ ((srfi 23) . "types/srfi.23.scm")
  ((srfi 27) . "types/srfi.27.scm")
- ;; srfi 39 -- part of r7rs small
+ ((srfi 39) . "types/srfi.39.scm")
  ((srfi 13) . "types/srfi.13.scm")
  ((srfi 26) . "types/srfi.26.scm")
  ((srfi 60) . "types/srfi.60.scm")
- ;; srfi 16 -- part of r7rs small
+ ;; srfi 16 -- defined as (scheme case-lambda)
  ((srfi 28) . "types/srfi.28.scm")
- ;; srfi 11 -- part of r7rs small
+ ((srfi 11) . "types/srfi.11.scm")
  ((srfi 19) . "types/srfi.19.scm")
  ((srfi 38) . "types/srfi.38.scm")
  ((srfi 31) . "types/srfi.31.scm")
  ((srfi 42) . "types/srfi.42.scm")
  ((srfi 69) . "types/srfi.69.scm")
- ;; srfi 98 -- part of r7rs small
+ ;; srfi 98 TODO
  ;; srfi 4 -- superceded in r7rs large (TODO?)
  ((srfi 17) . "types/srfi.17.scm")
  ((srfi 37) . "types/srfi.37.scm")
- ;; srfi 41 -- part of r7rs large
- ;; srfi 43 -- part of r7rs large
+ ;; srfi 41 -- defined as (scheme stream)
+ ;; srfi 43 -- defined as (scheme vector)
  ;; srfi 30 -- non-sexpr syntax
  ((srfi 45) . "types/srfi.45.scm")
  ((srfi 61) . "types/srfi.61.scm")
@@ -134,7 +134,7 @@
  ;; srfi 55 -- ??
  ((srfi 67) . "types/srfi.67.scm")
  ;;((srfi 87) . "types/srfi.87.scm") TODO
- ;; srfi 128 -- part of r7rs large
+ ;; srfi 128 -- defined as (scheme comparator)
  ;; srfi 7 -- ??
  ;; srfi 10 -- non-sexrp syntax
  ((srfi 35) . "types/srfi.35.scm")
