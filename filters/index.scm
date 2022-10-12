@@ -50,6 +50,10 @@
   (name . "Gauche")
   (file . "filters/gauche.scm"))
 
+ ((code . "iron")
+  (name . "IronScheme")
+  (file . "filters/iron.scm"))
+
  ((code . "kawa")
   (name . "Kawa")
   (file . "filters/kawa.scm"))
