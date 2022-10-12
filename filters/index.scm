@@ -54,6 +54,10 @@
   (name . "Kawa")
   (file . "filters/kawa.scm"))
 
+ ((code . "loko")
+  (name . "Loko")
+  (file . "filters/loko.scm"))
+
  ((code . "mit")
   (name . "MIT")
   (file . "filters/mit.scm"))
