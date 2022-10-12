@@ -79,14 +79,14 @@
 
     <!-- Helpers -->
 
-    <!-- uses scheme.vector.PLACEHOLDER.scm to generate actual spec files -->
+    <!-- uses srfi.160.PLACEHOLDER.scm to generate actual spec files -->
     <macrodef name="generate-vector-spec">
         <attribute name="type"/>
         <attribute name="supertype"/>
         <sequential>
-            <copy file="types/scheme.vector.PLACEHOLDER.scm" tofile="types/scheme.vector.@{type}.scm"/>
-            <replace file="types/scheme.vector.@{type}.scm" token="@?-SUPERTYPE" value="@{supertype}"/>
-            <replace file="types/scheme.vector.@{type}.scm" token="@" value="@{type}"/>
+            <copy file="types/srfi.160.PLACEHOLDER.scm" tofile="types/srfi.160.@{type}.scm"/>
+            <replace file="types/srfi.160.@{type}.scm" token="@?-SUPERTYPE" value="@{supertype}"/>
+            <replace file="types/srfi.160.@{type}.scm" token="@" value="@{type}"/>
         </sequential>
     </macrodef>
     <target name="generate-vector-specs">

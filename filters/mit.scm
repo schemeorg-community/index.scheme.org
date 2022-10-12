@@ -17,22 +17,23 @@
  ((scheme time) . #t)
  ((scheme write) . #t)
  
- ; r7rs large red
- ((scheme comparator) . (srfi 128))
- ((scheme charset) . (srfi 14))
- ((scheme ephemeron) . (srfi 124))
- ((scheme hash-table) . (srfi 125))
- ((scheme list) . (srfi 1))
- ((scheme vector) . (srfi 133))
- 
- ; r7rs large tangerine
- ((scheme fixnum) . (srfi 143))
- ((scheme regex) . (srfi 115))
-
- ;; misc srfi, added in order of popularity according to https://misc.lassi.io/2019/srfi-implementation-counts.scm
- ;; omitting anything added to r7rs small / large
- ((srfi 8) . #t)
+ ((srfi 0) . #t)
+ ((srfi 1) . #t)
  ((srfi 2) . #t)
+ ((srfi 6) . #t)
+ ((srfi 8) . #t)
+ ((srfi 9) . #t)
+ ((srfi 14) . #t)
+ ((srfi 23) . #t)
  ((srfi 27) . #t)
+ ((srfi 31) . #t)
+ ((srfi 39) . #t)
  ((srfi 69) . #t)
+ ((srfi 115) . #t)
+ ((srfi 124) . #t)
+ ((srfi 125) . #t)
+ ((srfi 128) . #t)
+ ((srfi 133) . #t)
+ ((srfi 143) . #t)
+ ((srfi 158) . #t)
  )
