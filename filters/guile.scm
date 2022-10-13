@@ -46,6 +46,7 @@
  ((srfi 0) . #t)
  ((srfi 1) . #t)
  ((srfi 2) . #t)
+ ((srfi 4) . #t)
  ((srfi 6) . #t)
  ((srfi 8) . #t)
  ((srfi 9) . #t)

@@ -3,7 +3,7 @@
  ((name . make-s16vector)
   (signature lambda ((integer? size)) s16vector?))
  ((name . make-s16vector)
-  (signature lambda ((integer? size) (s16? size)) s16vector?)
+  (signature lambda ((integer? size) (s16? fill)) s16vector?)
   (tags pure))
  ((name . s16vector)
   (signature lambda ((s16? value) ...) s16vector?)

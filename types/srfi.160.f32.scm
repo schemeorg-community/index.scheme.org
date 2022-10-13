@@ -3,7 +3,7 @@
  ((name . make-f32vector)
   (signature lambda ((integer? size)) f32vector?))
  ((name . make-f32vector)
-  (signature lambda ((integer? size) (f32? size)) f32vector?)
+  (signature lambda ((integer? size) (f32? fill)) f32vector?)
   (tags pure))
  ((name . f32vector)
   (signature lambda ((f32? value) ...) f32vector?)

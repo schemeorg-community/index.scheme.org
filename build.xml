@@ -79,8 +79,31 @@
 
     <!-- Helpers -->
 
+    <!-- uses srfi.4.PLACEHOLDER.scm to generate actual spec files -->
+    <macrodef name="generate-srfi4-vector-spec">
+        <attribute name="type"/>
+        <attribute name="eltype"/>
+        <sequential>
+            <copy file="types/srfi.4.PLACEHOLDER.scm" tofile="types/srfi.4.@{type}.scm"/>
+            <replace file="types/srfi.4.@{type}.scm" token="@?-ELTYPE" value="@{eltype}"/>
+            <replace file="types/srfi.4.@{type}.scm" token="@" value="@{type}"/>
+        </sequential>
+    </macrodef>
+    <target name="generate-srfi4-vector-specs">
+        <generate-srfi4-vector-spec type="u8" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="s8" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="u16" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="s16" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="u32" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="s32" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="u64" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="s64" eltype="integer?"/>
+        <generate-srfi4-vector-spec type="f32" eltype="real?"/>
+        <generate-srfi4-vector-spec type="f64" eltype="real?"/>
+    </target>
+
     <!-- uses srfi.160.PLACEHOLDER.scm to generate actual spec files -->
-    <macrodef name="generate-vector-spec">
+    <macrodef name="generate-srfi160-vector-spec">
         <attribute name="type"/>
         <attribute name="supertype"/>
         <sequential>
@@ -89,19 +112,19 @@
             <replace file="types/srfi.160.@{type}.scm" token="@" value="@{type}"/>
         </sequential>
     </macrodef>
-    <target name="generate-vector-specs">
-        <generate-vector-spec type="u8" supertype="integer?"/>
-        <generate-vector-spec type="s8" supertype="integer?"/>
-        <generate-vector-spec type="u16" supertype="integer?"/>
-        <generate-vector-spec type="s16" supertype="integer?"/>
-        <generate-vector-spec type="u32" supertype="integer?"/>
-        <generate-vector-spec type="s32" supertype="integer?"/>
-        <generate-vector-spec type="u64" supertype="integer?"/>
-        <generate-vector-spec type="s64" supertype="integer?"/>
-        <generate-vector-spec type="f32" supertype="real?"/>
-        <generate-vector-spec type="f64" supertype="real?"/>
-        <generate-vector-spec type="c64" supertype="number?"/>
-        <generate-vector-spec type="c128" supertype="number?"/>
+    <target name="generate-srfi160-vector-specs">
+        <generate-srfi160-vector-spec type="u8" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="s8" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="u16" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="s16" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="u32" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="s32" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="u64" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="s64" supertype="integer?"/>
+        <generate-srfi160-vector-spec type="f32" supertype="real?"/>
+        <generate-srfi160-vector-spec type="f64" supertype="real?"/>
+        <generate-srfi160-vector-spec type="c64" supertype="number?"/>
+        <generate-srfi160-vector-spec type="c128" supertype="number?"/>
     </target>
 
 </project>

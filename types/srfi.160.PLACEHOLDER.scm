@@ -3,7 +3,7 @@
  ((name . make-@vector)
   (signature lambda ((integer? size)) @vector?))
  ((name . make-@vector)
-  (signature lambda ((integer? size) (@? size)) @vector?)
+  (signature lambda ((integer? size) (@? fill)) @vector?)
   (tags pure))
  ((name . @vector)
   (signature lambda ((@? value) ...) @vector?)

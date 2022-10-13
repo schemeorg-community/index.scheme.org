@@ -3,7 +3,7 @@
  ((name . make-u32vector)
   (signature lambda ((integer? size)) u32vector?))
  ((name . make-u32vector)
-  (signature lambda ((integer? size) (u32? size)) u32vector?)
+  (signature lambda ((integer? size) (u32? fill)) u32vector?)
   (tags pure))
  ((name . u32vector)
   (signature lambda ((u32? value) ...) u32vector?)

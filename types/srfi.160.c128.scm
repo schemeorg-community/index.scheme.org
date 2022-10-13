@@ -3,7 +3,7 @@
  ((name . make-c128vector)
   (signature lambda ((integer? size)) c128vector?))
  ((name . make-c128vector)
-  (signature lambda ((integer? size) (c128? size)) c128vector?)
+  (signature lambda ((integer? size) (c128? fill)) c128vector?)
   (tags pure))
  ((name . c128vector)
   (signature lambda ((c128? value) ...) c128vector?)

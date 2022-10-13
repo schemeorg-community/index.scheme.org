@@ -3,7 +3,7 @@
  ((name . make-s8vector)
   (signature lambda ((integer? size)) s8vector?))
  ((name . make-s8vector)
-  (signature lambda ((integer? size) (s8? size)) s8vector?)
+  (signature lambda ((integer? size) (s8? fill)) s8vector?)
   (tags pure))
  ((name . s8vector)
   (signature lambda ((s8? value) ...) s8vector?)

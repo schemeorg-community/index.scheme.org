@@ -99,7 +99,16 @@
  ((srfi 1) . "types/srfi.1.scm")
  ((srfi 2) . "types/srfi.2.scm")
  ;; srfi 3 -- withdrawn
- ;; ((srfi 4) . "types/srfi.4.scm") TODO
+ ((srfi 4) . "types/srfi.4.u8.scm")
+ ((srfi 4) . "types/srfi.4.s8.scm")
+ ((srfi 4) . "types/srfi.4.u16.scm")
+ ((srfi 4) . "types/srfi.4.s16.scm")
+ ((srfi 4) . "types/srfi.4.u32.scm")
+ ((srfi 4) . "types/srfi.4.s32.scm")
+ ((srfi 4) . "types/srfi.4.u64.scm")
+ ((srfi 4) . "types/srfi.4.s64.scm")
+ ((srfi 4) . "types/srfi.4.f32.scm")
+ ((srfi 4) . "types/srfi.4.f64.scm")
  ((srfi 5) . "types/srfi.5.scm")
  ((srfi 6) . "types/srfi.6.scm")
  ;; srfi 7 -- ??

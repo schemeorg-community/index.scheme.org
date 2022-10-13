@@ -3,7 +3,7 @@
  ((name . make-u64vector)
   (signature lambda ((integer? size)) u64vector?))
  ((name . make-u64vector)
-  (signature lambda ((integer? size) (u64? size)) u64vector?)
+  (signature lambda ((integer? size) (u64? fill)) u64vector?)
   (tags pure))
  ((name . u64vector)
   (signature lambda ((u64? value) ...) u64vector?)
