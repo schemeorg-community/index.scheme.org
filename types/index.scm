@@ -147,7 +147,7 @@
  ;; srfi 40 -- superceded
  ((srfi 41) . "types/srfi.41.scm")
  ((srfi 42) . "types/srfi.42.scm")
- ;((srfi 43) . "types/srfi.43.scm") TODO
+ ((srfi 43) . "types/srfi.43.scm")
  ;; srfi 44 -- unpopular (TODO?)
  ((srfi 45) . "types/srfi.45.scm")
  ;; ((srfi 46) . "types/srfi.46.scm") TODO
