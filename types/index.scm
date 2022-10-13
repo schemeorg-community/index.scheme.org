@@ -100,7 +100,7 @@
  ((srfi 2) . "types/srfi.2.scm")
  ;; srfi 3 -- withdrawn
  ;; ((srfi 4) . "types/srfi.4.scm") TODO
- ;;((srfi 5) . "types/srfi.5.scm") TODO
+ ((srfi 5) . "types/srfi.5.scm")
  ((srfi 6) . "types/srfi.6.scm")
  ;; srfi 7 -- ??
  ((srfi 8) . "types/srfi.8.scm")
