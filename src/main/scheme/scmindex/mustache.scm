@@ -13,7 +13,8 @@
           (arvyy kawa-spark)
           (scmindex domain)
           (scmindex util)
-          (only (srfi 1) iota filter find))
+          (only (srfi 1) iota filter find)
+          (srfi 95))
   
   (export
 
@@ -350,11 +351,11 @@
         filterset
         query
         (append
-          (make-facet* "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens))
-          (make-facet* "tag" "Tag" (parse-facet-options (search-result-tags search-result) tags #f))
-          (make-facet* "param" "Parameter type" (parse-facet-options (search-result-params search-result) param-types #f))
-          (make-facet* "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f))
-          (make-facet* "parameterized" "Parameterized by" (parse-facet-options (search-result-parameterized-by search-result) parameterized-by #f)))
+          (make-facet* "lib" "Library" (parse-facet-options (search-result-libs search-result) libs remove-parens libname-comparator))
+          (make-facet* "tag" "Tag" (parse-facet-options (search-result-tags search-result) tags #f #f))
+          (make-facet* "param" "Parameter type" (parse-facet-options (search-result-params search-result) param-types #f #f))
+          (make-facet* "return" "Return type" (parse-facet-options (search-result-returns search-result) return-types #f #f))
+          (make-facet* "parameterized" "Parameterized by" (parse-facet-options (search-result-parameterized-by search-result) parameterized-by #f #f)))
         (render-pager page (ceiling (/ (search-result-total search-result) page-size)) current-query)
         (map render-index-entry (search-result-items search-result))))
 
@@ -365,7 +366,24 @@
           '()
           (list (make-facet name title options))))
 
-    (define (parse-facet-options facet-result selected-values label-transformer)
+    ;; in case both libraries point to srfi
+    ;; compare srfi numbers numerically instead of alphabetically
+    (define (libname-comparator l1 l2)
+      (define (srfi? lib)
+        (and (list? lib)
+             (symbol=? 'srfi (car lib))
+             (integer? (cadr lib))))
+      (define str1 (facet-option-value l1))
+      (define str2 (facet-option-value l2))
+      (define v1 (read* str1))
+      (define v2 (read* str2))
+      (if (and (srfi? v1) (srfi? v2))
+          (let ((num1 (cadr v1))
+                (num2 (cadr v2)))
+            (< num1 num2))
+          (string<? str1 str2)))
+
+    (define (parse-facet-options facet-result selected-values label-transformer comparator)
       (define fn (if label-transformer label-transformer values))
       (define options
         (map
@@ -374,10 +392,14 @@
             (define selected? (member value selected-values))
             (make-facet-option value (fn value) (search-result-facet-count f) selected?))
           facet-result))
-      (filter
-        (lambda (opt)
-          (or (facet-option-selected? opt) (> (facet-option-count opt) 0)))
-        options))
+      (define selected-options
+        (filter
+          (lambda (opt)
+            (or (facet-option-selected? opt) (> (facet-option-count opt) 0)))
+          options))
+      (if comparator
+          (sort selected-options comparator)
+          selected-options))
 
     (define percent-encoding
       '((#\space . "%20")
