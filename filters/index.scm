@@ -65,7 +65,25 @@
  ((code . "mit")
   (name . "MIT")
   (file . "filters/mit.scm"))
+
+ ((code . "unsyntax")
+  (name . "Unsyntax")
+  (file . "filters/unsyntax.scm"))
  
  ((code . "sagittarius")
   (name . "Sagittarius")
-  (file . "filters/sagittarius.scm")))
+  (file . "filters/sagittarius.scm"))
+ 
+ ((code . "scheme48")
+  (name . "Scheme48")
+  (file . "filters/scheme48.scm"))
+ 
+ ((code . "vicare")
+  (name . "Vicare")
+  (file . "filters/vicare.scm"))
+ 
+ ((code . "ypsilon")
+  (name . "Ypsilon")
+  (file . "filters/ypsilon.scm"))
+ 
+ )
