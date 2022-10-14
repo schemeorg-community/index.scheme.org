@@ -125,7 +125,7 @@
  ((srfi 18) . "types/srfi.18.scm")
  ((srfi 19) . "types/srfi.19.scm")
  ;; srfi 20 -- withdrawn
- ;; ((srfi 21) . "types/srfi.21.scm") TODO
+ ((srfi 21) . "types/srfi.21.scm")
  ;; srfi 22 -- non-sexpr syntax
  ((srfi 23) . "types/srfi.23.scm")
  ;; srfi 24 -- withdrawn
@@ -133,7 +133,7 @@
  ((srfi 26) . "types/srfi.26.scm")
  ((srfi 27) . "types/srfi.27.scm")
  ((srfi 28) . "types/srfi.28.scm")
- ;; ((srfi 29) . "types/srfi.29.scm") TODO
+ ((srfi 29) . "types/srfi.29.scm")
  ;; srfi 30 -- non-sexpr syntax
  ((srfi 31) . "types/srfi.31.scm")
  ;; srfi 32 -- withdrawn
@@ -148,9 +148,9 @@
  ((srfi 41) . "types/srfi.41.scm")
  ((srfi 42) . "types/srfi.42.scm")
  ((srfi 43) . "types/srfi.43.scm")
- ;; srfi 44 -- unpopular (TODO?)
+ ;; srfi 44 -- "meta" srfi
  ((srfi 45) . "types/srfi.45.scm")
- ;; ((srfi 46) . "types/srfi.46.scm") TODO
+ ((srfi 46) . "types/srfi.46.scm")
  ;; ((srfi 47) . "types/srfi.47.scm") TODO
  ((srfi 48) . "types/srfi.48.scm")
  ;; srfi 49 -- non-sexpr syntax
@@ -162,8 +162,8 @@
  ;; srfi 55 -- ??
  ;; srfi 56 -- withdrawn
  ;; ((srfi 57) . "types/srfi.57.scm") TODO
- ;; srfi 58 -- unpopular (TODO?)
- ;; ((srfi 59) . "types/srfi.59.scm") TODO
+ ;; srfi 58 -- non-sexpr syntax
+ ((srfi 59) . "types/srfi.59.scm")
  ((srfi 60) . "types/srfi.60.scm")
  ((srfi 61) . "types/srfi.61.scm")
  ;; srfi 62 -- non-sexpr syntax
@@ -175,7 +175,7 @@
  ;; srfi 68 -- withdrawn
  ((srfi 69) . "types/srfi.69.scm")
  ;; ((srfi 70) . "types/srfi.70.scm") TODO
- ;; ((srfi 71) . "types/srfi.71.scm") TODO
+ ((srfi 71) . "types/srfi.71.scm")
  ;; srfi 72 -- unpopular (TODO?)
  ;; srfi 73 -- withdrawn
  ;; ((srfi 74) . "types/srfi.74.scm") TODO

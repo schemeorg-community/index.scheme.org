@@ -71,11 +71,13 @@
  ((srfi 42) . #t)
  ((srfi 43) . #t)
  ((srfi 45) . #t)
+ ((srfi 46) . #t)
  ((srfi 60) . #t)
  ((srfi 61) . #t)
  ((srfi 64) . #t)
  ((srfi 67) . #t)
  ((srfi 69) . #t)
+ ((srfi 71) . #t)
  ((srfi 101) . #t)
  ((srfi 111) . #t)
 

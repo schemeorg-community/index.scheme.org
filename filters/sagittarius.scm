@@ -103,6 +103,7 @@
  ((srfi 25) . #t)
  ((srfi 26) . #t)
  ((srfi 27) . #t)
+ ((srfi 29) . #t)
  ((srfi 31) . #t)
  ((srfi 37) . #t)
  ((srfi 38) . #t)
