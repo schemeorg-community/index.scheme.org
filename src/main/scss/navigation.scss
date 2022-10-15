@@ -17,7 +17,7 @@
 
         &--nestedlevel {
             display: none;
-            flex-direction: column;
+            grid-template-columns: 1fr 1fr;
             color: var(--accent-color);
             background-color: var(--bg-color2);
             border: solid 2px var(--accent-color);
@@ -25,6 +25,7 @@
             border-bottom-left-radius: 5px;
             border-bottom-right-radius: 5px;
             position: absolute;
+            z-index: 10000;
             top: 100%;
             padding: 0.5em;
             box-shadow: rgba(0, 0, 0, 0.2) 0px 8px 24px;
@@ -68,7 +69,7 @@
 
 .navbar__list--toplevel .navbar__list-item:hover .navbar__list--nestedlevel
 {
-    display: flex;
+    display: grid;
 }
 
 #theme-cb-wrapper {

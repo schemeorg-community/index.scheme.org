@@ -38,17 +38,25 @@
   (name . "Chicken")
   (file . "filters/chicken.scm"))
 
+ ((code . "cyclone")
+  (name . "Cyclone")
+  (file . "filters/cyclone.scm"))
+
  ((code . "gambit")
   (name . "Gambit")
   (file . "filters/gambit.scm"))
 
- ((code . "guile")
-  (name . "Guile")
-  (file . "filters/guile.scm"))
-
  ((code . "gauche")
   (name . "Gauche")
   (file . "filters/gauche.scm"))
+
+ ((code . "gerbil")
+  (name . "Gerbil")
+  (file . "filters/gerbil.scm"))
+
+ ((code . "guile")
+  (name . "Guile")
+  (file . "filters/guile.scm"))
 
  ((code . "iron")
   (name . "IronScheme")
@@ -58,6 +66,10 @@
   (name . "Kawa")
   (file . "filters/kawa.scm"))
 
+ ((code . "larceny")
+  (name . "Larceny")
+  (file . "filters/larceny.scm"))
+
  ((code . "loko")
   (name . "Loko")
   (file . "filters/loko.scm"))
@@ -66,9 +78,9 @@
   (name . "MIT")
   (file . "filters/mit.scm"))
 
- ((code . "unsyntax")
-  (name . "Unsyntax")
-  (file . "filters/unsyntax.scm"))
+ ((code . "racket")
+  (name . "Racket")
+  (file . "filters/racket.scm"))
  
  ((code . "sagittarius")
   (name . "Sagittarius")
@@ -77,6 +89,14 @@
  ((code . "scheme48")
   (name . "Scheme48")
   (file . "filters/scheme48.scm"))
+ 
+ ((code . "stklos")
+  (name . "STKlos")
+  (file . "filters/stklos.scm"))
+
+ ((code . "unsyntax")
+  (name . "Unsyntax")
+  (file . "filters/unsyntax.scm"))
  
  ((code . "vicare")
   (name . "Vicare")

@@ -19,6 +19,10 @@
         color: var(--accent-color);
     }
 
+    &__header:not(:first-child) {
+        margin-top: 2em;
+    }
+
     &__text-link {
         color: var(--secondary-color);
     }
@@ -33,7 +37,7 @@
 
     &__filtersets {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 2em;
         padding: 3em;
     }
@@ -47,6 +51,11 @@
         height: 5em;
         display: flex;
         align-items: center;
+        transition: transform 0.2s ease-out;
+    }
+
+    &__filterset:hover {
+        transform: scale(1.1);
     }
 
     &__filterset--fake {
