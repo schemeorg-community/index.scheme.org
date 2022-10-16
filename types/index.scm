@@ -233,7 +233,7 @@
  ;; ((srfi 126) . "types/srfi.126.scm") TODO
  ((srfi 127) . "types/srfi.127.scm")
  ((srfi 128) . "types/srfi.128.scm")
- ;; ((srfi 129) . "types/srfi.129.scm") TODO
+ ((srfi 129) . "types/srfi.129.scm")
  ;; ((srfi 130) . "types/srfi.130.scm") TODO
  ;; ((srfi 131) . "types/srfi.131.scm") TODO
  ((srfi 132) . "types/srfi.132.scm")
@@ -278,6 +278,8 @@
  ((srfi 160 f64) . "types/srfi.160.f64.scm")
  ((srfi 160 c64) . "types/srfi.160.c64.scm")
  ((srfi 160 c128) . "types/srfi.160.c128.scm")
+ ((srfi 193) . "types/srfi.193.scm")
+ ((srfi 219) . "types/srfi.219.scm")
 
  ;; specific implementation handling
  (bigloo . "types/r5rs.scm")
