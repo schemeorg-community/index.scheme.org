@@ -140,7 +140,7 @@
  ;; srfi 33 -- withdrawn
  ((srfi 34) . "types/srfi.34.scm")
  ((srfi 35) . "types/srfi.35.scm")
- ;; ((srfi 36) . "types/srfi.36.scm") TODO
+ ((srfi 36) . "types/srfi.36.scm")
  ((srfi 37) . "types/srfi.37.scm")
  ((srfi 38) . "types/srfi.38.scm")
  ((srfi 39) . "types/srfi.39.scm")
@@ -191,8 +191,8 @@
  ;; srfi 84 -- withdrawn
  ;; srfi 85 -- withdrawn
  ;;((srfi 86) . "types/srfi.86.scm") TODO
- ;;((srfi 87) . "types/srfi.87.scm") TODO
- ;;((srfi 88) . "types/srfi.88.scm") TODO
+ ((srfi 87) . "types/srfi.87.scm")
+ ((srfi 88) . "types/srfi.88.scm")
  ;;((srfi 89) . "types/srfi.89.scm") TODO
  ;;((srfi 90) . "types/srfi.90.scm") TODO
  ;; srfi 91 -- withdrawn
@@ -202,7 +202,7 @@
  ((srfi 95) . "types/srfi.95.scm")
  ;; ((srfi 96) . "types/srfi.96.scm") TODO
  ;; ((srfi 97) . "types/srfi.97.scm") TODO
- ;; ((srfi 98) . "types/srfi.98.scm") TODO
+ ((srfi 98) . "types/srfi.98.scm")
  ;; ((srfi 99) . "types/srfi.99.scm") TODO
  ;; ((srfi 100) . "types/srfi.100.scm") TODO
  ((srfi 101) . "types/srfi.101.scm")
@@ -249,7 +249,7 @@
  ;; srfi 142 -- superceded
  ((srfi 143) . "types/srfi.143.scm")
  ((srfi 144) . "types/srfi.144.scm")
- ;; ((srfi 145) . "types/srfi.145.scm") TODO
+ ((srfi 145) . "types/srfi.145.scm")
  ((srfi 146) . "types/srfi.146.scm")
  ((srfi 146 hash) . "types/srfi.146.hash.scm")
  ;; ((srfi 147) . "types/srfi.147.scm") TODO

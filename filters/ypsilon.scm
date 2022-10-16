@@ -68,6 +68,7 @@
  ((srfi 42) . #t)
  ((srfi 48) . #t)
  ((srfi 64) . #t)
+ ((srfi 98) . #t)
  ((srfi 125) . #t)
  ((srfi 128) . #t)
  ((srfi 132) . #t)
