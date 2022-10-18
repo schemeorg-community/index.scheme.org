@@ -158,7 +158,7 @@
  ;; ((srfi 51) . "types/srfi.51.scm")
  ;; srfi 52 -- withdrawn
  ;; srfi 53 -- withdrawn
- ;; ((srfi 54) . "types/srfi.54.scm") TODO
+ ((srfi 54) . "types/srfi.54.scm")
  ;; srfi 55 -- ??
  ;; srfi 56 -- withdrawn
  ;; ((srfi 57) . "types/srfi.57.scm") TODO
