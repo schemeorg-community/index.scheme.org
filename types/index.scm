@@ -178,7 +178,7 @@
  ((srfi 71) . "types/srfi.71.scm")
  ;; srfi 72 -- unpopular (TODO?)
  ;; srfi 73 -- withdrawn
- ;; ((srfi 74) . "types/srfi.74.scm") TODO
+ ((srfi 74) . "types/srfi.74.scm")
  ;; srfi 75 -- withdrawn
  ;; srfi 76 -- withdrawn
  ;; srfi 77 -- withdrawn
