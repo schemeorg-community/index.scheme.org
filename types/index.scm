@@ -167,7 +167,7 @@
  ((srfi 60) . "types/srfi.60.scm")
  ((srfi 61) . "types/srfi.61.scm")
  ;; srfi 62 -- non-sexpr syntax
- ;;((srfi 63) . "types/srfi.63.scm") TODO
+ ((srfi 63) . "types/srfi.63.scm")
  ((srfi 64) . "types/srfi.64.scm")
  ;; srfi 65 -- withdrawn
  ((srfi 66) . "types/srfi.66.scm")

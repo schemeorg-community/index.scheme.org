@@ -27,6 +27,7 @@
  ((srfi 45) . #t)
  ((srfi 60) . #t)
  ((srfi 61) . #t)
+ ((srfi 63) . #t)
  ((srfi 66) . #t)
  ((srfi 67) . #t)
  ((srfi 71) . #t)
