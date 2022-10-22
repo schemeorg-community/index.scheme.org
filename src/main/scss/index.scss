@@ -52,15 +52,11 @@
         display: flex;
         align-items: center;
         transition: transform 0.2s ease-out;
+        text-decoration: none;
     }
 
     &__filterset:hover {
-        transform: scale(1.1);
-    }
-
-    &__filterset--fake {
-        color: var(--text-color-muted);
-        border-color: var(--text-color-muted);
+        transform: translate(0, -3px);
     }
 
     &__filterset-text {

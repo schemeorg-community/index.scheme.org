@@ -13,7 +13,7 @@
           (arvyy kawa-spark)
           (scmindex domain)
           (scmindex util)
-          (only (srfi 1) iota filter find)
+          (only (srfi 1) iota filter find any partition)
           (srfi 95))
   
   (export
@@ -203,6 +203,12 @@
                                  (value spec-value-fieldentry-value)
                                  (description spec-value-fieldentry-description))
 
+    (define-mustache-record-type <filterset-group>
+                                 filterset-group-lookup
+                                 (make-filterset-group filtersets)
+                                 filterset-group?
+                                 (filtersets filterset-group-filtersets))
+
     (define-mustache-record-type <filterset-entry>
                                  filterset-entry-lookup
                                  (make-filterset-entry code name)
@@ -255,6 +261,7 @@
         facet-extra-lookup
         spec-value-fieldblock-lookup
         spec-value-fieldentry-lookup
+        filterset-group-lookup
         filterset-entry-lookup))
 
     (define (make-mustache-nav-data page filtersets show-settings?)
@@ -776,10 +783,23 @@
         (make-page
           (make-page-head #f)
           (make-navigation (make-mustache-nav-data 'index filtersets (deploy-setting/enable-user-settings settings)))
-          (map
-            (lambda (e)
-              (make-filterset-entry (car e) (cdr e)))
-            filtersets))))
+          (make-filterset-groups filtersets))))
+
+    (define (make-filterset-groups filtersets-alist)
+      (define filtersets (map (lambda (e)
+                                (make-filterset-entry (car e) (cdr e)))
+                              filtersets-alist))
+      (define spec '("r5rs" "r6rs" "r7rs"))
+      (define (spec? filterset)
+        (define code (filterset-entry-code filterset))
+        (any (lambda (spec-code)
+               (and (>= (string-length code) (string-length spec-code))
+                    (string=? spec-code (substring code 0 (string-length spec-code)))))
+             spec))
+      (define-values (spec-filtersets impl-filtersets)
+        (partition spec? filtersets))
+      (list (make-filterset-group spec-filtersets)
+            (make-filterset-group impl-filtersets)))
 
     (define (render-search-page settings filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
       (values
