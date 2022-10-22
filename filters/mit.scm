@@ -29,6 +29,7 @@
  ((srfi 31) . #t)
  ((srfi 39) . #t)
  ((srfi 69) . #t)
+ ((srfi 112) . #t)
  ((srfi 115) . #t)
  ((srfi 124) . #t)
  ((srfi 125) . #t)

@@ -78,6 +78,7 @@
  ((srfi 98) . #t)
  ((srfi 101) . #t)
  ((srfi 111) . #t)
+ ((srfi 112) . #t)
  ((srfi 113) . #t)
  ((srfi 115) . #t)
  ((srfi 116) . #t)

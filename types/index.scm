@@ -211,12 +211,12 @@
  ;; srfi 104 -- withdrawn
  ;; srfi 105 -- non-sexpr syntax
  ;; ((srfi 106) . "types/srfi.106.scm") TODO
- ;; ((srfi 107) . "types/srfi.107.scm") TODO
- ;; ((srfi 108) . "types/srfi.108.scm") TODO
- ;; ((srfi 109) . "types/srfi.109.scm") TODO
- ;; ((srfi 110) . "types/srfi.110.scm") TODO
+ ;; srfi 107 -- non-sexpr syntax
+ ;; srfi 108 -- non-sexpr syntax
+ ;; srfi 109 -- non-sexpr syntax
+ ;; srfi 110 -- non-sexpr syntax
  ((srfi 111) . "types/srfi.111.scm")
- ;; ((srfi 112) . "types/srfi.112.scm") TODO
+ ((srfi 112) . "types/srfi.112.scm")
  ((srfi 113) . "types/srfi.113.scm")
  ;; srfi 114 -- superceded
  ((srfi 115) . "types/srfi.115.scm")
