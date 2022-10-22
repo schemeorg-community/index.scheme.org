@@ -62,7 +62,6 @@
   (signature lambda ((list? string-list) (string? delimiter)) string?)
   (tags pure))
  ((name . string-join)
-  ;;TODO need way to specify grammar is one of infix, strict-infix, suffix, prefix
   (signature lambda ((list? string-list) (string? delimiter) (symbol? grammar)) string?)
   (tags pure)
   (spec-values
