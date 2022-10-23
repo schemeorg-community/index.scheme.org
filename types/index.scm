@@ -263,7 +263,7 @@
  ;; srfi 153 -- withdrawn
  ;; ((srfi 154) . "types/srfi.154.scm") TODO
  ;; srfi 155 -- unpopular (TODO?)
- ;; ((srfi 156) . "types/srfi.156.scm") TODO
+ ((srfi 156) . "types/srfi.156.scm")
  ;; srfi 157 -- unpopular (TODO?)
  ((srfi 158) . "types/srfi.158.scm")
  ((srfi 159) . "types/srfi.159.scm")
