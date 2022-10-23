@@ -2,7 +2,7 @@
   (signature lambda ((char? char)) boolean?)
   (tags pure))
  ((name . char-titlecase)
-  (signature lambda ((char? char)) char)
+  (signature lambda ((char? char)) char?)
   (tags pure))
  ((name . string-titlecase)
   (signature lambda ((string? string)) string?)
