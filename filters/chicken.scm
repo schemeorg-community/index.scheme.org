@@ -86,6 +86,7 @@
  ((srfi 146) . #t)
  ((srfi 146 hash) . #t)
  ((srfi 151) . #t)
+ ((srfi 152) . #t)
  ((srfi 158) . #t)
  ((srfi 159) . #t)
  ((srfi 160 base) . #t)
