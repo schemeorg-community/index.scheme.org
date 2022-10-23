@@ -1,7 +1,7 @@
 (
  ;;TODO specify new identifiers being generated / inserted into environment?
  ((name . define-record-type)
-  (signature syntax-rules () ((type-spec constructor predicate field ...)))
+  (signature syntax-rules () ((_ type-spec constructor predicate field ...)))
   (subsigs
     (type-spec type-name
                (type-name parent))
