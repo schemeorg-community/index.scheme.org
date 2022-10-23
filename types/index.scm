@@ -203,6 +203,9 @@
  ;; ((srfi 96) . "types/srfi.96.scm") TODO
  ;; ((srfi 97) . "types/srfi.97.scm") TODO
  ((srfi 98) . "types/srfi.98.scm")
+ ((srfi 99) . "types/srfi.99.records.procedural.scm")
+ ((srfi 99) . "types/srfi.99.records.inspection.scm")
+ ((srfi 99) . "types/srfi.99.records.syntactic.scm")
  ((srfi 99 records procedural) . "types/srfi.99.records.procedural.scm")
  ((srfi 99 records inspection) . "types/srfi.99.records.inspection.scm")
  ((srfi 99 records syntactic) . "types/srfi.99.records.syntactic.scm")
@@ -237,7 +240,12 @@
  ((srfi 128) . "types/srfi.128.scm")
  ((srfi 129) . "types/srfi.129.scm")
  ((srfi 130) . "types/srfi.130.scm")
- ;; ((srfi 131) . "types/srfi.131.scm") TODO
+ ((srfi 131) . "types/srfi.99.records.procedural.scm")
+ ((srfi 131) . "types/srfi.99.records.inspection.scm")
+ ((srfi 131) . "types/srfi.131.records.syntactic.scm")
+ ((srfi 131 records procedural) . "types/srfi.99.records.procedural.scm")
+ ((srfi 131 records inspection) . "types/srfi.99.records.inspection.scm")
+ ((srfi 131 records syntactic) . "types/srfi.131.records.syntactic.scm")
  ((srfi 132) . "types/srfi.132.scm")
  ((srfi 133) . "types/srfi.133.scm")
  ((srfi 134) . "types/srfi.134.scm")
