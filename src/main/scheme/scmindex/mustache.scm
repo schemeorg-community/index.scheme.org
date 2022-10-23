@@ -670,7 +670,7 @@
         (else (error sexpr))))
 
     (define spacer-sd
-      (make-sexpr-el #f #f "spacer" #f #f))
+      (make-sexpr-el " " #f "spacer" #f #f))
 
     (define paren-open-sd
       (make-sexpr-el #f "(" "muted" #f #f))

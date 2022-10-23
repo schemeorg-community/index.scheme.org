@@ -1,3 +1,4 @@
+$padding-breakpoint: 1000px;
 $media-breakpoint: 600px;
 
 .search-page {
@@ -160,7 +161,7 @@ $media-breakpoint: 600px;
         align-items: stretch;
     }
 
-    @media (max-width: $media-breakpoint) {
+    @media (max-width: $padding-breakpoint) {
         &__search-result {
             padding: 0;
         }
