@@ -77,6 +77,7 @@
  ((srfi 144) . #t)
  ((srfi 145) . #t)
  ((srfi 151) . #t)
+ ((srfi 154) . #t)
  ((srfi 156) . #t)
  ((srfi 158) . #t)
  ((srfi 193) . #t)
