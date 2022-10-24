@@ -94,6 +94,7 @@
  ((srfi 43) . #t)
  ((srfi 45) . #t)
  ((srfi 46) . #t)
+ ((srfi 47) . #t)
  ((srfi 48) . #t)
  ((srfi 54) . #t)
  ((srfi 59) . #t)

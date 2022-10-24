@@ -151,7 +151,7 @@
  ;; srfi 44 -- "meta" srfi
  ((srfi 45) . "types/srfi.45.scm")
  ((srfi 46) . "types/srfi.46.scm")
- ;; ((srfi 47) . "types/srfi.47.scm") TODO
+ ((srfi 47) . "types/srfi.47.scm")
  ((srfi 48) . "types/srfi.48.scm")
  ;; srfi 49 -- non-sexpr syntax
  ;; srfi 50 -- withdrawn
