@@ -1,3 +1,1 @@
-(((name . assume)
-  (signature syntax-rules ()
-             ((_ obj message) *))))
+(((name . "assume") (signature syntax-rules () ((_ obj message) *))))

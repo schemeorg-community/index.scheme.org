@@ -132,7 +132,7 @@
     ;; result item corresponding to a search-item / index-item in domain
     (define-mustache-record-type <result-item>
                                  result-item-lookup
-                                 (make-result-item signature param-signatures subsyntax-signatures syntax-param-signatures tags lib parameterized-by spec-values)
+                                 (make-result-item signature param-signatures subsyntax-signatures tags lib parameterized-by spec-values)
                                  result-item?
                                  ;; sexpr of main signature
                                  (signature result-item-signature)
@@ -140,8 +140,6 @@
                                  (param-signatures result-item-param-signatures)
                                  ;; list of sexprs of signatures of types in syntax
                                  (subsyntax-signatures result-item-subsyntax-signatures)
-                                 ;; list of sexprs of macro subpatterns
-                                 (syntax-param-signatures result-item-syntax-param-signatures)
                                  (tags result-item-tags)
                                  (lib result-item-lib)
                                  (parameterized-by result-item-parameterized-by)
@@ -222,7 +220,6 @@
         ((not (result-item? obj)) (not-found))
         ((equal? "has-param-signatures?" name) (found (not (null? (result-item-param-signatures obj)))))
         ((equal? "has-subsyntax-signatures?" name) (found (not (null? (result-item-subsyntax-signatures obj)))))
-        ((equal? "has-syntax-param-signatures?" name) (found (not (null? (result-item-syntax-param-signatures obj)))))
         ((equal? "has-parameterized-by?" name) (found (not (null? (result-item-parameterized-by obj)))))
         ((equal? "has-spec-values?" name) (found (not (null? (result-item-spec-values obj)))))
         (else (not-found))))
@@ -505,26 +502,37 @@
           ((lambda)
            (values (map
                      (lambda (param-sig)
-                       (parameterize ((suppress-make-link #t))
-                         (render-procedure-signature (symbol->string (car param-sig))
-                                                  (cadr param-sig)
-                                                  #t)))
+                       (render-subsig (symbol->string (car param-sig))
+                                                (cadr param-sig)))
                      (index-entry-param-signatures index-entry))
                    '()
                    (render-procedure-signature (index-entry-name index-entry)
                                               signature 
                                               #f)))
           ((syntax-rules)
-           (values '()
+           (values (map
+                     (lambda (param-sig)
+                       (render-subsig (symbol->string (car param-sig))
+                                                (cadr param-sig)))
+                     (filter
+                       (lambda (s)
+                         (not (symbol=? 'pattern (caadr s))))
+                       (index-entry-param-signatures index-entry)))
                    (let ((literals (cadr signature)))
                      (map
                        (lambda (param)
-                         (make-syntax-rule (symbol->string (car param))
+                         ;; param is like: (name (syntax template ...))
+                         (define name (symbol->string (car param)))
+                         (define templates (cdr (cadr param)))
+                         (make-syntax-rule name
                                            (map
                                              (lambda (rule)
                                                (render-syntax-signature-signature literals rule))
-                                             (cdr param))))
-                       (index-entry-param-signatures index-entry)))
+                                             templates)))
+                       (filter
+                         (lambda (s)
+                           (symbol=? 'pattern (caadr s)))
+                         (index-entry-param-signatures index-entry))))
                    (render-syntax-signature (index-entry-name index-entry)
                                                      signature)))
           ((value)
@@ -532,15 +540,12 @@
                    '()
                    (render-value-signature (index-entry-name index-entry)
                                                     signature)))))
-      (define syntax-param-signatures
-        (render-param-signatures (index-entry-syntax-param-signatures index-entry)))
       (define spec-values
         (render-spec-values (index-entry-spec-values index-entry)))
       (make-result-item
         signature-sd
         param-signatures
         subsyntax-signatures
-        syntax-param-signatures
         (index-entry-tags index-entry)
         (index-entry-lib index-entry)
         (index-entry-parameterized-by index-entry)
@@ -574,20 +579,6 @@
                                  (make-sexpr-el #f (symbol->string term) #f #f #f)
                                  (make-sexpr-el "&#x27E9" #f #f #f #f))))))
       (make-sexpr-el #f #f "sexpr-flex" #f (render-sexpr (cons rule '()) term-handler 1)))
-
-    (define (render-param-signatures params)
-      (map
-        (lambda (param)
-          (define name (symbol->string (car param)))
-          (define type (cadr param))
-          (make-sexpr-el #f #f "sexpr-flex" #f
-                         (list
-                           paren-open-sd
-                           (render-param-type type #f)
-                           spacer-sd
-                           (make-sexpr-el #f name "muted" #f #f)
-                           paren-close-sd)))
-        params))
 
     (define suppress-make-link (make-parameter #f))
 
@@ -672,11 +663,26 @@
     (define spacer-sd
       (make-sexpr-el " " #f "spacer" #f #f))
 
+    (define quote-sd
+      (make-sexpr-el "'" #f "muted" #f #f))
+
+    (define hash-sd
+      (make-sexpr-el "#" #f "muted" #f #f))
+
+    (define period-sd
+      (make-sexpr-el "." #f "muted" #f #f))
+
     (define paren-open-sd
       (make-sexpr-el #f "(" "muted" #f #f))
 
     (define paren-close-sd
       (make-sexpr-el #f ")" "muted" #f #f))
+
+    (define sq-paren-open-sd
+      (make-sexpr-el #f "[" "muted" #f #f))
+
+    (define sq-paren-close-sd
+      (make-sexpr-el #f "]" "muted" #f #f))
 
     (define long-arrow-sd
       (make-sexpr-el "&DoubleLongRightArrow;" #f "muted" #f #f))
@@ -727,6 +733,15 @@
                      (loop (cdr types)
                            (append (list slash sd) sds)))))))))
 
+    (define (render-procedure-signature/param param sub?)
+      (if (list? param)
+          `(,sq-paren-open-sd
+            ,(render-param-type (car param) sub?)
+            ,spacer-sd
+            ,(make-sexpr-el #f (cadr param) "muted" #f #f)
+            ,sq-paren-close-sd)
+          `(,(make-sexpr-el #f (symbol->string param) "muted" #f #f))))
+
     (define (render-procedure-signature name sig sub?)
       (define name-sd (make-sexpr-el #f name (if sub? "muted-name" "bright-name") #f #f))
       (define (render-params-block params)
@@ -735,21 +750,10 @@
                    (result '()))
           (define param (car params))
           (define sd
-            (cond
-              ((list? param)
-               (make-sexpr-el #f #f "sexpr-flex" #f
-                              `(,spacer-sd
-                                 ,paren-open-sd
-                                 ,(render-param-type (car param) sub?)
-                                 ,spacer-sd
-                                 ,(make-sexpr-el #f (cadr param) "muted" #f #f)
-                                 ,paren-close-sd
-                                 ,@(if last (list paren-close-sd) (list)))))
-              (else
-                (make-sexpr-el #f #f "sexpr-flex" #f
-                               `(,spacer-sd
-                                  ,(make-sexpr-el #f (symbol->string param) "muted" #f #f)
-                                  ,@(if last (list paren-close-sd) (list)))))))
+            (make-sexpr-el #f #f "sexpr-flex" #f
+                           `(,spacer-sd
+                              ,@(render-procedure-signature/param param sub?)
+                              ,@(if last (list paren-close-sd) (list)))))
           (if last
               (reverse (cons sd result))
               (loop (cdr params)
@@ -768,6 +772,58 @@
                             ,name-sd
                             ,(make-sexpr-el #f #f "sexpr-flex sexpr-shrink" #f (render-params-block params))
                             ,@return-sd))))
+
+    (define (render-subsig/lambda sig)
+      (parameterize ((suppress-make-link #t))
+        (render-procedure-signature "\x03BB" sig #t)))
+
+    (define (render-subsig/alist sig)
+      (make-sexpr-el #f #f "sexpr-flex" #f
+                     `(,quote-sd
+                        ,paren-open-sd
+                        ,paren-open-sd
+                        ,@(render-procedure-signature/param (cadr sig) #f)
+                        ,spacer-sd
+                        ,period-sd
+                        ,spacer-sd
+                        ,@(render-procedure-signature/param (caddr sig) #f)
+                        ,paren-close-sd
+                        ,spacer-sd
+                        ,(make-sexpr-el #f "..." "muted" #f #f)
+                        ,paren-close-sd)))
+
+    (define (render-subsig/list sig)
+      (make-sexpr-el #f #f "sexpr-flex" #f
+                     `(,quote-sd
+                        ,paren-open-sd
+                        ,@(render-procedure-signature/param (cadr sig) #f)
+                        ,spacer-sd
+                        ,(make-sexpr-el #f "..." "muted" #f #f)
+                        ,paren-close-sd)))
+
+    (define (render-subsig/value sig)
+      (render-param-type (cadr sig) #f))
+
+    (define (render-subsig/vector sig)
+      (make-sexpr-el #f #f "sexpr-flex" #f
+                     `(,hash-sd
+                        ,paren-open-sd
+                        ,@(render-procedure-signature/param (cadr sig) #f)
+                        ,spacer-sd
+                        ,(make-sexpr-el #f "..." "muted" #f #f)
+                        ,paren-close-sd)))
+
+    (define (render-subsig name sig)
+      (define name-sd (make-sexpr-el #f name "muted-name"  #f #f))
+      (define value
+        (case (car sig)
+          ((lambda) (render-subsig/lambda sig))
+          ((alist) (render-subsig/alist sig))
+          ((list) (render-subsig/list sig))
+          ((vector) (render-subsig/vector sig))
+          ((value) (render-subsig/value sig))
+          (else (raise (string-append "Unexpected signature: " (write* sig))))))
+      (make-sexpr-el #f #f "sexpr-flex" #f `(,name-sd ,spacer-sd ,value)))
 
     (define (render-value-signature name sig)
       (make-sexpr-el #f #f "sexpr-flex" #f

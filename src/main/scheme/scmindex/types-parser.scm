@@ -73,7 +73,7 @@
                          (unless n
                            (error "Missing name attribute"))
                          (log-debug logger "Reading spec {}" n)
-                         n))
+                         (string->symbol n)))
           (define signature (let ((s (assoc* 'signature entry #f)))
                               (unless s
                                 (error "Missing signature attribute"))
@@ -89,12 +89,9 @@
               (else '())))
           (define param-types
             (case (car signature)
-              ((lambda) (extract-param-types signature))
-              ((syntax-rules) (extract-syntax-param-types (assoc* 'syntax-param-signatures entry '())))
-              (else '())))
-          (define syntax-param-signatures
-            (case (car signature)
-              ((syntax-rules) (assoc* 'syntax-param-signatures entry '()))
+              ((lambda) (append (extract-param-types signature)
+                                (extract-procedure-subsig-param-types (assoc* 'subsigs entry '()))))
+              ((syntax-rules) (extract-procedure-subsig-param-types (assoc* 'subsigs entry '())))
               (else '())))
           (define return-types
             (case (car signature)
@@ -120,7 +117,6 @@
                     param-names
                     signature
                     param-signatures
-                    syntax-param-signatures
                     tags
                     param-types
                     return-types
@@ -173,11 +169,22 @@
              (types (map parse-type-from-return returns)))
         (delete-duplicates (apply append types))))
 
-    (define (extract-syntax-param-types param-types)
+    (define (extract-procedure-subsig-param-types subsigs)
+      (define (parse-type-if-present value)
+        (cond
+          ((list? value) (parse-type-from-param (car value)))
+          (else (list))))
       (define types (map
-                      (lambda (param-type)
-                        (parse-type-from-param (cadr param-type)))
-                      param-types))
+                      (lambda (sig)
+                        (define value (cadr sig))
+                        (case (car value)
+                          ((value) (list (cadr value)))
+                          ((list vector) (parse-type-if-present (cadr value)))
+                          ((alist) (append (parse-type-if-present (cadr value))
+                                           (parse-type-if-present (caddr value))))
+                          ;; ignore lambda and synax-rules
+                          (else '())))
+                      subsigs))
       (apply append types))
 
     (define (extract-param-types signature)
@@ -199,7 +206,7 @@
            (cdr value))
           ((symbol? value) (list value))
           ((equal? #f value) (list))
-          (else (error "Bad signature"))))
+          (else (error (string-append "Bad signature: " (write* value))))))
       (filter symbol? types))
 
     (define (parse-type-from-return value)

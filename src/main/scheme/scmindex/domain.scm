@@ -36,7 +36,6 @@
     index-entry-param-names
     index-entry-signature
     index-entry-param-signatures
-    index-entry-syntax-param-signatures
     index-entry-tags
     index-entry-param-types
     index-entry-return-types
@@ -98,7 +97,6 @@
         param-names
         signature
         param-signatures
-        syntax-param-signatures
         tags
         param-types
         return-types
@@ -113,7 +111,6 @@
       (param-names index-entry-param-names)
       (signature index-entry-signature)
       (param-signatures index-entry-param-signatures)
-      (syntax-param-signatures index-entry-syntax-param-signatures)
       (tags index-entry-tags)
       (param-types index-entry-param-types)
       (return-types index-entry-return-types)
@@ -142,9 +139,6 @@
         (syntax_subsyntax_signatures . ,(if (equal? 'syntax type)
                                            (jsonify-syntax-subsigs (index-entry-param-signatures func))
                                            #()))
-        (syntax_param_signatures . ,(if (equal? 'syntax type)
-                                        (jsonify-syntax-param-signatures (index-entry-syntax-param-signatures func))
-                                        #()))
         (tags . ,(list->vector (map symbol->string (index-entry-tags func))))
         (param_types . ,(list->vector (map symbol->string (index-entry-param-types func))))
         (return_types . ,(list->vector (map symbol->string (index-entry-return-types func))))
@@ -158,7 +152,6 @@
         (param-names . ,(index-entry-param-names f))
         (signature . ,(index-entry-signature f))
         (param-signatures . ,(index-entry-param-signatures f))
-        (syntax-param-signatures . ,(index-entry-syntax-param-signatures f))
         (tags . ,(index-entry-tags f))
         (param-types . ,(index-entry-param-types f))
         (return-types . ,(index-entry-return-types f))
@@ -173,7 +166,6 @@
         (cdr (assoc 'param-names a))
         (cdr (assoc 'signature a))
         (cdr (assoc 'param-signatures a))
-        (cdr (assoc 'syntax-param-signatures a))
         (cdr (assoc 'tags a))
         (cdr (assoc 'param-types a))
         (cdr (assoc 'return-types a))
@@ -363,7 +355,6 @@
               (index-entry-param-names item)
               (index-entry-signature item)
               (index-entry-param-signatures item)
-              (index-entry-syntax-param-signatures item)
               (index-entry-tags item)
               (index-entry-param-types item)
               (index-entry-return-types item)

@@ -1,1 +1,1 @@
-(((name . error) (signature lambda ((string? message) obj ...) undefined)))
+(((name . "error") (signature lambda ((string? message) obj ...) undefined)))
