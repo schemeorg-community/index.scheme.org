@@ -11,7 +11,6 @@
     <div class="search-item__extra-info">
         {{# has-param-signatures? }}
         <div class="search-item__block search-item__block--params">
-            <div class="search-item__result-item-block-header">Typing of parameters and result</div>
             {{# param-signatures }}
             <div class="search-item__param-signature">
                 {{> sexpr }}
@@ -22,10 +21,9 @@
 
         {{# has-subsyntax-signatures? }}
         <div class="search-item__block search-item__block--subsyntax">
-            <div class="search-item__block-header">Fragments' format</div>
             <div class="search-item__subsyntax-signatures">
                 {{# subsyntax-signatures }}
-                <span class="search-item__subsyntax-name">&#x27E8;{{name}}&#x27E9;:&nbsp;</span>
+                <span class="search-item__subsyntax-name-wrapper">&#x27E8;<span class="search-item__subsyntax-name">{{name}}</span>&#x27E9;:=&nbsp;</span>
                 <div class="search-item__subsyntax-rules">
                     {{# rules }}
                         {{> sexpr }}
@@ -35,17 +33,6 @@
             </div>
         </div>
         {{/ has-subsyntax-signatures? }}
-
-        {{# has-syntax-param-signatures? }}
-        <div class="search-item__block search-item__block--syntax-params">
-            <div class="search-item__block-header">Fragments' types</div>
-            {{# syntax-param-signatures}}
-            <div class="search-item__param-signature">
-                {{> sexpr }}
-            </div>
-            {{/ syntax-param-signatures}}
-        </div>
-        {{/ has-syntax-param-signatures? }}
 
         {{# has-spec-values? }}
         <div class="search-item__block search-item__block--spec-values">

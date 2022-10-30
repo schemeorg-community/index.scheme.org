@@ -73,7 +73,10 @@
                          (unless n
                            (error "Missing name attribute"))
                          (log-debug logger "Reading spec {}" n)
-                         (string->symbol n)))
+                         (cond
+                           ((string? n) (string->symbol n))
+                           ((symbol? n) n)
+                           (else (raise "entry name not a string or a symbol")))))
           (define signature (let ((s (assoc* 'signature entry #f)))
                               (unless s
                                 (error "Missing signature attribute"))

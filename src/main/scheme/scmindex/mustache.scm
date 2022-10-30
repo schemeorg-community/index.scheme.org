@@ -823,7 +823,7 @@
           ((vector) (render-subsig/vector sig))
           ((value) (render-subsig/value sig))
           (else (raise (string-append "Unexpected signature: " (write* sig))))))
-      (make-sexpr-el #f #f "sexpr-flex" #f `(,name-sd ,spacer-sd ,value)))
+      (make-sexpr-el #f #f "sexpr-flex" #f `(,name-sd  ,spacer-sd ,long-arrow-sd ,spacer-sd ,value)))
 
     (define (render-value-signature name sig)
       (make-sexpr-el #f #f "sexpr-flex" #f

@@ -66,7 +66,7 @@
                 }
             }
         },
-        "signature-block-param":{
+        "param":{
             "type":"object",
             "properties":{
                 "name":{
@@ -80,7 +80,7 @@
                 }
             }
         },
-        "signature-block-return":{
+        "return":{
             "type":"object",
             "properties":{
                 "kind":{
@@ -90,7 +90,7 @@
                 "items":{
                     "type":"array",
                     "items":{
-                        "$ref":"#/$defs/signature-block-return"
+                        "$ref":"#/$defs/return"
                     }
                 },
                 "type":{
@@ -98,23 +98,31 @@
                 }
             }
         },
-        "func-signature-block":{
-            "types":["object","null"],
+        "func-signature":{
+            "type":"object",
             "properties":{
+                "type":{
+                    "type":"string",
+                    "pattern":"function"
+                },
                 "params":{
                     "type":"array",
                     "items":{
-                        "$ref":"#/$defs/signature-block-param"
+                        "$ref":"#/$defs/param"
                     }
                 },
                 "return":{
-                    "$ref":"#/$defs/signature-block-return"
+                    "$ref":"#/$defs/return"
                 }
             }
         },
-        "syntax-signature-block":{
-            "types":["object","null"],
+        "syntax-signature":{
+            "type":"object",
             "properties":{
+                "type":{
+                    "type":"string",
+                    "pattern":"syntax"
+                },
                 "literals":{
                     "type":"array",
                     "items":{
@@ -140,22 +148,24 @@
                 }
             }
         },
-        "func-param-signature-block":{
+        "value-signature":{
             "type":"object",
             "properties":{
-                "name":{
-                    "type":"string"
+                "type":{
+                    "type":"string",
+                    "pattern":"value"
                 },
-                "signature":{
-                    "$ref":"#/$defs/func-signature-block"
+                "value":{
+                    "$ref":"#/$defs/return"
                 }
             }
         },
-        "syntax-subsyntax-block":{
+        "pattern-signature":{
             "type":"object",
             "properties":{
-                "name":{
-                    "type":"string"
+                "type":{
+                    "type":"string",
+                    "pattern":"pattern"
                 },
                 "patterns":{
                     "type":"array",
@@ -165,16 +175,61 @@
                 }
             }
         },
-        "syntax-param-signature-block":{
+        "alist-signature":{
             "type":"object",
             "properties":{
-                "name":{
-                    "type":"string"
-                },
                 "type":{
-                    "type":"string"
+                    "type":"string",
+                    "pattern":"alist"
+                },
+                "car":{
+                    "$ref":"#/$defs/param"
+                },
+                "cdr":{
+                    "$ref":"#/$defs/param"
                 }
             }
+        },
+        "list-signature":{
+            "type":"object",
+            "properties":{
+                "type":{
+                    "type":"string",
+                    "pattern":"list"
+                },
+                "element":{
+                    "$ref":"#/$defs/param"
+                }
+            }
+        },
+        "vector-signature":{
+            "type":"object",
+            "properties":{
+                "type":{
+                    "type":"string",
+                    "pattern":"vector"
+                },
+                "element":{
+                    "$ref":"#/$defs/param"
+                }
+            }
+        },
+        "signature": {
+            "oneOf": [{
+                "$ref":"#/$defs/func-signature"
+            },{
+                "$ref":"#/$defs/syntax-signature"
+            },{
+                "$ref":"#/$defs/value-signature"
+            }, {
+                "$ref":"#/$defs/pattern-signature"
+            }, {
+                "$ref":"#/$defs/alist-signature"
+            }, {
+                "$ref":"#/$defs/list-signature"
+            }, {
+                "$ref":"#/$defs/vector-signature"
+            }]
         },
         "search-item":{
             "type":"object",
@@ -188,28 +243,21 @@
                 "type":{
                     "type":"string"
                 },
-                "func_signature":{
-                    "$ref":"#/$defs/func-signature-block"
+                "signature": {
+                    "$ref":"#/$defs/signature"
                 },
-                "syntax_signature":{
-                    "$ref":"#/$defs/syntax-signature-block"
-                },
-                "func_param_signatures":{
+                "subsignatures":{
                     "type":"array",
                     "items":{
-                        "$ref":"#/$defs/func-param-signature-block"
-                    }
-                },
-                "syntax_subsyntax_signatures":{
-                    "type":"array",
-                    "items":{
-                        "$ref":"#/$defs/syntax-subsyntax-block"
-                    }
-                },
-                "syntax_param_signatures":{
-                    "type":"array",
-                    "items":{
-                        "$ref":"#/$defs/syntax-param-signature-block"
+                        "type":"object",
+                        "properties":{
+                            "name":{
+                                "type":"string"
+                            },
+                            "signature":{
+                                "$ref":"#/$defs/signature"
+                            }
+                        }
                     }
                 },
                 "tags":{
