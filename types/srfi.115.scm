@@ -1,186 +1,291 @@
-(((name . regexp)
-  (signature lambda (re) regexp?)
-  (tags pure))
- ((name . rx)
-  (signature syntax-rules (* one-or-more ? optional = exactly at-least ** repeated |\|| or : seq $ submatch -> sumatch-named w/case w/nocase w/unicode
-                           w/ascii w/nocapture bos eos bol eol bog eog grapheme bow eow nwb word word+
-                           ?? non-greedy-optional *? non-greedy-zero-or-more **? non-greedy-repeated look-ahead look-behind
-                           neg-look-ahead neg-look-behind backref) 
-             ((_ sre ...) regexp?))
-  (tags pure)
+(((name . "regexp") (signature lambda (re) regexp?) (tags pure))
+ ((name . "rx")
+  (signature
+   syntax-rules
+   (*
+    one-or-more
+    ?
+    optional
+    =
+    exactly
+    at-least
+    **
+    repeated
+    \|
+    or
+    :
+    seq
+    $
+    submatch
+    ->
+    sumatch-named
+    w/case
+    w/nocase
+    w/unicode
+    w/ascii
+    w/nocapture
+    bos
+    eos
+    bol
+    eol
+    bog
+    eog
+    grapheme
+    bow
+    eow
+    nwb
+    word
+    word+
+    ??
+    non-greedy-optional
+    *?
+    non-greedy-zero-or-more
+    **?
+    non-greedy-repeated
+    look-ahead
+    look-behind
+    neg-look-ahead
+    neg-look-behind
+    backref)
+   ((_ sre ...) regexp?))
   (subsigs
-    (sre
-      string
-      charset
-      (* sre ...)
-      (one-or-more sre ...)
-      (? sre ...)
-      (optional sre ...)
-      (= n sre ...)
-      (exactly n sre ...)
-      (>= n sre ...)
-      (at-least n sre ...)
-      (** n m sre ...)
-      (repeated n m sre ...)
-      (|\|| sre ...)
-      (or sre ...)
-      (: sre ...)
-      (seq sre ...)
-      ($ sre ...)
-      (submatch sre ...)
-      (-> name sre ...)
-      (submatch-named name sre ...)
-      (w/case sre ...)
-      (w/nocase sre ...)
-      (w/unicode sre ...)
-      (w/ascii sre ...)
-      (w/nocapture sre ...)
-      bos
-      eos
-      bol
-      eol
-      bog
-      eog
-      grapheme
-      bow
-      eow
-      nwb
-      (word sre ...)
-      (word+ cset-sre ...)
-      word
-      (?? sre ...)
-      (non-greedy-optional sre ...)
-      (*? sre ...)
-      (non-greedy-zero-or-more sre ...)
-      (**? m n sre ...)
-      (non-greedy-repeated sre ...)
-      (look-ahead sre ...)
-      (look-behind sre ...)
-      (neg-look-ahead sre ...)
-      (neg-look-behind sre ...)
-      (backref n-or-name))))
- ((name . regexp->sre)
-  (signature lambda ((regexp? re)) *)
+   (sre
+    (pattern
+     string
+     charset
+     (* sre ...)
+     (one-or-more sre ...)
+     (? sre ...)
+     (optional sre ...)
+     (= n sre ...)
+     (exactly n sre ...)
+     (>= n sre ...)
+     (at-least n sre ...)
+     (** n m sre ...)
+     (repeated n m sre ...)
+     (\| sre ...)
+     (or sre ...)
+     (: sre ...)
+     (seq sre ...)
+     ($ sre ...)
+     (submatch sre ...)
+     (-> name sre ...)
+     (submatch-named name sre ...)
+     (w/case sre ...)
+     (w/nocase sre ...)
+     (w/unicode sre ...)
+     (w/ascii sre ...)
+     (w/nocapture sre ...)
+     bos
+     eos
+     bol
+     eol
+     bog
+     eog
+     grapheme
+     bow
+     eow
+     nwb
+     (word sre ...)
+     (word+ cset-sre ...)
+     word
+     (?? sre ...)
+     (non-greedy-optional sre ...)
+     (*? sre ...)
+     (non-greedy-zero-or-more sre ...)
+     (**? m n sre ...)
+     (non-greedy-repeated sre ...)
+     (look-ahead sre ...)
+     (look-behind sre ...)
+     (neg-look-ahead sre ...)
+     (neg-look-behind sre ...)
+     (backref n-or-name))))
   (tags pure))
- ((name . charset->sre)
+ ((name . "regexp->sre") (signature lambda ((regexp? re)) *) (tags pure))
+ ((name . "charset->sre")
   (signature lambda ((charset? char-set)) *)
   (tags pure))
- ((name . valid-sre?)
-  (signature lambda (obj) boolean?)
-  (tags pure))
- ((name . regexp?)
-  (signature lambda (obj) boolean?)
-  (tags predicate pure))
- ((name . regexp-matches)
+ ((name . "valid-sre?") (signature lambda (obj) boolean?) (tags pure))
+ ((name . "regexp?") (signature lambda (obj) boolean?) (tags predicate pure))
+ ((name . "regexp-matches")
   (signature lambda (re (string? str)) (or regexp-match? #f))
   (tags pure))
- ((name . regexp-matches)
+ ((name . "regexp-matches")
   (signature lambda (re (string? str) (integer? start)) (or regexp-match? #f))
   (tags pure))
- ((name . regexp-matches)
-  (signature lambda (re (string? str) (integer? start) (integer? end)) (or regexp-match? #f))
+ ((name . "regexp-matches")
+  (signature
+   lambda
+   (re (string? str) (integer? start) (integer? end))
+   (or regexp-match? #f))
   (tags pure))
- ((name . regexp-matches?)
+ ((name . "regexp-matches?")
   (signature lambda (re (string? str)) boolean?)
   (tags pure))
- ((name . regexp-matches?)
+ ((name . "regexp-matches?")
   (signature lambda (re (string? str) (integer? start)) boolean?)
   (tags pure))
- ((name . regexp-matches?)
-  (signature lambda (re (string? str) (integer? start) (integer? end)) boolean?)
+ ((name . "regexp-matches?")
+  (signature
+   lambda
+   (re (string? str) (integer? start) (integer? end))
+   boolean?)
   (tags pure))
- ((name . regexp-search)
+ ((name . "regexp-search")
   (signature lambda (re (string? str)) (or regexp-match? #f))
   (tags pure))
- ((name . regexp-search)
+ ((name . "regexp-search")
   (signature lambda (re (string? str) (integer? start)) (or regexp-match? #f))
   (tags pure))
- ((name . regexp-search)
-  (signature lambda (re (string? str) (integer? start) (integer? end)) (or regexp-match? #f))
+ ((name . "regexp-search")
+  (signature
+   lambda
+   (re (string? str) (integer? start) (integer? end))
+   (or regexp-match? #f))
   (tags pure))
- ((name . regexp-fold)
+ ((name . "regexp-fold")
   (signature lambda (re (procedure? kons) knil (string? str)) *)
   (subsigs
-    (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *)))
+   (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *)))
   (tags pure))
- ((name . regexp-fold)
-  (signature lambda (re (procedure? kons) knil (string? str) (procedure? finish)) *)
+ ((name . "regexp-fold")
+  (signature
+   lambda
+   (re (procedure? kons) knil (string? str) (procedure? finish))
+   *)
   (subsigs
-    (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
-    (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
+   (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
+   (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
   (tags pure))
- ((name . regexp-fold)
-  (signature lambda (re (procedure? kons) knil (string? str) (procedure? finish) (integer? start)) *)
+ ((name . "regexp-fold")
+  (signature
+   lambda
+   (re
+    (procedure? kons)
+    knil
+    (string? str)
+    (procedure? finish)
+    (integer? start))
+   *)
   (subsigs
-    (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
-    (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
+   (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
+   (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
   (tags pure))
- ((name . regexp-fold)
-  (signature lambda (re (procedure? kons) knil (string? str) (procedure? finish) (integer? start) (integer? end)) *)
+ ((name . "regexp-fold")
+  (signature
+   lambda
+   (re
+    (procedure? kons)
+    knil
+    (string? str)
+    (procedure? finish)
+    (integer? start)
+    (integer? end))
+   *)
   (subsigs
-    (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
-    (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
+   (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
+   (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
   (tags pure))
- ((name . regexp-extract)
+ ((name . "regexp-extract")
   (signature lambda (re (string? str)) list?)
   (tags pure))
- ((name . regexp-extract)
+ ((name . "regexp-extract")
   (signature lambda (re (string? str) (integer? start)) list?)
   (tags pure))
- ((name . regexp-extract)
+ ((name . "regexp-extract")
   (signature lambda (re (string? str) (integer? start) (integer? end)) list?)
   (tags pure))
- ((name . regexp-split)
+ ((name . "regexp-split")
   (signature lambda (re (string? str)) list?)
   (tags pure))
- ((name . regexp-split)
+ ((name . "regexp-split")
   (signature lambda (re (string? str) (integer? start)) list?)
   (tags pure))
- ((name . regexp-split)
+ ((name . "regexp-split")
   (signature lambda (re (string? str) (integer? start) (integer? end)) list?)
   (tags pure))
- ((name . regexp-partition)
+ ((name . "regexp-partition")
   (signature lambda (re (string? str)) list?)
   (tags pure))
- ((name . regexp-partition)
+ ((name . "regexp-partition")
   (signature lambda (re (string? str) (integer? start)) list?)
   (tags pure))
- ((name . regexp-partition)
+ ((name . "regexp-partition")
   (signature lambda (re (string? str) (integer? start) (integer? end)) list?)
   (tags pure))
- ((name . regexp-replace)
-  (signature lambda (re (string? str) ((or string? integer? symbol?) subst)) string?)
+ ((name . "regexp-replace")
+  (signature
+   lambda
+   (re (string? str) ((or string? integer? symbol?) subst))
+   string?)
   (tags pure))
- ((name . regexp-replace)
-  (signature lambda (re (string? str) ((or string? integer? symbol?) subst) (integer? start)) string?)
+ ((name . "regexp-replace")
+  (signature
+   lambda
+   (re (string? str) ((or string? integer? symbol?) subst) (integer? start))
+   string?)
   (tags pure))
- ((name . regexp-replace)
-  (signature lambda (re (string? str) ((or string? integer? symbol?) subst) (integer? start) (integer? end)) string?)
+ ((name . "regexp-replace")
+  (signature
+   lambda
+   (re
+    (string? str)
+    ((or string? integer? symbol?) subst)
+    (integer? start)
+    (integer? end))
+   string?)
   (tags pure))
- ((name . regexp-replace)
-  (signature lambda (re (string? str) ((or string? integer? symbol?) subst) (integer? start) (integer? end) (integer? count)) string?)
+ ((name . "regexp-replace")
+  (signature
+   lambda
+   (re
+    (string? str)
+    ((or string? integer? symbol?) subst)
+    (integer? start)
+    (integer? end)
+    (integer? count))
+   string?)
   (tags pure))
- ((name . regexp-replace-all)
-  (signature lambda (re (string? str) ((or string? integer? symbol?) subst) (integer? start)) string?)
+ ((name . "regexp-replace-all")
+  (signature
+   lambda
+   (re (string? str) ((or string? integer? symbol?) subst) (integer? start))
+   string?)
   (tags pure))
- ((name . regexp-replace-all)
-  (signature lambda (re (string? str) ((or string? integer? symbol?) subst) (integer? start) (integer? end)) string?)
+ ((name . "regexp-replace-all")
+  (signature
+   lambda
+   (re
+    (string? str)
+    ((or string? integer? symbol?) subst)
+    (integer? start)
+    (integer? end))
+   string?)
   (tags pure))
- ((name . regexp-match?)
+ ((name . "regexp-match?")
   (signature lambda (obj) boolean?)
   (tags pure predicate))
- ((name . regexp-match-count)
+ ((name . "regexp-match-count")
   (signature lambda ((regexp-match? obj)) integer?)
   (tags pure))
- ((name . regexp-match-submatch)
-  (signature lambda ((regexp-match? obj) ((or integer? symbol?) field)) (or string? #f))
+ ((name . "regexp-match-submatch")
+  (signature
+   lambda
+   ((regexp-match? obj) ((or integer? symbol?) field))
+   (or string? #f))
   (tags pure))
- ((name . regexp-match-submatch-start)
-  (signature lambda ((regexp-match? obj) ((or integer? symbol?) field)) (or integer? #f))
+ ((name . "regexp-match-submatch-start")
+  (signature
+   lambda
+   ((regexp-match? obj) ((or integer? symbol?) field))
+   (or integer? #f))
   (tags pure))
- ((name . regexp-match-submatch-end)
-  (signature lambda ((regexp-match? obj) ((or integer? symbol?) field)) (or integer? #f))
+ ((name . "regexp-match-submatch-end")
+  (signature
+   lambda
+   ((regexp-match? obj) ((or integer? symbol?) field))
+   (or integer? #f))
   (tags pure))
- ((name . regexp-match->list)
+ ((name . "regexp-match->list")
   (signature lambda ((regexp-match? obj)) list?)
   (tags pure)))

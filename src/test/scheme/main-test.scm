@@ -1,23 +1,17 @@
 (define-library
   (main-test)
   (import (scheme base)
-          (scheme write)
-          (scheme read)
-          (scmindex domain)
-          (scmindex types-parser)
-          (scmindex mustache)
-          (only (srfi 1) lset=)
           (srfi 64)
-          (srfi 180))
+          (test-mustache)
+          (test-types-parser)
+          (test-json))
   
   (export run-tests)
   
   (begin
-    
     (define (run-tests)
       (test-begin "SCM index test")
-      (test-group "types-parser"
-                  (include "test-types-parser.scm"))
-      (test-group "mustache"
-                  (include "test-mustache.scm"))
+      (run-parser-tests)
+      (run-json-tests)
+      (run-mustache-tests)
       (test-end))))

@@ -31,6 +31,14 @@
                                (cons code (get-name filterset-store code)))
                              lst)))
 
+      (define downloads-config 
+        (let* ((file (deploy-setting/downloads settings))
+               (exists? (file-exists? file))
+               (content (if exists?
+                            (call-with-input-file file read)
+                            #f)))
+          content))
+
       ;; load templates from ./templates
       (define (partial-locator name)
         (open-input-file (string-append "templates/" name ".html")))
@@ -100,7 +108,7 @@
 
       (get/html "/"
                 (lambda (req resp)
-                  (render-home-page settings filtersets)))
+                  (render-home-page settings downloads-config filtersets)))
 
       (get/html "/settings"
                 (lambda (req resp)

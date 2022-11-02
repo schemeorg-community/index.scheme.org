@@ -36,7 +36,6 @@
     index-entry-param-names
     index-entry-signature
     index-entry-param-signatures
-    index-entry-syntax-param-signatures
     index-entry-tags
     index-entry-param-types
     index-entry-return-types
@@ -73,6 +72,7 @@
     deploy-setting/filterset-index
     deploy-setting/sqlite-location
     deploy-setting/enable-user-settings
+    deploy-setting/downloads
     user-setting/page-size
     user-setting/param-filter-loose
     user-setting/ctrl-f-override
@@ -98,7 +98,6 @@
         param-names
         signature
         param-signatures
-        syntax-param-signatures
         tags
         param-types
         return-types
@@ -113,7 +112,6 @@
       (param-names index-entry-param-names)
       (signature index-entry-signature)
       (param-signatures index-entry-param-signatures)
-      (syntax-param-signatures index-entry-syntax-param-signatures)
       (tags index-entry-tags)
       (param-types index-entry-param-types)
       (return-types index-entry-return-types)
@@ -122,29 +120,10 @@
       (supertypes index-entry-supertypes))
 
     (define (index-entry->json func)
-      (define type
-        (case (car (index-entry-signature func))
-          ((lambda) 'function)
-          ((syntax-rules) 'syntax)
-          (else 'value)))
       `((lib . ,(index-entry-lib func))
         (name . ,(symbol->string (index-entry-name func)))
-        (type . ,(symbol->string type))
-        (func_signature . ,(if (equal? 'function type)
-                             (jsonify-signature (index-entry-signature func))
-                             'null))
-        (syntax_signature . ,(if (equal? 'syntax type)
-                             (jsonify-signature (index-entry-signature func))
-                             'null))
-        (func_param_signatures . ,(if (equal? 'function type)
-                                     (jsonify-function-subsigs (index-entry-param-signatures func))
-                                     #()))
-        (syntax_subsyntax_signatures . ,(if (equal? 'syntax type)
-                                           (jsonify-syntax-subsigs (index-entry-param-signatures func))
-                                           #()))
-        (syntax_param_signatures . ,(if (equal? 'syntax type)
-                                        (jsonify-syntax-param-signatures (index-entry-syntax-param-signatures func))
-                                        #()))
+        (signature . ,(jsonify-signature (index-entry-signature func)))
+        (subsignatures . ,(jsonify-subsigs (index-entry-param-signatures func)))
         (tags . ,(list->vector (map symbol->string (index-entry-tags func))))
         (param_types . ,(list->vector (map symbol->string (index-entry-param-types func))))
         (return_types . ,(list->vector (map symbol->string (index-entry-return-types func))))
@@ -158,7 +137,6 @@
         (param-names . ,(index-entry-param-names f))
         (signature . ,(index-entry-signature f))
         (param-signatures . ,(index-entry-param-signatures f))
-        (syntax-param-signatures . ,(index-entry-syntax-param-signatures f))
         (tags . ,(index-entry-tags f))
         (param-types . ,(index-entry-param-types f))
         (return-types . ,(index-entry-return-types f))
@@ -173,7 +151,6 @@
         (cdr (assoc 'param-names a))
         (cdr (assoc 'signature a))
         (cdr (assoc 'param-signatures a))
-        (cdr (assoc 'syntax-param-signatures a))
         (cdr (assoc 'tags a))
         (cdr (assoc 'param-types a))
         (cdr (assoc 'return-types a))
@@ -202,7 +179,8 @@
 
     (define (jsonify-signature sig)
       (define (jsonify-lambda l)
-        `((params . ,(list->vector (map jsonify-lambda-param (car l))))
+        `((type . "function")
+          (params . ,(list->vector (map jsonify-lambda-param (car l))))
           (return . ,(jsonify-lambda-return (cadr l)))))
       (define (jsonify-syntax s)
         (define literals (list->vector (map symbol->string (car s))))
@@ -212,19 +190,43 @@
                                                              (write* (cadr pattern))
                                                              'null))))
                                             (cdr s))))
-        `((literals . ,literals)
+        `((type . "syntax")
+          (literals . ,literals)
           (patterns . ,patterns)))
-      (case (car sig)
-        ((lambda) (jsonify-lambda (cdr sig)))
-        ((syntax-rules) (jsonify-syntax (cdr sig)))
-        (else #f)))
+      (define (jsonify-value v)
+        `((type . "value")
+          (value . ,(jsonify-lambda-return (car v)))))
+      (define (jsonify-pattern p)
+        `((type . "pattern")
+          (patterns . ,(list->vector (map pattern->string p)))))
+      (define (jsonify-alist alist)
+        `((type . "alist")
+          (car . ,(jsonify-lambda-param (car alist)))
+          (cdr . ,(jsonify-lambda-param (cadr alist)))))
+      (define (jsonify-list lst)
+        `((type . "list")
+          (element . ,(jsonify-lambda-param (car lst)))))
+      (define (jsonify-vector vec)
+        `((type . "vector")
+          (element . ,(jsonify-lambda-param (car vec)))))
 
-    (define (jsonify-function-subsigs subsigs)
+      (define jsonifier
+        (case (car sig)
+          ((lambda) jsonify-lambda)
+          ((syntax-rules) jsonify-syntax)
+          ((value) jsonify-value)
+          ((pattern) jsonify-pattern)
+          ((alist) jsonify-alist)
+          ((list) jsonify-list)
+          ((vector) jsonify-vector)
+          (else (raise (string-append "Unrecognized sig type: " (write* (car sig)))))))
+      (jsonifier (cdr sig)))
+
+    (define (jsonify-subsigs subsigs)
       (list->vector (map (lambda (e)
                            (define name (symbol->string (car e)))
-                           (define sig (jsonify-signature (cadr e)))
                            `((name . ,name)
-                             (signature . ,sig))) 
+                             (signature . ,(jsonify-signature (cadr e))))) 
                          subsigs)))
 
     (define (pattern->string pattern)
@@ -240,20 +242,6 @@
           (display pattern p))
       (get-output-string p))
 
-    (define (jsonify-syntax-subsigs subsigs)
-      (list->vector (map (lambda (e)
-                           (define name (symbol->string (car e)))
-                           (define patterns (list->vector (map pattern->string (cdr e))))
-                           `((name . ,name)
-                             (patterns . ,patterns))) 
-                         subsigs)))
-
-    (define (jsonify-syntax-param-signatures syntax-sigs)
-      (list->vector (map (lambda (e)
-                           `((name . ,(symbol->string (car e)))
-                             (type . ,(symbol->string (cadr e))))) 
-                         syntax-sigs)))
-
     (define (spec-value->json block)
       (define vals 
         (map (lambda (e)
@@ -262,16 +250,6 @@
           (cdr block)))
       `((field . ,(symbol->string (car block)))
         (values . ,(list->vector vals))))
-
-    (define (json->spec-value block)
-      (define vals
-        (map
-          (lambda (e)
-            (list (cdr (assoc 'value e))
-                  (cdr (assoc 'desc e))))
-          (vector->list (cdr (assoc 'values block)))))
-      (define field (string->symbol (cdr (assoc 'field block))))
-      (cons field vals))
 
     (define-record-type <search-result>
       (make-search-result items total libs params tags returns parameterized-by)
@@ -340,6 +318,7 @@
       (deploy-setting/filterset-index)
       (deploy-setting/sqlite-location)
       (deploy-setting/enable-user-settings)
+      (deploy-setting/downloads)
       (user-setting/page-size)
       (user-setting/param-filter-loose)
       (user-setting/ctrl-f-override)
@@ -363,7 +342,6 @@
               (index-entry-param-names item)
               (index-entry-signature item)
               (index-entry-param-signatures item)
-              (index-entry-syntax-param-signatures item)
               (index-entry-tags item)
               (index-entry-param-types item)
               (index-entry-return-types item)

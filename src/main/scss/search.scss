@@ -328,14 +328,19 @@ $media-breakpoint: 600px;
        margin-bottom: 1em;
    }
 
-   &__subsyntax-name {
-       font-family: monospace;
+   &__subsyntax-name-wrapper {
        color: var(--text-color-muted);
        margin-right: 5px;
    }
 
+   &__subsyntax-name {
+       font-weight: bold;
+   }
+
    &__subsyntax-signatures {
        display: grid;
+       font-family: monospace;
+       font-size: 1.2em;
    }
 
    @media (min-width: $media-breakpoint) {

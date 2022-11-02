@@ -1,7 +1,7 @@
 = Scheme index
 :toc: left
 
-Scheme index is a tool for indexing and searching through procedures and syntax from R7RS-small, R7RS-large, select SRFI libraries.
+Scheme index is a tool for indexing and searching through procedures and syntax from Scheme specifications and select SRFI libraries.
 The index may be used through a site (https://index.scheme.org) or through REST API.
 
 == Userguide for site visitors
@@ -10,31 +10,27 @@ Scheme index search consists of control pane on the left, and result list in the
 
 === Control pane
 
-In the control pane, optionally select values from the filter list, optionally enter search query in the text field, and press either enter or button with magnifying glass to display the results. If you have javascript enabled, typing in the search query field should give you auto suggestions for identifier names, although those suggestions are not filtered by current selection. If you have javascript enabled and have checked apropriate option in settings, you can use control + f to quickly focus to the query text field.
+In the control pane, optionally select values from the filter list, optionally enter search query in the text field, and press either enter or button with magnifying glass to display the results. You can use control + f to quickly focus to the query text field.
 
 === Result list
 
-Each result item is one of procedure, a macro, or a value. At the top it shows a library it is exported from. Note, that some identifiers are exported from multiple libraries. The library name can be clicked, which will result in starting new search using said library as a filter. On the right side top, associated list of tags with the result is shown. Like with library, tags are also clickable, and start a search using the clicked tag as a filter.
+Each result item is either a procedure, a macro, or a value. At the top it shows a library it is exported from. Identifiers that are exported from multiple libraries will appear in the result list multiple times. The library name can be clicked, which will result in starting new search using said library as a filter. On the right side top, associated list of tags with the result is shown. Tags are also clickable, and start a search using the clicked tag as a filter.
 
-Procedures and value names are rendered in *red*. Procedures are distinguished by being surrounded with parenthesis, as if being called. Following the name until the "=>" sign are parameters. If parameter is just a name, it means it has an unspecified type. Otherwise, parameter may be a list of type and name. Types are usually represented as predicate procedures (sometimes a type may be opaque or logical, and without a disjoint predicate function to distinguish it). It can also be a logical "or" of multiple types, separated by `/`. Due to its pervasiveness as a `NULL`, `#f` literal is also used as a type sometimes, usually as a part of the "or". 
+Procedures and value names are rendered in *red*. Procedures are distinguished by being surrounded with parenthesis, as if being called. Following the name until the "=>" sign are parameters. If parameter is just a name, it means it has an unspecified type. Otherwise, parameter may be a list of type and name. Types are usually represented as predicate procedures (sometimes a type may be opaque or logical, and without a disjoint predicate function to distinguish it). It can also be a logical "or" of multiple types, separated by `/`. Sometimes `#f` literal is used as a type due to its significant role in scheme to act what would be `null` elsewhere. 
 
 After the "=>" sign is the return type. The return type is same as parameter type, and additionally may contain: 
 
 * a "*" symbol (meaning it returns a value of unknown type); 
 
-* a word "undefined" (meaning it returns a value which shouldn't be used in portable code); 
-
 * a list with "values" word in car position (meaning it has a multivalue return); 
 
 Types expressed as predicates in *blue* are links. Pressing on a type in parameter position will search using that type as *return value* filter; pressing on a type in return value position will search using that type as *parameter* filter.
 
-If one of parameters is *procedure?*, it's signature is defined below the main procedure's signature, using parameter's name in car position. Likewise same is done if return value is a procedure; but in that case word "return" is used as a name.
+If one of parameters or return value is *procedure?*, *list?*, *vector?*, its signature might be further elaborated below the main procedure's signature.
 
 Procedures can have more than one entry, even from same library. This occurs, if the procedures is has optional parameters and therefore can be called in multiple ways; or if the result type can be determined more precisely under more specific input parameters.
 
 Macros are rendered in *green*. If macro is complex, some parts of it are grouped, and the syntax of those groups shown below the syntax of whole macro. Macro literals are also rendered in green. To make parenthesis more obvious, auxiliary parenthesis coloring is used, however this coloring doesn't signify any information.
-
-Macros may also contain typing definition, signifying expected type during macro expansion or runtime. Unlike with procedures though, such definitions are shown in separate block as to not confuse which parenthesis are part of macro syntax, and which are used for type grouping. 
 
 === Tags
 
@@ -59,20 +55,20 @@ Some types are defined as a union of other types; for example *list?* is a union
 
 Selecting multiple return types will return results that match *all* of the given types. As and in case filter by parameter type, when filtering by return type the type hierarchy is taken into consideration. Searching by a "parent" return type will also yield procedures returning more precise "child" types.
 
-The text query is parsed by edismax parser, and is used to filter by name and parameter / subsyntax names. This means it supports and interprets common searching syntax, such as using "-" in front of the word to exclude results containing said word. This has its disadvantages; eg. if you tried to search for coercion functions and typed "->string" (without quotes) into the search input field, you wouldn't find anything interesting, because the leading minus was interpreted specially. Instead, you'd have to search using "exact phrase", by putting double quotes around the search.
+The text query is parsed by edismax parser (read more about it https://solr.apache.org/guide/6_6/the-dismax-query-parser.html#the-dismax-query-parser), and is used to filter by name and parameter / subsyntax names. This means it supports and interprets common searching syntax, such as using "-" in front of the word to exclude results containing said word. This has its disadvantages; eg. if you tried to search for coercion functions and typed "->string" (without quotes) into the search input field, you wouldn't find anything interesting, because the leading minus was interpreted specially. Instead, you'd have to search using "exact phrase", by putting double quotes around the search.
 
 
-== Obtaining and running index locally
+== Obtaining and running index yourself
 
 === Download
 
 Prebuilt versions are available at https://github.com/arvyy/r7rs-index-site/releases
 
-Docker image (corresponding to latest deployed version) may be pulled from `arvyy/scheme-index:master`.
+Docker image (always corresponding to latest deployed version) may be pulled from `arvyy/scheme-index:master`.
 
 === Building native
 
-Build processes requires executables on path:
+Build processes requires following tools on path:
 
 * `ant` - Apache Ant build tool
 
@@ -82,7 +78,9 @@ Build processes requires executables on path:
 
 * `sass` - SCSS compiler
 
-You can build scheme index by running `ant` from the root of the source directory.
+* (optional) `npm` - nodejs / npm tooling to build CLI client application.
+
+You can build scheme index by running `ant` from the root of the source directory. Pass `-DbuildClient=true` to include CLI client application build.
 
 After the build successfully completes, you should find everything scheme index needs in `dist` directory.
 
@@ -98,17 +96,18 @@ Note that working directory is important; type files, configuration are resolved
 
 See <<Configuration>> section for configuring the application behavior.
 
-=== Building docker
+=== Building docker image
 
 Build a docker image using
 
 ```
-docker build -t scheme-index -f docker/Dockerfile .
+docker build -t scmindex-builder:latest -f docker/base/Dockerfile .
+docker build -t scheme-index -f docker/scheme-index/Dockerfile .
 ```
 
 The built image has same structure as a native build, under path `/app` inside the image.
 
-=== Running with docker
+=== Running docker image
 
 To run with docker, execute
 
@@ -119,7 +118,7 @@ docker run -p 8080:8080 --init scheme-index
 The application resides in `/app` location. Consult rest of the documentation for details, but in particular you might want to mount a volume 
 to `/app/logs` to catch log files, or a volume file to `/app/config/configuration.scm` to overwrite index config.
 
-=== Running for development
+=== Running in development
 
 First, install dependencies under kawa-web-collection submodule (make sure the git submodule is initialized / updated)
 
@@ -142,7 +141,7 @@ sass -w src/main/scss/main.scss static/css/scmindex.css
 
 == Configuration
 
-=== Config.scm
+=== configuration.scm
 
 Core application behavior is managed using a scm configuration file, containing a list of key-value pairs, where each key is a symbol (ie. an alist).
 Running the application, first argument is interpreted as a path to configuration file. If not set, it defaults to `./config/configuration.scm`
@@ -197,6 +196,10 @@ The following is exhaustive list of valid properties
 | enable-user-settings
 | Allow user to save certain settings in cookies and show settings page
 | #t
+
+| downloads
+| Location of downloads config file, listing available CLI app downloads. The file should be a list, where each item is an alist with symbol keys name, checksum, and url and string values. It's not an error if file doesn't exist.
+| "config/downloads.scm"
 |===
 
 === Identifiers definitions
@@ -271,17 +274,17 @@ where type is same as described under functions.
 Currently used tags are described in <<Tags>>
 
 | subsigs
-| Signatures of parameter / return functions in case of a higher order function; or syntax definition of pattern variables in case of syntax
+| Additional elaboration of signatures for the parameters / returns / syntax fragments / datastructure content. Each entry in this list is a list,
+ where first element is a name (corresponding to parameter / syntax fragment / etc), and second parameter is its signature. The signature can be either 
+one of as described in `signature` section, as well as additionally: 
 
-== Function
+* `(pattern <pattern> ...)` - describes subsyntax pattern, expanding template variables used in main signature of the syntax;
 
-Each entry in this list is a list, where first element is a parameter name (must match one of parameters in main signature), and second parameter
-is its signature of same format as a main function's signature definition. To describe return value's signature, use `return` as a name.
+* `(alist <car> <cdr>)` - describes an alist datastrucutre, where `<car>` and `<cdr>` has same format as function parameter definition;
 
-== Syntax
+* `(list <element>)` - describes an list datastrucutre, where `<element>` has same format as function parameter definition;
 
-Each entry in this list is a list, in the form of `(name <pattern> ...)`, where name should match one of identifiers
-in other signature, and the pattern is as described in `signature`.
+* `(vector <element>)` - describes an list datastrucutre, where `<element>` has same format as function parameter definition;
 
 | syntax-param-signatures
 | Applicable only to syntax type. The value is a list, where each element is itself a 2 element list. First element is a symbol, matching one of the symbols in the signature.
