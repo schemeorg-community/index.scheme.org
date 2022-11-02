@@ -46,6 +46,7 @@
       ((deploy-setting/filterset-index) (get-property 'filterset-index "filters/index.scm"))
       ((deploy-setting/sqlite-location) (get-property 'sqlite-data "sqlitedb"))
       ((deploy-setting/enable-user-settings) (get-property 'enable-user-settings #t))
+      ((deploy-setting/downloads) (get-property 'downloads "./config/downloads.scm"))
       ((user-setting/page-size)
        (string->number (get-cookie-property 'pageSize "40")))
       ((user-setting/param-filter-loose)

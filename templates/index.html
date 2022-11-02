@@ -8,12 +8,13 @@
             {{>topnavigation}}
             {{/navigation}}
         </div>
+        {{# body }}
         <div class="body__content">
             <main class="index-page animated-enter">
                 <h1 class="index-page__header">Scheme index</h1>
                 <p>Scheme index allows searching for Scheme procedures, syntax and constants through types, tags, and names. Please see <a class="index-page__text-link" href="/README.html#_userguide_for_site_visitors">user guide</a> for details.
 
-                {{# body }}
+                {{# filterset-groups }}
                 <div class="index-page__filtersets">
                     {{# filtersets }}
                     <a href="/filterset/{{{code}}}/search" class="index-page__filterset">
@@ -21,14 +22,20 @@
                     </a>
                     {{/ filtersets }}
                 </div>
-                {{/ body }}
+                {{/ filterset-groups }}
 
                 <p class="index-page__completeness-note">There are no guarantees about completeness of index for any of the scheme implementations.
                 Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs and implementation specific libraries might be missing.
 
-                <h2 class="index-page__header">Command line application</h2>
-                <p>Command line executable (thin rest client) <a class="index-page__text-link" href="http://github.com/arvyy/scheme-index-client/releases">is available here</a>.
-                It provides an interactive (REPL) mode, as well as non-interactive execution mode. 
+                {{ downloads }}
+                <h2 class="index-page__header">Download command line application</h2>
+                {{# downloads }}
+                    <div class="index-page__download">
+                        <a class="index-page__download-link" href="{{url}}">{{name}}</a>
+                        <div class="index-page__download-checksum">{{checksum}}</div>
+                    </div>
+                {{/ downloads }}
+                <p>Command line executable (thin rest client) provides an interactive (REPL) mode, as well as non-interactive execution mode. 
                 The later can be integrated with your editor of choice. For example; if you use vim, add following to your 
                 .vimrc to be able to lookup signature of an identifier under the cursor using "\?".
                 <div class="codeblock">
@@ -40,6 +47,7 @@ fu! ScmIndexGet()
 endfunc
 nnoremap &lt;silent&gt; &lt;leader&gt;? :call ScmIndexGet()&lt;cr&gt;</p>
                 </div>
+                {{/ downloads }}
 
                 <h2 class="index-page__header">REST API</h2>
                 <p>Scheme index provides REST API integration.
@@ -57,5 +65,6 @@ nnoremap &lt;silent&gt; &lt;leader&gt;? :call ScmIndexGet()&lt;cr&gt;</p>
                 </div>
             </main>
         </div>
+        {{/ body }}
     </body>
 </html>

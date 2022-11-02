@@ -78,7 +78,9 @@ Build processes requires following tools on path:
 
 * `sass` - SCSS compiler
 
-You can build scheme index by running `ant` from the root of the source directory.
+* (optional) `npm` - nodejs / npm tooling to build CLI client application.
+
+You can build scheme index by running `ant` from the root of the source directory. Pass `-DbuildClient=true` to include CLI client application build.
 
 After the build successfully completes, you should find everything scheme index needs in `dist` directory.
 
@@ -194,6 +196,10 @@ The following is exhaustive list of valid properties
 | enable-user-settings
 | Allow user to save certain settings in cookies and show settings page
 | #t
+
+| downloads
+| Location of downloads config file, listing available CLI app downloads. The file should be a list, where each item is an alist with symbol keys name, checksum, and url and string values. It's not an error if file doesn't exist.
+| "config/downloads.scm"
 |===
 
 === Identifiers definitions

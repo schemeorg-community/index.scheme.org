@@ -214,6 +214,21 @@
                                  (code filterset-entry-code)
                                  (name filterset-entry-name))
 
+    (define-mustache-record-type <home-download>
+                                 home-download-lookup
+                                 (make-home-download name url checksum)
+                                 home-download?
+                                 (name home-download-name)
+                                 (url home-download-url)
+                                 (checksum home-download-checksum))
+
+    (define-mustache-record-type <home-body>
+                                 home-body-lookup
+                                 (make-home-body filterset-groups downloads)
+                                 home-body?
+                                 (filterset-groups home-body-filterset-groups)
+                                 (downloads home-body-downloads))
+
     ;; additional lookup names, mostly "null?" predicates
     (define (result-item-extra-lookup obj name found not-found)
       (cond
@@ -259,7 +274,9 @@
         spec-value-fieldblock-lookup
         spec-value-fieldentry-lookup
         filterset-group-lookup
-        filterset-entry-lookup))
+        filterset-entry-lookup
+        home-download-lookup
+        home-body-lookup))
 
     (define (make-mustache-nav-data page filtersets show-settings?)
       (filter
@@ -833,13 +850,15 @@
                            spacer-sd
                            (make-sexpr-el #f (symbol->string (cadr sig)) "bright-type" (make-link (cadr sig) #f) #f))))
 
-    (define (render-home-page settings filtersets)
+    (define (render-home-page settings downloads-config filtersets)
       (values
         "index"
         (make-page
           (make-page-head #f)
           (make-navigation (make-mustache-nav-data 'index filtersets (deploy-setting/enable-user-settings settings)))
-          (make-filterset-groups filtersets))))
+          (make-home-body
+            (make-filterset-groups filtersets)
+            (make-downloads-section downloads-config)))))
 
     (define (make-filterset-groups filtersets-alist)
       (define filtersets (map (lambda (e)
@@ -856,6 +875,16 @@
         (partition spec? filtersets))
       (list (make-filterset-group spec-filtersets)
             (make-filterset-group impl-filtersets)))
+
+    (define (make-downloads-section downloads)
+      (cond
+        ((not downloads) #f)
+        (else (map
+                (lambda (e)
+                  (make-home-download (cdr (assoc 'name e))
+                                      (cdr (assoc 'url e))
+                                      (cdr (assoc 'checksum e))))
+                downloads))))
 
     (define (render-search-page settings filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
       (values

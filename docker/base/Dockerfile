@@ -9,4 +9,4 @@ WORKDIR /app
 COPY pom.xml .
 RUN mvn -B org.apache.maven.plugins:maven-dependency-plugin:3.1.0:resolve-plugins org.apache.maven.plugins:maven-dependency-plugin:3.1.0:resolve org.apache.maven.plugins:maven-dependency-plugin:3.1.0:go-offline
 COPY . .
-RUN ant
+RUN ant -DbuildClient=true

@@ -72,6 +72,7 @@
     deploy-setting/filterset-index
     deploy-setting/sqlite-location
     deploy-setting/enable-user-settings
+    deploy-setting/downloads
     user-setting/page-size
     user-setting/param-filter-loose
     user-setting/ctrl-f-override
@@ -317,6 +318,7 @@
       (deploy-setting/filterset-index)
       (deploy-setting/sqlite-location)
       (deploy-setting/enable-user-settings)
+      (deploy-setting/downloads)
       (user-setting/page-size)
       (user-setting/param-filter-loose)
       (user-setting/ctrl-f-override)
