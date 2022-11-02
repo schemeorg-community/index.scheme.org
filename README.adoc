@@ -99,7 +99,8 @@ See <<Configuration>> section for configuring the application behavior.
 Build a docker image using
 
 ```
-docker build -t scheme-index -f docker/Dockerfile .
+docker build -t scmindex-builder:latest -f docker/base/Dockerfile .
+docker build -t scheme-index -f docker/scheme-index/Dockerfile .
 ```
 
 The built image has same structure as a native build, under path `/app` inside the image.

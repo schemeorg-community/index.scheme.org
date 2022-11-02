@@ -44,7 +44,30 @@
         </exec>
     </target>
 
-    <target name="dist" depends="compile-jar, compile-doc, compile-css">
+    <macrodef name="zip-client">
+        <attribute name="name"/>
+        <attribute name="ext"/>
+        <sequential>
+            <mkdir dir="client/dist/zip/@{name}"/>
+            <copy file="client/dist/@{name}@{ext}" tofile="client/dist/zip/@{name}/scmindex@{ext}"/>
+            <zip destfile="client/dist/zip/@{name}.zip" basedir="client/dist/zip/@{name}"/>
+        </sequential>
+    </macrodef>
+
+    <target name="compile-client" depends="prepare_unix, prepare_windows">
+        <exec dir="client" executable="${exec}">
+            <arg line="${args} 'npm install'"/>
+        </exec>
+        <exec dir="client" executable="${exec}">
+            <arg line="${args} 'npm run build'"/>
+        </exec>
+        <zip-client name="scmindex-linuxstatic-x64" ext=""/>
+        <zip-client name="scmindex-macos-arm64" ext=""/>
+        <zip-client name="scmindex-macos-x64" ext=""/>
+        <zip-client name="scmindex-win-x64" ext=".exe"/>
+    </target>
+
+    <target name="dist" depends="compile-jar, compile-doc, compile-css, compile-client">
         <delete dir="dist" failonerror="false"/>
         <mkdir dir="dist"/>
         <copy todir="dist/solrhome">
@@ -65,6 +88,11 @@
         </copy>
         <copy todir="dist/templates">
             <fileset dir="templates"/>
+        </copy>
+        <copy todir="dist/static/downloads">
+            <fileset dir="client/dist/zip">
+                <include name="*.zip"/>
+            </fileset>
         </copy>
         <copy file="config/configuration-dist.scm" tofile="dist/config/configuration.scm"/>
         <copy file="target/scheme-index.jar" tofile="dist/scheme-index.jar"/>

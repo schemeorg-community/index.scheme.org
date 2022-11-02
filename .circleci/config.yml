@@ -1,12 +1,11 @@
 version: 2.1
 
 jobs:
-  test:
+  unittest:
     docker:
       - image: cimg/openjdk:11.0
     steps:
       - checkout
-
       - run:
           name: Test
           command: |
@@ -20,22 +19,21 @@ jobs:
     machine: true
     steps:
       - checkout
-
       - run: |
           cd kawa-web-collection
           git submodule update --init
           cd ..
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+          docker build -t scheme-builder:latest -f docker/base/Dockerfile .
           docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/scheme-index/Dockerfile .
           docker build -t arvyy/scheme-index-nginx:$CIRCLE_BRANCH -f docker/nginx/Dockerfile .
-
-      - run: |
-          docker push arvyy/scheme-index:$CIRCLE_BRANCH
-          docker push arvyy/scheme-index-nginx:$CIRCLE_BRANCH
 
   deploy:
     machine: true
     steps:
+      - run: |
+          docker push arvyy/scheme-index:$CIRCLE_BRANCH
+          docker push arvyy/scheme-index-nginx:$CIRCLE_BRANCH
       - run:
           name: Deploy Over SSH
           command: |
@@ -44,14 +42,10 @@ jobs:
 workflows:
   sample:
     jobs:
-      - test
+      - unittest
       - build:
           requires:
-            - test
-          filters:
-            branches:
-              only:
-                - master
+            - unittest
       - deploy:
           requires:
             - build

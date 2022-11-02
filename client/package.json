@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "tsc && node dist/main.js --url http://localhost:8080",
-    "help": "tsc && node dist/main.js --help",
-    "non-interactive": "tsc && node dist/main.js --filterset bigloo --query map --strict --url http://localhost:8080",
-    "build": "tsc && pkg --debug dist/main.js --targets latest-win-x64,latest-linuxstatic-x64,latest-mac-x64,latest-mac-arm64"
+    "start": "tsc && node out/scmindex.js --url http://localhost:8080",
+    "help": "tsc && node out/scmindex.js --help",
+    "non-interactive": "tsc && node out/scmindex.js --filterset bigloo --query map --strict --url http://localhost:8080",
+    "build": "tsc && pkg --debug out/scmindex.js --targets latest-win-x64,latest-linuxstatic-x64,latest-mac-x64,latest-mac-arm64 --out-path dist"
   },
   "keywords": [],
   "author": "",
