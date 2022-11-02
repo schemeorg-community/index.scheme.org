@@ -27,7 +27,7 @@
                 <p class="index-page__completeness-note">There are no guarantees about completeness of index for any of the scheme implementations.
                 Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs and implementation specific libraries might be missing.
 
-                {{ downloads }}
+                {{# has-downloads? }}
                 <h2 class="index-page__header">Download command line application</h2>
                 {{# downloads }}
                     <div class="index-page__download">
@@ -47,7 +47,7 @@ fu! ScmIndexGet()
 endfunc
 nnoremap &lt;silent&gt; &lt;leader&gt;? :call ScmIndexGet()&lt;cr&gt;</p>
                 </div>
-                {{/ downloads }}
+                {{/ has-downloads? }}
 
                 <h2 class="index-page__header">REST API</h2>
                 <p>Scheme index provides REST API integration.

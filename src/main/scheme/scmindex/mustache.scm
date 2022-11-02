@@ -252,6 +252,15 @@
         ((equal? "has-items?" name) (found (not (null? (nav-item-items obj)))))
         (else (not-found))))
 
+    (define (home-body-extra-lookup obj name found not-found)
+      (cond
+        ((not (home-body? obj)) (not-found))
+        ((equal? "has-downloads?" name) 
+         (let ((downloads (home-body-downloads obj)))
+           (found (and downloads
+                       (not (null? downloads))))))
+        (else (not-found))))
+
     ;; compose all lookup procedures into one
     (define data-lookup
       (compose-lookups
@@ -276,7 +285,9 @@
         filterset-group-lookup
         filterset-entry-lookup
         home-download-lookup
-        home-body-lookup))
+        home-body-lookup
+        home-body-extra-lookup
+        ))
 
     (define (make-mustache-nav-data page filtersets show-settings?)
       (filter

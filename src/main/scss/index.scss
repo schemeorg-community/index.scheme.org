@@ -63,11 +63,25 @@
         text-align: center;
         flex: 1;
     }
+
+    &__download {
+        margin-bottom: 2em;
+    }
+
+    &__download-link {
+        color: var(--secondary-color);
+    }
+
+    &__download-checksum {
+        font-size: 0.8em;
+        color: var(--text-color-muted);
+    }
 }
 
 .codeblock {
     background-color: var(--bg-color);
     font-family: monospace;
+    padding: 1em;
 }
 
 .codeblock__dollar {
