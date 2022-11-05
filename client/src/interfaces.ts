@@ -17,8 +17,10 @@ export interface FuncSignatureParam {
 
 export interface FuncSignature {
     type: 'function';
-    params: FuncSignatureParam[];
-    return: FuncSignatureReturn;
+    variants: {
+        params: FuncSignatureParam[];
+        return: FuncSignatureReturn;
+    }[];
 }
 
 export interface SyntaxSignature {
