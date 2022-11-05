@@ -1,3 +1,5 @@
-(((name . "load") (signature lambda ((string? filename)) undefined))
- ((name . "load")
-  (signature lambda ((string? filename) environment-specifier) undefined)))
+(((name . "load")
+  (signature
+   case-lambda
+   (((string? filename)) undefined)
+   (((string? filename) environment-specifier) undefined))))

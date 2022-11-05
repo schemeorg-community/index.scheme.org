@@ -1,9 +1,11 @@
 (((name . "u16vector?")
   (signature lambda (obj) boolean?)
   (tags pure predicate))
- ((name . "make-u16vector") (signature lambda ((integer? size)) u16vector?))
  ((name . "make-u16vector")
-  (signature lambda ((integer? size) (integer? fill)) u16vector?)
+  (signature
+   case-lambda
+   (((integer? size)) u16vector?)
+   (((integer? size) (integer? fill)) u16vector?))
   (tags pure))
  ((name . "u16vector-length")
   (signature lambda ((u16vector? vec)) integer?)

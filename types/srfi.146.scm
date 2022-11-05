@@ -26,17 +26,11 @@
   (signature lambda ((mapping? mapping1) (mapping? mapping2)) boolean?)
   (tags pure))
  ((name . "mapping-ref")
-  (signature lambda ((mapping? mapping) key) *)
-  (tags pure))
- ((name . "mapping-ref")
-  (signature lambda ((mapping? mapping) key (procedure? failure)) *)
-  (subsigs (failure (lambda () *)))
-  (tags pure))
- ((name . "mapping-ref")
   (signature
-   lambda
-   ((mapping? mapping) key (procedure? failure) (procedure? success))
-   *)
+   case-lambda
+   (((mapping? mapping) key) *)
+   (((mapping? mapping) key (procedure? failure)) *)
+   (((mapping? mapping) key (procedure? failure) (procedure? success)) *))
   (subsigs (failure (lambda () *)) (success (lambda (value) *)))
   (tags pure))
  ((name . "mapping-ref/default")
@@ -85,48 +79,34 @@
    (values mapping? *))
   (subsigs (failure (lambda () *))))
  ((name . "mapping-update")
-  (signature lambda ((mapping? mapping) key (procedure? updater)) mapping?)
-  (subsigs (updater (lambda (value) *)))
-  (tags pure))
- ((name . "mapping-update")
   (signature
-   lambda
-   ((mapping? mapping) key (procedure? updater) (procedure? failure))
-   mapping?)
-  (subsigs (updater (lambda (value) *)) (failure (lambda () *)))
-  (tags pure))
- ((name . "mapping-update")
-  (signature
-   lambda
-   ((mapping? mapping)
-    key
-    (procedure? updater)
-    (procedure? failure)
-    (procedure? success))
-   mapping?)
+   case-lambda
+   (((mapping? mapping) key (procedure? updater)) mapping?)
+   (((mapping? mapping) key (procedure? updater) (procedure? failure))
+    mapping?)
+   (((mapping? mapping)
+     key
+     (procedure? updater)
+     (procedure? failure)
+     (procedure? success))
+    mapping?))
   (subsigs
    (updater (lambda (value) *))
    (failure (lambda () *))
    (success (lambda (value) *)))
   (tags pure))
  ((name . "mapping-update!")
-  (signature lambda ((mapping? mapping) key (procedure? updater)) mapping?)
-  (subsigs (updater (lambda (value) *))))
- ((name . "mapping-update!")
   (signature
-   lambda
-   ((mapping? mapping) key (procedure? updater) (procedure? failure))
-   mapping?)
-  (subsigs (updater (lambda (value) *)) (failure (lambda () *))))
- ((name . "mapping-update!")
-  (signature
-   lambda
-   ((mapping? mapping)
-    key
-    (procedure? updater)
-    (procedure? failure)
-    (procedure? success))
-   mapping?)
+   case-lambda
+   (((mapping? mapping) key (procedure? updater)) mapping?)
+   (((mapping? mapping) key (procedure? updater) (procedure? failure))
+    mapping?)
+   (((mapping? mapping)
+     key
+     (procedure? updater)
+     (procedure? failure)
+     (procedure? success))
+    mapping?))
   (subsigs
    (updater (lambda (value) *))
    (failure (lambda () *))
@@ -145,22 +125,17 @@
    mapping?)
   (subsigs (updater (lambda (value) *))))
  ((name . "mapping-pop")
-  (signature lambda ((mapping? mapping)) (values mapping? * *))
-  (tags pure))
- ((name . "mapping-pop")
   (signature
-   lambda
-   ((mapping? mapping) (procedure? failure))
-   (values mapping? * *))
+   case-lambda
+   (((mapping? mapping)) (values mapping? * *))
+   (((mapping? mapping) (procedure? failure)) (values mapping? * *)))
   (subsigs (failure (lambda () (values mapping? * *))))
   (tags pure))
  ((name . "mapping-pop!")
-  (signature lambda ((mapping? mapping)) (values mapping? * *)))
- ((name . "mapping-pop!")
   (signature
-   lambda
-   ((mapping? mapping) (procedure? failure))
-   (values mapping? * *))
+   case-lambda
+   (((mapping? mapping)) (values mapping? * *))
+   (((mapping? mapping) (procedure? failure)) (values mapping? * *)))
   (subsigs (failure (lambda () (values mapping? * *)))))
  ((name . "mapping-search")
   (signature

@@ -16,10 +16,10 @@
  ((name . "delay") (signature syntax-rules () ((_ expression) promise?)))
  ((name . "force") (signature lambda ((promise? promise)) *))
  ((name . "null-environment")
-  (signature lambda ((integer? n)) environment)
-  (tags pure))
- ((name . "null-environment")
-  (signature lambda ((integer? n)) environment)
+  (signature
+   case-lambda
+   (((integer? n)) environment)
+   (((integer? n)) environment))
   (spec-values (n ("5" "N must be the exact integer object 5")))
   (tags pure))
  ((name . "scheme-report-environment")

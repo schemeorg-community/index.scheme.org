@@ -3,10 +3,10 @@
   (signature lambda (object) boolean?)
   (tags pure predicate))
  ((name . "make-thread")
-  (signature lambda ((procedure? thunk)) thread?)
-  (subsigs (thunk (lambda () *))))
- ((name . "make-thread")
-  (signature lambda ((procedure? thunk) name) thread?)
+  (signature
+   case-lambda
+   (((procedure? thunk)) thread?)
+   (((procedure? thunk) name) thread?))
   (subsigs (thunk (lambda () *))))
  ((name . "thread-name") (signature lambda ((thread? thread)) *) (tags pure))
  ((name . "thread-specific")
@@ -18,14 +18,14 @@
  ((name . "thread-yield!") (signature lambda ((thread? thread)) undefined))
  ((name . "thread-sleep!") (signature lambda ((integer? timeout)) undefined))
  ((name . "thread-terminate!") (signature lambda ((thread? thread)) undefined))
- ((name . "thread-join!") (signature lambda ((thread? thread)) *))
  ((name . "thread-join!")
-  (signature lambda ((thread? thread) (integer? timeout)) *))
- ((name . "thread-join!")
-  (signature lambda ((thread? thread) (integer? timeout) timeout-val) *))
+  (signature
+   case-lambda
+   (((thread? thread)) *)
+   (((thread? thread) (integer? timeout)) *)
+   (((thread? thread) (integer? timeout) timeout-val) *)))
  ((name . "mutex?") (signature lambda (object) boolean?) (tags pure predicate))
- ((name . "make-mutex") (signature lambda () mutex?))
- ((name . "make-mutex") (signature lambda (name) mutex?))
+ ((name . "make-mutex") (signature case-lambda (() mutex?) ((name) mutex?)))
  ((name . "mutex-name") (signature lambda ((mutex? mutex)) *) (tags pure))
  ((name . "mutex-specific") (signature lambda ((mutex? mutex)) *) (tags pure))
  ((name . "mutex-specific-set!")
@@ -39,33 +39,30 @@
     ("'not-owned" "the mutex is in the locked/not-owned state")
     ("'abandoned" "the mutex is in the unlocked/abandoned state")
     ("'not-abandoned" " the mutex is in the unlocked/not-abandoned state"))))
- ((name . "mutex-lock!") (signature lambda ((mutex? mutex)) boolean?))
- ((name . "mutex-lock!")
-  (signature lambda ((mutex? mutex) (integer? timeout)) boolean?))
  ((name . "mutex-lock!")
   (signature
-   lambda
-   ((mutex? mutex) (integer? timeout) ((or #f thread?) thread))
-   boolean?))
- ((name . "mutex-unlock!") (signature lambda ((mutex? mutex)) boolean?))
+   case-lambda
+   (((mutex? mutex)) boolean?)
+   (((mutex? mutex) (integer? timeout)) boolean?)
+   (((mutex? mutex) (integer? timeout) ((or #f thread?) thread)) boolean?)))
  ((name . "mutex-unlock!")
   (signature
-   lambda
-   ((mutex? mutex) (condition-variable? condition-variable))
-   boolean?))
- ((name . "mutex-unlock!")
-  (signature
-   lambda
-   ((mutex? mutex) (condition-variable? condition-variable) (integer? timeout))
-   boolean?))
+   case-lambda
+   (((mutex? mutex)) boolean?)
+   (((mutex? mutex) (condition-variable? condition-variable)) boolean?)
+   (((mutex? mutex)
+     (condition-variable? condition-variable)
+     (integer? timeout))
+    boolean?)))
  ((name . "condition-variable?")
   (signature lambda (object) boolean?)
   (tags pure predicate))
- ((name . "make-condition-variable") (signature lambda () condition-variable?))
  ((name . "make-condition-variable")
-  (signature lambda (name) condition-variable?))
- ((name . "make-condition-variable")
-  (signature lambda (name) condition-variable?))
+  (signature
+   case-lambda
+   (() condition-variable?)
+   ((name) condition-variable?)
+   ((name) condition-variable?)))
  ((name . "condition-variable-name")
   (signature lambda ((condition-variable? condition-variable)) *)
   (tags pure))

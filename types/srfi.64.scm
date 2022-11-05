@@ -51,10 +51,10 @@
   (signature lambda ((string? name)) procedure?)
   (subsigs (return (lambda ((test-runner? runner)) boolean?))))
  ((name . "test-match-nth")
-  (signature lambda ((integer? n)) procedure?)
-  (subsigs (return (lambda ((test-runner? runner)) boolean?))))
- ((name . "test-match-nth")
-  (signature lambda ((integer? n) (integer? count)) procedure?)
+  (signature
+   case-lambda
+   (((integer? n)) procedure?)
+   (((integer? n) (integer? count)) procedure?))
   (subsigs (return (lambda ((test-runner? runner)) boolean?))))
  ((name . "test-match-any")
   (signature lambda ((procedure? specifier) ...) procedure?)
@@ -75,18 +75,17 @@
  ((name . "test-runner?")
   (signature lambda (obj) boolean?)
   (tags pure predicate))
- ((name . "test-runner-current") (signature lambda () test-runner?))
  ((name . "test-runner-current")
-  (signature lambda ((test-runner? runner)) undefined))
+  (signature
+   case-lambda
+   (() test-runner?)
+   (((test-runner? runner)) undefined)))
  ((name . "test-runner-get") (signature lambda () test-runner?))
  ((name . "test-runner-simple") (signature lambda () test-runner?))
  ((name . "test-runner-null") (signature lambda () test-runner?))
  ((name . "test-runner-create") (signature lambda () test-runner?))
  ((name . "test-runner-factory")
-  (signature lambda () procedure?)
-  (subsigs (return (lambda () test-runner?))))
- ((name . "test-runner-factory")
-  (signature lambda ((procedure? factory)) undefined)
+  (signature case-lambda (() procedure?) (((procedure? factory)) undefined))
   (subsigs (factory (lambda () test-runner?))))
  ((name . "test-apply")
   (signature
@@ -100,7 +99,10 @@
   (signature syntax-rules () ((_ runner decl-or-expr ...)))
   (subsigs (runner (value test-runner?))))
  ((name . "test-result-kind")
-  (signature lambda () (or #f symbol?))
+  (signature
+   case-lambda
+   (() (or #f symbol?))
+   (((test-runner? runner)) (or #f symbol?)))
   (spec-values
    (return
     ("'pass" "The test passed, as expected.")
@@ -108,21 +110,13 @@
     ("'xfail" "The test failed and was expected to.")
     ("'xpass" "The test passed, but was expected to fail.")
     ("'skip" "The test was skipped."))))
- ((name . "test-result-kind")
-  (signature lambda ((test-runner? runner)) (or #f symbol?))
-  (spec-values
-   (return
-    ("'pass" "The test passed, as expected.")
-    ("'fail" "The test failed (and was not expected to).")
-    ("'xfail" "The test failed and was expected to.")
-    ("'xpass" "The test passed, but was expected to fail.")
-    ("'skip" "The test was skipped."))))
- ((name . "test-passed?") (signature lambda () boolean?))
- ((name . "test-passed?") (signature lambda ((test-runner? runner)) boolean?))
+ ((name . "test-passed?")
+  (signature case-lambda (() boolean?) (((test-runner? runner)) boolean?)))
  ((name . "test-result-ref")
-  (signature lambda ((test-runner? runner) (symbol? pname)) *))
- ((name . "test-result-ref")
-  (signature lambda ((test-runner? runner) (symbol? pname) default) *))
+  (signature
+   case-lambda
+   (((test-runner? runner) (symbol? pname)) *)
+   (((test-runner? runner) (symbol? pname) default) *)))
  ((name . "test-result-set!")
   (signature lambda ((test-runner? runner) (symbol? pname) value) undefined))
  ((name . "test-result-remove")

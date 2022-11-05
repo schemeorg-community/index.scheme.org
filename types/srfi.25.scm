@@ -1,7 +1,9 @@
 (((name . "array?") (signature lambda (obj) boolean?) (tags predicate pure))
- ((name . "make-array") (signature lambda ((array? shape)) array?))
  ((name . "make-array")
-  (signature lambda ((array? shape) obj) array?)
+  (signature
+   case-lambda
+   (((array? shape)) array?)
+   (((array? shape) obj) array?))
   (tags pure))
  ((name . "shape")
   (signature lambda ((integer? lowerbound1) (integer? upperbound1) ...) array?)
@@ -19,18 +21,16 @@
   (signature lambda ((array? shape) (integer? k)) integer?)
   (tags pure))
  ((name . "array-ref")
-  (signature lambda ((array? shape) (integer? k) ...) *)
+  (signature
+   case-lambda
+   (((array? shape) (integer? k) ...) *)
+   (((array? shape) ((or vector? array?) index)) *))
   (tags pure))
- ((name . "array-ref")
-  (signature lambda ((array? shape) ((or vector? array?) index)) *)
-  (tags pure))
- ((name . "array-set!")
-  (signature lambda ((array? shape) (integer? k) ... obj) undefined))
  ((name . "array-set!")
   (signature
-   lambda
-   ((array? shape) ((or vector? array?) index) obj)
-   undefined))
+   case-lambda
+   (((array? shape) (integer? k) ... obj) undefined)
+   (((array? shape) ((or vector? array?) index) obj) undefined)))
  ((name . "share-array")
   (signature lambda ((array? array) (array? shape) (procedure? proc)) array?)
   (subsigs (proc (lambda ((integer? index1) ...) (values integer? ...))))

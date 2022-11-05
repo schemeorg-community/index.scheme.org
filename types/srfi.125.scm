@@ -1,15 +1,10 @@
 (((name . "make-hash-table")
-  (signature lambda ((comparator? comparator) arg ...) hash-table?)
-  (tags pure))
- ((name . "make-hash-table")
-  (signature lambda ((procedure? equality-predicate) arg ...) hash-table?)
-  (subsigs (equality-predicate (lambda (a b) boolean?)))
-  (tags pure deprecated))
- ((name . "make-hash-table")
   (signature
-   lambda
-   ((procedure? equality-predicate) (procedure? hash-function) arg ...)
-   hash-table?)
+   case-lambda
+   (((comparator? comparator) arg ...) hash-table?)
+   (((procedure? equality-predicate) arg ...) hash-table?)
+   (((procedure? equality-predicate) (procedure? hash-function) arg ...)
+    hash-table?))
   (subsigs
    (equality-predicate (lambda (a b) boolean?))
    (hash-function (lambda (obj) integer?)))
@@ -35,28 +30,15 @@
   (tags pure))
  ((name . "alist->hash-table")
   (signature
-   lambda
-   ((list? alist) (comparator? comparator) arg ...)
-   hash-table?)
-  (tags pure))
- ((name . "alist->hash-table")
-  (signature
-   lambda
-   ((list? alist) (procedure? equality-predicate) arg ...)
-   hash-table?)
-  (subsigs
-   (equality-predicate (lambda (a b) boolean?))
-   (hash-function (lambda (obj) integer?)))
-  (tags pure deprecated))
- ((name . "alist->hash-table")
-  (signature
-   lambda
-   ((list? alist)
-    (procedure? equality-predicate)
-    (procedure? hash-function)
-    arg
-    ...)
-   hash-table?)
+   case-lambda
+   (((list? alist) (comparator? comparator) arg ...) hash-table?)
+   (((list? alist) (procedure? equality-predicate) arg ...) hash-table?)
+   (((list? alist)
+     (procedure? equality-predicate)
+     (procedure? hash-function)
+     arg
+     ...)
+    hash-table?))
   (subsigs
    (equality-predicate (lambda (a b) boolean?))
    (hash-function (lambda (obj) integer?)))
@@ -85,17 +67,12 @@
   (signature lambda ((hash-table? hash-table)) boolean?)
   (tags pure))
  ((name . "hash-table-ref")
-  (signature lambda ((hash-table? hash-table) key) *)
-  (tags pure))
- ((name . "hash-table-ref")
-  (signature lambda ((hash-table? hash-table) key (procedure? failure)) *)
-  (subsigs (failure (lambda () *)))
-  (tags pure))
- ((name . "hash-table-ref")
   (signature
-   lambda
-   ((hash-table? hash-table) key (procedure? failure) (procedure? success))
-   *)
+   case-lambda
+   (((hash-table? hash-table) key) *)
+   (((hash-table? hash-table) key (procedure? failure)) *)
+   (((hash-table? hash-table) key (procedure? failure) (procedure? success))
+    *))
   (subsigs (failure (lambda () *)) (success (lambda (value) *)))
   (tags pure))
  ((name . "hash-table-ref/default")
@@ -113,25 +90,16 @@
   (subsigs (failure (lambda () *))))
  ((name . "hash-table-update!")
   (signature
-   lambda
-   ((hash-table? hash-table) key (procedure? updater))
-   undefined)
-  (subsigs (updated (lambda (value) *))))
- ((name . "hash-table-update!")
-  (signature
-   lambda
-   ((hash-table? hash-table) key (procedure? updater) (procedure? failure))
-   undefined)
-  (subsigs (updater (lambda (value) *)) (failure (lambda () *))))
- ((name . "hash-table-update!")
-  (signature
-   lambda
-   ((hash-table? hash-table)
-    key
-    (procedure? updater)
-    (procedure? failure)
-    (procedure? success))
-   undefined)
+   case-lambda
+   (((hash-table? hash-table) key (procedure? updater)) undefined)
+   (((hash-table? hash-table) key (procedure? updater) (procedure? failure))
+    undefined)
+   (((hash-table? hash-table)
+     key
+     (procedure? updater)
+     (procedure? failure)
+     (procedure? success))
+    undefined))
   (subsigs
    (updater (lambda (value) *))
    (failure (lambda () *))
@@ -193,21 +161,20 @@
   (signature lambda ((procedure? proc) (hash-table? hash-table)) list?)
   (subsigs (proc (lambda (key value) *))))
  ((name . "hash-table-fold")
-  (signature lambda ((procedure? proc) seed (hash-table? hash-table)) *)
-  (subsigs (proc (lambda (key value state) *)))
-  (tags pure))
- ((name . "hash-table-fold")
-  (signature lambda ((hash-table? hash-table) (procedure? proc) seed) *)
+  (signature
+   case-lambda
+   (((procedure? proc) seed (hash-table? hash-table)) *)
+   (((hash-table? hash-table) (procedure? proc) seed) *))
   (subsigs (proc (lambda (key value state) *)))
   (tags pure deprecated))
  ((name . "hash-table-prune!")
   (signature lambda ((procedure? proc) (hash-table? hash-table)) undefined)
   (subsigs (proc (lambda (key value) boolean?))))
  ((name . "hash-table-copy")
-  (signature lambda ((hash-table? hash-table)) hash-table?)
-  (tags pure))
- ((name . "hash-table-copy")
-  (signature lambda ((hash-table? hash-table) (boolean? mutable)) hash-table?)
+  (signature
+   case-lambda
+   (((hash-table? hash-table)) hash-table?)
+   (((hash-table? hash-table) (boolean? mutable)) hash-table?))
   (tags pure))
  ((name . "hash-table-empty-copy")
   (signature lambda ((hash-table? hash-table)) hash-table?)
@@ -240,25 +207,23 @@
    lambda
    ((hash-table? hash-table1) (hash-table? hash-table2))
    hash-table?))
- ((name . "hash") (signature lambda (obj) integer?) (tags deprecated))
- ((name . "hash") (signature lambda (obj arg) integer?) (tags deprecated))
+ ((name . "hash")
+  (signature case-lambda ((obj) integer?) ((obj arg) integer?))
+  (tags deprecated))
  ((name . "string-hash")
-  (signature lambda ((string? str)) integer?)
-  (tags pure deprecated))
- ((name . "string-hash")
-  (signature lambda ((string? str) arg) integer?)
+  (signature
+   case-lambda
+   (((string? str)) integer?)
+   (((string? str) arg) integer?))
   (tags pure deprecated))
  ((name . "string-ci-hash")
-  (signature lambda ((string? str)) integer?)
-  (tags pure deprecated))
- ((name . "string-ci-hash")
-  (signature lambda ((string? str) arg) integer?)
-  (tags pure deprecated))
- ((name . "hash-by-identity")
-  (signature lambda (obj) integer?)
+  (signature
+   case-lambda
+   (((string? str)) integer?)
+   (((string? str) arg) integer?))
   (tags pure deprecated))
  ((name . "hash-by-identity")
-  (signature lambda (obj arg) integer?)
+  (signature case-lambda ((obj) integer?) ((obj arg) integer?))
   (tags pure deprecated))
  ((name . "hash-table-equivalence-function")
   (signature lambda ((hash-table? hash-table)) procedure?)

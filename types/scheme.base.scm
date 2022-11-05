@@ -21,16 +21,17 @@
   (tags pure))
  ((name . "abs") (signature lambda ((real? x)) number?) (tags pure))
  ((name . "and") (signature syntax-rules () ((_ test1 ...))))
- ((name . "append") (signature lambda ((list? list) ...) list?) (tags pure))
- ((name . "append") (signature lambda ((list? list) ... obj) *) (tags pure))
+ ((name . "append")
+  (signature case-lambda (((list? list) ...) list?) (((list? list) ... obj) *))
+  (tags pure))
  ((name . "apply")
   (signature lambda ((procedure? proc) arg1 ... (list? args)) *)
   (tags pure))
  ((name . "assoc")
-  (signature lambda (obj (list? alist)) (or pair? #f))
-  (tags pure))
- ((name . "assoc")
-  (signature lambda (obj (list? alist) (procedure? =)) (or pair? #f))
+  (signature
+   case-lambda
+   ((obj (list? alist)) (or pair? #f))
+   ((obj (list? alist) (procedure? =)) (or pair? #f)))
   (subsigs (= (lambda (a b) *)))
   (tags pure))
  ((name . "assq")
@@ -59,36 +60,24 @@
   (signature lambda ((bytevector? bytevector) ...) bytevector?)
   (tags pure))
  ((name . "bytevector-copy")
-  (signature lambda ((bytevector? bytevector)) bytevector?)
-  (tags pure))
- ((name . "bytevector-copy")
-  (signature lambda ((bytevector? bytevector) (integer? start)) bytevector?)
-  (tags pure))
- ((name . "bytevector-copy")
   (signature
-   lambda
-   ((bytevector? bytevector) (integer? start) (integer? end))
-   bytevector?)
+   case-lambda
+   (((bytevector? bytevector)) bytevector?)
+   (((bytevector? bytevector) (integer? start)) bytevector?)
+   (((bytevector? bytevector) (integer? start) (integer? end)) bytevector?))
   (tags pure))
  ((name . "bytevector-copy!")
   (signature
-   lambda
-   ((bytevector? to) (integer? at) (bytevector? from))
-   undefined))
- ((name . "bytevector-copy!")
-  (signature
-   lambda
-   ((bytevector? to) (integer? at) (bytevector? from) (integer? start))
-   undefined))
- ((name . "bytevector-copy!")
-  (signature
-   lambda
-   ((bytevector? to)
-    (integer? at)
-    (bytevector? from)
-    (integer? start)
-    (integer? end))
-   undefined))
+   case-lambda
+   (((bytevector? to) (integer? at) (bytevector? from)) undefined)
+   (((bytevector? to) (integer? at) (bytevector? from) (integer? start))
+    undefined)
+   (((bytevector? to)
+     (integer? at)
+     (bytevector? from)
+     (integer? start)
+     (integer? end))
+    undefined)))
  ((name . "bytevector-length")
   (signature lambda ((bytevector? bytevector)) integer?)
   (tags pure))
@@ -136,9 +125,7 @@
   (signature lambda ((char? char)) integer?)
   (tags pure))
  ((name . "char-ready?")
-  (signature lambda () boolean?)
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "char-ready?") (signature lambda ((input-port? port)) boolean?))
+  (signature case-lambda (() boolean?) (((input-port? port)) boolean?)))
  ((name . "char<=?")
   (signature lambda ((char? char1) (char? char2) (char? char3) ...) boolean?)
   (tags pure))
@@ -268,10 +255,7 @@
   (signature lambda ((integer? n1) (integer? n2)) (values integer? integer?))
   (tags pure))
  ((name . "flush-output-port")
-  (signature lambda () undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "flush-output-port")
-  (signature lambda ((output-port? port)) undefined))
+  (signature case-lambda (() undefined) (((output-port? port)) undefined)))
  ((name . "for-each")
   (signature
    lambda
@@ -357,19 +341,26 @@
   (signature lambda (obj) boolean?)
   (tags pure predicate)
   (supertypes pair? null?))
- ((name . "make-bytevector") (signature lambda ((integer? k)) bytevector?))
  ((name . "make-bytevector")
-  (signature lambda ((integer? k) (integer? byte)) bytevector?)
+  (signature
+   case-lambda
+   (((integer? k)) bytevector?)
+   (((integer? k) (integer? byte)) bytevector?))
   (tags pure))
- ((name . "make-list") (signature lambda ((integer? k)) list?))
- ((name . "make-list") (signature lambda ((integer? k) obj) list?) (tags pure))
- ((name . "make-string") (signature lambda ((integer? k)) string?))
+ ((name . "make-list")
+  (signature case-lambda (((integer? k)) list?) (((integer? k) obj) list?))
+  (tags pure))
  ((name . "make-string")
-  (signature lambda ((integer? k) (char? char)) string?)
+  (signature
+   case-lambda
+   (((integer? k)) string?)
+   (((integer? k) (char? char)) string?))
   (tags pure))
- ((name . "make-vector") (signature lambda ((integer? k)) vector?))
  ((name . "make-vector")
-  (signature lambda ((integer? k) fill) vector?)
+  (signature
+   case-lambda
+   (((integer? k)) vector?)
+   (((integer? k) fill) vector?))
   (tags pure))
  ((name . "map")
   (signature lambda ((procedure? proc) (list? list1) (list? list2) ...) list?)
@@ -379,10 +370,10 @@
   (signature lambda ((real? x1) (real? x2) ...) real?)
   (tags pure))
  ((name . "member")
-  (signature lambda (obj (list? list)) (or #f list?))
-  (tags pure))
- ((name . "member")
-  (signature lambda (obj (list? list) (procedure? compare)) (or #f list?))
+  (signature
+   case-lambda
+   ((obj (list? list)) (or #f list?))
+   ((obj (list? list) (procedure? compare)) (or #f list?)))
   (subsigs (compare (lambda (obj1 obj2) *)))
   (tags pure))
  ((name . "memq")
@@ -399,16 +390,14 @@
   (tags pure))
  ((name . "negative?") (signature lambda ((real? x)) boolean?) (tags pure))
  ((name . "newline")
-  (signature lambda () undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "newline") (signature lambda ((output-port? port)) undefined))
+  (signature case-lambda (() undefined) (((output-port? port)) undefined)))
  ((name . "not") (signature lambda (obj) boolean?) (tags pure))
  ((name . "null?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "number->string")
-  (signature lambda ((number? z)) string?)
-  (tags pure))
- ((name . "number->string")
-  (signature lambda ((number? z) (integer? radix)) string?)
+  (signature
+   case-lambda
+   (((number? z)) string?)
+   (((number? z) (integer? radix)) string?))
   (tags pure))
  ((name . "number?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "numerator") (signature lambda ((rational? q)) integer?) (tags pure))
@@ -430,15 +419,15 @@
   (supertypes port?))
  ((name . "pair?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "peek-char")
-  (signature lambda () (or eof-object? char?))
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "peek-char")
-  (signature lambda ((input-port? port)) (or eof-object? char?)))
+  (signature
+   case-lambda
+   (() (or eof-object? char?))
+   (((input-port? port)) (or eof-object? char?))))
  ((name . "peek-u8")
-  (signature lambda () (or eof-object? integer?))
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "peek-u8")
-  (signature lambda ((input-port? port)) (or eof-object? integer?)))
+  (signature
+   case-lambda
+   (() (or eof-object? integer?))
+   (((input-port? port)) (or eof-object? integer?))))
  ((name . "port?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "positive?") (signature lambda ((real? x)) boolean?) (tags pure))
  ((name . "procedure?")
@@ -458,57 +447,45 @@
   (signature lambda ((real? x) (real? y)) rational?)
   (tags pure))
  ((name . "read-bytevector")
-  (signature lambda ((integer? k)) bytevector?)
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "read-bytevector")
-  (signature lambda ((integer? k) (input-port? port)) bytevector?))
- ((name . "read-bytevector!")
-  (signature lambda ((bytevector? bytevector)) (or eof-object? integer?))
-  (parameterized-by "(scheme base) current-input-port"))
+  (signature
+   case-lambda
+   (((integer? k)) bytevector?)
+   (((integer? k) (input-port? port)) bytevector?)))
  ((name . "read-bytevector!")
   (signature
-   lambda
-   ((bytevector? bytevector) (input-port? port))
-   (or eof-object? integer?)))
- ((name . "read-bytevector!")
-  (signature
-   lambda
-   ((bytevector? bytevector) (input-port? port) (integer? start))
-   (or eof-object? integer?)))
- ((name . "read-bytevector!")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (input-port? port)
-    (integer? start)
-    (integer? end))
-   (or eof-object? integer?)))
+   case-lambda
+   (((bytevector? bytevector)) (or eof-object? integer?))
+   (((bytevector? bytevector) (input-port? port)) (or eof-object? integer?))
+   (((bytevector? bytevector) (input-port? port) (integer? start))
+    (or eof-object? integer?))
+   (((bytevector? bytevector)
+     (input-port? port)
+     (integer? start)
+     (integer? end))
+    (or eof-object? integer?))))
  ((name . "read-char")
-  (signature lambda () (or eof-object? char?))
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "read-char")
-  (signature lambda ((input-port? port)) (or eof-object? char?)))
+  (signature
+   case-lambda
+   (() (or eof-object? char?))
+   (((input-port? port)) (or eof-object? char?))))
  ((name . "read-error?")
   (signature lambda (obj) boolean?)
   (tags pure predicate))
  ((name . "read-line")
-  (signature lambda () (or eof-object? string?))
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "read-line")
-  (signature lambda ((input-port? port)) (or eof-object? string?)))
- ((name . "read-string")
-  (signature lambda ((integer? k)) (or eof-object? string?))
-  (parameterized-by "(scheme base) current-input-port"))
+  (signature
+   case-lambda
+   (() (or eof-object? string?))
+   (((input-port? port)) (or eof-object? string?))))
  ((name . "read-string")
   (signature
-   lambda
-   ((integer? k) (input-port? port))
-   (or eof-object? string?)))
+   case-lambda
+   (((integer? k)) (or eof-object? string?))
+   (((integer? k) (input-port? port)) (or eof-object? string?))))
  ((name . "read-u8")
-  (signature lambda () (or eof-object? integer?))
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "read-u8")
-  (signature lambda ((input-port? port)) (or eof-object? integer?)))
+  (signature
+   case-lambda
+   (() (or eof-object? integer?))
+   (((input-port? port)) (or eof-object? integer?))))
  ((name . "real?")
   (signature lambda (obj) boolean?)
   (tags pure predicate)
@@ -524,80 +501,59 @@
  ((name . "square") (signature lambda ((number? z)) number?) (tags pure))
  ((name . "string") (signature lambda ((char? char) ...) string?) (tags pure))
  ((name . "string->list")
-  (signature lambda ((string? string)) list?)
-  (tags pure))
- ((name . "string->list")
-  (signature lambda ((string? string) (integer? start)) list?)
-  (tags pure))
- ((name . "string->list")
-  (signature lambda ((string? string) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((string? string)) list?)
+   (((string? string) (integer? start)) list?)
+   (((string? string) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "string->number")
-  (signature lambda ((string? string)) number?)
-  (tags pure))
- ((name . "string->number")
-  (signature lambda ((string? string) (integer? radix)) number?)
+  (signature
+   case-lambda
+   (((string? string)) number?)
+   (((string? string) (integer? radix)) number?))
   (tags pure))
  ((name . "string->symbol")
   (signature lambda ((string? string)) symbol?)
   (tags pure))
  ((name . "string->utf8")
-  (signature lambda ((string? string)) bytevector?)
-  (tags pure))
- ((name . "string->utf8")
-  (signature lambda ((string? string) (integer? start)) bytevector?)
-  (tags pure))
- ((name . "string->utf8")
   (signature
-   lambda
-   ((string? string) (integer? start) (integer? end))
-   bytevector?)
+   case-lambda
+   (((string? string)) bytevector?)
+   (((string? string) (integer? start)) bytevector?)
+   (((string? string) (integer? start) (integer? end)) bytevector?))
   (tags pure))
  ((name . "string->vector")
-  (signature lambda ((string? string)) vector?)
-  (tags pure))
- ((name . "string->vector")
-  (signature lambda ((string? string) (integer? start)) vector?)
-  (tags pure))
- ((name . "string->vector")
-  (signature lambda ((string? string) (integer? start) (integer? end)) vector?)
+  (signature
+   case-lambda
+   (((string? string)) vector?)
+   (((string? string) (integer? start)) vector?)
+   (((string? string) (integer? start) (integer? end)) vector?))
   (tags pure))
  ((name . "string-append")
   (signature lambda ((string? string) ...) string?)
   (tags pure))
  ((name . "string-copy")
-  (signature lambda ((string? string)) string?)
-  (tags pure))
- ((name . "string-copy")
-  (signature lambda ((string? string) (integer? start)) string?)
-  (tags pure))
- ((name . "string-copy")
-  (signature lambda ((string? string) (integer? start) (integer? end)) string?)
+  (signature
+   case-lambda
+   (((string? string)) string?)
+   (((string? string) (integer? start)) string?)
+   (((string? string) (integer? start) (integer? end)) string?))
   (tags pure))
  ((name . "string-copy!")
-  (signature lambda ((string? to) (integer? at) (string? from)) undefined))
- ((name . "string-copy!")
   (signature
-   lambda
-   ((string? to) (integer? at) (string? from) (integer? start))
-   undefined))
- ((name . "string-copy!")
-  (signature
-   lambda
-   ((string? to) (integer? at) (string? from) (integer? start) (integer? end))
-   undefined))
- ((name . "string-fill!")
-  (signature lambda ((string? string) (char? fill)) undefined))
+   case-lambda
+   (((string? to) (integer? at) (string? from)) undefined)
+   (((string? to) (integer? at) (string? from) (integer? start)) undefined)
+   (((string? to) (integer? at) (string? from) (integer? start) (integer? end))
+    undefined)))
  ((name . "string-fill!")
   (signature
-   lambda
-   ((string? string) (char? fill) (integer? start))
-   undefined))
- ((name . "string-fill!")
-  (signature
-   lambda
-   ((string? string) (char? fill) (integer? start) (integer? end))
-   undefined))
+   case-lambda
+   (((string? string) (char? fill)) undefined)
+   (((string? string) (char? fill) (integer? start)) undefined)
+   (((string? string) (char? fill) (integer? start) (integer? end))
+    undefined)))
  ((name . "string-for-each")
   (signature
    lambda
@@ -718,69 +674,51 @@
  ((name . "unquote-splicing") (signature syntax-rules () ((_ expression))))
  ((name . "u8-ready?") (signature lambda ((input-port? port)) boolean?))
  ((name . "utf8->string")
-  (signature lambda ((bytevector? bytevector)) string?)
-  (tags pure))
- ((name . "utf8->string")
-  (signature lambda ((bytevector? bytevector) (integer? start)) string?)
-  (tags pure))
- ((name . "utf8->string")
   (signature
-   lambda
-   ((bytevector? bytevector) (integer? start) (integer? end))
-   string?)
+   case-lambda
+   (((bytevector? bytevector)) string?)
+   (((bytevector? bytevector) (integer? start)) string?)
+   (((bytevector? bytevector) (integer? start) (integer? end)) string?))
   (tags pure))
  ((name . "values") (signature lambda (obj ...) (values * ...)) (tags pure))
  ((name . "vector") (signature lambda (obj ...) vector?) (tags pure))
  ((name . "vector->list")
-  (signature lambda ((vector? vector)) list?)
-  (tags pure))
- ((name . "vector->list")
-  (signature lambda ((vector? vector) (integer? start)) list?)
-  (tags pure))
- ((name . "vector->list")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((vector? vector)) list?)
+   (((vector? vector) (integer? start)) list?)
+   (((vector? vector) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "vector->string")
-  (signature lambda ((vector? vector)) string?)
-  (tags pure))
- ((name . "vector->string")
-  (signature lambda ((vector? vector) (integer? start)) string?)
-  (tags pure))
- ((name . "vector->string")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) string?)
+  (signature
+   case-lambda
+   (((vector? vector)) string?)
+   (((vector? vector) (integer? start)) string?)
+   (((vector? vector) (integer? start) (integer? end)) string?))
   (tags pure))
  ((name . "vector-append")
   (signature lambda ((vector? vector) ...) vector?)
   (tags pure))
  ((name . "vector-copy")
-  (signature lambda ((vector? vector)) vector?)
+  (signature
+   case-lambda
+   (((vector? vector)) vector?)
+   (((vector? vector) (integer? start)) vector?)
+   (((vector? vector) (integer? start) (integer? end)) vector?))
   (tags pure))
- ((name . "vector-copy")
-  (signature lambda ((vector? vector) (integer? start)) vector?)
-  (tags pure))
- ((name . "vector-copy")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) vector?)
-  (tags pure))
- ((name . "vector-copy!")
-  (signature lambda ((vector? to) (integer? at) (vector? from)) undefined))
  ((name . "vector-copy!")
   (signature
-   lambda
-   ((vector? to) (integer? at) (vector? from) (integer? start))
-   undefined))
- ((name . "vector-copy!")
-  (signature
-   lambda
-   ((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
-   undefined))
- ((name . "vector-fill!") (signature lambda ((vector? vector) fill) undefined))
- ((name . "vector-fill!")
-  (signature lambda ((vector? vector) fill (integer? start)) undefined))
+   case-lambda
+   (((vector? to) (integer? at) (vector? from)) undefined)
+   (((vector? to) (integer? at) (vector? from) (integer? start)) undefined)
+   (((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
+    undefined)))
  ((name . "vector-fill!")
   (signature
-   lambda
-   ((vector? vector) fill (integer? start) (integer? end))
-   undefined))
+   case-lambda
+   (((vector? vector) fill) undefined)
+   (((vector? vector) fill (integer? start)) undefined)
+   (((vector? vector) fill (integer? start) (integer? end)) undefined)))
  ((name . "vector-for-each")
   (signature
    lambda
@@ -806,48 +744,34 @@
  ((name . "when")
   (signature syntax-rules () ((_ test expression1 expression2 ...))))
  ((name . "write-bytevector")
-  (signature lambda ((bytevector? bytevector)) undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "write-bytevector")
-  (signature lambda ((bytevector? bytevector) (output-port? port)) undefined))
- ((name . "write-bytevector")
   (signature
-   lambda
-   ((bytevector? bytevector) (output-port? port) (integer? start))
-   undefined))
- ((name . "write-bytevector")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (output-port? port)
-    (integer? start)
-    (integer? end))
-   undefined))
+   case-lambda
+   (((bytevector? bytevector)) undefined)
+   (((bytevector? bytevector) (output-port? port)) undefined)
+   (((bytevector? bytevector) (output-port? port) (integer? start)) undefined)
+   (((bytevector? bytevector)
+     (output-port? port)
+     (integer? start)
+     (integer? end))
+    undefined)))
  ((name . "write-char")
-  (signature lambda ((char? char)) undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "write-char")
-  (signature lambda ((char? char) (output-port? port)) undefined))
- ((name . "write-string")
-  (signature lambda ((string? string)) undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "write-string")
-  (signature lambda ((string? string) (output-port? port)) undefined))
+  (signature
+   case-lambda
+   (((char? char)) undefined)
+   (((char? char) (output-port? port)) undefined)))
  ((name . "write-string")
   (signature
-   lambda
-   ((string? string) (output-port? port) (integer? start))
-   undefined))
- ((name . "write-string")
+   case-lambda
+   (((string? string)) undefined)
+   (((string? string) (output-port? port)) undefined)
+   (((string? string) (output-port? port) (integer? start)) undefined)
+   (((string? string) (output-port? port) (integer? start) (integer? end))
+    undefined)))
+ ((name . "write-u8")
   (signature
-   lambda
-   ((string? string) (output-port? port) (integer? start) (integer? end))
-   undefined))
- ((name . "write-u8")
-  (signature lambda ((integer? byte)) undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "write-u8")
-  (signature lambda ((integer? byte) (output-port? port)) undefined))
+   case-lambda
+   (((integer? byte)) undefined)
+   (((integer? byte) (output-port? port)) undefined)))
  ((name . "zero?")
   (signature lambda ((number? z)) boolean?)
   (tags pure predicate)))

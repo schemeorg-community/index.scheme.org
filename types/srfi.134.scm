@@ -126,25 +126,17 @@
   (subsigs (pred (lambda (element) boolean?)))
   (tags pure))
  ((name . "ideque-find")
-  (signature lambda ((procedure? pred) (ideque? ideque)) *)
-  (subsigs (pred (lambda (element) boolean?)))
-  (tags pure))
- ((name . "ideque-find")
   (signature
-   lambda
-   ((procedure? pred) (ideque? ideque) (procedure? failure))
-   *)
+   case-lambda
+   (((procedure? pred) (ideque? ideque)) *)
+   (((procedure? pred) (ideque? ideque) (procedure? failure)) *))
   (subsigs (pred (lambda (element) boolean?)) (failure (lambda () *)))
   (tags pure))
  ((name . "ideque-find-right")
-  (signature lambda ((procedure? pred) (ideque? ideque)) *)
-  (subsigs (pred (lambda (element) boolean?)))
-  (tags pure))
- ((name . "ideque-find-right")
   (signature
-   lambda
-   ((procedure? pred) (ideque? ideque) (procedure? failure))
-   *)
+   case-lambda
+   (((procedure? pred) (ideque? ideque)) *)
+   (((procedure? pred) (ideque? ideque) (procedure? failure)) *))
   (subsigs (pred (lambda (element) boolean?)) (failure (lambda () *)))
   (tags pure))
  ((name . "ideque-take-while")

@@ -26,17 +26,11 @@
   (signature lambda ((hashmap? hashmap1) (hashmap? hashmap2)) boolean?)
   (tags pure))
  ((name . "hashmap-ref")
-  (signature lambda ((hashmap? hashmap) key) *)
-  (tags pure))
- ((name . "hashmap-ref")
-  (signature lambda ((hashmap? hashmap) key (procedure? failure)) *)
-  (subsigs (failure (lambda () *)))
-  (tags pure))
- ((name . "hashmap-ref")
   (signature
-   lambda
-   ((hashmap? hashmap) key (procedure? failure) (procedure? success))
-   *)
+   case-lambda
+   (((hashmap? hashmap) key) *)
+   (((hashmap? hashmap) key (procedure? failure)) *)
+   (((hashmap? hashmap) key (procedure? failure) (procedure? success)) *))
   (subsigs (failure (lambda () *)) (success (lambda (value) *)))
   (tags pure))
  ((name . "hashmap-ref/default")
@@ -85,48 +79,34 @@
    (values hashmap? *))
   (subsigs (failure (lambda () *))))
  ((name . "hashmap-update")
-  (signature lambda ((hashmap? hashmap) key (procedure? updater)) hashmap?)
-  (subsigs (updater (lambda (value) *)))
-  (tags pure))
- ((name . "hashmap-update")
   (signature
-   lambda
-   ((hashmap? hashmap) key (procedure? updater) (procedure? failure))
-   hashmap?)
-  (subsigs (updater (lambda (value) *)) (failure (lambda () *)))
-  (tags pure))
- ((name . "hashmap-update")
-  (signature
-   lambda
-   ((hashmap? hashmap)
-    key
-    (procedure? updater)
-    (procedure? failure)
-    (procedure? success))
-   hashmap?)
+   case-lambda
+   (((hashmap? hashmap) key (procedure? updater)) hashmap?)
+   (((hashmap? hashmap) key (procedure? updater) (procedure? failure))
+    hashmap?)
+   (((hashmap? hashmap)
+     key
+     (procedure? updater)
+     (procedure? failure)
+     (procedure? success))
+    hashmap?))
   (subsigs
    (updater (lambda (value) *))
    (failure (lambda () *))
    (success (lambda (value) *)))
   (tags pure))
  ((name . "hashmap-update!")
-  (signature lambda ((hashmap? hashmap) key (procedure? updater)) hashmap?)
-  (subsigs (updater (lambda (value) *))))
- ((name . "hashmap-update!")
   (signature
-   lambda
-   ((hashmap? hashmap) key (procedure? updater) (procedure? failure))
-   hashmap?)
-  (subsigs (updater (lambda (value) *)) (failure (lambda () *))))
- ((name . "hashmap-update!")
-  (signature
-   lambda
-   ((hashmap? hashmap)
-    key
-    (procedure? updater)
-    (procedure? failure)
-    (procedure? success))
-   hashmap?)
+   case-lambda
+   (((hashmap? hashmap) key (procedure? updater)) hashmap?)
+   (((hashmap? hashmap) key (procedure? updater) (procedure? failure))
+    hashmap?)
+   (((hashmap? hashmap)
+     key
+     (procedure? updater)
+     (procedure? failure)
+     (procedure? success))
+    hashmap?))
   (subsigs
    (updater (lambda (value) *))
    (failure (lambda () *))
@@ -145,22 +125,17 @@
    hashmap?)
   (subsigs (updater (lambda (value) *))))
  ((name . "hashmap-pop")
-  (signature lambda ((hashmap? hashmap)) (values hashmap? * *))
-  (tags pure))
- ((name . "hashmap-pop")
   (signature
-   lambda
-   ((hashmap? hashmap) (procedure? failure))
-   (values hashmap? * *))
+   case-lambda
+   (((hashmap? hashmap)) (values hashmap? * *))
+   (((hashmap? hashmap) (procedure? failure)) (values hashmap? * *)))
   (subsigs (failure (lambda () (values hashmap? * *))))
   (tags pure))
  ((name . "hashmap-pop!")
-  (signature lambda ((hashmap? hashmap)) (values hashmap? * *)))
- ((name . "hashmap-pop!")
   (signature
-   lambda
-   ((hashmap? hashmap) (procedure? failure))
-   (values hashmap? * *))
+   case-lambda
+   (((hashmap? hashmap)) (values hashmap? * *))
+   (((hashmap? hashmap) (procedure? failure)) (values hashmap? * *)))
   (subsigs (failure (lambda () (values hashmap? * *)))))
  ((name . "hashmap-search")
   (signature

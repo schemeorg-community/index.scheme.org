@@ -64,10 +64,15 @@
                         (signature . (lambda (obj1 obj2 ...) *)))
                        ((name . f3)
                         (signature . (lambda ((string? str) ... (#f obj2)) *)))
+                       ((name . f4)
+                        (signature . (case-lambda
+                                       ((obj1 ...) *)
+                                       (((string? str)) *))))
                        )))
         (test-equal '() (index-entry-param-names (list-ref specs 0)))
         (test-equal '(obj1 obj2) (index-entry-param-names (list-ref specs 1)))
-        (test-equal '(str obj2) (index-entry-param-names (list-ref specs 2))))
+        (test-equal '(str obj2) (index-entry-param-names (list-ref specs 2)))
+        (test-equal '(obj1 str) (index-entry-param-names (list-ref specs 3))))
 
       (test-group
         "Test function parameter type parsing"
@@ -82,11 +87,17 @@
                        ((name . f3)
                         (signature . (lambda ((string? str) (#f int)) *)))
                        ((name . f4)
-                        (signature . (lambda (((or #f string?) str)) *))))))
+                        (signature . (lambda (((or #f string?) str)) *)))
+                       ((name . f5)
+                        (signature . (case-lambda
+                                       ((obj (integer? foo)) *)
+                                       (((string? bar)) *))))
+                       )))
         (test-equal '() (index-entry-param-types (list-ref specs 0)))
         (test-equal '() (index-entry-param-types (list-ref specs 1)))
         (test-equal '(string?) (index-entry-param-types (list-ref specs 2)))
-        (test-equal '(string?) (index-entry-param-types (list-ref specs 3))))
+        (test-equal '(string?) (index-entry-param-types (list-ref specs 3)))
+        (test-equal '(integer? string?) (index-entry-param-types (list-ref specs 4))))
 
       (test-group
         "Test function return type parsing"
@@ -105,13 +116,18 @@
                        ((name . f5)
                         (signature . (lambda () (or #f string?))))
                        ((name . f6)
-                        (signature . (lambda () (values integer? string? ...)))))))
+                        (signature . (lambda () (values integer? string? ...))))
+                       ((name . f7)
+                        (signature . (case-lambda 
+                                       (() integer?)
+                                       (() (values string? ...))))))))
         (test-equal '() (index-entry-return-types (list-ref specs 0)))
         (test-equal '() (index-entry-return-types (list-ref specs 1)))
         (test-equal '(string?) (index-entry-return-types (list-ref specs 2)))
         (test-equal '(integer? string?) (index-entry-return-types (list-ref specs 3)))
         (test-equal '(string?) (index-entry-return-types (list-ref specs 4)))
-        (test-equal '(integer? string?) (index-entry-return-types (list-ref specs 5))))
+        (test-equal '(integer? string?) (index-entry-return-types (list-ref specs 5)))
+        (test-equal '(integer? string?) (index-entry-return-types (list-ref specs 6))))
 
       (test-group
         "Test syntax return type parsing"
@@ -133,6 +149,28 @@
         (test-equal '() (index-entry-return-types (list-ref specs 0)))
         (test-equal '(foo?) (index-entry-return-types (list-ref specs 1)))
         (test-equal '(foo? bar?) (index-entry-return-types (list-ref specs 2))))
+
+      (test-group
+        "Test container-type parameter detalization"
+        (define specs
+          (read-spec '(test-lib)
+                     '()
+                     `(
+                       ((name . f1)
+                        (signature lambda ((list? alist)) *)
+                        (subsigs
+                          (alist (alist (integer? key) (string? value)))))
+                       ((name . f2)
+                        (signature lambda ((list? lst)) *)
+                        (subsigs
+                          (lst (list (integer? foo)))))
+                       ((name . f3)
+                        (signature lambda ((vector? v)) *)
+                        (subsigs
+                          (v (vector (integer? foo))))))))
+        (test-equal '(list? integer? string?) (index-entry-param-types (list-ref specs 0)))
+        (test-equal '(list? integer?) (index-entry-param-types (list-ref specs 1)))
+        (test-equal '(vector? integer?) (index-entry-param-types (list-ref specs 2))))
 
       (test-group
         "Test subtyping"

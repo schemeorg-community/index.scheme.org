@@ -1,12 +1,9 @@
 (((name . "make-hash-table")
-  (signature lambda ((procedure? equality-predicate) arg ...) hash-table?)
-  (subsigs (equality-predicate (lambda (a b) boolean?)))
-  (tags pure))
- ((name . "make-hash-table")
   (signature
-   lambda
-   ((procedure? equality-predicate) (procedure? hash-function) arg ...)
-   hash-table?)
+   case-lambda
+   (((procedure? equality-predicate) arg ...) hash-table?)
+   (((procedure? equality-predicate) (procedure? hash-function) arg ...)
+    hash-table?))
   (subsigs
    (equality-predicate (lambda (a b) boolean?))
    (hash-function (lambda (obj) integer?)))
@@ -29,10 +26,10 @@
   (subsigs (return (lambda (obj) integer?)))
   (tags pure))
  ((name . "hash-table-ref")
-  (signature lambda ((hash-table? hash-table) key) *)
-  (tags pure))
- ((name . "hash-table-ref")
-  (signature lambda ((hash-table? hash-table) key (procedure? failure)) *)
+  (signature
+   case-lambda
+   (((hash-table? hash-table) key) *)
+   (((hash-table? hash-table) key (procedure? failure)) *))
   (subsigs (failure (lambda () *)))
   (tags pure))
  ((name . "hash-table-ref/default")
@@ -47,15 +44,10 @@
   (tags pure))
  ((name . "hash-table-update!")
   (signature
-   lambda
-   ((hash-table? hash-table) key (procedure? updater))
-   undefined)
-  (subsigs (updated (lambda (value) *))))
- ((name . "hash-table-update!")
-  (signature
-   lambda
-   ((hash-table? hash-table) key (procedure? updater) (procedure? failure))
-   undefined)
+   case-lambda
+   (((hash-table? hash-table) key (procedure? updater)) undefined)
+   (((hash-table? hash-table) key (procedure? updater) (procedure? failure))
+    undefined))
   (subsigs (updater (lambda (value) *)) (failure (lambda () *))))
  ((name . "hash-table-size")
   (signature lambda ((hash-table? hash-table)) integer?)
@@ -83,21 +75,20 @@
    lambda
    ((hash-table? hash-table1) (hash-table? hash-table2))
    hash-table?))
- ((name . "hash") (signature lambda (obj) integer?))
- ((name . "hash") (signature lambda (obj arg) integer?))
+ ((name . "hash")
+  (signature case-lambda ((obj) integer?) ((obj arg) integer?)))
  ((name . "string-hash")
-  (signature lambda ((string? str)) integer?)
-  (tags pure))
- ((name . "string-hash")
-  (signature lambda ((string? str) arg) integer?)
+  (signature
+   case-lambda
+   (((string? str)) integer?)
+   (((string? str) arg) integer?))
   (tags pure))
  ((name . "string-ci-hash")
-  (signature lambda ((string? str)) integer?)
+  (signature
+   case-lambda
+   (((string? str)) integer?)
+   (((string? str) arg) integer?))
   (tags pure))
- ((name . "string-ci-hash")
-  (signature lambda ((string? str) arg) integer?)
-  (tags pure))
- ((name . "hash-by-identity") (signature lambda (obj) integer?) (tags pure))
  ((name . "hash-by-identity")
-  (signature lambda (obj arg) integer?)
+  (signature case-lambda ((obj) integer?) ((obj arg) integer?))
   (tags pure)))

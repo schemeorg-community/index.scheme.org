@@ -1,6 +1,8 @@
-(((name . "make-u16vector") (signature lambda ((integer? size)) u16vector?))
- ((name . "make-u16vector")
-  (signature lambda ((integer? size) (u16? fill)) u16vector?)
+(((name . "make-u16vector")
+  (signature
+   case-lambda
+   (((integer? size)) u16vector?)
+   (((integer? size) (u16? fill)) u16vector?))
   (tags pure))
  ((name . "u16vector")
   (signature lambda ((u16? value) ...) u16vector?)
@@ -21,48 +23,35 @@
  ((name . "u16vector-set!")
   (signature lambda ((u16vector? vec) (integer? i) (u16? value)) undefined))
  ((name . "u16vector->list")
-  (signature lambda ((u16vector? vec)) list?)
-  (tags pure))
- ((name . "u16vector->list")
-  (signature lambda ((u16vector? vec) (integer? start)) list?)
-  (tags pure))
- ((name . "u16vector->list")
-  (signature lambda ((u16vector? vec) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((u16vector? vec)) list?)
+   (((u16vector? vec) (integer? start)) list?)
+   (((u16vector? vec) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "list->u16vector")
   (signature lambda ((list? proper-list)) u16vector?)
   (tags pure))
  ((name . "u16vector-unfold")
-  (signature lambda ((procedure? f) (integer? length) seed) u16vector?)
+  (signature
+   case-lambda
+   (((procedure? f) (integer? length) seed) u16vector?)
+   (((procedure? f) (integer? length) seed) u16vector?))
   (subsigs (f (lambda ((integer? index) state) (values u16? *))))
-  (tags pure))
- ((name . "u16vector-unfold")
-  (signature lambda ((procedure? f) (integer? length) seed) u16vector?)
-  (subsigs (f (lambda ((integer? index) state) (values u16? *))))
-  (tags pure))
- ((name . "u16vector-copy")
-  (signature lambda ((u16vector? vec)) u16vector?)
-  (tags pure))
- ((name . "u16vector-copy")
-  (signature lambda ((u16vector? vec) (integer? start)) u16vector?)
   (tags pure))
  ((name . "u16vector-copy")
   (signature
-   lambda
-   ((u16vector? vec) (integer? start) (integer? end))
-   u16vector?)
-  (tags pure))
- ((name . "u16vector-reverse-copy")
-  (signature lambda ((u16vector? vec)) u16vector?)
-  (tags pure))
- ((name . "u16vector-reverse-copy")
-  (signature lambda ((u16vector? vec) (integer? start)) u16vector?)
+   case-lambda
+   (((u16vector? vec)) u16vector?)
+   (((u16vector? vec) (integer? start)) u16vector?)
+   (((u16vector? vec) (integer? start) (integer? end)) u16vector?))
   (tags pure))
  ((name . "u16vector-reverse-copy")
   (signature
-   lambda
-   ((u16vector? vec) (integer? start) (integer? end))
-   u16vector?)
+   case-lambda
+   (((u16vector? vec)) u16vector?)
+   (((u16vector? vec) (integer? start)) u16vector?)
+   (((u16vector? vec) (integer? start) (integer? end)) u16vector?))
   (tags pure))
  ((name . "u16vector-append")
   (signature lambda ((u16vector? vec) ...) u16vector?)
@@ -220,64 +209,42 @@
    ((u16vector? u16vector) (integer? i) (integer? j))
    undefined))
  ((name . "u16vector-fill!")
-  (signature lambda ((u16vector? u16vector) (u16? fill)) undefined))
- ((name . "u16vector-fill!")
   (signature
-   lambda
-   ((u16vector? u16vector) (u16? fill) (integer? start))
-   undefined))
- ((name . "u16vector-fill!")
-  (signature
-   lambda
-   ((u16vector? u16vector) (u16? fill) (integer? start) (integer? end))
-   undefined))
- ((name . "u16vector-reverse!")
-  (signature lambda ((u16vector? u16vector)) undefined))
- ((name . "u16vector-reverse!")
-  (signature lambda ((u16vector? u16vector) (integer? start)) undefined))
+   case-lambda
+   (((u16vector? u16vector) (u16? fill)) undefined)
+   (((u16vector? u16vector) (u16? fill) (integer? start)) undefined)
+   (((u16vector? u16vector) (u16? fill) (integer? start) (integer? end))
+    undefined)))
  ((name . "u16vector-reverse!")
   (signature
-   lambda
-   ((u16vector? u16vector) (integer? start) (integer? end))
-   undefined))
+   case-lambda
+   (((u16vector? u16vector)) undefined)
+   (((u16vector? u16vector) (integer? start)) undefined)
+   (((u16vector? u16vector) (integer? start) (integer? end)) undefined)))
  ((name . "u16vector-copy!")
   (signature
-   lambda
-   ((u16vector? to) (integer? at) (u16vector? from))
-   undefined))
- ((name . "u16vector-copy!")
-  (signature
-   lambda
-   ((u16vector? to) (integer? at) (u16vector? from) (integer? start))
-   undefined))
- ((name . "u16vector-copy!")
-  (signature
-   lambda
-   ((u16vector? to)
-    (integer? at)
-    (u16vector? from)
-    (integer? start)
-    (integer? end))
-   undefined))
+   case-lambda
+   (((u16vector? to) (integer? at) (u16vector? from)) undefined)
+   (((u16vector? to) (integer? at) (u16vector? from) (integer? start))
+    undefined)
+   (((u16vector? to)
+     (integer? at)
+     (u16vector? from)
+     (integer? start)
+     (integer? end))
+    undefined)))
  ((name . "u16vector-reverse-copy!")
   (signature
-   lambda
-   ((u16vector? to) (integer? at) (u16vector? from))
-   undefined))
- ((name . "u16vector-reverse-copy!")
-  (signature
-   lambda
-   ((u16vector? to) (integer? at) (u16vector? from) (integer? start))
-   undefined))
- ((name . "u16vector-reverse-copy!")
-  (signature
-   lambda
-   ((u16vector? to)
-    (integer? at)
-    (u16vector? from)
-    (integer? start)
-    (integer? end))
-   undefined))
+   case-lambda
+   (((u16vector? to) (integer? at) (u16vector? from)) undefined)
+   (((u16vector? to) (integer? at) (u16vector? from) (integer? start))
+    undefined)
+   (((u16vector? to)
+     (integer? at)
+     (u16vector? from)
+     (integer? start)
+     (integer? end))
+    undefined)))
  ((name . "u16vector-unfold!")
   (signature
    lambda
@@ -301,41 +268,35 @@
    undefined)
   (subsigs (f (lambda ((integer? index) seed ...) (values * * ...)))))
  ((name . "reverse-u16vector->list")
-  (signature lambda ((u16vector? vec)) list?)
-  (tags pure))
- ((name . "reverse-u16vector->list")
-  (signature lambda ((u16vector? vec) (integer? start)) list?)
-  (tags pure))
- ((name . "reverse-u16vector->list")
-  (signature lambda ((u16vector? vec) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((u16vector? vec)) list?)
+   (((u16vector? vec) (integer? start)) list?)
+   (((u16vector? vec) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "reverse-list->u16vector")
   (signature lambda ((list? proper-list)) u16vector?)
   (tags pure))
  ((name . "u16vector->vector")
-  (signature lambda ((u16vector? vec)) vector?)
-  (tags pure))
- ((name . "u16vector->vector")
-  (signature lambda ((u16vector? vec) (integer? start)) vector?)
-  (tags pure))
- ((name . "u16vector->vector")
-  (signature lambda ((u16vector? vec) (integer? start) (integer? end)) vector?)
+  (signature
+   case-lambda
+   (((u16vector? vec)) vector?)
+   (((u16vector? vec) (integer? start)) vector?)
+   (((u16vector? vec) (integer? start) (integer? end)) vector?))
   (tags pure))
  ((name . "vector->u16vector")
-  (signature lambda ((vector? vec)) u16vector?)
-  (tags pure))
- ((name . "vector->u16vector")
-  (signature lambda ((vector? vec) (integer? start)) u16vector?)
-  (tags pure))
- ((name . "vector->u16vector")
-  (signature lambda ((vector? vec) (integer? start) (integer? end)) u16vector?)
+  (signature
+   case-lambda
+   (((vector? vec)) u16vector?)
+   (((vector? vec) (integer? start)) u16vector?)
+   (((vector? vec) (integer? start) (integer? end)) u16vector?))
   (tags pure))
  ((name . "make-u16vector-generator")
   (signature lambda ((u16vector? vec)) procedure?)
   (subsigs (return (lambda () (or eof-object? u16?)))))
  ((name . "u16vector-comparator") (signature value comparator?))
  ((name . "write-u16vector")
-  (signature lambda ((u16vector vec)) undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "write-u16vector")
-  (signature lambda ((u16vector vec) (output-port? port)) undefined)))
+  (signature
+   case-lambda
+   (((u16vector vec)) undefined)
+   (((u16vector vec) (output-port? port)) undefined))))

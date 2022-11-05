@@ -117,20 +117,31 @@
  ((name . "open-input-file") (signature lambda ((string? string)) input-port?))
  ((name . "open-output-file")
   (signature lambda ((string? string)) output-port?))
- ((name . "read-char") (signature lambda () (or eof-object? char?)))
  ((name . "read-char")
-  (signature lambda ((input-port? port)) (or eof-object? char?)))
- ((name . "peek-char") (signature lambda () (or eof-object? char?)))
+  (signature
+   case-lambda
+   (() (or eof-object? char?))
+   (((input-port? port)) (or eof-object? char?))))
  ((name . "peek-char")
-  (signature lambda ((input-port? port)) (or eof-object? char?)))
- ((name . "read") (signature lambda () *))
- ((name . "read") (signature lambda ((input-port? port)) *))
- ((name . "write-char") (signature lambda ((char? char)) undefined))
+  (signature
+   case-lambda
+   (() (or eof-object? char?))
+   (((input-port? port)) (or eof-object? char?))))
+ ((name . "read") (signature case-lambda (() *) (((input-port? port)) *)))
  ((name . "write-char")
-  (signature lambda ((char? char) (output-port? port)) undefined))
- ((name . "newline") (signature lambda () undefined))
- ((name . "newline") (signature lambda ((output-port? port)) undefined))
- ((name . "display") (signature lambda (obj) undefined))
- ((name . "display") (signature lambda (obj (output-port? port)) undefined))
- ((name . "write") (signature lambda (obj) undefined))
- ((name . "write") (signature lambda (obj (output-port? port)) undefined)))
+  (signature
+   case-lambda
+   (((char? char)) undefined)
+   (((char? char) (output-port? port)) undefined)))
+ ((name . "newline")
+  (signature case-lambda (() undefined) (((output-port? port)) undefined)))
+ ((name . "display")
+  (signature
+   case-lambda
+   ((obj) undefined)
+   ((obj (output-port? port)) undefined)))
+ ((name . "write")
+  (signature
+   case-lambda
+   ((obj) undefined)
+   ((obj (output-port? port)) undefined))))

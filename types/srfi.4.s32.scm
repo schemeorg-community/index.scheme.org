@@ -1,9 +1,11 @@
 (((name . "s32vector?")
   (signature lambda (obj) boolean?)
   (tags pure predicate))
- ((name . "make-s32vector") (signature lambda ((integer? size)) s32vector?))
  ((name . "make-s32vector")
-  (signature lambda ((integer? size) (integer? fill)) s32vector?)
+  (signature
+   case-lambda
+   (((integer? size)) s32vector?)
+   (((integer? size) (integer? fill)) s32vector?))
   (tags pure))
  ((name . "s32vector-length")
   (signature lambda ((s32vector? vec)) integer?)

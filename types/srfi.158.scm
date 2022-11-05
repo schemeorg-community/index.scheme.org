@@ -2,22 +2,18 @@
   (signature lambda (arg ...) procedure?)
   (subsigs (return (lambda () *))))
  ((name . "make-iota-generator")
-  (signature lambda ((integer? count)) procedure?)
-  (subsigs (return (lambda () (or integer? eof-object?)))))
- ((name . "make-iota-generator")
-  (signature lambda ((integer? count) (real? start)) procedure?)
-  (subsigs (return (lambda () (or real? eof-object?)))))
- ((name . "make-iota-generator")
-  (signature lambda ((integer? count) (real? start) (real? step)) procedure?)
+  (signature
+   case-lambda
+   (((integer? count)) procedure?)
+   (((integer? count) (real? start)) procedure?)
+   (((integer? count) (real? start) (real? step)) procedure?))
   (subsigs (return (lambda () (or real? eof-object?)))))
  ((name . "make-range-generator")
-  (signature lambda ((real? start)) procedure?)
-  (subsigs (return (lambda () real?))))
- ((name . "make-range-generator")
-  (signature lambda ((real? start) (real? end)) procedure?)
-  (subsigs (return (lambda () (or real? eof-object?)))))
- ((name . "make-range-generator")
-  (signature lambda ((real? start) (real? end) (real? step)) procedure?)
+  (signature
+   case-lambda
+   (((real? start)) procedure?)
+   (((real? start) (real? end)) procedure?)
+   (((real? start) (real? end) (real? step)) procedure?))
   (subsigs (return (lambda () (or real? eof-object?)))))
  ((name . "make-coroutine-generator")
   (signature lambda ((procedure? proc)) procedure?)
@@ -29,43 +25,32 @@
   (signature lambda ((list? lis)) procedure?)
   (subsigs (return (lambda () *))))
  ((name . "vector->generator")
-  (signature lambda ((vector? vec)) procedure?)
-  (subsigs (return (lambda () *))))
- ((name . "vector->generator")
-  (signature lambda ((vector? vec) (integer? start)) procedure?)
-  (subsigs (return (lambda () *))))
- ((name . "vector->generator")
-  (signature lambda ((vector? vec) (integer? start) (integer? end)) procedure?)
+  (signature
+   case-lambda
+   (((vector? vec)) procedure?)
+   (((vector? vec) (integer? start)) procedure?)
+   (((vector? vec) (integer? start) (integer? end)) procedure?))
   (subsigs (return (lambda () *))))
  ((name . "reverse-vector->generator")
-  (signature lambda ((vector? vec)) procedure?)
-  (subsigs (return (lambda () *))))
- ((name . "reverse-vector->generator")
-  (signature lambda ((vector? vec) (integer? start)) procedure?)
-  (subsigs (return (lambda () *))))
- ((name . "reverse-vector->generator")
-  (signature lambda ((vector? vec) (integer? start) (integer? end)) procedure?)
+  (signature
+   case-lambda
+   (((vector? vec)) procedure?)
+   (((vector? vec) (integer? start)) procedure?)
+   (((vector? vec) (integer? start) (integer? end)) procedure?))
   (subsigs (return (lambda () *))))
  ((name . "string->generator")
-  (signature lambda ((string? str)) procedure?)
+  (signature
+   case-lambda
+   (((string? str)) procedure?)
+   (((string? str) (integer? start)) procedure?)
+   (((string? str) (integer? start) (integer? end)) procedure?))
   (subsigs (return (lambda () (or char? eof-object?)))))
- ((name . "string->generator")
-  (signature lambda ((string? str) (integer? start)) procedure?)
-  (subsigs (return (lambda () (or char? eof-object?)))))
- ((name . "string->generator")
-  (signature lambda ((string? str) (integer? start) (integer? end)) procedure?)
-  (subsigs (return (lambda () (or char? eof-object?)))))
- ((name . "bytevector->generator")
-  (signature lambda ((bytevector? bytevector)) procedure?)
-  (subsigs (return (lambda () (or integer? eof-object?)))))
- ((name . "bytevector->generator")
-  (signature lambda ((bytevector? bytevector) (integer? start)) procedure?)
-  (subsigs (return (lambda () (or integer? eof-object?)))))
  ((name . "bytevector->generator")
   (signature
-   lambda
-   ((bytevector? bytevector) (integer? start) (integer? end))
-   procedure?)
+   case-lambda
+   (((bytevector? bytevector)) procedure?)
+   (((bytevector? bytevector) (integer? start)) procedure?)
+   (((bytevector? bytevector) (integer? start) (integer? end)) procedure?))
   (subsigs (return (lambda () (or integer? eof-object?)))))
  ((name . "make-for-each-generator")
   (signature lambda ((procedure? for-each) obj) procedure?)
@@ -108,10 +93,10 @@
    (gen (lambda () *))
    (return (lambda () *))))
  ((name . "gtake")
-  (signature lambda ((procedure? gen) (integer? k)) procedure?)
-  (subsigs (gen (lambda () *)) (return (lambda () *))))
- ((name . "gtake")
-  (signature lambda ((procedure? gen) (integer? k) padding) procedure?)
+  (signature
+   case-lambda
+   (((procedure? gen) (integer? k)) procedure?)
+   (((procedure? gen) (integer? k) padding) procedure?))
   (subsigs (gen (lambda () *)) (return (lambda () *))))
  ((name . "gdrop")
   (signature lambda ((procedure? gen) (integer? k)) procedure?)
@@ -129,19 +114,19 @@
    (gen (lambda () *))
    (return (lambda () *))))
  ((name . "gdelete")
-  (signature lambda (item (procedure? gen)) procedure?)
-  (subsigs (gen (lambda () *)) (return (lambda () *))))
- ((name . "gdelete")
-  (signature lambda (item (procedure? gen) (procedure? =)) procedure?)
+  (signature
+   case-lambda
+   ((item (procedure? gen)) procedure?)
+   ((item (procedure? gen) (procedure? =)) procedure?))
   (subsigs
    (gen (lambda () *))
    (= (lambda (a b) boolean?))
    (return (lambda () *))))
  ((name . "gdelete-neighbor-dups")
-  (signature lambda ((procedure? gen)) procedure?)
-  (subsigs (gen (lambda () *)) (return (lambda () *))))
- ((name . "gdelete-neighbor-dups")
-  (signature lambda ((procedure? gen) (procedure? =)) procedure?)
+  (signature
+   case-lambda
+   (((procedure? gen)) procedure?)
+   (((procedure? gen) (procedure? =)) procedure?))
   (subsigs
    (gen (lambda () *))
    (= (lambda (a b) boolean?))
@@ -159,22 +144,22 @@
    (truth-gen (lambda () (or boolean? eof-object?)))
    (return (lambda () *))))
  ((name . "generator->list")
-  (signature lambda ((procedure? generator)) list?)
-  (subsigs (generator (lambda () *))))
- ((name . "generator->list")
-  (signature lambda ((procedure? generator) (integer? k)) list?)
-  (subsigs (generator (lambda () *))))
- ((name . "generator->reverse-list")
-  (signature lambda ((procedure? generator)) list?)
+  (signature
+   case-lambda
+   (((procedure? generator)) list?)
+   (((procedure? generator) (integer? k)) list?))
   (subsigs (generator (lambda () *))))
  ((name . "generator->reverse-list")
-  (signature lambda ((procedure? generator) (integer? k)) list?)
+  (signature
+   case-lambda
+   (((procedure? generator)) list?)
+   (((procedure? generator) (integer? k)) list?))
   (subsigs (generator (lambda () *))))
  ((name . "generator->vector")
-  (signature lambda ((procedure? generator)) vector?)
-  (subsigs (generator (lambda () *))))
- ((name . "generator->vector")
-  (signature lambda ((procedure? generator) (integer? k)) vector?)
+  (signature
+   case-lambda
+   (((procedure? generator)) vector?)
+   (((procedure? generator) (integer? k)) vector?))
   (subsigs (generator (lambda () *))))
  ((name . "generator->vector!")
   (signature
@@ -183,10 +168,10 @@
    integer?)
   (subsigs (generator (lambda () *))))
  ((name . "generator->string")
-  (signature lambda ((procedure? generator)) string?)
-  (subsigs (generator (lambda () (or char? eof-object?)))))
- ((name . "generator->string")
-  (signature lambda ((procedure? generator) (integer? k)) string?)
+  (signature
+   case-lambda
+   (((procedure? generator)) string?)
+   (((procedure? generator) (integer? k)) string?))
   (subsigs (generator (lambda () (or char? eof-object?)))))
  ((name . "generator-fold")
   (signature

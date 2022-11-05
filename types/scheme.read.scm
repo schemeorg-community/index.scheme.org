@@ -1,4 +1,1 @@
-(((name . "read")
-  (signature lambda () *)
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "read") (signature lambda ((input-port? port)) *)))
+(((name . "read") (signature case-lambda (() *) (((input-port? port)) *))))

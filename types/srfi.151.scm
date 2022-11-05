@@ -101,15 +101,17 @@
  ((name . "bit-field-reverse")
   (signature lambda ((integer? i) (integer? start) (integer? end)) integer?)
   (tags pure))
- ((name . "bits->list") (signature lambda ((integer? i)) list?) (tags pure))
  ((name . "bits->list")
-  (signature lambda ((integer? i) (integer? len)) list?)
+  (signature
+   case-lambda
+   (((integer? i)) list?)
+   (((integer? i) (integer? len)) list?))
   (tags pure))
  ((name . "bits->vector")
-  (signature lambda ((integer? i)) vector?)
-  (tags pure))
- ((name . "bits->vector")
-  (signature lambda ((integer? i) (integer? len)) vector?)
+  (signature
+   case-lambda
+   (((integer? i)) vector?)
+   (((integer? i) (integer? len)) vector?))
   (tags pure))
  ((name . "list->bits") (signature lambda ((list? list)) integer?) (tags pure))
  ((name . "vector->bits")

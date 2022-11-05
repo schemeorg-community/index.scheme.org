@@ -1,7 +1,9 @@
 (((name . "u8vector?") (signature lambda (obj) boolean?) (tags pure predicate))
- ((name . "make-u8vector") (signature lambda ((integer? size)) u8vector?))
  ((name . "make-u8vector")
-  (signature lambda ((integer? size) (integer? fill)) u8vector?)
+  (signature
+   case-lambda
+   (((integer? size)) u8vector?)
+   (((integer? size) (integer? fill)) u8vector?))
   (tags pure))
  ((name . "u8vector-length")
   (signature lambda ((u8vector? vec)) integer?)

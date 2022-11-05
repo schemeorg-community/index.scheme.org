@@ -1,19 +1,15 @@
 (((name . "make-rtd")
-  (signature lambda ((symbol? name) (vector? fieldspecs)) rtd?)
-  (tags pure))
- ((name . "make-rtd")
   (signature
-   lambda
-   ((symbol? name) (vector? fieldspecs) ((or rtd? #f) parent))
-   rtd?)
+   case-lambda
+   (((symbol? name) (vector? fieldspecs)) rtd?)
+   (((symbol? name) (vector? fieldspecs) ((or rtd? #f) parent)) rtd?))
   (tags pure))
  ((name . "rtd?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "rtd-constructor")
-  (signature lambda ((rtd? rtd)) procedure?)
-  (subsigs (return (lambda (fieldvalue ...) record?)))
-  (tags pure))
- ((name . "rtd-constructor")
-  (signature lambda ((rtd? rtd) (vector? fieldspec)) procedure?)
+  (signature
+   case-lambda
+   (((rtd? rtd)) procedure?)
+   (((rtd? rtd) (vector? fieldspec)) procedure?))
   (subsigs (return (lambda (fieldvalue ...) record?)))
   (tags pure))
  ((name . "rtd-predicate")

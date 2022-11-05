@@ -9,11 +9,10 @@
   (subsigs (return (lambda ((symbol? el)) (or #f integer?))))
   (tags pure))
  ((name . "enum-set-constructor")
-  (signature lambda ((enum-set enum-set)) procedure?)
-  (subsigs (return (lambda ((list? elements)) enum-set)))
-  (tags pure))
- ((name . "enum-set-constructor")
-  (signature lambda ((enum-set enum-set)) procedure?)
+  (signature
+   case-lambda
+   (((enum-set enum-set)) procedure?)
+   (((enum-set enum-set)) procedure?))
   (subsigs (return (lambda ((list? elements)) enum-set)))
   (tags pure))
  ((name . "enum-set->list")
