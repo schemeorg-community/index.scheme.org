@@ -31,13 +31,17 @@
  ((name . "flmin") (signature lambda ((flonum? x) ...) flonum?) (tags pure))
  ((name . "fl+") (signature lambda ((flonum? x) ...) flonum?) (tags pure))
  ((name . "fl*") (signature lambda ((flonum? x) ...) flonum?) (tags pure))
- ((name . "fl-") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "fl-")
-  (signature lambda ((flonum? x) (flonum? y) ...) flonum?)
+  (signature
+   case-lambda
+   (((flonum? x)) flonum?)
+   (((flonum? x) (flonum? y) ...) flonum?))
   (tags pure))
- ((name . "fl/") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "fl/")
-  (signature lambda ((flonum? x) (flonum? y) ...) flonum?)
+  (signature
+   case-lambda
+   (((flonum? x)) flonum?)
+   (((flonum? x) (flonum? y) ...) flonum?))
   (tags pure))
  ((name . "flabs") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "fldiv")
@@ -67,18 +71,22 @@
  ((name . "flround") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "fltruncate") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flexp") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "fllog") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "fllog")
-  (signature lambda ((flonum? x) (flonum? base)) flonum?)
+  (signature
+   case-lambda
+   (((flonum? x)) flonum?)
+   (((flonum? x) (flonum? base)) flonum?))
   (tags pure))
  ((name . "flsin") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flcos") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "fltan") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flasin") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flacos") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "flatan") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flatan")
-  (signature lambda ((flonum? y) (flonum? x)) flonum?)
+  (signature
+   case-lambda
+   (((flonum? x)) flonum?)
+   (((flonum? y) (flonum? x)) flonum?))
   (tags pure))
  ((name . "flsqrt") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flexpt")

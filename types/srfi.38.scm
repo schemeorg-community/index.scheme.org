@@ -1,7 +1,6 @@
 (((name . "write-with-shared-structure")
-  (signature lambda (obj) undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "write-with-shared-structure")
-  (signature lambda (obj (output-port? port)) undefined))
- ((name . "write-with-shared-structure")
-  (signature lambda (obj (output-port? port) optarg) undefined)))
+  (signature
+   case-lambda
+   ((obj) undefined)
+   ((obj (output-port? port)) undefined)
+   ((obj (output-port? port) optarg) undefined))))

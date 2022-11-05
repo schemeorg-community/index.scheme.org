@@ -4,14 +4,14 @@
  ((name . "time-tai") (signature value time-type))
  ((name . "time-thread") (signature value time-type))
  ((name . "time-utc") (signature value time-type))
- ((name . "current-date") (signature lambda () date?))
- ((name . "current-date") (signature lambda ((integer? tz-offset)) date?))
+ ((name . "current-date")
+  (signature case-lambda (() date?) (((integer? tz-offset)) date?)))
  ((name . "current-julian-day") (signature lambda () real?))
  ((name . "current-modified-julian-day") (signature lambda () real?))
- ((name . "current-time") (signature lambda () time?))
- ((name . "current-time") (signature lambda ((time-type type)) time?))
- ((name . "time-resolution") (signature lambda () integer?))
- ((name . "time-resolution") (signature lambda ((time-type type)) integer?))
+ ((name . "current-time")
+  (signature case-lambda (() time?) (((time-type type)) time?)))
+ ((name . "time-resolution")
+  (signature case-lambda (() integer?) (((time-type type)) integer?)))
  ((name . "make-time")
   (signature
    lambda
@@ -120,9 +120,11 @@
  ((name . "date->time-utc")
   (signature lambda ((date? date)) time?)
   (tags pure))
- ((name . "julian-day->date") (signature lambda ((real? jd)) date?))
  ((name . "julian-day->date")
-  (signature lambda ((real? jd) (integer? tz-offset)) date?)
+  (signature
+   case-lambda
+   (((real? jd)) date?)
+   (((real? jd) (integer? tz-offset)) date?))
   (tags pure))
  ((name . "julian-day->time-monotonic")
   (signature lambda ((real? jd)) time?)
@@ -133,9 +135,11 @@
  ((name . "julian-day->time-utc")
   (signature lambda ((real? jd)) time?)
   (tags pure))
- ((name . "modified-julian-day->date") (signature lambda ((real? jd)) date?))
  ((name . "modified-julian-day->date")
-  (signature lambda ((real? jd) (integer? tz-offset)) date?)
+  (signature
+   case-lambda
+   (((real? jd)) date?)
+   (((real? jd) (integer? tz-offset)) date?))
   (tags pure))
  ((name . "modified-julian-day->time-monotonic")
   (signature lambda ((real? jd)) time?)
@@ -147,9 +151,10 @@
   (signature lambda ((real? jd)) time?)
   (tags pure))
  ((name . "time-monotonic->date")
-  (signature lambda ((time? time-monotonic)) date?))
- ((name . "time-monotonic->date")
-  (signature lambda ((time? time-monotonic) (integer? tz-offset)) date?)
+  (signature
+   case-lambda
+   (((time? time-monotonic)) date?)
+   (((time? time-monotonic) (integer? tz-offset)) date?))
   (tags pure))
  ((name . "time-monotonic->julian-day")
   (signature lambda ((time? time-monotonic)) real?)
@@ -167,9 +172,11 @@
   (tags pure))
  ((name . "time-monotonic->time-utc!")
   (signature lambda ((time? time-monotonic)) time?))
- ((name . "time-tai->date") (signature lambda ((time? time-tai)) date?))
  ((name . "time-tai->date")
-  (signature lambda ((time? time-tai) (integer? tz-offset)) date?)
+  (signature
+   case-lambda
+   (((time? time-tai)) date?)
+   (((time? time-tai) (integer? tz-offset)) date?))
   (tags pure))
  ((name . "time-tai->julian-day")
   (signature lambda ((time? time-tai)) real?)
@@ -186,9 +193,11 @@
   (signature lambda ((time? time-tai)) time?)
   (tags pure))
  ((name . "time-tai->time-utc!") (signature lambda ((time? time-tai)) time?))
- ((name . "time-utc->date") (signature lambda ((time? time-utc)) date?))
  ((name . "time-utc->date")
-  (signature lambda ((time? time-utc) (integer? tz-offset)) date?)
+  (signature
+   case-lambda
+   (((time? time-utc)) date?)
+   (((time? time-utc) (integer? tz-offset)) date?))
   (tags pure))
  ((name . "time-utc->julian-day")
   (signature lambda ((time? time-utc)) real?)
@@ -205,10 +214,10 @@
   (tags pure))
  ((name . "time-utc->time-tai!") (signature lambda ((time? time-utc)) time?))
  ((name . "date->string")
-  (signature lambda ((date? date)) string?)
-  (tags pure))
- ((name . "date->string")
-  (signature lambda ((date? date) (string? format-string)) string?)
+  (signature
+   case-lambda
+   (((date? date)) string?)
+   (((date? date) (string? format-string)) string?))
   (tags pure)
   (spec-values
    (format-string

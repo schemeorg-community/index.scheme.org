@@ -87,18 +87,22 @@
               (else '())))
           (define param-names
             (case (car signature)
-              ((lambda) (extract-param-names signature))
+              ((lambda) (extract-lambda-param-names signature))
+              ((case-lambda) (extract-case-lambda-param-names signature))
               ((syntax-rules) (extract-syntax-names signature))
               (else '())))
           (define param-types
             (case (car signature)
-              ((lambda) (append (extract-param-types signature)
+              ((lambda) (append (extract-lambda-param-types signature)
                                 (extract-procedure-subsig-param-types (assoc* 'subsigs entry '()))))
+              ((case-lambda) (append (extract-case-lambda-param-types signature)
+                                     (extract-procedure-subsig-param-types (assoc* 'subsigs entry '()))))
               ((syntax-rules) (extract-procedure-subsig-param-types (assoc* 'subsigs entry '())))
               (else '())))
           (define return-types
             (case (car signature)
-              ((lambda) (extract-return-types signature))
+              ((lambda) (extract-lambda-return-types signature))
+              ((case-lambda) (extract-case-lambda-return-types signature))
               ((syntax-rules) (extract-syntax-return-types signature))
               ((value) (list (cadr signature)))
               (else '())))
@@ -130,8 +134,18 @@
         '()
         (reverse input)))
 
-    (define (extract-param-names signature)
+    (define (extract-case-lambda-param-names signature)
+      (define params-list (apply append (map 
+                                          (lambda (case)
+                                            (car case))
+                                          (cdr signature))))
+      (extract-param-names params-list))
+
+    (define (extract-lambda-param-names signature)
       (define params-list (cadr signature))
+      (extract-param-names params-list))
+
+    (define (extract-param-names params-list)
       (define lst* (map
                      (lambda (param)
                        (cond
@@ -190,8 +204,18 @@
                       subsigs))
       (apply append types))
 
-    (define (extract-param-types signature)
+    (define (extract-lambda-param-types signature)
       (define params-list (cadr signature))
+      (extract-param-types params-list))
+
+    (define (extract-case-lambda-param-types signature)
+      (define params-list (apply append (map 
+                                          (lambda (case)
+                                            (car case))
+                                          (cdr signature))))
+      (extract-param-types params-list))
+
+    (define (extract-param-types params-list)
       (define lst* (map
                      (lambda (param)
                        (cond
@@ -226,10 +250,14 @@
          (apply append (map parse-type-from-return (cdr value))))
         (else (list))))
 
-    (define (extract-return-types signature)
-      (when (< (length signature) 3)
-        (error (string-append "Bad signature: " (write* signature))))
+    (define (extract-lambda-return-types signature)
       (parse-type-from-return (caddr signature)))
+
+    (define (extract-case-lambda-return-types signature)
+      (apply append (map
+                      (lambda (case)
+                        (parse-type-from-return (cadr case)))
+                      (cdr signature))))
 
     (define (make-type-maps specs)
       (define (make-entries strict)

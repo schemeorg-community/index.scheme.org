@@ -23,8 +23,9 @@
  ((name . "acos") (signature lambda ((number? z)) number?) (tags pure))
  ((name . "and") (signature syntax-rules () ((_ test1 ...))))
  ((name . "angle") (signature lambda ((complex? z)) real?) (tags pure))
- ((name . "append") (signature lambda ((list? list) ...) list?) (tags pure))
- ((name . "append") (signature lambda ((list? list) ... obj) *) (tags pure))
+ ((name . "append")
+  (signature case-lambda (((list? list) ...) list?) (((list? list) ... obj) *))
+  (tags pure))
  ((name . "apply")
   (signature lambda ((procedure? proc) arg1 ... (list? args)) *)
   (tags pure))
@@ -284,9 +285,11 @@
   (signature lambda (obj) boolean?)
   (tags pure predicate)
   (supertypes pair? null?))
- ((name . "log") (signature lambda ((number? z)) number?) (tags pure))
  ((name . "log")
-  (signature lambda ((number? z1) (number? z2)) number?)
+  (signature
+   case-lambda
+   (((number? z)) number?)
+   (((number? z1) (number? z2)) number?))
   (tags pure))
  ((name . "magnitude") (signature lambda ((complex? z)) real?) (tags pure))
  ((name . "make-polar")
@@ -295,13 +298,17 @@
  ((name . "make-rectangular")
   (signature lambda ((real? x1) (real? x2)) complex?)
   (tags pure))
- ((name . "make-string") (signature lambda ((integer? k)) string?))
  ((name . "make-string")
-  (signature lambda ((integer? k) (char? char)) string?)
+  (signature
+   case-lambda
+   (((integer? k)) string?)
+   (((integer? k) (char? char)) string?))
   (tags pure))
- ((name . "make-vector") (signature lambda ((integer? k)) vector?))
  ((name . "make-vector")
-  (signature lambda ((integer? k) fill) vector?)
+  (signature
+   case-lambda
+   (((integer? k)) vector?)
+   (((integer? k) fill) vector?))
   (tags pure))
  ((name . "map")
   (signature lambda ((procedure? proc) (list? list1) (list? list2) ...) list?)
@@ -320,10 +327,10 @@
  ((name . "not") (signature lambda (obj) boolean?) (tags pure))
  ((name . "null?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "number->string")
-  (signature lambda ((number? z)) string?)
-  (tags pure))
- ((name . "number->string")
-  (signature lambda ((number? z) (integer? radix)) string?)
+  (signature
+   case-lambda
+   (((number? z)) string?)
+   (((number? z) (integer? radix)) string?))
   (tags pure))
  ((name . "number?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "numerator") (signature lambda ((rational? q)) integer?) (tags pure))
@@ -358,19 +365,17 @@
  ((name . "sqrt") (signature lambda ((number? z)) number?) (tags pure))
  ((name . "string") (signature lambda ((char? char) ...) string?) (tags pure))
  ((name . "string->list")
-  (signature lambda ((string? string)) list?)
-  (tags pure))
- ((name . "string->list")
-  (signature lambda ((string? string) (integer? start)) list?)
-  (tags pure))
- ((name . "string->list")
-  (signature lambda ((string? string) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((string? string)) list?)
+   (((string? string) (integer? start)) list?)
+   (((string? string) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "string->number")
-  (signature lambda ((string? string)) number?)
-  (tags pure))
- ((name . "string->number")
-  (signature lambda ((string? string) (integer? radix)) number?)
+  (signature
+   case-lambda
+   (((string? string)) number?)
+   (((string? string) (integer? radix)) number?))
   (tags pure))
  ((name . "string->symbol")
   (signature lambda ((string? string)) symbol?)
@@ -379,13 +384,11 @@
   (signature lambda ((string? string) ...) string?)
   (tags pure))
  ((name . "string-copy")
-  (signature lambda ((string? string)) string?)
-  (tags pure))
- ((name . "string-copy")
-  (signature lambda ((string? string) (integer? start)) string?)
-  (tags pure))
- ((name . "string-copy")
-  (signature lambda ((string? string) (integer? start) (integer? end)) string?)
+  (signature
+   case-lambda
+   (((string? string)) string?)
+   (((string? string) (integer? start)) string?)
+   (((string? string) (integer? start) (integer? end)) string?))
   (tags pure))
  ((name . "string-for-each")
   (signature
@@ -480,22 +483,18 @@
  ((name . "values") (signature lambda (obj ...) (values * ...)) (tags pure))
  ((name . "vector") (signature lambda (obj ...) vector?) (tags pure))
  ((name . "vector->list")
-  (signature lambda ((vector? vector)) list?)
+  (signature
+   case-lambda
+   (((vector? vector)) list?)
+   (((vector? vector) (integer? start)) list?)
+   (((vector? vector) (integer? start) (integer? end)) list?))
   (tags pure))
- ((name . "vector->list")
-  (signature lambda ((vector? vector) (integer? start)) list?)
-  (tags pure))
- ((name . "vector->list")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) list?)
-  (tags pure))
- ((name . "vector-fill!") (signature lambda ((vector? vector) fill) undefined))
- ((name . "vector-fill!")
-  (signature lambda ((vector? vector) fill (integer? start)) undefined))
  ((name . "vector-fill!")
   (signature
-   lambda
-   ((vector? vector) fill (integer? start) (integer? end))
-   undefined))
+   case-lambda
+   (((vector? vector) fill) undefined)
+   (((vector? vector) fill (integer? start)) undefined)
+   (((vector? vector) fill (integer? start) (integer? end)) undefined)))
  ((name . "vector-for-each")
   (signature
    lambda

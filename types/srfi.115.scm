@@ -108,159 +108,102 @@
  ((name . "valid-sre?") (signature lambda (obj) boolean?) (tags pure))
  ((name . "regexp?") (signature lambda (obj) boolean?) (tags predicate pure))
  ((name . "regexp-matches")
-  (signature lambda (re (string? str)) (or regexp-match? #f))
-  (tags pure))
- ((name . "regexp-matches")
-  (signature lambda (re (string? str) (integer? start)) (or regexp-match? #f))
-  (tags pure))
- ((name . "regexp-matches")
   (signature
-   lambda
-   (re (string? str) (integer? start) (integer? end))
-   (or regexp-match? #f))
-  (tags pure))
- ((name . "regexp-matches?")
-  (signature lambda (re (string? str)) boolean?)
-  (tags pure))
- ((name . "regexp-matches?")
-  (signature lambda (re (string? str) (integer? start)) boolean?)
+   case-lambda
+   ((re (string? str)) (or regexp-match? #f))
+   ((re (string? str) (integer? start)) (or regexp-match? #f))
+   ((re (string? str) (integer? start) (integer? end)) (or regexp-match? #f)))
   (tags pure))
  ((name . "regexp-matches?")
   (signature
-   lambda
-   (re (string? str) (integer? start) (integer? end))
-   boolean?)
-  (tags pure))
- ((name . "regexp-search")
-  (signature lambda (re (string? str)) (or regexp-match? #f))
-  (tags pure))
- ((name . "regexp-search")
-  (signature lambda (re (string? str) (integer? start)) (or regexp-match? #f))
+   case-lambda
+   ((re (string? str)) boolean?)
+   ((re (string? str) (integer? start)) boolean?)
+   ((re (string? str) (integer? start) (integer? end)) boolean?))
   (tags pure))
  ((name . "regexp-search")
   (signature
-   lambda
-   (re (string? str) (integer? start) (integer? end))
-   (or regexp-match? #f))
-  (tags pure))
- ((name . "regexp-fold")
-  (signature lambda (re (procedure? kons) knil (string? str)) *)
-  (subsigs
-   (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *)))
+   case-lambda
+   ((re (string? str)) (or regexp-match? #f))
+   ((re (string? str) (integer? start)) (or regexp-match? #f))
+   ((re (string? str) (integer? start) (integer? end)) (or regexp-match? #f)))
   (tags pure))
  ((name . "regexp-fold")
   (signature
-   lambda
-   (re (procedure? kons) knil (string? str) (procedure? finish))
-   *)
-  (subsigs
-   (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
-   (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
-  (tags pure))
- ((name . "regexp-fold")
-  (signature
-   lambda
-   (re
-    (procedure? kons)
-    knil
-    (string? str)
-    (procedure? finish)
-    (integer? start))
-   *)
-  (subsigs
-   (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
-   (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
-  (tags pure))
- ((name . "regexp-fold")
-  (signature
-   lambda
-   (re
-    (procedure? kons)
-    knil
-    (string? str)
-    (procedure? finish)
-    (integer? start)
-    (integer? end))
-   *)
+   case-lambda
+   ((re (procedure? kons) knil (string? str)) *)
+   ((re (procedure? kons) knil (string? str) (procedure? finish)) *)
+   ((re
+     (procedure? kons)
+     knil
+     (string? str)
+     (procedure? finish)
+     (integer? start))
+    *)
+   ((re
+     (procedure? kons)
+     knil
+     (string? str)
+     (procedure? finish)
+     (integer? start)
+     (integer? end))
+    *))
   (subsigs
    (kons (lambda ((integer? i) (regexp-match? match) (string? str) acc) *))
    (finish (lambda ((integer? i) (#f match) (string? str) acc) *)))
   (tags pure))
  ((name . "regexp-extract")
-  (signature lambda (re (string? str)) list?)
-  (tags pure))
- ((name . "regexp-extract")
-  (signature lambda (re (string? str) (integer? start)) list?)
-  (tags pure))
- ((name . "regexp-extract")
-  (signature lambda (re (string? str) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   ((re (string? str)) list?)
+   ((re (string? str) (integer? start)) list?)
+   ((re (string? str) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "regexp-split")
-  (signature lambda (re (string? str)) list?)
-  (tags pure))
- ((name . "regexp-split")
-  (signature lambda (re (string? str) (integer? start)) list?)
-  (tags pure))
- ((name . "regexp-split")
-  (signature lambda (re (string? str) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   ((re (string? str)) list?)
+   ((re (string? str) (integer? start)) list?)
+   ((re (string? str) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "regexp-partition")
-  (signature lambda (re (string? str)) list?)
-  (tags pure))
- ((name . "regexp-partition")
-  (signature lambda (re (string? str) (integer? start)) list?)
-  (tags pure))
- ((name . "regexp-partition")
-  (signature lambda (re (string? str) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   ((re (string? str)) list?)
+   ((re (string? str) (integer? start)) list?)
+   ((re (string? str) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "regexp-replace")
   (signature
-   lambda
-   (re (string? str) ((or string? integer? symbol?) subst))
-   string?)
-  (tags pure))
- ((name . "regexp-replace")
-  (signature
-   lambda
-   (re (string? str) ((or string? integer? symbol?) subst) (integer? start))
-   string?)
-  (tags pure))
- ((name . "regexp-replace")
-  (signature
-   lambda
-   (re
-    (string? str)
-    ((or string? integer? symbol?) subst)
-    (integer? start)
-    (integer? end))
-   string?)
-  (tags pure))
- ((name . "regexp-replace")
-  (signature
-   lambda
-   (re
-    (string? str)
-    ((or string? integer? symbol?) subst)
-    (integer? start)
-    (integer? end)
-    (integer? count))
-   string?)
+   case-lambda
+   ((re (string? str) ((or string? integer? symbol?) subst)) string?)
+   ((re (string? str) ((or string? integer? symbol?) subst) (integer? start))
+    string?)
+   ((re
+     (string? str)
+     ((or string? integer? symbol?) subst)
+     (integer? start)
+     (integer? end))
+    string?)
+   ((re
+     (string? str)
+     ((or string? integer? symbol?) subst)
+     (integer? start)
+     (integer? end)
+     (integer? count))
+    string?))
   (tags pure))
  ((name . "regexp-replace-all")
   (signature
-   lambda
-   (re (string? str) ((or string? integer? symbol?) subst) (integer? start))
-   string?)
-  (tags pure))
- ((name . "regexp-replace-all")
-  (signature
-   lambda
-   (re
-    (string? str)
-    ((or string? integer? symbol?) subst)
-    (integer? start)
-    (integer? end))
-   string?)
+   case-lambda
+   ((re (string? str) ((or string? integer? symbol?) subst) (integer? start))
+    string?)
+   ((re
+     (string? str)
+     ((or string? integer? symbol?) subst)
+     (integer? start)
+     (integer? end))
+    string?))
   (tags pure))
  ((name . "regexp-match?")
   (signature lambda (obj) boolean?)

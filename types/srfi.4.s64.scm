@@ -1,9 +1,11 @@
 (((name . "s64vector?")
   (signature lambda (obj) boolean?)
   (tags pure predicate))
- ((name . "make-s64vector") (signature lambda ((integer? size)) s64vector?))
  ((name . "make-s64vector")
-  (signature lambda ((integer? size) (integer? fill)) s64vector?)
+  (signature
+   case-lambda
+   (((integer? size)) s64vector?)
+   (((integer? size) (integer? fill)) s64vector?))
   (tags pure))
  ((name . "s64vector-length")
   (signature lambda ((s64vector? vec)) integer?)

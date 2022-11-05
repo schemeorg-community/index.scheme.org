@@ -82,10 +82,10 @@
   (subsigs (pred (lambda (element) *)))
   (tags pure))
  ((name . "lseq-member")
-  (signature lambda (x (lseq? lseq)) (or #f lseq?))
-  (tags pure))
- ((name . "lseq-member")
-  (signature lambda (x (lseq? lseq) (procedure? =)) (or #f lseq?))
+  (signature
+   case-lambda
+   ((x (lseq? lseq)) (or #f lseq?))
+   ((x (lseq? lseq) (procedure? =)) (or #f lseq?)))
   (subsigs (= (lambda (a b) boolean?)))
   (tags pure))
  ((name . "lseq-memq")

@@ -159,10 +159,12 @@ function returnToString(r: FuncSignatureReturn): string {
 }
 
 function renderFunction(s: FuncSignature) {
-    const params = s.params.map(paramToString).join(' ');
-    const ret = returnToString(s['return']);
-    const str = `(lambda ${params}) => ${ret}`;
-    rl.write(str + EOL);
+    s.variants.forEach(v => {
+        const params = v.params.map(paramToString).join(' ');
+        const ret = returnToString(v['return']);
+        const str = `(lambda ${params}) => ${ret}`;
+        rl.write(str + EOL);
+    });
 }
 
 function renderSyntax(s: SyntaxSignature) {

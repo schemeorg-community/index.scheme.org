@@ -76,9 +76,11 @@
  ((name . "reverse-bit-field")
   (signature lambda ((integer? n) (integer? start) (integer? end)) integer?)
   (tags pure))
- ((name . "integer->list") (signature lambda ((integer? k)) list?) (tags pure))
  ((name . "integer->list")
-  (signature lambda ((integer? k) (integer? len)) list?)
+  (signature
+   case-lambda
+   (((integer? k)) list?)
+   (((integer? k) (integer? len)) list?))
   (tags pure))
  ((name . "list->integer")
   (signature lambda ((list? list)) integer?)

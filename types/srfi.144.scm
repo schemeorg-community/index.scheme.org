@@ -155,9 +155,11 @@
  ((name . "fltan") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flasin") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flacos") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "flatan") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flatan")
-  (signature lambda ((flonum? y) (flonum? x)) flonum?)
+  (signature
+   case-lambda
+   (((flonum? x)) flonum?)
+   (((flonum? y) (flonum? x)) flonum?))
   (tags pure))
  ((name . "flsinh") (signature lambda ((flonum? x)) flonum?) (tags pure))
  ((name . "flcosh") (signature lambda ((flonum? x)) flonum?) (tags pure))

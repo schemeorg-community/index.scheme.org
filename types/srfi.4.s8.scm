@@ -1,7 +1,9 @@
 (((name . "s8vector?") (signature lambda (obj) boolean?) (tags pure predicate))
- ((name . "make-s8vector") (signature lambda ((integer? size)) s8vector?))
  ((name . "make-s8vector")
-  (signature lambda ((integer? size) (integer? fill)) s8vector?)
+  (signature
+   case-lambda
+   (((integer? size)) s8vector?)
+   (((integer? size) (integer? fill)) s8vector?))
   (tags pure))
  ((name . "s8vector-length")
   (signature lambda ((s8vector? vec)) integer?)

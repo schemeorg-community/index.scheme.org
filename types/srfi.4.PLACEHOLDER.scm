@@ -1,7 +1,9 @@
 (((name . "@vector?") (signature lambda (obj) boolean?) (tags pure predicate))
- ((name . "make-@vector") (signature lambda ((integer? size)) @vector?))
  ((name . "make-@vector")
-  (signature lambda ((integer? size) (@?-ELTYPE fill)) @vector?)
+  (signature
+   case-lambda
+   (((integer? size)) @vector?)
+   (((integer? size) (@?-ELTYPE fill)) @vector?))
   (tags pure))
  ((name . "@vector-length")
   (signature lambda ((@vector? vec)) integer?)

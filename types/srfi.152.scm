@@ -1,39 +1,23 @@
 (((name . "string?")
-  (signature lambda (obj) boolean?)
-  (tags pure predicate)
-  (supertypes string?))
- ((name . "string?") (signature lambda (obj) boolean?) (tags pure predicate))
+  (signature case-lambda ((obj) boolean?) ((obj) boolean?))
+  (tags pure predicate))
  ((name . "string-null?")
   (signature lambda ((string? string)) boolean?)
   (tags pure))
  ((name . "string-every")
-  (signature lambda ((procedure? pred) (string? string)) *)
-  (subsigs (pred (lambda ((char? char)) *)))
-  (tags pure))
- ((name . "string-every")
-  (signature lambda ((procedure? pred) (string? string) (integer? start)) *)
-  (subsigs (pred (lambda ((char? char)) *)))
-  (tags pure))
- ((name . "string-every")
   (signature
-   lambda
-   ((procedure? pred) (string? string) (integer? start) (integer? end))
-   *)
-  (subsigs (pred (lambda ((char? char)) *)))
-  (tags pure))
- ((name . "string-any")
-  (signature lambda ((procedure? pred) (string? string)) *)
-  (subsigs (pred (lambda ((char? char)) *)))
-  (tags pure))
- ((name . "string-any")
-  (signature lambda ((procedure? pred) (string? string) (integer? start)) *)
+   case-lambda
+   (((procedure? pred) (string? string)) *)
+   (((procedure? pred) (string? string) (integer? start)) *)
+   (((procedure? pred) (string? string) (integer? start) (integer? end)) *))
   (subsigs (pred (lambda ((char? char)) *)))
   (tags pure))
  ((name . "string-any")
   (signature
-   lambda
-   ((procedure? pred) (string? string) (integer? start) (integer? end))
-   *)
+   case-lambda
+   (((procedure? pred) (string? string)) *)
+   (((procedure? pred) (string? string) (integer? start)) *)
+   (((procedure? pred) (string? string) (integer? start) (integer? end)) *))
   (subsigs (pred (lambda ((char? char)) *)))
   (tags pure))
  ((name . "make-string")
@@ -46,38 +30,22 @@
   (tags pure))
  ((name . "string-unfold")
   (signature
-   lambda
-   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
-   string?)
-  (subsigs
-   (stop? (lambda (seed) boolean?))
-   (mapper (lambda (seed) (or char? string?)))
-   (success (lambda (seed) *)))
-  (tags pure))
- ((name . "string-unfold")
-  (signature
-   lambda
-   ((procedure? stop?)
-    (procedure? mapper)
-    (procedure? successor)
-    seed
-    (string? base))
-   string?)
-  (subsigs
-   (stop? (lambda (seed) boolean?))
-   (mapper (lambda (seed) (or char? string?)))
-   (success (lambda (seed) *)))
-  (tags pure))
- ((name . "string-unfold")
-  (signature
-   lambda
-   ((procedure? stop?)
-    (procedure? mapper)
-    (procedure? successor)
-    seed
-    (string? base)
-    (procedure? make-final))
-   string?)
+   case-lambda
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+    string?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
+     seed
+     (string? base))
+    string?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
+     seed
+     (string? base)
+     (procedure? make-final))
+    string?))
   (subsigs
    (stop? (lambda (seed) boolean?))
    (mapper (lambda (seed) (or char? string?)))
@@ -86,38 +54,22 @@
   (tags pure))
  ((name . "string-unfold-right")
   (signature
-   lambda
-   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
-   string?)
-  (subsigs
-   (stop? (lambda (seed) boolean?))
-   (mapper (lambda (seed) (or char? string?)))
-   (success (lambda (seed) *)))
-  (tags pure))
- ((name . "string-unfold-right")
-  (signature
-   lambda
-   ((procedure? stop?)
-    (procedure? mapper)
-    (procedure? successor)
-    seed
-    (string? base))
-   string?)
-  (subsigs
-   (stop? (lambda (seed) boolean?))
-   (mapper (lambda (seed) (or char? string?)))
-   (success (lambda (seed) *)))
-  (tags pure))
- ((name . "string-unfold-right")
-  (signature
-   lambda
-   ((procedure? stop?)
-    (procedure? mapper)
-    (procedure? successor)
-    seed
-    (string? base)
-    (procedure? make-final))
-   string?)
+   case-lambda
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+    string?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
+     seed
+     (string? base))
+    string?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
+     seed
+     (string? base)
+     (procedure? make-final))
+    string?))
   (subsigs
    (stop? (lambda (seed) boolean?))
    (mapper (lambda (seed) (or char? string?)))
@@ -125,31 +77,25 @@
    (make-final (lambda (seed) (or char? string?))))
   (tags pure))
  ((name . "string->vector")
-  (signature lambda ((string? string)) vector?)
-  (tags pure))
- ((name . "string->vector")
-  (signature lambda ((string? string) (integer? start)) vector?)
-  (tags pure))
- ((name . "string->vector")
-  (signature lambda ((string? string) (integer? start) (integer? end)) vector?)
+  (signature
+   case-lambda
+   (((string? string)) vector?)
+   (((string? string) (integer? start)) vector?)
+   (((string? string) (integer? start) (integer? end)) vector?))
   (tags pure))
  ((name . "string->list")
-  (signature lambda ((string? string)) list?)
-  (tags pure))
- ((name . "string->list")
-  (signature lambda ((string? string) (integer? start)) list?)
-  (tags pure))
- ((name . "string->list")
-  (signature lambda ((string? string) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((string? string)) list?)
+   (((string? string) (integer? start)) list?)
+   (((string? string) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "vector->string")
-  (signature lambda ((vector? vector)) string?)
-  (tags pure))
- ((name . "vector->string")
-  (signature lambda ((vector? vector) (integer? start)) string?)
-  (tags pure))
- ((name . "vector->string")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) string?)
+  (signature
+   case-lambda
+   (((vector? vector)) string?)
+   (((vector? vector) (integer? start)) string?)
+   (((vector? vector) (integer? start) (integer? end)) string?))
   (tags pure))
  ((name . "list->string")
   (signature lambda ((list? list)) string?)
@@ -167,13 +113,11 @@
   (signature lambda ((string? string) (integer? start) (integer? end)) string?)
   (tags pure))
  ((name . "string-copy")
-  (signature lambda ((string? string)) string?)
-  (tags pure))
- ((name . "string-copy")
-  (signature lambda ((string? string) (integer? start)) string?)
-  (tags pure))
- ((name . "string-copy")
-  (signature lambda ((string? string) (integer? start) (integer? end)) string?)
+  (signature
+   case-lambda
+   (((string? string)) string?)
+   (((string? string) (integer? start)) string?)
+   (((string? string) (integer? start) (integer? end)) string?))
   (tags pure))
  ((name . "string-take")
   (signature lambda ((string? string) (integer? nchars)) string?)
@@ -188,138 +132,79 @@
   (signature lambda ((string? string) (integer? nchars)) string?)
   (tags pure))
  ((name . "string-pad")
-  (signature lambda ((string? string) (integer? len)) string?)
-  (tags pure))
- ((name . "string-pad")
-  (signature lambda ((string? string) (integer? len) (char? char)) string?)
-  (tags pure))
- ((name . "string-pad")
   (signature
-   lambda
-   ((string? string) (integer? len) (char? char) (integer? start))
-   string?)
-  (tags pure))
- ((name . "string-pad")
-  (signature
-   lambda
-   ((string? string)
-    (integer? len)
-    (char? char)
-    (integer? start)
-    (integer? end))
-   string?)
-  (tags pure))
- ((name . "string-pad-right")
-  (signature lambda ((string? string) (integer? len)) string?)
-  (tags pure))
- ((name . "string-pad-right")
-  (signature lambda ((string? string) (integer? len) (char? char)) string?)
+   case-lambda
+   (((string? string) (integer? len)) string?)
+   (((string? string) (integer? len) (char? char)) string?)
+   (((string? string) (integer? len) (char? char) (integer? start)) string?)
+   (((string? string)
+     (integer? len)
+     (char? char)
+     (integer? start)
+     (integer? end))
+    string?))
   (tags pure))
  ((name . "string-pad-right")
   (signature
-   lambda
-   ((string? string) (integer? len) (char? char) (integer? start))
-   string?)
-  (tags pure))
- ((name . "string-pad-right")
-  (signature
-   lambda
-   ((string? string)
-    (integer? len)
-    (char? char)
-    (integer? start)
-    (integer? end))
-   string?)
-  (tags pure))
- ((name . "string-trim")
-  (signature lambda ((string? string)) string?)
-  (tags pure))
- ((name . "string-trim")
-  (signature lambda ((string? string) (procedure? pred)) string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
+   case-lambda
+   (((string? string) (integer? len)) string?)
+   (((string? string) (integer? len) (char? char)) string?)
+   (((string? string) (integer? len) (char? char) (integer? start)) string?)
+   (((string? string)
+     (integer? len)
+     (char? char)
+     (integer? start)
+     (integer? end))
+    string?))
   (tags pure))
  ((name . "string-trim")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-trim")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-trim-right")
-  (signature lambda ((string? string)) string?)
-  (tags pure))
- ((name . "string-trim-right")
-  (signature lambda ((string? string) (procedure? pred)) string?)
+   case-lambda
+   (((string? string)) string?)
+   (((string? string) (procedure? pred)) string?)
+   (((string? string) (procedure? pred) (integer? start)) string?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-trim-right")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-trim-right")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-trim-both")
-  (signature lambda ((string? string)) string?)
-  (tags pure))
- ((name . "string-trim-both")
-  (signature lambda ((string? string) (procedure? pred)) string?)
+   case-lambda
+   (((string? string)) string?)
+   (((string? string) (procedure? pred)) string?)
+   (((string? string) (procedure? pred) (integer? start)) string?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-trim-both")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-trim-both")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   string?)
+   case-lambda
+   (((string? string)) string?)
+   (((string? string) (procedure? pred)) string?)
+   (((string? string) (procedure? pred) (integer? start)) string?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-replace")
   (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1) (integer? end1))
-   string?)
-  (tags pure))
- ((name . "string-replace")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2))
-   string?)
-  (tags pure))
- ((name . "string-replace")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2)
-    (integer? end2))
-   string?)
+   case-lambda
+   (((string? string1) (string? string2) (integer? start1) (integer? end1))
+    string?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2))
+    string?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2)
+     (integer? end2))
+    string?))
   (tags pure))
  ((name . "string=?")
   (signature
@@ -382,405 +267,221 @@
    boolean?)
   (tags pure))
  ((name . "string-prefix-length")
-  (signature lambda ((string? string1) (string? string2)) integer?)
-  (tags pure))
- ((name . "string-prefix-length")
   (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1))
-   integer?)
-  (tags pure))
- ((name . "string-prefix-length")
-  (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1) (integer? end1))
-   integer?)
-  (tags pure))
- ((name . "string-prefix-length")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2))
-   integer?)
-  (tags pure))
- ((name . "string-prefix-length")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2)
-    (integer? end2))
-   integer?)
-  (tags pure))
- ((name . "string-suffix-length")
-  (signature lambda ((string? string1) (string? string2)) integer?)
+   case-lambda
+   (((string? string1) (string? string2)) integer?)
+   (((string? string1) (string? string2) (integer? start1)) integer?)
+   (((string? string1) (string? string2) (integer? start1) (integer? end1))
+    integer?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2))
+    integer?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2)
+     (integer? end2))
+    integer?))
   (tags pure))
  ((name . "string-suffix-length")
   (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1))
-   integer?)
-  (tags pure))
- ((name . "string-suffix-length")
-  (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1) (integer? end1))
-   integer?)
-  (tags pure))
- ((name . "string-suffix-length")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2))
-   integer?)
-  (tags pure))
- ((name . "string-suffix-length")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2)
-    (integer? end2))
-   integer?)
-  (tags pure))
- ((name . "string-prefix?")
-  (signature lambda ((string? string1) (string? string2)) boolean?)
+   case-lambda
+   (((string? string1) (string? string2)) integer?)
+   (((string? string1) (string? string2) (integer? start1)) integer?)
+   (((string? string1) (string? string2) (integer? start1) (integer? end1))
+    integer?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2))
+    integer?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2)
+     (integer? end2))
+    integer?))
   (tags pure))
  ((name . "string-prefix?")
   (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1))
-   boolean?)
-  (tags pure))
- ((name . "string-prefix?")
-  (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1) (integer? end1))
-   boolean?)
-  (tags pure))
- ((name . "string-prefix?")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2))
-   boolean?)
-  (tags pure))
- ((name . "string-prefix?")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2)
-    (integer? end2))
-   boolean?)
-  (tags pure))
- ((name . "string-suffix?")
-  (signature lambda ((string? string1) (string? string2)) boolean?)
+   case-lambda
+   (((string? string1) (string? string2)) boolean?)
+   (((string? string1) (string? string2) (integer? start1)) boolean?)
+   (((string? string1) (string? string2) (integer? start1) (integer? end1))
+    boolean?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2))
+    boolean?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2)
+     (integer? end2))
+    boolean?))
   (tags pure))
  ((name . "string-suffix?")
   (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1))
-   boolean?)
-  (tags pure))
- ((name . "string-suffix?")
-  (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1) (integer? end1))
-   boolean?)
-  (tags pure))
- ((name . "string-suffix?")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2))
-   boolean?)
-  (tags pure))
- ((name . "string-suffix?")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2)
-    (integer? end2))
-   boolean?)
-  (tags pure))
- ((name . "string-index")
-  (signature lambda ((string? string) (procedure? pred)) (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
+   case-lambda
+   (((string? string1) (string? string2)) boolean?)
+   (((string? string1) (string? string2) (integer? start1)) boolean?)
+   (((string? string1) (string? string2) (integer? start1) (integer? end1))
+    boolean?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2))
+    boolean?)
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2)
+     (integer? end2))
+    boolean?))
   (tags pure))
  ((name . "string-index")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-index")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-index-right")
-  (signature lambda ((string? string) (procedure? pred)) (or #f integer?))
+   case-lambda
+   (((string? string) (procedure? pred)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    (or #f integer?)))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-index-right")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-index-right")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-skip")
-  (signature lambda ((string? string) (procedure? pred)) (or #f integer?))
+   case-lambda
+   (((string? string) (procedure? pred)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    (or #f integer?)))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-skip")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-skip")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-skip-right")
-  (signature lambda ((string? string) (procedure? pred)) (or #f integer?))
+   case-lambda
+   (((string? string) (procedure? pred)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    (or #f integer?)))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-skip-right")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   (or #f integer?))
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-skip-right")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   (or #f integer?))
+   case-lambda
+   (((string? string) (procedure? pred)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start)) (or #f integer?))
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    (or #f integer?)))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-contains")
-  (signature lambda ((string? string1) (string? string2)) (or #f integer?))
-  (tags pure))
- ((name . "string-contains")
   (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-contains")
-  (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1) (integer? end1))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-contains")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-contains")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2)
-    (integer? end2))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-contains-right")
-  (signature lambda ((string? string1) (string? string2)) (or #f integer?))
+   case-lambda
+   (((string? string1) (string? string2)) (or #f integer?))
+   (((string? string1) (string? string2) (integer? start1)) (or #f integer?))
+   (((string? string1) (string? string2) (integer? start1) (integer? end1))
+    (or #f integer?))
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2))
+    (or #f integer?))
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2)
+     (integer? end2))
+    (or #f integer?)))
   (tags pure))
  ((name . "string-contains-right")
   (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-contains-right")
-  (signature
-   lambda
-   ((string? string1) (string? string2) (integer? start1) (integer? end1))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-contains-right")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-contains-right")
-  (signature
-   lambda
-   ((string? string1)
-    (string? string2)
-    (integer? start1)
-    (integer? end1)
-    (integer? start2)
-    (integer? end2))
-   (or #f integer?))
-  (tags pure))
- ((name . "string-take-while")
-  (signature lambda ((string? string) (procedure? pred)) string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
+   case-lambda
+   (((string? string1) (string? string2)) (or #f integer?))
+   (((string? string1) (string? string2) (integer? start1)) (or #f integer?))
+   (((string? string1) (string? string2) (integer? start1) (integer? end1))
+    (or #f integer?))
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2))
+    (or #f integer?))
+   (((string? string1)
+     (string? string2)
+     (integer? start1)
+     (integer? end1)
+     (integer? start2)
+     (integer? end2))
+    (or #f integer?)))
   (tags pure))
  ((name . "string-take-while")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-take-while")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-take-while-right")
-  (signature lambda ((string? string) (procedure? pred)) string?)
+   case-lambda
+   (((string? string) (procedure? pred)) string?)
+   (((string? string) (procedure? pred) (integer? start)) string?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? c)) boolean?)))
   (tags pure))
  ((name . "string-take-while-right")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-take-while-right")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-drop-while")
-  (signature lambda ((string? string) (procedure? pred)) string?)
+   case-lambda
+   (((string? string) (procedure? pred)) string?)
+   (((string? string) (procedure? pred) (integer? start)) string?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? c)) boolean?)))
   (tags pure))
  ((name . "string-drop-while")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-drop-while")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-drop-while-right")
-  (signature lambda ((string? string) (procedure? pred)) string?)
+   case-lambda
+   (((string? string) (procedure? pred)) string?)
+   (((string? string) (procedure? pred) (integer? start)) string?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? c)) boolean?)))
   (tags pure))
  ((name . "string-drop-while-right")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-drop-while-right")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   string?)
+   case-lambda
+   (((string? string) (procedure? pred)) string?)
+   (((string? string) (procedure? pred) (integer? start)) string?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? c)) boolean?)))
   (tags pure))
  ((name . "string-span")
   (signature
-   lambda
-   ((string? string) (procedure? pred))
-   (values string? string))
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-span")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   (values string? string))
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-span")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   (values string? string))
+   case-lambda
+   (((string? string) (procedure? pred)) (values string? string))
+   (((string? string) (procedure? pred) (integer? start))
+    (values string? string))
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    (values string? string)))
   (subsigs (pred (lambda ((char? c)) boolean?)))
   (tags pure))
  ((name . "string-break")
   (signature
-   lambda
-   ((string? string) (procedure? pred))
-   (values string? string))
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-break")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   (values string? string))
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "string-break")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   (values string? string))
+   case-lambda
+   (((string? string) (procedure? pred)) (values string? string))
+   (((string? string) (procedure? pred) (integer? start))
+    (values string? string))
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    (values string? string)))
   (subsigs (pred (lambda ((char? c)) boolean?)))
   (tags pure))
  ((name . "string-append")
@@ -790,28 +491,18 @@
   (signature lambda ((list? string-list)) string?)
   (tags pure))
  ((name . "string-concatenate-reverse")
-  (signature lambda ((list? string-list)) string?)
-  (tags pure))
- ((name . "string-concatenate-reverse")
-  (signature lambda ((list? string-list) (string? final-string)) string?)
-  (tags pure))
- ((name . "string-concatenate-reverse")
   (signature
-   lambda
-   ((list? string-list) (string? final-string) (integer? end))
-   string?)
-  (tags pure))
- ((name . "string-join")
-  (signature lambda ((list? string-list)) string?)
-  (tags pure))
- ((name . "string-join")
-  (signature lambda ((list? string-list) (string? delimiter)) string?)
+   case-lambda
+   (((list? string-list)) string?)
+   (((list? string-list) (string? final-string)) string?)
+   (((list? string-list) (string? final-string) (integer? end)) string?))
   (tags pure))
  ((name . "string-join")
   (signature
-   lambda
-   ((list? string-list) (string? delimiter) (symbol? grammar))
-   string?)
+   case-lambda
+   (((list? string-list)) string?)
+   (((list? string-list) (string? delimiter)) string?)
+   (((list? string-list) (string? delimiter) (symbol? grammar)) string?))
   (tags pure)
   (spec-values
    (grammar
@@ -824,39 +515,21 @@
     ("'prefix"
      "prefix grammar: insert the delimiter before every list element."))))
  ((name . "string-fold")
-  (signature lambda ((procedure? kons) knil (string? string)) *)
-  (subsigs (kons (lambda ((char? char) state) *)))
-  (tags pure))
- ((name . "string-fold")
   (signature
-   lambda
-   ((procedure? kons) knil (string? string) (integer? start))
-   *)
-  (subsigs (kons (lambda ((char? char) state) *)))
-  (tags pure))
- ((name . "string-fold")
-  (signature
-   lambda
-   ((procedure? kons) knil (string? string) (integer? start) (integer? end))
-   *)
-  (subsigs (kons (lambda ((char? char) state) *)))
-  (tags pure))
- ((name . "string-fold-right")
-  (signature lambda ((procedure? kons) knil (string? string)) *)
+   case-lambda
+   (((procedure? kons) knil (string? string)) *)
+   (((procedure? kons) knil (string? string) (integer? start)) *)
+   (((procedure? kons) knil (string? string) (integer? start) (integer? end))
+    *))
   (subsigs (kons (lambda ((char? char) state) *)))
   (tags pure))
  ((name . "string-fold-right")
   (signature
-   lambda
-   ((procedure? kons) knil (string? string) (integer? start))
-   *)
-  (subsigs (kons (lambda ((char? char) state) *)))
-  (tags pure))
- ((name . "string-fold-right")
-  (signature
-   lambda
-   ((procedure? kons) knil (string? string) (integer? start) (integer? end))
-   *)
+   case-lambda
+   (((procedure? kons) knil (string? string)) *)
+   (((procedure? kons) knil (string? string) (integer? start)) *)
+   (((procedure? kons) knil (string? string) (integer? start) (integer? end))
+    *))
   (subsigs (kons (lambda ((char? char) state) *)))
   (tags pure))
  ((name . "string-map")
@@ -874,137 +547,70 @@
    undefined)
   (subsigs (proc (lambda ((char? char1) (char? char2) ...) undefined))))
  ((name . "string-count")
-  (signature lambda ((string? string) (procedure? pred)) integer?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-count")
   (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start))
-   integer?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-count")
-  (signature
-   lambda
-   ((string? string) (procedure? pred) (integer? start) (integer? end))
-   integer?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-filter")
-  (signature lambda ((procedure? pred) (string? string)) string?)
+   case-lambda
+   (((string? string) (procedure? pred)) integer?)
+   (((string? string) (procedure? pred) (integer? start)) integer?)
+   (((string? string) (procedure? pred) (integer? start) (integer? end))
+    integer?))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-filter")
   (signature
-   lambda
-   ((procedure? pred) (string? string) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-filter")
-  (signature
-   lambda
-   ((procedure? pred) (string? string) (integer? start) (integer? end))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-remove")
-  (signature lambda ((procedure? pred) (string? string)) string?)
+   case-lambda
+   (((procedure? pred) (string? string)) string?)
+   (((procedure? pred) (string? string) (integer? start)) string?)
+   (((procedure? pred) (string? string) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-remove")
   (signature
-   lambda
-   ((procedure? pred) (string? string) (integer? start))
-   string?)
-  (subsigs (pred (lambda ((char? char)) boolean?)))
-  (tags pure))
- ((name . "string-remove")
-  (signature
-   lambda
-   ((procedure? pred) (string? string) (integer? start) (integer? end))
-   string?)
+   case-lambda
+   (((procedure? pred) (string? string)) string?)
+   (((procedure? pred) (string? string) (integer? start)) string?)
+   (((procedure? pred) (string? string) (integer? start) (integer? end))
+    string?))
   (subsigs (pred (lambda ((char? char)) boolean?)))
   (tags pure))
  ((name . "string-replicate")
-  (signature lambda ((string? string) (integer? from) (integer? to)) string?)
-  (tags pure))
- ((name . "string-replicate")
   (signature
-   lambda
-   ((string? string) (integer? from) (integer? to) (integer? start))
-   string?)
-  (tags pure))
- ((name . "string-replicate")
-  (signature
-   lambda
-   ((string? string)
-    (integer? from)
-    (integer? to)
-    (integer? start)
-    (integer? end))
-   string?)
+   case-lambda
+   (((string? string) (integer? from) (integer? to)) string?)
+   (((string? string) (integer? from) (integer? to) (integer? start)) string?)
+   (((string? string)
+     (integer? from)
+     (integer? to)
+     (integer? start)
+     (integer? end))
+    string?))
   (tags pure))
  ((name . "string-segment")
   (signature lambda ((string? string) (integer? k)) list?)
   (tags pure))
  ((name . "string-split")
-  (signature lambda ((string? string) (string? delimiter)) list?)
-  (tags pure))
- ((name . "string-split")
   (signature
-   lambda
-   ((string? string) (string? delimiter) (symbol? grammar))
-   list?)
-  (tags pure)
-  (spec-values
-   (grammar
-    ("'infix" "empty string produces empty list")
-    ("'strict-infix" "empty string signals an error")
-    ("'suffix" "leading empty string is suppressed")
-    ("'prefix" "trailing empty string is suppressed"))))
- ((name . "string-split")
-  (signature
-   lambda
-   ((string? string)
-    (string? delimiter)
-    (symbol? grammar)
-    ((or #f integer?) limit))
-   list?)
-  (tags pure)
-  (spec-values
-   (grammar
-    ("'infix" "empty string produces empty list")
-    ("'strict-infix" "empty string signals an error")
-    ("'suffix" "leading empty string is suppressed")
-    ("'prefix" "trailing empty string is suppressed"))))
- ((name . "string-split")
-  (signature
-   lambda
-   ((string? string)
-    (string? delimiter)
-    (symbol? grammar)
-    ((or #f integer?) limit)
-    (integer? start))
-   list?)
-  (tags pure)
-  (spec-values
-   (grammar
-    ("'infix" "empty string produces empty list")
-    ("'strict-infix" "empty string signals an error")
-    ("'suffix" "leading empty string is suppressed")
-    ("'prefix" "trailing empty string is suppressed"))))
- ((name . "string-split")
-  (signature
-   lambda
-   ((string? string)
-    (string? delimiter)
-    (symbol? grammar)
-    ((or #f integer?) limit)
-    (integer? start)
-    (integer? end))
-   list?)
+   case-lambda
+   (((string? string) (string? delimiter)) list?)
+   (((string? string) (string? delimiter) (symbol? grammar)) list?)
+   (((string? string)
+     (string? delimiter)
+     (symbol? grammar)
+     ((or #f integer?) limit))
+    list?)
+   (((string? string)
+     (string? delimiter)
+     (symbol? grammar)
+     ((or #f integer?) limit)
+     (integer? start))
+    list?)
+   (((string? string)
+     (string? delimiter)
+     (symbol? grammar)
+     ((or #f integer?) limit)
+     (integer? start)
+     (integer? end))
+    list?))
   (tags pure)
   (spec-values
    (grammar
@@ -1013,51 +619,31 @@
     ("'suffix" "leading empty string is suppressed")
     ("'prefix" "trailing empty string is suppressed"))))
  ((name . "read-string")
-  (signature lambda ((integer? k)) (or eof-object? string?))
-  (parameterized-by "(scheme base) current-input-port"))
- ((name . "read-string")
   (signature
-   lambda
-   ((integer? k) (input-port? port))
-   (or eof-object? string?)))
- ((name . "write-string")
-  (signature lambda ((string? string)) undefined)
-  (parameterized-by "(scheme base) current-output-port"))
- ((name . "write-string")
-  (signature lambda ((string? string) (output-port? port)) undefined))
+   case-lambda
+   (((integer? k)) (or eof-object? string?))
+   (((integer? k) (input-port? port)) (or eof-object? string?))))
  ((name . "write-string")
   (signature
-   lambda
-   ((string? string) (output-port? port) (integer? start))
-   undefined))
- ((name . "write-string")
-  (signature
-   lambda
-   ((string? string) (output-port? port) (integer? start) (integer? end))
-   undefined))
+   case-lambda
+   (((string? string)) undefined)
+   (((string? string) (output-port? port)) undefined)
+   (((string? string) (output-port? port) (integer? start)) undefined)
+   (((string? string) (output-port? port) (integer? start) (integer? end))
+    undefined)))
  ((name . "string-set!")
   (signature lambda ((string? string) (integer? k) (char? char)) undefined))
  ((name . "string-fill!")
-  (signature lambda ((string? string) (char? fill)) undefined))
- ((name . "string-fill!")
   (signature
-   lambda
-   ((string? string) (char? fill) (integer? start))
-   undefined))
- ((name . "string-fill!")
-  (signature
-   lambda
-   ((string? string) (char? fill) (integer? start) (integer? end))
-   undefined))
- ((name . "string-copy!")
-  (signature lambda ((string? to) (integer? at) (string? from)) undefined))
+   case-lambda
+   (((string? string) (char? fill)) undefined)
+   (((string? string) (char? fill) (integer? start)) undefined)
+   (((string? string) (char? fill) (integer? start) (integer? end))
+    undefined)))
  ((name . "string-copy!")
   (signature
-   lambda
-   ((string? to) (integer? at) (string? from) (integer? start))
-   undefined))
- ((name . "string-copy!")
-  (signature
-   lambda
-   ((string? to) (integer? at) (string? from) (integer? start) (integer? end))
-   undefined)))
+   case-lambda
+   (((string? to) (integer? at) (string? from)) undefined)
+   (((string? to) (integer? at) (string? from) (integer? start)) undefined)
+   (((string? to) (integer? at) (string? from) (integer? start) (integer? end))
+    undefined))))

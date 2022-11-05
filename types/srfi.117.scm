@@ -1,34 +1,26 @@
 (((name . "make-list-queue")
-  (signature lambda ((list? list)) list-queue?)
-  (tags pure))
- ((name . "make-list-queue")
-  (signature lambda ((list? list) (pair? last)) list-queue?)
-  (tags pure))
- ((name . "list-queue")
-  (signature lambda (element ...) list-queue?)
+  (signature
+   case-lambda
+   (((list? list)) list-queue?)
+   (((list? list) (pair? last)) list-queue?))
   (tags pure))
  ((name . "list-queue")
-  (signature lambda ((list-queue? list-queue)) list-queue?)
+  (signature
+   case-lambda
+   ((element ...) list-queue?)
+   (((list-queue? list-queue)) list-queue?))
   (tags pure))
  ((name . "list-queue-unfold")
   (signature
-   lambda
-   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
-   list-queue?)
-  (subsigs
-   (stop? (lambda (seed) boolean?))
-   (mapper (lambda (seed) *))
-   (successor (lambda (seed) *)))
-  (tags pure))
- ((name . "list-queue-unfold")
-  (signature
-   lambda
-   ((procedure? stop?)
-    (procedure? mapper)
-    (procedure? successor)
-    seed
-    (list-queue? queue))
-   list-queue?)
+   case-lambda
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+    list-queue?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
+     seed
+     (list-queue? queue))
+    list-queue?))
   (subsigs
    (stop? (lambda (seed) boolean?))
    (mapper (lambda (seed) *))
@@ -36,23 +28,15 @@
   (tags pure))
  ((name . "list-queue-unfold-right")
   (signature
-   lambda
-   ((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
-   list-queue?)
-  (subsigs
-   (stop? (lambda (seed) boolean?))
-   (mapper (lambda (seed) *))
-   (successor (lambda (seed) *)))
-  (tags pure))
- ((name . "list-queue-unfold-right")
-  (signature
-   lambda
-   ((procedure? stop?)
-    (procedure? mapper)
-    (procedure? successor)
-    seed
-    (list-queue? queue))
-   list-queue?)
+   case-lambda
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed)
+    list-queue?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
+     seed
+     (list-queue? queue))
+    list-queue?))
   (subsigs
    (stop? (lambda (seed) boolean?))
    (mapper (lambda (seed) *))
@@ -87,12 +71,10 @@
  ((name . "list-queue-remove-all!")
   (signature lambda ((list-queue? list-queue)) list?))
  ((name . "list-queue-set-list!")
-  (signature lambda ((list-queue? list-queue) (list? list)) undefined))
- ((name . "list-queue-set-list!")
   (signature
-   lambda
-   ((list-queue? list-queue) (list? list) (pair? last))
-   undefined))
+   case-lambda
+   (((list-queue? list-queue) (list? list)) undefined)
+   (((list-queue? list-queue) (list? list) (pair? last)) undefined)))
  ((name . "list-queue-append")
   (signature lambda ((list-queue? list-queue) ...) list-queue?)
   (tags pure))

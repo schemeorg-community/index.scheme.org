@@ -2,27 +2,28 @@
  ((name . "list") (signature lambda (object ...) list?) (tags pure))
  ((name . "xcons") (signature lambda (d a) pair?) (tags pure))
  ((name . "cons*") (signature lambda (elt1 elt2 ...) *))
- ((name . "make-list") (signature lambda ((integer? n)) list?))
  ((name . "make-list")
-  (signature lambda ((integer? n) fill) list?)
+  (signature case-lambda (((integer? n)) list?) (((integer? n) fill) list?))
   (tags pure))
  ((name . "list-tabulate")
   (signature lambda ((integer? n) (procedure? init-proc)) list?)
   (subsigs (init-proc (lambda ((integer? i)) *)))
   (tags pure))
- ((name . "list-copy") (signature lambda ((list? flist)) list?) (tags pure))
  ((name . "list-copy")
-  (signature lambda ((dotted-list? flist)) dotted-list?)
+  (signature
+   case-lambda
+   (((list? flist)) list?)
+   (((dotted-list? flist)) dotted-list?))
   (tags pure))
  ((name . "circular-list")
   (signature lambda (elt1 elt2 ...) circular-list?)
   (tags pure))
- ((name . "iota") (signature lambda ((integer? count)) list?) (tags pure))
  ((name . "iota")
-  (signature lambda ((integer? count) (number? start)) list?)
-  (tags pure))
- ((name . "iota")
-  (signature lambda ((integer? count) (number? start) (number? step)) list?)
+  (signature
+   case-lambda
+   (((integer? count)) list?)
+   (((integer? count) (number? start)) list?)
+   (((integer? count) (number? start) (number? step)) list?))
   (tags pure))
  ((name . "proper-list?")
   (signature lambda (obj) boolean?)
@@ -38,10 +39,10 @@
  ((name . "pair?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "null?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "null-list?")
-  (signature lambda ((list? lst)) boolean?)
-  (tags pure predicate))
- ((name . "null-list?")
-  (signature lambda ((circular-list? lst)) boolean?)
+  (signature
+   case-lambda
+   (((list? lst)) boolean?)
+   (((circular-list? lst)) boolean?))
   (tags pure predicate))
  ((name . "not-pair?") (signature lambda (obj) boolean?) (tags pure predicate))
  ((name . "list=")
@@ -79,10 +80,10 @@
  ((name . "cddddr") (signature lambda ((pair? pair)) *) (tags pure))
  ((name . "cdddr") (signature lambda ((pair? pair)) *) (tags pure))
  ((name . "list-ref")
-  (signature lambda ((list? clist) (integer? i)) *)
-  (tags pure))
- ((name . "list-ref")
-  (signature lambda ((circular-list? clist) (integer? i)) *)
+  (signature
+   case-lambda
+   (((list? clist) (integer? i)) *)
+   (((circular-list? clist) (integer? i)) *))
   (tags pure))
  ((name . "first") (signature lambda ((pair? pair)) *) (tags pure))
  ((name . "second") (signature lambda ((pair? pair)) *) (tags pure))
@@ -98,73 +99,72 @@
   (signature lambda ((pair? pair)) (values * *))
   (tags pure))
  ((name . "take")
-  (signature lambda ((list? x) (integer? i)) list?)
-  (tags pure))
- ((name . "take")
-  (signature lambda ((circular-list? x) (integer? i)) list?)
-  (tags pure))
- ((name . "take")
-  (signature lambda ((dotted-list? x) (integer? i)) list?)
+  (signature
+   case-lambda
+   (((list? x) (integer? i)) list?)
+   (((circular-list? x) (integer? i)) list?)
+   (((dotted-list? x) (integer? i)) list?))
   (tags pure))
  ((name . "drop")
-  (signature lambda ((list? x) (integer? i)) list?)
-  (tags pure))
- ((name . "drop")
-  (signature lambda ((circular-list? x) (integer? i)) circular-list?)
-  (tags pure))
- ((name . "drop")
-  (signature lambda ((dotted-list? x) (integer? i)) *)
+  (signature
+   case-lambda
+   (((list? x) (integer? i)) list?)
+   (((circular-list? x) (integer? i)) circular-list?)
+   (((dotted-list? x) (integer? i)) *))
   (tags pure))
  ((name . "take-right")
-  (signature lambda ((list? flist) (integer? i)) list?)
-  (tags pure))
- ((name . "take-right")
-  (signature lambda ((dotted-list? flist) (integer? i)) *)
-  (tags pure))
- ((name . "drop-right")
-  (signature lambda ((list? flist) (integer? i)) list?)
+  (signature
+   case-lambda
+   (((list? flist) (integer? i)) list?)
+   (((dotted-list? flist) (integer? i)) *))
   (tags pure))
  ((name . "drop-right")
-  (signature lambda ((dotted-list? flist) (integer? i)) list?)
+  (signature
+   case-lambda
+   (((list? flist) (integer? i)) list?)
+   (((dotted-list? flist) (integer? i)) list?))
   (tags pure))
- ((name . "take!") (signature lambda ((list? x) (integer? i)) list?))
- ((name . "take!") (signature lambda ((circular-list? x) (integer? i)) list?))
- ((name . "take!") (signature lambda ((dotted-list? x) (integer? i)) list?))
- ((name . "drop-right!") (signature lambda ((list? flist) (integer? i)) list?))
+ ((name . "take!")
+  (signature
+   case-lambda
+   (((list? x) (integer? i)) list?)
+   (((circular-list? x) (integer? i)) list?)
+   (((dotted-list? x) (integer? i)) list?)))
  ((name . "drop-right!")
-  (signature lambda ((dotted-list? flist) (integer? i)) list?))
- ((name . "split-at")
-  (signature lambda ((list? x) (integer? i)) (values list? list?))
-  (tags pure))
+  (signature
+   case-lambda
+   (((list? flist) (integer? i)) list?)
+   (((dotted-list? flist) (integer? i)) list?)))
  ((name . "split-at")
   (signature
-   lambda
-   ((circular-list? x) (integer? i))
-   (values list? circular-list?))
+   case-lambda
+   (((list? x) (integer? i)) (values list? list?))
+   (((circular-list? x) (integer? i)) (values list? circular-list?))
+   (((dotted-list? x) (integer? i)) (values list? *)))
   (tags pure))
- ((name . "split-at")
-  (signature lambda ((dotted-list? x) (integer? i)) (values list? *))
-  (tags pure))
- ((name . "split-at!")
-  (signature lambda ((list? x) (integer? i)) (values list? list?)))
  ((name . "split-at!")
   (signature
-   lambda
-   ((circular-list? x) (integer? i))
-   (values list? circular-list?)))
- ((name . "split-at!")
-  (signature lambda ((dotted-list? x) (integer? i)) (values list? *)))
+   case-lambda
+   (((list? x) (integer? i)) (values list? list?))
+   (((circular-list? x) (integer? i)) (values list? circular-list?))
+   (((dotted-list? x) (integer? i)) (values list? *))))
  ((name . "last") (signature lambda ((list? pair)) *) (tags pure))
  ((name . "last-pair") (signature lambda ((list? pair)) pair?) (tags pure))
  ((name . "length") (signature lambda ((list? list)) integer?) (tags pure))
- ((name . "length+") (signature lambda ((list? clist)) integer?) (tags pure))
  ((name . "length+")
-  (signature lambda ((circular-list? clist)) boolean?)
+  (signature
+   case-lambda
+   (((list? clist)) integer?)
+   (((circular-list? clist)) boolean?))
   (tags pure))
- ((name . "append") (signature lambda ((list? list) ...) list?) (tags pure))
- ((name . "append") (signature lambda ((list? list) ... obj) *) (tags pure))
- ((name . "append!") (signature lambda ((list? list) ...) list?))
- ((name . "append!") (signature lambda ((list? list) ... obj) *))
+ ((name . "append")
+  (signature case-lambda (((list? list) ...) list?) (((list? list) ... obj) *))
+  (tags pure))
+ ((name . "append!")
+  (signature
+   case-lambda
+   (((list? list) ...) list?)
+   (((list? list) ... obj) *)))
  ((name . "concatenate")
   (signature lambda ((list? list-of-lists)) *)
   (tags pure))
@@ -172,14 +172,16 @@
  ((name . "reverse") (signature lambda ((list? list)) list?) (tags pure))
  ((name . "reverse!") (signature lambda ((list? list)) list?))
  ((name . "append-reverse")
-  (signature lambda ((list? rev-head) (list? tail)) list?)
-  (tags pure))
- ((name . "append-reverse")
-  (signature lambda ((list? rev-head) tail) *)
+  (signature
+   case-lambda
+   (((list? rev-head) (list? tail)) list?)
+   (((list? rev-head) tail) *))
   (tags pure))
  ((name . "append-reverse!")
-  (signature lambda ((list? rev-head) (list? tail)) list?))
- ((name . "append-reverse!") (signature lambda ((list? rev-head) tail) *))
+  (signature
+   case-lambda
+   (((list? rev-head) (list? tail)) list?)
+   (((list? rev-head) tail) *)))
  ((name . "zip")
   (signature lambda ((list? clist1) (list? clist2) ...) list?)
   (tags pure))
@@ -240,17 +242,10 @@
   (subsigs (f (lambda (obj fold-state) *)))
   (tags pure))
  ((name . "unfold")
-  (signature lambda ((procedure? p) (procedure? f) (procedure? g) seed) list?)
-  (subsigs
-   (p (lambda (seed) boolean?))
-   (f (lambda (seed) *))
-   (g (lambda (seed) *)))
-  (tags pure))
- ((name . "unfold")
   (signature
-   lambda
-   ((procedure? p) (procedure? f) (procedure? g) seed (list? tail-gen))
-   *)
+   case-lambda
+   (((procedure? p) (procedure? f) (procedure? g) seed) list?)
+   (((procedure? p) (procedure? f) (procedure? g) seed (list? tail-gen)) *))
   (subsigs
    (p (lambda (seed) boolean?))
    (f (lambda (seed) *))
@@ -258,17 +253,10 @@
    (tail-gen (lambda () *)))
   (tags pure))
  ((name . "unfold-right")
-  (signature lambda ((procedure? p) (procedure? f) (procedure? g) seed) list?)
-  (subsigs
-   (p (lambda (seed) boolean?))
-   (f (lambda (seed) *))
-   (g (lambda (seed) *)))
-  (tags pure))
- ((name . "unfold-right")
   (signature
-   lambda
-   ((procedure? p) (procedure? f) (procedure? g) seed (list? tail-gen))
-   *)
+   case-lambda
+   (((procedure? p) (procedure? f) (procedure? g) seed) list?)
+   (((procedure? p) (procedure? f) (procedure? g) seed (list? tail-gen)) *))
   (subsigs
    (p (lambda (seed) boolean?))
    (f (lambda (seed) *))
@@ -345,36 +333,27 @@
   (signature lambda ((procedure? pred) (list? list)) list?)
   (subsigs (pred (lambda (obj) *))))
  ((name . "drop-while")
-  (signature lambda ((procedure? pred) (list? list)) list?)
-  (subsigs (pred (lambda (obj) *)))
-  (tags pure))
- ((name . "drop-while")
-  (signature lambda ((procedure? pred) (circular-list? list)) circular-list?)
-  (subsigs (pred (lambda (obj) *)))
-  (tags pure))
- ((name . "span")
-  (signature lambda ((procedure? pred) (list? list)) (values list? list?))
+  (signature
+   case-lambda
+   (((procedure? pred) (list? list)) list?)
+   (((procedure? pred) (circular-list? list)) circular-list?))
   (subsigs (pred (lambda (obj) *)))
   (tags pure))
  ((name . "span")
   (signature
-   lambda
-   ((procedure? pred) (circular-list? list))
-   (values list? circular-list?))
+   case-lambda
+   (((procedure? pred) (list? list)) (values list? list?))
+   (((procedure? pred) (circular-list? list)) (values list? circular-list?)))
   (subsigs (pred (lambda (obj) *)))
   (tags pure))
  ((name . "span!")
   (signature lambda ((procedure? pred) (list? list)) (values list? list?))
   (subsigs (pred (lambda (obj) *))))
  ((name . "break")
-  (signature lambda ((procedure? pred) (list? list)) (values list? list?))
-  (subsigs (pred (lambda (obj) *)))
-  (tags pure))
- ((name . "break")
   (signature
-   lambda
-   ((procedure? pred) (circular-list? list))
-   (values list? circular-list?))
+   case-lambda
+   (((procedure? pred) (list? list)) (values list? list?))
+   (((procedure? pred) (circular-list? list)) (values list? circular-list?)))
   (subsigs (pred (lambda (obj) *)))
   (tags pure))
  ((name . "break!")
@@ -396,10 +375,10 @@
   (subsigs (pred (lambda (obj1 obj2 ...) *)))
   (tags pure))
  ((name . "member")
-  (signature lambda (obj (list? list)) (or #f list?))
-  (tags pure))
- ((name . "member")
-  (signature lambda (obj (list? list) (procedure? =)) (or #f list?))
+  (signature
+   case-lambda
+   ((obj (list? list)) (or #f list?))
+   ((obj (list? list) (procedure? =)) (or #f list?)))
   (subsigs (= (lambda (obj1 obj2) *)))
   (tags pure))
  ((name . "memq")
@@ -408,31 +387,37 @@
  ((name . "memv")
   (signature lambda (obj (list? list)) (or #f list?))
   (tags pure))
- ((name . "delete") (signature lambda (obj (list? list)) list?) (tags pure))
  ((name . "delete")
-  (signature lambda (obj (list? list) (procedure? =)) list?)
+  (signature
+   case-lambda
+   ((obj (list? list)) list?)
+   ((obj (list? list) (procedure? =)) list?))
   (subsigs (= (lambda (obj1 obj2) *)))
   (tags pure))
- ((name . "delete!") (signature lambda (obj (list? list)) list?))
  ((name . "delete!")
-  (signature lambda (obj (list? list) (procedure? =)) list?)
+  (signature
+   case-lambda
+   ((obj (list? list)) list?)
+   ((obj (list? list) (procedure? =)) list?))
   (subsigs (= (lambda (obj1 obj2) *))))
  ((name . "delete-duplicates")
-  (signature lambda ((list? list)) list?)
-  (tags pure))
- ((name . "delete-duplicates")
-  (signature lambda ((list? list) (procedure? =)) list?)
+  (signature
+   case-lambda
+   (((list? list)) list?)
+   (((list? list) (procedure? =)) list?))
   (subsigs (= (lambda (obj1 obj2) *)))
   (tags pure))
- ((name . "delete-duplicates!") (signature lambda ((list? list)) list?))
  ((name . "delete-duplicates!")
-  (signature lambda ((list? list) (procedure? =)) list?)
+  (signature
+   case-lambda
+   (((list? list)) list?)
+   (((list? list) (procedure? =)) list?))
   (subsigs (= (lambda (obj1 obj2) *))))
  ((name . "assoc")
-  (signature lambda (obj (list? alist)) (or list? #f))
-  (tags pure))
- ((name . "assoc")
-  (signature lambda (obj (list? alist) (procedure? =)) (or pair? #f))
+  (signature
+   case-lambda
+   ((obj (list? alist)) (or list? #f))
+   ((obj (list? alist) (procedure? =)) (or pair? #f)))
   (subsigs (= (lambda (a b) *)))
   (tags pure))
  ((name . "assq")
@@ -446,15 +431,17 @@
   (tags pure))
  ((name . "alist-copy") (signature lambda ((list? alist)) list?) (tags pure))
  ((name . "alist-delete")
-  (signature lambda (key (list? alist)) list?)
-  (tags pure))
- ((name . "alist-delete")
-  (signature lambda (key (list? alist) (procedure? =)) list?)
+  (signature
+   case-lambda
+   ((key (list? alist)) list?)
+   ((key (list? alist) (procedure? =)) list?))
   (subsigs (= (lambda (a b) *)))
   (tags pure))
- ((name . "alist-delete!") (signature lambda (key (list? alist)) list?))
  ((name . "alist-delete!")
-  (signature lambda (key (list? alist) (procedure? =)) list?)
+  (signature
+   case-lambda
+   ((key (list? alist)) list?)
+   ((key (list? alist) (procedure? =)) list?))
   (subsigs (= (lambda (a b) *))))
  ((name . "lset<=")
   (signature lambda ((procedure? =) (list? list1) ...) boolean?)

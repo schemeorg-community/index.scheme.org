@@ -3,9 +3,11 @@
  ((name . "bytevector?")
   (signature lambda (obj) boolean?)
   (tags pure predicate))
- ((name . "make-bytevector") (signature lambda ((integer? k)) bytevector?))
  ((name . "make-bytevector")
-  (signature lambda ((integer? k) (integer? byte)) bytevector?)
+  (signature
+   case-lambda
+   (((integer? k)) bytevector?)
+   (((integer? k) (integer? byte)) bytevector?))
   (tags pure))
  ((name . "bytevector-length")
   (signature lambda ((bytevector? bytevector)) integer?)
@@ -318,39 +320,35 @@
   (signature lambda ((string? string)) bytevector?)
   (tags pure))
  ((name . "string->utf16")
-  (signature lambda ((string? string)) bytevector?)
-  (tags pure))
- ((name . "string->utf16")
-  (signature lambda ((string? string) (symbol? endianness)) bytevector?)
-  (tags pure))
- ((name . "string->utf32")
-  (signature lambda ((string? string)) bytevector?)
+  (signature
+   case-lambda
+   (((string? string)) bytevector?)
+   (((string? string) (symbol? endianness)) bytevector?))
   (tags pure))
  ((name . "string->utf32")
-  (signature lambda ((string? string) (symbol? endianness)) bytevector?)
+  (signature
+   case-lambda
+   (((string? string)) bytevector?)
+   (((string? string) (symbol? endianness)) bytevector?))
   (tags pure))
  ((name . "utf8->string")
   (signature lambda ((bytevector? bytevector)) string?)
   (tags pure))
  ((name . "utf16->string")
-  (signature lambda ((bytevector? bytevector) (symbol? endianness)) string?)
-  (tags pure))
- ((name . "utf16->string")
   (signature
-   lambda
-   ((bytevector? bytevector)
-    (symbol? endianness)
-    (boolean? endianness-mandatory?))
-   string?)
-  (tags pure))
- ((name . "utf32->string")
-  (signature lambda ((bytevector? bytevector) (symbol? endianness)) string?)
+   case-lambda
+   (((bytevector? bytevector) (symbol? endianness)) string?)
+   (((bytevector? bytevector)
+     (symbol? endianness)
+     (boolean? endianness-mandatory?))
+    string?))
   (tags pure))
  ((name . "utf32->string")
   (signature
-   lambda
-   ((bytevector? bytevector)
-    (symbol? endianness)
-    (boolean? endianness-mandatory?))
-   string?)
+   case-lambda
+   (((bytevector? bytevector) (symbol? endianness)) string?)
+   (((bytevector? bytevector)
+     (symbol? endianness)
+     (boolean? endianness-mandatory?))
+    string?))
   (tags pure)))

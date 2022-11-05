@@ -6,10 +6,10 @@
   (signature lambda ((char-set? cs1) ...) boolean?)
   (tags pure))
  ((name . "char-set-hash")
-  (signature lambda ((char-set? cs)) integer?)
-  (tags pure))
- ((name . "char-set-hash")
-  (signature lambda ((char-set? cs) (integer? bound)) integer?)
+  (signature
+   case-lambda
+   (((char-set? cs)) integer?)
+   (((char-set? cs) (integer? bound)) integer?))
   (tags pure))
  ((name . "char-set-cursor") (signature lambda ((char-set? cset)) *))
  ((name . "char-set-ref") (signature lambda ((char-set? cset) cursor) char?))
@@ -22,19 +22,10 @@
   (tags pure))
  ((name . "char-set-unfold")
   (signature
-   lambda
-   ((procedure? f) (procedure? p) (procedure? g) seed)
-   char-set?)
-  (subsigs
-   (f (lambda (seed) char?))
-   (p (lambda (seed) boolean?))
-   (g (lambda (seed) *)))
-  (tags pure))
- ((name . "char-set-unfold")
-  (signature
-   lambda
-   ((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs))
-   char-set?)
+   case-lambda
+   (((procedure? f) (procedure? p) (procedure? g) seed) char-set?)
+   (((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs))
+    char-set?))
   (subsigs
    (f (lambda (seed) char?))
    (p (lambda (seed) boolean?))
@@ -64,30 +55,26 @@
   (signature lambda ((char? char1) ...) char-set?)
   (tags pure))
  ((name . "list->char-set")
-  (signature lambda ((list? char-list)) char-set?)
-  (tags pure))
- ((name . "list->char-set")
-  (signature lambda ((list? char-list) (char-set? base-cs)) char-set?)
+  (signature
+   case-lambda
+   (((list? char-list)) char-set?)
+   (((list? char-list) (char-set? base-cs)) char-set?))
   (tags pure))
  ((name . "list->char-set!")
   (signature lambda ((list? char-list) (char-set? base-cs)) char-set?))
  ((name . "string->char-set")
-  (signature lambda ((string? s)) char-set?)
-  (tags pure))
- ((name . "string->char-set")
-  (signature lambda ((string? s) (char-set? base-cs)) char-set?)
+  (signature
+   case-lambda
+   (((string? s)) char-set?)
+   (((string? s) (char-set? base-cs)) char-set?))
   (tags pure))
  ((name . "string->char-set!")
   (signature lambda ((string? s) (char-set? base-cs)) char-set?))
  ((name . "char-set-filter")
-  (signature lambda ((procedure? pred) (char-set? cs)) char-set?)
-  (subsigs (pred (lambda ((char? c)) boolean?)))
-  (tags pure))
- ((name . "char-set-filter")
   (signature
-   lambda
-   ((procedure? pred) (char-set? cs) (char-set? base-cs))
-   char-set?)
+   case-lambda
+   (((procedure? pred) (char-set? cs)) char-set?)
+   (((procedure? pred) (char-set? cs) (char-set? base-cs)) char-set?))
   (subsigs (pred (lambda ((char? c)) boolean?)))
   (tags pure))
  ((name . "char-set-filter!")
@@ -97,29 +84,24 @@
    char-set?)
   (subsigs (pred (lambda ((char? c)) boolean?))))
  ((name . "ucs-range->char-set")
-  (signature lambda ((integer? lower) (integer? upper)) char-set?)
-  (tags pure))
- ((name . "ucs-range->char-set")
   (signature
-   lambda
-   ((integer? lower) (integer? upper) (boolean? error?))
-   char-set?)
-  (tags pure))
- ((name . "ucs-range->char-set")
-  (signature
-   lambda
-   ((integer? lower) (integer? upper) (boolean? error?) (char-set? base-cs))
-   char-set?)
+   case-lambda
+   (((integer? lower) (integer? upper)) char-set?)
+   (((integer? lower) (integer? upper) (boolean? error?)) char-set?)
+   (((integer? lower) (integer? upper) (boolean? error?) (char-set? base-cs))
+    char-set?))
   (tags pure))
  ((name . "ucs-range->char-set!")
   (signature
    lambda
    ((integer? lower) (integer? upper) (boolean? error?) (char-set? base-cs))
    char-set?))
- ((name . "->char-set") (signature lambda ((string? x)) char-set?) (tags pure))
- ((name . "->char-set") (signature lambda ((char? x)) char-set?) (tags pure))
  ((name . "->char-set")
-  (signature lambda ((char-set? x)) char-set?)
+  (signature
+   case-lambda
+   (((string? x)) char-set?)
+   (((char? x)) char-set?)
+   (((char-set? x)) char-set?))
   (tags pure))
  ((name . "char-set-size")
   (signature lambda ((char-set? cs)) integer?)

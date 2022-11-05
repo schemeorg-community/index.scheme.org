@@ -150,14 +150,12 @@
     ("raise" "exception with condition type &i/o-decoding is raised")
     ("replace"
      "the replacement character U+FFFD is injected into the data stream, an appropriate number of bytes are ignored, and decoding continues with the following bytes"))))
- ((name . "make-transcoder") (signature lambda ((codec codec)) transcoder))
- ((name . "make-transcoder")
-  (signature lambda ((codec codec) (symbol? eol-style)) transcoder))
  ((name . "make-transcoder")
   (signature
-   lambda
-   ((codec codec) (symbol? eol-style) (symbol? handling-mode))
-   transcoder))
+   case-lambda
+   (((codec codec)) transcoder)
+   (((codec codec) (symbol? eol-style)) transcoder)
+   (((codec codec) (symbol? eol-style) (symbol? handling-mode)) transcoder)))
  ((name . "native-transcoder") (signature lambda () transcoder))
  ((name . "transcoder-codec")
   (signature lambda ((transcoder transcoder)) codec)
@@ -198,19 +196,19 @@
  ((name . "port-has-port-position?")
   (signature lambda ((port? port)) boolean?)
   (tags pure))
- ((name . "port-position") (signature lambda ((binary-port? port)) integer?))
  ((name . "port-position")
-  (signature lambda ((textual-port? port)) opaque-port-position))
+  (signature
+   case-lambda
+   (((binary-port? port)) integer?)
+   (((textual-port? port)) opaque-port-position)))
  ((name . "port-has-set-port-position!?")
   (signature lambda ((port? port)) boolean?)
   (tags pure))
  ((name . "set-port-position!")
-  (signature lambda ((binary-port? port) (integer? pos)) undefined))
- ((name . "set-port-position!")
   (signature
-   lambda
-   ((textual-port? port) (opaque-port-position pos))
-   undefined))
+   case-lambda
+   (((binary-port? port) (integer? pos)) undefined)
+   (((textual-port? port) (opaque-port-position pos)) undefined)))
  ((name . "close-port") (signature lambda ((port? port)) undefined))
  ((name . "call-with-port")
   (signature lambda ((port? port) (procedure? proc)) *)
@@ -221,29 +219,22 @@
   (supertypes port?))
  ((name . "port-eof?") (signature lambda ((input-port? port)) boolean?))
  ((name . "open-file-input-port")
-  (signature lambda ((string? string)) input-port?))
- ((name . "open-file-input-port")
-  (signature lambda ((string? string) (file-options options)) input-port?))
- ((name . "open-file-input-port")
   (signature
-   lambda
-   ((string? string) (file-options options) (buffer-mode? buffer-mode))
-   input-port?))
- ((name . "open-file-input-port")
-  (signature
-   lambda
-   ((string? string)
-    (file-options options)
-    (buffer-mode? buffer-mode)
-    ((or #f transcoder) transcoder))
-   input-port?))
- ((name . "open-bytevector-input-port")
-  (signature lambda ((bytevector? bytevector)) input-port?))
+   case-lambda
+   (((string? string)) input-port?)
+   (((string? string) (file-options options)) input-port?)
+   (((string? string) (file-options options) (buffer-mode? buffer-mode))
+    input-port?)
+   (((string? string)
+     (file-options options)
+     (buffer-mode? buffer-mode)
+     ((or #f transcoder) transcoder))
+    input-port?)))
  ((name . "open-bytevector-input-port")
   (signature
-   lambda
-   ((bytevector? bytevector) ((or #f transcoder) transcoder))
-   input-port?))
+   case-lambda
+   (((bytevector? bytevector)) input-port?)
+   (((bytevector? bytevector) ((or #f transcoder) transcoder)) input-port?)))
  ((name . "open-string-input-port")
   (signature lambda ((string? string)) input-port?))
  ((name . "standard-input-port") (signature lambda () binary-port?))
@@ -331,42 +322,28 @@
  ((name . "output-port-buffer-mode")
   (signature lambda ((output-port? port)) buffer-mode?))
  ((name . "open-file-output-port")
-  (signature lambda ((string? filename)) output-port?))
- ((name . "open-file-output-port")
   (signature
-   lambda
-   ((string? filename) (file-options file-options))
-   output-port?))
- ((name . "open-file-output-port")
-  (signature
-   lambda
-   ((string? filename) (file-options file-options) (buffer-mode? buffer-mode))
-   output-port?))
- ((name . "open-file-output-port")
-  (signature
-   lambda
-   ((string? filename)
-    (file-options file-options)
-    (buffer-mode? buffer-mode)
-    ((or transcoder #f) maybe-transcoder))
-   output-port?))
- ((name . "open-bytevector-output-port")
-  (signature lambda () (values output-port? procedure?))
-  (subsigs (return (lambda () bytevector?))))
+   case-lambda
+   (((string? filename)) output-port?)
+   (((string? filename) (file-options file-options)) output-port?)
+   (((string? filename) (file-options file-options) (buffer-mode? buffer-mode))
+    output-port?)
+   (((string? filename)
+     (file-options file-options)
+     (buffer-mode? buffer-mode)
+     ((or transcoder #f) maybe-transcoder))
+    output-port?)))
  ((name . "open-bytevector-output-port")
   (signature
-   lambda
-   (((or #f transcoder) maybe-transcoder))
-   (values output-port? procedure?))
+   case-lambda
+   (() (values output-port? procedure?))
+   ((((or #f transcoder) maybe-transcoder)) (values output-port? procedure?)))
   (subsigs (return (lambda () bytevector?))))
  ((name . "call-with-bytevector-output-port")
-  (signature lambda ((procedure? proc)) bytevector?)
-  (subsigs (proc (lambda ((output-port? port)) *))))
- ((name . "call-with-bytevector-output-port")
   (signature
-   lambda
-   ((procedure? proc) ((or #f transcoder) maybe-transcoder))
-   bytevector?)
+   case-lambda
+   (((procedure? proc)) bytevector?)
+   (((procedure? proc) ((or #f transcoder) maybe-transcoder)) bytevector?))
   (subsigs (proc (lambda ((output-port? port)) *))))
  ((name . "open-string-output-port")
   (signature lambda () (values output-port? procedure?))
@@ -410,53 +387,37 @@
  ((name . "put-u8")
   (signature lambda ((output-port? port) (integer? octet)) undefined))
  ((name . "put-bytevector")
-  (signature lambda ((output-port? port) (bytevector? bytevector)) undefined))
- ((name . "put-bytevector")
   (signature
-   lambda
-   ((output-port? port) (bytevector? bytevector) (integer? start))
-   undefined))
- ((name . "put-bytevector")
-  (signature
-   lambda
-   ((output-port? port)
-    (bytevector? bytevector)
-    (integer? start)
-    (integer? count))
-   undefined))
+   case-lambda
+   (((output-port? port) (bytevector? bytevector)) undefined)
+   (((output-port? port) (bytevector? bytevector) (integer? start)) undefined)
+   (((output-port? port)
+     (bytevector? bytevector)
+     (integer? start)
+     (integer? count))
+    undefined)))
  ((name . "put-char")
   (signature lambda ((output-port? port) (char? char)) undefined))
  ((name . "put-string")
-  (signature lambda ((output-port? port) (string? string)) undefined))
- ((name . "put-string")
   (signature
-   lambda
-   ((output-port? port) (string? string) (integer? start))
-   undefined))
- ((name . "put-string")
-  (signature
-   lambda
-   ((output-port? port) (string? string) (integer? start) (integer? count))
-   undefined))
+   case-lambda
+   (((output-port? port) (string? string)) undefined)
+   (((output-port? port) (string? string) (integer? start)) undefined)
+   (((output-port? port) (string? string) (integer? start) (integer? count))
+    undefined)))
  ((name . "put-datum")
   (signature lambda ((output-port? port) datum) undefined))
  ((name . "open-file-input/output-port")
-  (signature lambda ((string? string)) port?))
- ((name . "open-file-input/output-port")
-  (signature lambda ((string? string) (file-options options)) port?))
- ((name . "open-file-input/output-port")
   (signature
-   lambda
-   ((string? string) (file-options options) (buffer-mode? buffer-mode))
-   port?))
- ((name . "open-file-input/output-port")
-  (signature
-   lambda
-   ((string? string)
-    (file-options options)
-    (buffer-mode? buffer-mode)
-    ((or #f transcoder) transcoder))
-   port?))
+   case-lambda
+   (((string? string)) port?)
+   (((string? string) (file-options options)) port?)
+   (((string? string) (file-options options) (buffer-mode? buffer-mode)) port?)
+   (((string? string)
+     (file-options options)
+     (buffer-mode? buffer-mode)
+     ((or #f transcoder) transcoder))
+    port?)))
  ((name . "make-custom-binary-input/output-port")
   (signature
    lambda

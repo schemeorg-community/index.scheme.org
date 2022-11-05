@@ -28,9 +28,11 @@
   (signature lambda ((fixnum? i) (fixnum? j)) fixnum?)
   (tags pure))
  ((name . "fx-")
-  (signature lambda ((fixnum? i) (fixnum? j)) fixnum?)
+  (signature
+   case-lambda
+   (((fixnum? i) (fixnum? j)) fixnum?)
+   (((fixnum? i)) fixnum?))
   (tags pure))
- ((name . "fx-") (signature lambda ((fixnum? i)) fixnum?) (tags pure))
  ((name . "fxdiv")
   (signature lambda ((fixnum? x1) (fixnum? x2)) fixnum?)
   (tags pure))

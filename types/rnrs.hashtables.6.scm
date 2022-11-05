@@ -1,22 +1,14 @@
-(((name . "make-eq-hashtable") (signature lambda () hashtable?) (tags pure))
- ((name . "make-eq-hashtable")
-  (signature lambda ((integer? k)) hashtable?)
+(((name . "make-eq-hashtable")
+  (signature case-lambda (() hashtable?) (((integer? k)) hashtable?))
   (tags pure))
- ((name . "make-eqv-hashtable") (signature lambda () hashtable?) (tags pure))
  ((name . "make-eqv-hashtable")
-  (signature lambda ((integer? k)) hashtable?)
-  (tags pure))
- ((name . "make-hashtable")
-  (signature lambda ((procedure? hash-function) (procedure? equiv)) hashtable?)
-  (subsigs
-   (hash-function (lambda (key) integer?))
-   (equiv (lambda (a b) boolean?)))
+  (signature case-lambda (() hashtable?) (((integer? k)) hashtable?))
   (tags pure))
  ((name . "make-hashtable")
   (signature
-   lambda
-   ((procedure? hash-function) (procedure? equiv) (integer? k))
-   hashtable?)
+   case-lambda
+   (((procedure? hash-function) (procedure? equiv)) hashtable?)
+   (((procedure? hash-function) (procedure? equiv) (integer? k)) hashtable?))
   (subsigs
    (hash-function (lambda (key) integer?))
    (equiv (lambda (a b) boolean?)))
@@ -44,15 +36,16 @@
    boolean?)
   (subsigs (proc (lambda (value) *))))
  ((name . "hashtable-copy")
-  (signature lambda ((hashtable? hashtable)) hashtable?)
-  (tags pure))
- ((name . "hashtable-copy")
-  (signature lambda ((hashtable? hashtable) (boolean? mutable)) hashtable?)
+  (signature
+   case-lambda
+   (((hashtable? hashtable)) hashtable?)
+   (((hashtable? hashtable) (boolean? mutable)) hashtable?))
   (tags pure))
  ((name . "hashtable-clear!")
-  (signature lambda ((hashtable? hashtable)) undefined))
- ((name . "hashtable-clear!")
-  (signature lambda ((hashtable? hashtable) (integer? k)) undefined))
+  (signature
+   case-lambda
+   (((hashtable? hashtable)) undefined)
+   (((hashtable? hashtable) (integer? k)) undefined)))
  ((name . "hashtable-keys")
   (signature lambda ((hashtable? hashtable)) vector?)
   (tags pure))

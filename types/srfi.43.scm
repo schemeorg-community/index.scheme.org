@@ -1,6 +1,8 @@
-(((name . "make-vector") (signature lambda ((integer? k)) vector?))
- ((name . "make-vector")
-  (signature lambda ((integer? k) fill) vector?)
+(((name . "make-vector")
+  (signature
+   case-lambda
+   (((integer? k)) vector?)
+   (((integer? k) fill) vector?))
   (tags pure))
  ((name . "vector") (signature lambda (obj ...) vector?) (tags pure))
  ((name . "vector-unfold")
@@ -18,22 +20,18 @@
   (subsigs (f (lambda ((integer? index) seed ...) (values * * ...))))
   (tags pure))
  ((name . "vector-copy")
-  (signature lambda ((vector? vector)) vector?)
-  (tags pure))
- ((name . "vector-copy")
-  (signature lambda ((vector? vector) (integer? start)) vector?)
-  (tags pure))
- ((name . "vector-copy")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) vector?)
+  (signature
+   case-lambda
+   (((vector? vector)) vector?)
+   (((vector? vector) (integer? start)) vector?)
+   (((vector? vector) (integer? start) (integer? end)) vector?))
   (tags pure))
  ((name . "vector-reverse-copy")
-  (signature lambda ((vector? vector)) vector?)
-  (tags pure))
- ((name . "vector-reverse-copy")
-  (signature lambda ((vector? vector) (integer? start)) vector?)
-  (tags pure))
- ((name . "vector-reverse-copy")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) vector?)
+  (signature
+   case-lambda
+   (((vector? vector)) vector?)
+   (((vector? vector) (integer? start)) vector?)
+   (((vector? vector) (integer? start) (integer? end)) vector?))
   (tags pure))
  ((name . "vector-append")
   (signature lambda ((vector? vector) ...) vector?)
@@ -139,63 +137,45 @@
   (signature lambda ((vector? vector) (integer? k) obj) undefined))
  ((name . "vector-swap!")
   (signature lambda ((vector? vector) (integer? i) (integer? j)) undefined))
- ((name . "vector-fill!") (signature lambda ((vector? vector) fill) undefined))
- ((name . "vector-fill!")
-  (signature lambda ((vector? vector) fill (integer? start)) undefined))
  ((name . "vector-fill!")
   (signature
-   lambda
-   ((vector? vector) fill (integer? start) (integer? end))
-   undefined))
- ((name . "vector-reverse!") (signature lambda ((vector? vector)) undefined))
- ((name . "vector-reverse!")
-  (signature lambda ((vector? vector) (integer? start)) undefined))
+   case-lambda
+   (((vector? vector) fill) undefined)
+   (((vector? vector) fill (integer? start)) undefined)
+   (((vector? vector) fill (integer? start) (integer? end)) undefined)))
  ((name . "vector-reverse!")
   (signature
-   lambda
-   ((vector? vector) (integer? start) (integer? end))
-   undefined))
- ((name . "vector-copy!")
-  (signature lambda ((vector? to) (integer? at) (vector? from)) undefined))
- ((name . "vector-copy!")
-  (signature
-   lambda
-   ((vector? to) (integer? at) (vector? from) (integer? start))
-   undefined))
+   case-lambda
+   (((vector? vector)) undefined)
+   (((vector? vector) (integer? start)) undefined)
+   (((vector? vector) (integer? start) (integer? end)) undefined)))
  ((name . "vector-copy!")
   (signature
-   lambda
-   ((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
-   undefined))
- ((name . "vector-reverse-copy!")
-  (signature lambda ((vector? to) (integer? at) (vector? from)) undefined))
- ((name . "vector-reverse-copy!")
-  (signature
-   lambda
-   ((vector? to) (integer? at) (vector? from) (integer? start))
-   undefined))
+   case-lambda
+   (((vector? to) (integer? at) (vector? from)) undefined)
+   (((vector? to) (integer? at) (vector? from) (integer? start)) undefined)
+   (((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
+    undefined)))
  ((name . "vector-reverse-copy!")
   (signature
-   lambda
-   ((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
-   undefined))
+   case-lambda
+   (((vector? to) (integer? at) (vector? from)) undefined)
+   (((vector? to) (integer? at) (vector? from) (integer? start)) undefined)
+   (((vector? to) (integer? at) (vector? from) (integer? start) (integer? end))
+    undefined)))
  ((name . "vector->list")
-  (signature lambda ((vector? vector)) list?)
-  (tags pure))
- ((name . "vector->list")
-  (signature lambda ((vector? vector) (integer? start)) list?)
-  (tags pure))
- ((name . "vector->list")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((vector? vector)) list?)
+   (((vector? vector) (integer? start)) list?)
+   (((vector? vector) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "reverse-vector->list")
-  (signature lambda ((vector? vector)) list?)
-  (tags pure))
- ((name . "reverse-vector->list")
-  (signature lambda ((vector? vector) (integer? start)) list?)
-  (tags pure))
- ((name . "reverse-vector->list")
-  (signature lambda ((vector? vector) (integer? start) (integer? end)) list?)
+  (signature
+   case-lambda
+   (((vector? vector)) list?)
+   (((vector? vector) (integer? start)) list?)
+   (((vector? vector) (integer? start) (integer? end)) list?))
   (tags pure))
  ((name . "list->vector")
   (signature lambda ((list? list)) vector?)
