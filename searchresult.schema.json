@@ -105,14 +105,22 @@
                     "type":"string",
                     "pattern":"function"
                 },
-                "params":{
+                "variants":{
                     "type":"array",
                     "items":{
-                        "$ref":"#/$defs/param"
+                        "type":"object",
+                        "properties":{
+                            "params":{
+                                "type":"array",
+                                "items":{
+                                    "$ref":"#/$defs/param"
+                                }
+                            },
+                            "return":{
+                                "$ref":"#/$defs/return"
+                            }
+                        }
                     }
-                },
-                "return":{
-                    "$ref":"#/$defs/return"
                 }
             }
         },

@@ -527,7 +527,7 @@
       (define-values
         (param-signatures subsyntax-signatures signature-sd)
         (case (car signature)
-          ((lambda)
+          ((lambda case-lambda)
            (values (map
                      (lambda (param-sig)
                        (render-subsig (symbol->string (car param-sig))
@@ -771,10 +771,22 @@
           `(,(make-sexpr-el #f (symbol->string param) "muted" #f #f))))
 
     (define (render-procedure-signature name sig sub?)
+      (cond
+        ((symbol=? 'lambda (car sig))
+         (render-procedure-single-signature name (cadr sig) (caddr sig) sub?))
+        ((symbol=? 'case-lambda (car sig))
+         (make-sexpr-el #f #f "sexpr-flex-col" #f
+                        (map
+                          (lambda (e)
+                            (render-procedure-single-signature name (car e) (cadr e) sub?))
+                          (cdr sig))))
+        (else (error "Wrong signature"))))
+
+    (define (render-procedure-single-signature name params return sub?)
       (define name-sd (make-sexpr-el #f name (if sub? "muted-name" "bright-name") #f #f))
       (define (render-params-block params)
         (let loop ((params params)
-                   (last (null? (cdr (cadr sig))))
+                   (last (null? (cdr params)))
                    (result '()))
           (define param (car params))
           (define sd
@@ -787,8 +799,7 @@
               (loop (cdr params)
                     (null? (cddr params))
                     (cons sd result)))))
-      (define params (cadr sig))
-      (define return-sd (render-return-type (caddr sig) sub?))
+      (define return-sd (render-return-type return sub?))
       (if (null? params)
           (make-sexpr-el #f #f "sexpr-flex" #f
                          `(,paren-open-sd
