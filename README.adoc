@@ -238,7 +238,7 @@ Each definitions file is a list of entries, where each entry is an association l
 
 == Function
 
-In case of function, the format is `(lambda (<parameter> ...) <return type>)`
+In case of function, the format is either `(lambda (<parameter> ...) <return type>)` or `(case-lambda ((<parameter> ...) <return type>) ...)`.
 
 Each parameter is either of the form `(<type> param-name)` or just `param-name`, when type is "any". Each parameter may be succeeded by a `...` literal to indicate varargs / repetition.
 
