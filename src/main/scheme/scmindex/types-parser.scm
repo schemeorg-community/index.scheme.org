@@ -77,6 +77,7 @@
                            ((string? n) (string->symbol n))
                            ((symbol? n) n)
                            (else (raise "entry name not a string or a symbol")))))
+          (define description (assoc* 'desc entry ""))
           (define signature (let ((s (assoc* 'signature entry #f)))
                               (unless s
                                 (error "Missing signature attribute"))
@@ -121,6 +122,7 @@
                   (make-index-entry 
                     lib-string 
                     name
+                    description
                     param-names
                     signature
                     param-signatures

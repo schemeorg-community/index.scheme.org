@@ -60,6 +60,12 @@
             {{/ parameterized-by }}
         </div>
         {{/ has-parameterized-by? }}
+
+        {{# has-description? }}
+        <div class="search-item__block">
+            {{description}}
+        </div>
+        {{/ has-description? }}
     </div>
 
     <div class="search-item__tags">

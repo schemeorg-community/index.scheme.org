@@ -33,6 +33,7 @@
     index-entry?
     index-entry-lib
     index-entry-name
+    index-entry-description
     index-entry-param-names
     index-entry-signature
     index-entry-param-signatures
@@ -95,6 +96,7 @@
       (make-index-entry
         lib
         name
+        description
         param-names
         signature
         param-signatures
@@ -109,6 +111,7 @@
 
       (lib index-entry-lib)
       (name index-entry-name)
+      (description index-entry-description)
       (param-names index-entry-param-names)
       (signature index-entry-signature)
       (param-signatures index-entry-param-signatures)
@@ -122,6 +125,7 @@
     (define (index-entry->json func)
       `((lib . ,(index-entry-lib func))
         (name . ,(symbol->string (index-entry-name func)))
+        (description . ,(index-entry-description func))
         (signature . ,(jsonify-signature (index-entry-signature func)))
         (subsignatures . ,(jsonify-subsigs (index-entry-param-signatures func)))
         (tags . ,(list->vector (map symbol->string (index-entry-tags func))))
@@ -134,6 +138,7 @@
     (define (index-entry->alist f)
       `((lib . ,(index-entry-lib f))
         (name . ,(index-entry-name f))
+        (description . ,(index-entry-description f))
         (param-names . ,(index-entry-param-names f))
         (signature . ,(index-entry-signature f))
         (param-signatures . ,(index-entry-param-signatures f))
@@ -148,6 +153,7 @@
       (make-index-entry
         (cdr (assoc 'lib a))
         (cdr (assoc 'name a))
+        (cdr (assoc 'description a))
         (cdr (assoc 'param-names a))
         (cdr (assoc 'signature a))
         (cdr (assoc 'param-signatures a))
@@ -347,6 +353,7 @@
             (make-index-entry
               (get-target filterset-store filtername (index-entry-lib item))
               (index-entry-name item)
+              (index-entry-description item)
               (index-entry-param-names item)
               (index-entry-signature item)
               (index-entry-param-signatures item)

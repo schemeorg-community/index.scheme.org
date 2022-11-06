@@ -19,6 +19,7 @@
         "Test function general"
         (define spec-raw
           `((name . integer?)
+            (desc . "description")
             (signature . (lambda (obj) boolean?))
             (tags . (pure predicate))
             (supertypes . (number?))))
@@ -28,6 +29,8 @@
         (test-equal "(test lib)" (cdr (assoc 'lib f*)))
         (test-equal 'integer? (index-entry-name f))
         (test-equal "integer?" (cdr (assoc 'name f*)))
+        (test-equal "description" (index-entry-description f))
+        (test-equal "description" (cdr (assoc 'description f*)))
         (test-equal '(obj) (index-entry-param-names f))
         (test-equal '(boolean?) (index-entry-return-types f))
         (test-equal #("boolean?") (cdr (assoc 'return_types f*)))

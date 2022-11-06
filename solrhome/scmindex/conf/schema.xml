@@ -21,12 +21,13 @@
 
     <field name="id" type="uuid" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="_version_" type="plong" indexed="false" stored="false"/>
-    <field name="name" type="text_general" indexed="true" stored="true" />
+    <field name="name" type="text_name" indexed="true" stored="true" />
+    <field name="name_precise" type="text_precise" indexed="true" stored="false" />
+    <field name="description" type="text_general" indexed="true" stored="true" />
     <field name="data" type="string" indexed="false" stored="true" />
-    <field name="name_precise" type="string" indexed="true" stored="false" />
     <field name="signature" type="string" indexed="false" stored="true" />
     <field name="lib" type="string" indexed="true" stored="true" />
-    <field name="param_names" type="text_general" indexed="true" stored="true" multiValued="true"/>
+    <field name="param_names" type="text_name" indexed="true" stored="true" multiValued="true"/>
     <field name="tags" type="strings" indexed="true" stored="true" />
     <field name="param_types" type="strings" indexed="true" stored="true" />
     <field name="param_subtypes" type="strings" indexed="true" stored="true" />
@@ -48,14 +49,34 @@
     <fieldType name="pint" class="solr.IntPointField" docValues="true"/>
     <fieldType name="plong" class="solr.LongPointField" docValues="true"/>
 
-    <fieldType name="text_general" class="solr.TextField">
+    <fieldType name="text_name" class="solr.TextField">
         <analyzer type="index">
-            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+            <tokenizer class="solr.SimplePatternSplitTokenizerFactory" pattern="[A-Za-z0-9]+"/>
             <filter class="solr.LowerCaseFilterFactory"/>
-            <filter class="solr.NGramFilterFactory" minGramSize="2" maxGramSize="20"/>
+            <filter class="solr.EdgeNGramFilterFactory" minGramSize="3" maxGramSize="50"/>
         </analyzer>
         <analyzer type="query">
-            <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+            <tokenizer class="solr.SimplePatternSplitTokenizerFactory" pattern="[A-Za-z0-9]+"/>
+            <filter class="solr.LowerCaseFilterFactory"/>
+        </analyzer>
+    </fieldType>
+
+    <fieldType name="text_precise" class="solr.TextField">
+        <analyzer>
+            <tokenizer class="solr.KeywordTokenizerFactory"/>
+            <filter class="solr.LowerCaseFilterFactory"/>
+        </analyzer>
+    </fieldType>
+
+    <fieldType name="text_general" class="solr.TextField">
+        <analyzer type="index">
+            <tokenizer class="solr.StandardTokenizerFactory"/>
+            <filter class="solr.PorterStemFilterFactory" />
+            <filter class="solr.LowerCaseFilterFactory"/>
+        </analyzer>
+        <analyzer type="query">
+            <tokenizer class="solr.StandardTokenizerFactory"/>
+            <filter class="solr.PorterStemFilterFactory" />
             <filter class="solr.LowerCaseFilterFactory"/>
         </analyzer>
     </fieldType>

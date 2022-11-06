@@ -132,7 +132,7 @@
     ;; result item corresponding to a search-item / index-item in domain
     (define-mustache-record-type <result-item>
                                  result-item-lookup
-                                 (make-result-item signature param-signatures subsyntax-signatures tags lib parameterized-by spec-values)
+                                 (make-result-item signature param-signatures subsyntax-signatures tags lib parameterized-by spec-values description)
                                  result-item?
                                  ;; sexpr of main signature
                                  (signature result-item-signature)
@@ -143,7 +143,8 @@
                                  (tags result-item-tags)
                                  (lib result-item-lib)
                                  (parameterized-by result-item-parameterized-by)
-                                 (spec-values result-item-spec-values))
+                                 (spec-values result-item-spec-values)
+                                 (description result-item-description))
 
     ;; data used in <head>
     (define-mustache-record-type <page-head>
@@ -237,6 +238,7 @@
         ((equal? "has-subsyntax-signatures?" name) (found (not (null? (result-item-subsyntax-signatures obj)))))
         ((equal? "has-parameterized-by?" name) (found (not (null? (result-item-parameterized-by obj)))))
         ((equal? "has-spec-values?" name) (found (not (null? (result-item-spec-values obj)))))
+        ((equal? "has-description?" name) (found (> (string-length (result-item-description obj)) 0)))
         (else (not-found))))
 
     ;; hide faceting controls (search / expand / collapse) if there are only < 10 choices
@@ -570,6 +572,7 @@
                                                     signature)))))
       (define spec-values
         (render-spec-values (index-entry-spec-values index-entry)))
+      (define description (index-entry-description index-entry))
       (make-result-item
         signature-sd
         param-signatures
@@ -577,7 +580,8 @@
         (index-entry-tags index-entry)
         (index-entry-lib index-entry)
         (index-entry-parameterized-by index-entry)
-        spec-values))
+        spec-values
+        description))
 
     (define (render-spec-values spec-values)
       (map 

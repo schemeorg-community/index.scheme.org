@@ -37,6 +37,7 @@
             (lambda (f)
               (define jsondata
                 `((name . ,(symbol->string (index-entry-name f)))
+                  (description . ,(index-entry-description f))
                   (param_names . ,(list->vector (map symbol->string (index-entry-param-names f))))
                   (lib . ,(index-entry-lib f))
                   (tags . ,(list->vector (map symbol->string (index-entry-tags f))))
