@@ -51,12 +51,12 @@
 
     <fieldType name="text_name" class="solr.TextField">
         <analyzer type="index">
-            <tokenizer class="solr.SimplePatternSplitTokenizerFactory" pattern="[A-Za-z0-9]+"/>
+            <tokenizer class="solr.SimplePatternSplitTokenizerFactory" pattern="[\-:]"/>
             <filter class="solr.LowerCaseFilterFactory"/>
             <filter class="solr.EdgeNGramFilterFactory" minGramSize="3" maxGramSize="50"/>
         </analyzer>
         <analyzer type="query">
-            <tokenizer class="solr.SimplePatternSplitTokenizerFactory" pattern="[A-Za-z0-9]+"/>
+            <tokenizer class="solr.SimplePatternSplitTokenizerFactory" pattern="[\-:]"/>
             <filter class="solr.LowerCaseFilterFactory"/>
         </analyzer>
     </fieldType>

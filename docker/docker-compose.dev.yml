@@ -1,0 +1,28 @@
+services:
+  mvnrun:
+    image: "maven:3-openjdk-18"
+    volumes:
+      - type: bind
+        source: "../"
+        target: /app
+      - "mvn-repo:/root/.m2"
+    working_dir: /app
+    ports:
+      - "8080:8080"
+    command: ["sh", "-c", "cd kawa-web-collection; mvn install -DskipTests=true; cd ..; mvn clean kawa:run"]
+  sassrun:
+    image: "node:19-alpine3.15"
+    environment:
+      - "NPM_CONFIG_PREFIX=/home/node/.npm-global"
+      - "PATH=$PATH:/home/node/.npm-global/bin"
+    volumes:
+      - type: bind
+        source: "../"
+        target: /app
+      - "node-repo:/home/node/.npm-global"
+    working_dir: /app
+    command: ["sh", "-c", "npm install -g sass; sass -w src/main/scss/main.scss static/css/scmindex.css"]
+
+volumes:
+  mvn-repo:
+  node-repo:

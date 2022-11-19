@@ -118,7 +118,7 @@ docker run -p 8080:8080 --init scheme-index
 The application resides in `/app` location. Consult rest of the documentation for details, but in particular you might want to mount a volume 
 to `/app/logs` to catch log files, or a volume file to `/app/config/configuration.scm` to overwrite index config.
 
-=== Running in development
+=== Running in development (native)
 
 First, install dependencies under kawa-web-collection submodule (make sure the git submodule is initialized / updated)
 
@@ -138,6 +138,18 @@ Launch sass compiler with
 ```
 sass -w src/main/scss/main.scss static/css/scmindex.css
 ```
+
+=== Running development (docker)
+
+Make sure kawa-web-collection submodule is initialized
+
+Launch with
+
+```
+docker-compose -f docker/docker-compose.dev.yml up
+```
+
+
 
 == Configuration
 
