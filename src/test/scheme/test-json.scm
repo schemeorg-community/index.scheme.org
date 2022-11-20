@@ -38,4 +38,7 @@
         (define factory (JsonSchemaFactory:getInstance))
         (define schema (factory:getSchema schema-node))
         (define messages (schema:validate content-node))
-        (test-assert (= 0 (messages:size)))))))
+        (define message "")
+        (messages:forEach (lambda (m)
+                            (set! message (string-append message (m:toString)))))
+        (test-equal message "")))))

@@ -139,14 +139,26 @@ Launch sass compiler with
 sass -w src/main/scss/main.scss static/css/scmindex.css
 ```
 
+Execute unit tests using
+
+```
+mvn test
+```
+
 === Running in development (docker)
 
 Make sure kawa-web-collection submodule is initialized
 
-Launch with
+Run with
 
 ```
-docker-compose -f docker/docker-compose.dev.yml up
+docker-compose -f docker/docker-compose.dev.yml up mvnrun sassrun
+```
+
+Execute unit tests using
+
+```
+docker-compose -f docker/docker-compose.dev.yml up mvntest
 ```
 
 

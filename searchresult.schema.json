@@ -85,7 +85,7 @@
             "properties":{
                 "kind":{
                     "type":"string",
-                    "pattern":"(or)|(values)|(return)"
+                    "pattern":"^(or)|(values)|(return)$"
                 },
                 "items":{
                     "type":"array",
@@ -103,7 +103,7 @@
             "properties":{
                 "type":{
                     "type":"string",
-                    "pattern":"function"
+                    "pattern":"^function$"
                 },
                 "variants":{
                     "type":"array",
@@ -129,7 +129,7 @@
             "properties":{
                 "type":{
                     "type":"string",
-                    "pattern":"syntax"
+                    "pattern":"^syntax$"
                 },
                 "literals":{
                     "type":"array",
@@ -161,7 +161,7 @@
             "properties":{
                 "type":{
                     "type":"string",
-                    "pattern":"value"
+                    "pattern":"^value$"
                 },
                 "value":{
                     "$ref":"#/$defs/return"
@@ -173,7 +173,7 @@
             "properties":{
                 "type":{
                     "type":"string",
-                    "pattern":"pattern"
+                    "pattern":"^pattern$"
                 },
                 "patterns":{
                     "type":"array",
@@ -188,7 +188,7 @@
             "properties":{
                 "type":{
                     "type":"string",
-                    "pattern":"alist"
+                    "pattern":"^alist$"
                 },
                 "car":{
                     "$ref":"#/$defs/param"
@@ -203,7 +203,7 @@
             "properties":{
                 "type":{
                     "type":"string",
-                    "pattern":"list"
+                    "pattern":"^list$"
                 },
                 "element":{
                     "$ref":"#/$defs/param"
@@ -215,7 +215,7 @@
             "properties":{
                 "type":{
                     "type":"string",
-                    "pattern":"vector"
+                    "pattern":"^vector$"
                 },
                 "element":{
                     "$ref":"#/$defs/param"
