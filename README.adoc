@@ -139,7 +139,7 @@ Launch sass compiler with
 sass -w src/main/scss/main.scss static/css/scmindex.css
 ```
 
-=== Running development (docker)
+=== Running in development (docker)
 
 Make sure kawa-web-collection submodule is initialized
 
