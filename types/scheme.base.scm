@@ -426,7 +426,6 @@
  ((name . "list?")
   (signature lambda (obj) boolean?)
   (tags pure predicate)
-  (supertypes pair? null?)
   (desc . "Returns #t if obj is a list. Otherwise, it returns #f. By definition, all lists have finite length and are terminated by the empty list."))
  ((name . "make-bytevector")
   (signature
@@ -491,7 +490,11 @@
   (signature case-lambda (() undefined) (((output-port? port)) undefined))
   (desc . "Writes an end of line to textual output port. Returns an unspecified value."))
  ((name . "not") (signature lambda (obj) boolean?) (tags pure) (desc . "The not procedure returns #t if obj is false, and returns #f otherwise."))
- ((name . "null?") (signature lambda (obj) boolean?) (tags pure predicate) (desc . "Returns #t if obj is the empty list, otherwise returns #f."))
+ ((name . "null?")
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (supertypes list?)
+  (desc . "Returns #t if obj is the empty list, otherwise returns #f."))
  ((name . "number->string")
   (signature
    case-lambda
@@ -755,8 +758,7 @@
   (desc . "string<?, string-ci<?, string>?, string-ci>?, string<=?, string-ci<=?, string=>?, string-ci=>? These procedures return #t if their arguments are (respectively): monotonically increasing, monotonically decreasing, monotonically non-decreasing, or monotonically nonincreasing. These predicates are required to be transitive. These procedures compare strings in an implementationdefined way. One approach is to make them the lexicographic extensions to strings of the corresponding orderings on characters. In that case, string<? would be the lexicographic ordering on strings induced by the ordering char<? on characters, and if the two strings differ in length but are the same up to the length of the shorter string, the shorter string would be considered to be lexicographically less than the longer string. However, it is also permitted to use the natural ordering imposed by the implementation’s internal representation of strings, or a more complex locale-specific ordering. In all cases, a pair of strings must satisfy exactly one of string<?, string=?, and string>?, and must satisfy string<=? if and only if they do not satisfy string>? and string>=? if and only if they do not satisfy string<?. The \"-ci\" procedures behave as if they applied string-foldcase to their arguments before invoking the corresponding procedures without \"-ci\"."))
  ((name . "string?")
   (signature lambda (obj) boolean?)
-  (tags pure predicate)
-  (supertypes textual?))
+  (tags pure predicate))
  ((name . "substring")
   (signature lambda ((string? string) (integer? start) (integer? end)) string?)
   (tags pure)
