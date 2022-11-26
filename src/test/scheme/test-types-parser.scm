@@ -5,7 +5,6 @@
           (scheme read)
           (scmindex domain)
           (scmindex types-parser)
-          (scmindex mustache)
           (only (srfi 1) lset=)
           (srfi 64)
           (srfi 180))
