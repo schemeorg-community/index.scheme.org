@@ -289,6 +289,12 @@ $media-breakpoint: 600px;
        margin-top: 0.8em;
    }
 
+
+   &__block-description {
+       white-space: pre-line;
+        color: var(--text-color-muted);
+   }
+
    &__spec-value-field-name {
        color: var(--text-color-muted);
        font-weight: bold;
@@ -421,6 +427,10 @@ $media-breakpoint: 600px;
         width: 0.25em;
     }
 
+    &.wide-spacer {
+        width: 0.75em;
+    }
+
     &.bright-name {
         font-weight: bold;
         color: var(--accent-color);
@@ -458,4 +468,5 @@ $media-breakpoint: 600px;
         font-size: 0.8em;
         color: var(--text-color-muted);
     }
+
 }
