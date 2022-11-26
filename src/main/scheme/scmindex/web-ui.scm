@@ -13,7 +13,7 @@
     (arvyy mustache)
     (scmindex domain)
     (scmindex types-parser)
-    (scmindex mustache)
+    (scmindex renderer)
     (only (srfi 1) filter)
     (srfi 180))
   (export init-web-ui
