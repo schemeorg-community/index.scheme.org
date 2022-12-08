@@ -1,7 +1,9 @@
 (((name . "list-sorted?")
   (signature lambda ((procedure? <) (list? lis)) boolean?)
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "(shared description for list-sorted?, vector-sorted?)  These procedures return true iff their input list or vector is in sorted order, as determined by <. Specifically, they return #f iff there is an adjacent pair ... X Y ... in the input list or vector such that Y < X in the sense of <. The optional start and end range arguments restrict vector-sorted? to examining the indicated subvector.
+These procedures are equivalent to the SRFI 95 sorted? procedure when applied to lists or vectors respectively, except that they do not accept a key procedure."))
  ((name . "vector-sorted?")
   (signature
    case-lambda
@@ -9,21 +11,31 @@
    (((procedure? <) (vector? v) (integer? start)) boolean?)
    (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "(shared description for list-sorted?, vector-sorted?)  These procedures return true iff their input list or vector is in sorted order, as determined by <. Specifically, they return #f iff there is an adjacent pair ... X Y ... in the input list or vector such that Y < X in the sense of <. The optional start and end range arguments restrict vector-sorted? to examining the indicated subvector.
+These procedures are equivalent to the SRFI 95 sorted? procedure when applied to lists or vectors respectively, except that they do not accept a key procedure."))
  ((name . "list-sort")
   (signature lambda ((procedure? <) (list? lis)) list?)
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "(shared description for list-sort, list-stable-sort)  These procedures do not alter their inputs, but are allowed to return a value that shares a common tail with a list argument.
+The list-stable-sort procedure is equivalent to the R6RS list-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to lists, except that it does not accept a key procedure."))
  ((name . "list-stable-sort")
   (signature lambda ((procedure? <) (list? lis)) list?)
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "(shared description for list-sort, list-stable-sort)  These procedures do not alter their inputs, but are allowed to return a value that shares a common tail with a list argument.
+The list-stable-sort procedure is equivalent to the R6RS list-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to lists, except that it does not accept a key procedure."))
  ((name . "list-sort!")
   (signature lambda ((procedure? <) (list? lis)) list?)
-  (subsigs (< (lambda (obj1 obj2) boolean?))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . "(shared description for list-sort!, list-stable-sort!)  These procedures are linear update operators — they are allowed, but not required, to alter the cons cells of their arguments to produce their results. They return a sorted list containing the same elements as lis.
+The list-stable-sort! procedure is equivalent to the SRFI 95 sort! procedure when applied to lists, except that it does not accept a key procedure."))
  ((name . "list-stable-sort!")
   (signature lambda ((procedure? <) (list? lis)) list?)
-  (subsigs (< (lambda (obj1 obj2) boolean?))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . "(shared description for list-sort!, list-stable-sort!)  These procedures are linear update operators — they are allowed, but not required, to alter the cons cells of their arguments to produce their results. They return a sorted list containing the same elements as lis.
+The list-stable-sort! procedure is equivalent to the SRFI 95 sort! procedure when applied to lists, except that it does not accept a key procedure."))
  ((name . "vector-sort")
   (signature
    case-lambda
@@ -31,7 +43,8 @@
    (((procedure? <) (vector? v) (integer? start)) boolean?)
    (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "(shared description for vector-sort, vector-stable-sort) These procedures do not alter their inputs, but allocate a fresh vector as their result, of length end - start. The vector-stable-sort procedure with no optional arguments is equivalent to the R6RS vector-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to vectors, except that it does not accept a key procedure."))
  ((name . "vector-stable-sort")
   (signature
    case-lambda
@@ -39,28 +52,38 @@
    (((procedure? <) (vector? v) (integer? start)) boolean?)
    (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "(shared description for vector-sort, vector-stable-sort) These procedures do not alter their inputs, but allocate a fresh vector as their result, of length end - start. The vector-stable-sort procedure with no optional arguments is equivalent to the R6RS vector-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to vectors, except that it does not accept a key procedure."))
  ((name . "vector-sort!")
   (signature
    case-lambda
    (((procedure? <) (vector? v)) boolean?)
    (((procedure? <) (vector? v) (integer? start)) boolean?)
    (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
-  (subsigs (< (lambda (obj1 obj2) boolean?))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . "(shared description for vector-sort!, vector-stable-sort!)  These procedures sort their data in-place. (But note that vector-stable-sort! may allocate temporary storage proportional to the size of the input — there are no known O(n lg n) stable vector sorting algorithms that run in constant space.) They return an unspecified value.
+The vector-sort! procedure with no optional arguments is equivalent to the R6RS vector-sort! procedure."))
  ((name . "vector-stable-sort!")
   (signature
    case-lambda
    (((procedure? <) (vector? v)) boolean?)
    (((procedure? <) (vector? v) (integer? start)) boolean?)
    (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
-  (subsigs (< (lambda (obj1 obj2) boolean?))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . "(shared description for vector-sort!, vector-stable-sort!)  These procedures sort their data in-place. (But note that vector-stable-sort! may allocate temporary storage proportional to the size of the input — there are no known O(n lg n) stable vector sorting algorithms that run in constant space.) They return an unspecified value.
+The vector-sort! procedure with no optional arguments is equivalent to the R6RS vector-sort! procedure."))
  ((name . "list-merge")
   (signature lambda ((procedure? <) (list? lis1) (list? lis2)) list?)
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . " This procedure does not alter its inputs, and is allowed to return a value that shares a common tail with a list argument.
+This procedure is equivalent to the SRFI 95 merge procedure when applied to lists, except that it does not accept a key procedure. "))
  ((name . "list-merge!")
   (signature lambda ((procedure? <) (list? lis1) (list? lis2)) list?)
-  (subsigs (< (lambda (obj1 obj2) boolean?))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . " This procedure makes only a single, iterative, linear-time pass over its argument lists, using set-cdr!s to rearrange the cells of the lists into the list that is returned — it works \"in place.\" Hence, any cons cell appearing in the result must have originally appeared in an input. It returns the sorted input.
+Additionally, list-merge! is iterative, not recursive — it can operate on arguments of arbitrary size without requiring an unbounded amount of stack space. The intent of this iterative-algorithm commitment is to allow the programmer to be sure that if, for example, list-merge! is asked to merge two ten-million-element lists, the operation will complete without performing some extremely (possibly twenty-million) deep recursion.
+This procedure is equivalent to the SRFI 95 merge! procedure when applied to lists, except that it does not accept a key procedure."))
  ((name . "vector-merge")
   (signature
    case-lambda
@@ -88,7 +111,9 @@
      (integer? end2))
     vector?))
   (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "This procedure does not alter its inputs, and returns a newly allocated vector of length (end1 - start1) + (end2 - start2).
+This procedure is equivalent to the SRFI 95 merge procedure when applied to vectors, except that it does not accept a key procedure."))
  ((name . "vector-merge!")
   (signature
    case-lambda
@@ -115,14 +140,18 @@
      (integer? start2)
      (integer? end2))
     vector?))
-  (subsigs (< (lambda (obj1 obj2) boolean?))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . "This procedure writes its result into vector to, beginning at index start, for indices less than end, which is defined as start + (end1 - start1) + (end2 - start2). The target subvector to[start, end) may not overlap either of the source subvectors from1[start1, end1] and from2[start2, end2]. It returns an unspecified value.
+This procedure is equivalent to the SRFI 95 merge! procedure when applied to lists, except that it does not accept a key procedure."))
  ((name . "list-delete-neighbor-dups")
   (signature lambda ((procedure? =) (list? lis)) list?)
   (subsigs (= (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "This procedure does not alter its input list, but its result may share storage with the input list."))
  ((name . "list-delete-neighbor-dups!")
   (signature lambda ((procedure? =) (list? lis)) list?)
-  (subsigs (= (lambda (obj1 obj2) boolean?))))
+  (subsigs (= (lambda (obj1 obj2) boolean?)))
+  (desc . "This procedure mutates its input list in order to construct its result. It makes only a single, iterative, linear-time pass over its argument, using set-cdr!s to rearrange the cells of the list into the final result — it works \"in place.\" Hence, any cons cell appearing in the result must have originally appeared in the input."))
  ((name . "vector-delete-neighbor-dups")
   (signature
    case-lambda
@@ -130,27 +159,31 @@
    (((procedure? =) (vector? v) (integer? start)) vector?)
    (((procedure? =) (vector? v) (integer? start) (integer? end)) vector?))
   (subsigs (= (lambda (obj1 obj2) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "This procedure does not alter its input vector, but rather newly allocates and returns a vector to hold the result."))
  ((name . "vector-delete-neighbor-dups!")
   (signature
    case-lambda
    (((procedure? =) (vector? v)) vector?)
    (((procedure? =) (vector? v) (integer? start)) vector?)
    (((procedure? =) (vector? v) (integer? start) (integer? end)) vector?))
-  (subsigs (= (lambda (obj1 obj2) boolean?))))
+  (subsigs (= (lambda (obj1 obj2) boolean?)))
+  (desc . "This procedure reuses its input vector to hold the answer, packing it into the index range [start, newend), where newend is the non-negative exact integer that is returned as its value. The vector is not altered outside the range [start, newend)."))
  ((name . "vector-find-median")
   (signature
    case-lambda
    (((procedure? <) (vector? v) knil) *)
    (((procedure? <) (vector? v) knil (procedure? mean)) *))
   (subsigs (< (lambda (obj1 obj2) boolean?)) (mean (lambda (obj1 obj2) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "This procedure does not alter its input vector, but rather newly allocates a vector to hold the intermediate result. Runs in O(n) time."))
  ((name . "vector-find-median!")
   (signature
    case-lambda
    (((procedure? <) (vector? v) knil) *)
    (((procedure? <) (vector? v) knil (procedure? mean)) *))
-  (subsigs (< (lambda (obj1 obj2) boolean?)) (mean (lambda (obj1 obj2) *))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)) (mean (lambda (obj1 obj2) *)))
+(desc . "This procedure reuses its input vector to hold the intermediate result, leaving it sorted, but is otherwise the same as vector-find-median. Runs in O(n ln n) time."))
  ((name . "vector-select!")
   (signature
    case-lambda
@@ -158,7 +191,8 @@
    (((procedure? <) (vector? v) (integer? k) (integer? start)) *)
    (((procedure? <) (vector? v) (integer? k) (integer? start) (integer? end))
     *))
-  (subsigs (< (lambda (obj1 obj2) boolean?))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . "This procedure returns the kth smallest element (in the sense of the < argument) of the region of a vector between start and end. Elements within the range may be reordered, whereas those outside the range are left alone. Runs in O(n) time."))
  ((name . "vector-separate!")
   (signature
    case-lambda
@@ -166,4 +200,5 @@
    (((procedure? <) (vector? v) (integer? k) (integer? start)) undefined)
    (((procedure? <) (vector? v) (integer? k) (integer? start) (integer? end))
     undefined))
-  (subsigs (< (lambda (obj1 obj2) boolean?)))))
+  (subsigs (< (lambda (obj1 obj2) boolean?)))
+  (desc . "This procedure places the smallest k elements (in the sense of the < argument) of the region of a vector between start and end into the first k positions of that range, and the remaining elements into the remaining positions. Otherwise, the elements are not in any particular order. Elements outside the range are left alone. Runs in O(n) time. Returns an unspecified value.")))
