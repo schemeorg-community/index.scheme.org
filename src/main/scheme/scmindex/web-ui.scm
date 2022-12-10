@@ -131,6 +131,7 @@
                 (lambda (req resp)
                   (define filterset-code (req/param req "filterset"))
                   (define filterset-name (get-name filterset-store filterset-code))
+                  (define baseurl* (string-append "/filterset/" filterset-code "/"))
                   (if (not filterset-name)
                       (resp/redirect resp "/404.html")
                       (let ()
@@ -150,7 +151,27 @@
                         (define parameterized-by (or (req/query-param-values req "parameterized") '()))
                         (define search-result (query-index searcher start page-size query libs* param-types return-types parameterized-by tags filter-params-loose?))
                         (define search-result* (transform-result-libraries filterset-store filterset-code search-result))
-                        (render-search-page settings filtersets filterset-name page page-size query libs tags param-types return-types parameterized-by search-result*)))))
+                        (parameterize ((baseurl baseurl*))
+                          (resp/set-header! resp "X-Robots-Tag" "noindex")
+                          (render-search-page settings filtersets filterset-name page page-size query libs tags param-types return-types parameterized-by search-result*))))))
+
+      (get/html "/filterset/:filterset/:lib/:name"
+                (lambda (req resp)
+                  (define name (req/param req "name"))
+                  (define filterset-code (req/param req "filterset"))
+                  (define filterset-name (get-name filterset-store filterset-code))
+                  (define baseurl* (string-append "/filterset/" filterset-code "/"))
+                  (if (not filterset-name)
+                      (resp/redirect resp "/404.html")
+                      (let ()
+                        (define libs (transform-request-libraries filterset-store filterset-code (list (req/param req "lib"))))
+                        (define search-result (get-from-index searcher (car libs) name))
+                        (define search-result* (transform-result-libraries filterset-store filterset-code search-result))
+                        (cond
+                         ((= 0 (search-result-total search-result*)) (resp/redirect resp "/404.html"))
+                         (else (let ((result-item (list-ref (search-result-items search-result*) 0)))
+                                 (parameterize ((baseurl baseurl*))
+                                   (render-single-item-page settings filtersets filterset-code filterset-name result-item)))))))))
 
       ;; REST api
       (path "/rest"

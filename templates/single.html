@@ -1,0 +1,25 @@
+<html lang="en" class="theme-default">
+    {{#head}}
+        {{>head}}
+    {{/head}}
+    <body class="body preload">
+        <div class="body__navbar">
+        {{#navigation}}
+            {{>topnavigation}}
+        {{/navigation}}
+        </div>
+        {{#body}}
+        <main class="body__content single-page">
+            <section class="definition-list animated-enter" aria-label="Definition">
+                {{! extra div wrapping for shadow }}
+                <div class="definition-list__content-shadow">
+                    {{# item }}
+                        {{> search-item }}
+                    {{/ item }}
+                </div>
+                <a class="single-page__return" href="{{searchurl}}">Back to search</a>
+            </section>
+        </main>
+        {{/body}}
+    </body>
+</html>

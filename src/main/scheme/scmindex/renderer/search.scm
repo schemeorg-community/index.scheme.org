@@ -8,6 +8,13 @@
   ;; #t if this is a button showing `...` to indicate a gap between visible range and first / last page.
   (gap? pager-button-gap?))
 
+(define-mustache-record-type <ui-link>
+  ui-link-lookup
+  (make-ui-link href label)
+  ui-link?
+  (href ui-link-href)
+  (label ui-link-label))
+
 ;; facet filter, eg "library filter"
 (define-mustache-record-type <facet>
   facet-lookup
@@ -38,11 +45,22 @@
   (pages search-result-mustache-pages)
   (search-items search-result-mustache-search-items))
 
+;; single result page data
+(define-mustache-record-type <single-item-mustache>
+  single-item-mustache-lookup
+  (make-single-item-mustache filterset-code filterset-name item searchurl)
+  single-item-mustache?
+  (filterset-code single-item-mustache-filterset-code)
+  (filterset-name single-item-mustache-filterset-name)
+  (item single-item-mustache-item)
+  (searchurl single-item-mustache-searchurl))
+
 ;; result item corresponding to a search-item / index-item in domain
 (define-mustache-record-type <result-item>
   result-item-lookup
-  (make-result-item signature param-signatures subsyntax-signatures tags lib parameterized-by spec-values description)
+  (make-result-item name signature param-signatures subsyntax-signatures tags lib parameterized-by spec-values description)
   result-item?
+  (name result-item-name)
   ;; sexpr of main signature
   (signature result-item-signature)
   ;; list of sexprs of parameter signatures
@@ -217,12 +235,13 @@
                 (link
                  (if (= p page)
                      #f
-                     (string-append "?" (encode-query link-query)))))
+                     (string-append (baseurl) "search?" (encode-query link-query)))))
            (make-pager-button p link #f))))
    shown-pages))
 
 (define (render-index-entry index-entry)
   (define signature (index-entry-signature index-entry))
+  (define link (string-append (baseurl) (urlencode (index-entry-lib index-entry)) "/" (urlencode (symbol->string (index-entry-name index-entry)))))
   (define-values
       (param-signatures subsyntax-signatures signature-sd)
     (case (car signature)
@@ -234,6 +253,7 @@
                 (index-entry-param-signatures index-entry))
                '()
                (render-procedure-signature (index-entry-name index-entry)
+                                           link
                                            signature
                                            #f)))
       ((syntax-rules)
@@ -261,21 +281,30 @@
                      (symbol=? 'pattern (caadr s)))
                    (index-entry-param-signatures index-entry))))
                (render-syntax-signature (index-entry-name index-entry)
+                                        link
                                         signature)))
       ((value)
        (values '()
                '()
                (render-value-signature (index-entry-name index-entry)
+                                       link
                                        signature)))))
   (define spec-values
     (render-spec-values (index-entry-spec-values index-entry)))
   (define description (index-entry-description index-entry))
   (make-result-item
+   (index-entry-name index-entry)
    signature-sd
    param-signatures
    subsyntax-signatures
-   (index-entry-tags index-entry)
-   (index-entry-lib index-entry)
+   (map
+    (lambda (tag)
+      (make-ui-link (string-append (baseurl) "search?" (encode-query `((tag . ,(symbol->string tag)))))
+                    tag))
+    (index-entry-tags index-entry))
+   (let ((lib (index-entry-lib index-entry)))
+     (make-ui-link (string-append (baseurl) "search?" (encode-query `((lib . ,lib))))
+                   lib))
    (index-entry-parameterized-by index-entry)
    spec-values
    description))
@@ -310,14 +339,16 @@
   (make-sexpr-el #f #f "sexpr-flex" #f (render-sexpr (cons rule '()) term-handler 1)))
 
 (define suppress-make-link (make-parameter #f))
+(define singlepage-link-maker (make-parameter #f))
+(define baseurl (make-parameter ""))
 
 (define (make-link type param?)
   (cond
    ((suppress-make-link) #f)
-   (param? (string-append "?" (encode-query `((return . ,(symbol->string type))))))
-   (else (string-append "?" (encode-query `((param . ,(symbol->string type))))))))
+   (param? (string-append (baseurl) "search?" (encode-query `((return . ,(symbol->string type))))))
+   (else (string-append (baseurl) "search?" (encode-query `((param . ,(symbol->string type))))))))
 
-(define (render-syntax-signature name signature)
+(define (render-syntax-signature name link signature)
   (define rules
     (map
      (lambda (r)
@@ -326,8 +357,9 @@
   (define literals (cadr signature))
   (define (term-handler term)
     (cond
-     ((or (equal? name term)
-          (find (lambda (el) (equal? term el)) literals))
+     ((equal? name term)
+       (make-sexpr-el #f (symbol->string term) "bright-syntax" link #f))
+     ((find (lambda (el) (equal? term el)) literals)
       (make-sexpr-el #f (symbol->string term) "bright-syntax" #f #f))
      ((equal? '... term)
       (make-sexpr-el #f "..." "muted" #f #f))
@@ -442,20 +474,20 @@
         ,sq-paren-close-sd)
       `(,(make-sexpr-el #f (symbol->string param) "muted" #f #f))))
 
-(define (render-procedure-signature name sig sub?)
+(define (render-procedure-signature name link sig sub?)
   (cond
    ((symbol=? 'lambda (car sig))
-    (render-procedure-single-signature name (cadr sig) (caddr sig) sub?))
+    (render-procedure-single-signature name link (cadr sig) (caddr sig) sub?))
    ((symbol=? 'case-lambda (car sig))
     (make-sexpr-el #f #f "sexpr-flex-col" #f
                    (map
                     (lambda (e)
-                      (render-procedure-single-signature name (car e) (cadr e) sub?))
+                      (render-procedure-single-signature name link (car e) (cadr e) sub?))
                     (cdr sig))))
    (else (error "Wrong signature"))))
 
-(define (render-procedure-single-signature name params return sub?)
-  (define name-sd (make-sexpr-el #f name (if sub? "muted-name" "bright-name") #f #f))
+(define (render-procedure-single-signature name link params return sub?)
+  (define name-sd (make-sexpr-el #f name (if sub? "muted-name" "bright-name") link #f))
   (define (render-params-block params)
     (let loop ((params params)
                (last (null? (cdr params)))
@@ -486,7 +518,7 @@
 
 (define (render-subsig/lambda sig)
   (parameterize ((suppress-make-link #t))
-    (render-procedure-signature "\x03BB" sig #t)))
+    (render-procedure-signature "\x03BB" #f sig #t)))
 
 (define (render-subsig/alist sig)
   (make-sexpr-el #f #f "sexpr-flex" #f
@@ -536,9 +568,9 @@
       (else (raise (string-append "Unexpected signature: " (write* sig))))))
   (make-sexpr-el #f #f "sexpr-flex" #f `(,name-sd  ,spacer-sd ,long-arrow-sd ,spacer-sd ,value)))
 
-(define (render-value-signature name sig)
+(define (render-value-signature name link sig)
   (make-sexpr-el #f #f "sexpr-flex" #f
-                 (list (make-sexpr-el #f name "bright-name" #f #f)
+                 (list (make-sexpr-el #f name "bright-name" link #f)
                        spacer-sd
                        long-arrow-sd
                        spacer-sd
@@ -547,8 +579,16 @@
 
 (define (render-search-page settings filtersets filterset page page-size query libs tags param-types return-types parameterized-by search-result)
   (values
-   "search"
-   (make-page
-    (make-page-head "Search")
-    (make-navigation (make-mustache-nav-data 'search filtersets (deploy-setting/enable-user-settings settings)))
-    (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result))))
+     "search"
+     (make-page
+      (make-page-head "Search")
+      (make-navigation (make-mustache-nav-data 'search filtersets (deploy-setting/enable-user-settings settings)))
+      (render-search-result filterset page page-size query libs tags param-types return-types parameterized-by search-result))))
+
+(define (render-single-item-page settings filtersets filterset-code filterset-name entry)
+  (values
+     "single"
+     (make-page
+      (make-page-head "Search")
+      (make-navigation (make-mustache-nav-data 'search filtersets (deploy-setting/enable-user-settings settings)))
+      (make-single-item-mustache filterset-code filterset-name (render-index-entry entry) (string-append (baseurl) "search")))))

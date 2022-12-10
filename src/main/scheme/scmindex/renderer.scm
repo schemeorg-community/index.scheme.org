@@ -18,9 +18,12 @@
   
   (export
 
+    baseurl
+
     ;; render page functions -- each returning 2 values: template name and template data
     render-home-page
     render-search-page
+    render-single-item-page
     render-settings-page
 
     ;; list of cookies settings uses
@@ -49,9 +52,11 @@
         nav-item-lookup
         nav-item-extra-lookup
         pager-button-lookup
+        ui-link-lookup
         facet-lookup
         facet-option-lookup
         search-result-mustache-lookup
+        single-item-mustache-lookup
         result-item-lookup
         page-head-lookup
         setting-lookup

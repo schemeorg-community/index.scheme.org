@@ -24,6 +24,8 @@
          (index-types solr-client core entries))
         ((query-index start page-size text libs params returns parameterized-by tags filter-params-loose?)
          (exec-solr-query solr-client core start page-size text libs params returns parameterized-by tags filter-params-loose?))
+        ((get-from-index lib name)
+         (exec-solr-select solr-client core lib name))
         ((facet-values libs facet)
          (solr-facet-values solr-client core libs facet))))
 
@@ -73,6 +75,21 @@
             (lambda (f)
               (> (search-result-facet-count f) 0))
             facet-values)))
+
+    (define (exec-solr-select solr-client core lib name)
+      (define lib-fq
+        (if lib
+            (list (string-append "lib: \"" (escape-solr-spec lib) "\""))
+            '()))
+      (define name-fq
+        (list (string-append "name_precise: \"" (escape-solr-spec name) "\"")))
+      (define fq (append lib-fq name-fq))
+      (define params
+        `((fq . #(,@fq))
+          (start . 0)
+          (rows . 50)))
+      (define solr-resp (query solr-client core "/search" params))
+      (parse-solr-response solr-resp))
 
     (define (exec-solr-query solr-client core start page-size text libs params returns parameterized-by tags filter-params-loose?)
       (define body (build-solr-query start page-size text libs params returns parameterized-by tags filter-params-loose?))

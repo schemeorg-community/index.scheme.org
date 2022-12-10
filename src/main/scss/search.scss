@@ -1,6 +1,23 @@
 $padding-breakpoint: 1000px;
 $media-breakpoint: 600px;
 
+.definition-list {
+
+    padding: 2em;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    @media (max-width: $padding-breakpoint) {
+            padding: 0;
+    }
+
+    &__content-shadow {
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 24px;
+    }
+}
+
 .search-page {
 
     display: flex;
@@ -154,17 +171,6 @@ $media-breakpoint: 600px;
     &__search-result {
         overflow-y: auto;
         flex: 3;
-        padding: 2em;
-        background-color: var(--bg-color);
-        display: flex;
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    @media (max-width: $padding-breakpoint) {
-        &__search-result {
-            padding: 0;
-        }
     }
 
     &__query-cnt {
@@ -184,9 +190,6 @@ $media-breakpoint: 600px;
         color: var(--text-color-against-bg);
     }
 
-    &__search-result-list {
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 24px;
-    }
 }
 
 @media (max-width: $media-breakpoint) {
@@ -456,7 +459,6 @@ $media-breakpoint: 600px;
     &.bright-syntax {
         font-weight: bold;
         color: var(--tertary-color);
-        text-decoration: none;
     }
 
     &.muted-type {
@@ -469,4 +471,13 @@ $media-breakpoint: 600px;
         color: var(--text-color-muted);
     }
 
+}
+
+.single-page {
+    &__return {
+        margin-top: 2em;
+        align-self: start;
+        font-weight: bold;
+        color: var(--accent-color);
+    }
 }

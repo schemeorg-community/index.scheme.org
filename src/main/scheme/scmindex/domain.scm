@@ -58,6 +58,7 @@
     make-searcher
     save-index-entries
     query-index
+    get-from-index
     facet-values
 
     make-settings
@@ -306,6 +307,7 @@
       make-searcher
       (save-index-entries entries)
       (query-index start page-size query libs param-types return-types parameterized-by tags filter-params-loose?)
+      (get-from-index lib name)
       (facet-values libs facet))
 
     (define-interface
