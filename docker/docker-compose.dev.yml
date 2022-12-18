@@ -1,5 +1,5 @@
 services:
-  mvnrun:
+  app:
     image: "maven:3-openjdk-18"
     volumes:
       - type: bind
@@ -10,7 +10,7 @@ services:
     ports:
       - "8080:8080"
     command: ["sh", "-c", "cd kawa-web-collection; mvn install -DskipTests=true; cd ..; mvn clean kawa:run"]
-  sassrun:
+  sass:
     image: "node:19-alpine3.15"
     environment:
       - "NPM_CONFIG_PREFIX=/home/node/.npm-global"
@@ -22,7 +22,7 @@ services:
       - "node-repo:/home/node/.npm-global"
     working_dir: /app
     command: ["sh", "-c", "npm install -g sass; sass -w src/main/scss/main.scss static/css/scmindex.css"]
-  mvntest:
+  test:
     image: "maven:3-openjdk-18"
     volumes:
       - type: bind
@@ -33,6 +33,21 @@ services:
     ports:
       - "8080:8080"
     command: ["sh", "-c", "cd kawa-web-collection; mvn install -DskipTests=true; cd ..; mvn clean test"]
+  nginx:
+    image: "nginx:1.21"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./devcert/:/etc/letsencrypt/live/r7rsindex.com"
+      - "./devcert/:/etc/letsencrypt/live/index.scheme.org"
+      - type: bind
+        source: "../static"
+        target: /www/data
+      - type: bind
+        source: "./nginx/nginx.conf"
+        target: /etc/nginx/nginx.conf
+
 
 volumes:
   mvn-repo:

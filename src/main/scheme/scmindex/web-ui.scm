@@ -100,11 +100,11 @@
       (when (deploy-setting/serve-static settings)
         (static-files/external-location "static"))
 
-      (not-found (lambda (req resp) (resp/redirect resp "/404.html")))
-      ;(internal-server-error (lambda (req resp) (resp/redirect resp "/500.html")))
+      (not-found (lambda (req resp)
+                   (resp/set-status! resp 404)))
       (exception (lambda (exception req resp)
                    (log-info logger "Error handling request" exception)
-                   (resp/redirect resp "/500.html")))
+                   (resp/set-status! resp 500)))
 
       (get/html "/"
                 (lambda (req resp)
@@ -114,7 +114,7 @@
                 (lambda (req resp)
                   (if (deploy-setting/enable-user-settings settings)
                       (render-settings-page req settings filtersets)
-                      (resp/redirect resp "/404.html"))))
+                      (resp/set-status! resp 404))))
 
       (post "/settings"
             (lambda (req resp)
@@ -133,7 +133,7 @@
                   (define filterset-name (get-name filterset-store filterset-code))
                   (define baseurl* (string-append "/filterset/" filterset-code "/"))
                   (if (not filterset-name)
-                      (resp/redirect resp "/404.html")
+                      (resp/set-status! resp 404)
                       (let ()
                         (define page-size (user-setting/page-size settings))
                         (define filter-params-loose?  (user-setting/param-filter-loose settings))
@@ -162,13 +162,13 @@
                   (define filterset-name (get-name filterset-store filterset-code))
                   (define baseurl* (string-append "/filterset/" filterset-code "/"))
                   (if (not filterset-name)
-                      (resp/redirect resp "/404.html")
+                      (resp/set-status! resp 404)
                       (let ()
                         (define libs (transform-request-libraries filterset-store filterset-code (list (req/param req "lib"))))
                         (define search-result (get-from-index searcher (car libs) name))
                         (define search-result* (transform-result-libraries filterset-store filterset-code search-result))
                         (cond
-                         ((= 0 (search-result-total search-result*)) (resp/redirect resp "/404.html"))
+                         ((= 0 (search-result-total search-result*)) (resp/set-status! resp 404))
                          (else (let ((result-item (list-ref (search-result-items search-result*) 0)))
                                  (parameterize ((baseurl baseurl*))
                                    (render-single-item-page settings filtersets filterset-code filterset-name result-item)))))))))

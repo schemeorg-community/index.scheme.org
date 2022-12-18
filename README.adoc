@@ -152,13 +152,13 @@ Make sure kawa-web-collection submodule is initialized
 Run with
 
 ```
-docker-compose -f docker/docker-compose.dev.yml up mvnrun sassrun
+docker-compose -f docker/docker-compose.dev.yml up app sass nginx
 ```
 
 Execute unit tests using
 
 ```
-docker-compose -f docker/docker-compose.dev.yml up mvntest
+docker-compose -f docker/docker-compose.dev.yml up test
 ```
 
 
