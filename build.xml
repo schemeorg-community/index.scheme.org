@@ -98,7 +98,9 @@
         <copy file="target/scheme-index.jar" tofile="dist/scheme-index.jar"/>
         <copy file="README.adoc" tofile="dist/README.adoc"/>
         <copy file="README.html" tofile="dist/README.html"/>
+        <copy file="screenshot.png" tofile="dist/screenshot.png"/>
         <copy file="README.html" tofile="dist/static/README.html"/>
+        <copy file="screenshot.png" tofile="dist/static/screenshot.png"/>
     </target>
 
     <target name="dist-client-download" depends="prepare-dist, compile-client" if="${buildClient}">

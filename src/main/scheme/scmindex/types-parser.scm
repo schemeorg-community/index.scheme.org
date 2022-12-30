@@ -16,8 +16,7 @@
   (export read-specs 
           read-spec
           make-type-maps
-          flatten-type
-          )
+          flatten-type)
   (begin
 
     (define logger (get-logger "types-parser"))

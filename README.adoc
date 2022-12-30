@@ -4,6 +4,8 @@
 Scheme index is a tool for indexing and searching through procedures and syntax from Scheme specifications and select SRFI libraries.
 The index may be used through a site (https://index.scheme.org) or through REST API.
 
+image::screenshot.png[]
+
 == Userguide for site visitors
 
 Scheme index search consists of control pane on the left, and result list in the center. 
@@ -27,8 +29,6 @@ After the "=>" sign is the return type. The return type is same as parameter typ
 Types expressed as predicates in *blue* are links. Pressing on a type in parameter position will search using that type as *return value* filter; pressing on a type in return value position will search using that type as *parameter* filter.
 
 If one of parameters or return value is *procedure?*, *list?*, *vector?*, its signature might be further elaborated below the main procedure's signature.
-
-Procedures can have more than one entry, even from same library. This occurs, if the procedures is has optional parameters and therefore can be called in multiple ways; or if the result type can be determined more precisely under more specific input parameters.
 
 Macros are rendered in *green*. If macro is complex, some parts of it are grouped, and the syntax of those groups shown below the syntax of whole macro. Macro literals are also rendered in green. To make parenthesis more obvious, auxiliary parenthesis coloring is used, however this coloring doesn't signify any information.
 
