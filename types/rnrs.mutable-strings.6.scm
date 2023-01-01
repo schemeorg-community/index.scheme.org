@@ -1,4 +1,6 @@
 (((name . "string-set!")
-  (signature lambda ((string? string) (integer? k) (char? char)) undefined))
+  (signature lambda ((string? string) (integer? k) (char? char)) undefined)
+  (desc . "K must be a valid index of string. The string-set! procedure stores char in element k of string and returns unspecified values. Passing an immutable string to string-set! should cause an exception with condition type &assertion to be raised. "))
  ((name . "string-fill!")
-  (signature lambda ((string? string) (char? fill)) undefined)))
+  (signature lambda ((string? string) (char? fill)) undefined)
+  (desc . "Stores char in every element of the given string and returns unspecified values.")))
