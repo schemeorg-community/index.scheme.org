@@ -889,7 +889,6 @@
   (signature case-lambda 
              (() boolean?)
              (((input-port? port)) boolean?))
-  (parameterized-by "(scheme base) current-input-port")
   (desc . "Returns #t if a byte is ready on the binary input port and returns #f otherwise. If u8-ready? returns #t then the next read-u8 operation on the given port is guaranteed not to hang. If the port is at end of file then u8-ready? returns #t."))
  ((name . "unless")
   (signature syntax-rules () ((_ test expression1 expression2 ...)))
