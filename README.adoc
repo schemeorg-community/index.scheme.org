@@ -123,6 +123,7 @@ You can build & run locally built images using
 ```
 cd docker
 mkdir logs
+docker rmi docker-nginx:latest docker-app:latest scmindex-builder:latest -f
 docker-compose -f docker/docker-compose.local.yml up
 ```
 
