@@ -20,6 +20,7 @@
 <schema name="scmindex" version="1.6">
 
     <field name="id" type="uuid" indexed="true" stored="true" required="true" multiValued="false"/>
+    <field name="index" type="pint" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="_version_" type="plong" indexed="false" stored="false"/>
     <field name="name" type="text_name" indexed="true" stored="true" />
     <field name="name_precise" type="text_precise" indexed="true" stored="false" />

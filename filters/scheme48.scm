@@ -1,5 +1,5 @@
 (
- (r5rs . scheme)
+ (r5rs . #t)
  ((srfi 1) . #t)
  ((srfi 2) . #t)
  ((srfi 4) . #t)
