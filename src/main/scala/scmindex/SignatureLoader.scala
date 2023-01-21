@@ -1,8 +1,12 @@
 package scmindex
 
-trait SignatureLoader {
+import cats.effect.IO
 
-  def loadIndex(): Either[String, Sexpr]
-  def loadLibrary(file: String): Either[String, Sexpr]
+trait SignatureLoader[A] {
+
+  extension (a :A) {
+    def loadIndex(): IO[Either[Exception, Sexpr]]
+    def loadLibrary(file: String): IO[Either[Exception, Sexpr]]
+  }
 
 }

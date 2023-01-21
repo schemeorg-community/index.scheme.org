@@ -1,5 +1,9 @@
 package scmindex
 
+import cats.effect.IO
+
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Path}
 import scala.annotation.tailrec
 
 sealed trait Lexeme
@@ -108,50 +112,58 @@ class Lexer(val source: String) {
   }
 }
 
-def streamLexer(source: String): LazyList[Lexeme] = {
-  LazyList.unfold(new Lexer(source)) { lexer =>
-    lexer.next().map { (_, lexer) }
-  }
-}
+object SexprParser {
 
-def read(source: String): Either[String, Sexpr] = {
-  read(streamLexer(source)).map { _._1 }
-}
-
-def read(lexemes: LazyList[Lexeme]): Either[String, (Sexpr, LazyList[Lexeme])] = {
-  lexemes match {
-    case Open #:: rest => readList(rest)
-    case StringLexeme(content) #:: rest => Right(SexprString(content), rest)
-    case IntegerLexeme(content) #:: rest => Right(SexprNumber(content), rest)
-    case SymbolLexeme("#t") #:: rest => Right(SexprBool(true), rest)
-    case SymbolLexeme("#f") #:: rest => Right(SexprBool(false), rest)
-    case SymbolLexeme(content) #:: rest => Right(SexprSymbol(content), rest)
-    case _ => Left(s"Failed to parse sexpr: ${lexemes}")
-  }
-}
-
-def readList(lexemes: LazyList[Lexeme]): Either[String, (Sexpr, LazyList[Lexeme])] = {
-  @tailrec
-  def readInside(lexemes: LazyList[Lexeme], content: List[Sexpr]): Either[String, (Sexpr, LazyList[Lexeme])] = {
-    lexemes match {
-      case Close #:: rest => {
-        Right(parseListToPairs(content.reverse), rest)
-      }
-      case Dot #:: rest => {
-        read(rest).flatMap {
-          case (sexpr, Close #:: rest) => Right(parseListToPairs(content.reverse, sexpr), rest)
-          case _ => Left("Bad dotted list")
-        }
-      }
-      case _ => read(lexemes) match {
-        case Right((sexpr, lexemes)) => readInside(lexemes, sexpr +: content)
-        case Left(err) => Left(err)
-      }
+  def streamLexer(source: String): LazyList[Lexeme] = {
+    LazyList.unfold(new Lexer(source)) { lexer =>
+      lexer.next().map { (_, lexer) }
     }
   }
-  lexemes match {
-    case Close #:: rest => Right(SexprNull, rest)
-    case Dot #:: rest => Left("Unexpected period")
-    case _ => readInside(lexemes, List())
+
+  def readFromFile(file: String): IO[Either[Exception, Sexpr]] = IO {
+    val string = Files.readString(Path.of(file), StandardCharsets.UTF_8);
+    read(string)
+  }
+
+  def read(source: String): Either[Exception, Sexpr] = {
+    read(streamLexer(source)).map { _._1 }
+  }
+
+  def read(lexemes: LazyList[Lexeme]): Either[Exception, (Sexpr, LazyList[Lexeme])] = {
+    lexemes match {
+      case Open #:: rest => readList(rest)
+      case StringLexeme(content) #:: rest => Right(SexprString(content), rest)
+      case IntegerLexeme(content) #:: rest => Right(SexprNumber(content), rest)
+      case SymbolLexeme("#t") #:: rest => Right(SexprBool(true), rest)
+      case SymbolLexeme("#f") #:: rest => Right(SexprBool(false), rest)
+      case SymbolLexeme(content) #:: rest => Right(SexprSymbol(content), rest)
+      case _ => Left(Exception(s"Failed to parse sexpr: ${lexemes}"))
+    }
+  }
+
+  def readList(lexemes: LazyList[Lexeme]): Either[Exception, (Sexpr, LazyList[Lexeme])] = {
+    @tailrec
+    def readInside(lexemes: LazyList[Lexeme], content: List[Sexpr]): Either[Exception, (Sexpr, LazyList[Lexeme])] = {
+      lexemes match {
+        case Close #:: rest => {
+          Right(Sexpr.parseListToPairs(content.reverse), rest)
+        }
+        case Dot #:: rest => {
+          read(rest).flatMap {
+            case (sexpr, Close #:: rest) => Right(Sexpr.parseListToPairs(content.reverse, sexpr), rest)
+            case _ => Left(Exception("Bad dotted list"))
+          }
+        }
+        case _ => read(lexemes) match {
+          case Right((sexpr, lexemes)) => readInside(lexemes, sexpr +: content)
+          case Left(err) => Left(err)
+        }
+      }
+    }
+    lexemes match {
+      case Close #:: rest => Right(SexprNull, rest)
+      case Dot #:: rest => Left(Exception("Unexpected period"))
+      case _ => readInside(lexemes, List())
+    }
   }
 }

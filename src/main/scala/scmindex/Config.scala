@@ -1,5 +1,9 @@
 package scmindex
 
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, Path}
+import cats.effect.IO
+
 case class Config(
   port: Int,
   specIndex: String,
@@ -13,30 +17,30 @@ case class Config(
 
 object Config {
 
-  def readFromSexpr(sexpr: Sexpr): Either[String, Config] = {
-    def getString(map: Map[String, Sexpr], key: String, default: String): Either[String, String] = {
+  def readFromSexpr(sexpr: Sexpr): Either[Exception, Config] = {
+    def getString(map: Map[String, Sexpr], key: String, default: String): Either[Exception, String] = {
       map.get(key) match {
         case Some(SexprString(content)) => Right(content)
         case None => Right(default)
-        case v => Left(s"Expected ${key} to be a string, was ${v}")
+        case v => Left(Exception(s"Expected ${key} to be a string, was ${v}"))
       }
     }
-    def getInt(map: Map[String, Sexpr], key: String, default: Int): Either[String, Int] = {
+    def getInt(map: Map[String, Sexpr], key: String, default: Int): Either[Exception, Int] = {
       map.get(key) match {
         case Some(SexprNumber(content)) => Right(content)
         case None => Right(default)
-        case v => Left(s"Expected ${key} to be an integer, was ${v}")
+        case v => Left(Exception(s"Expected ${key} to be an integer, was ${v}"))
       }
     }
-    def getBool(map: Map[String, Sexpr], key: String, default: Boolean): Either[String, Boolean] = {
+    def getBool(map: Map[String, Sexpr], key: String, default: Boolean): Either[Exception, Boolean] = {
       map.get(key) match {
         case Some(SexprBool(content)) => Right(content)
         case None => Right(default)
-        case v => Left(s"Expected ${key} to be a boolean, was ${v}")
+        case v => Left(Exception(s"Expected ${key} to be a boolean, was ${v}"))
       }
     }
     for {
-      map <- alistToMap(sexpr)
+      map <- Sexpr.alistToMap(sexpr)
       port <- getInt(map, "port", 8080)
       specIndex <- getString(map, "spec-index", "types/index.scm")
       solrEmbed <- getBool(map, "solr-embed", true)
@@ -47,6 +51,18 @@ object Config {
       filtersetIndex <- getString(map, "filterset-idnex", "filters/index.scm")
       downloadsConfig <- getString(map, "downloads-config", "./config/downloads.scm")
     } yield Config(port, specIndex, solrEmbed, solrHome, solrUrl, solrCore, pageSize, filtersetIndex, downloadsConfig)
+  }
+
+  given SignatureLoader[Config] with {
+    extension (config: Config) {
+      def loadIndex() = config.loadLibrary(config.specIndex)
+
+      def loadLibrary(file: String) = IO {
+        val path = Path.of(file)
+        val content = Files.readString(path, StandardCharsets.UTF_8)
+        SexprParser.read(content)
+      }
+    }
   }
 
 }

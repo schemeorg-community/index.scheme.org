@@ -1,11 +1,13 @@
+import cats.effect.IO
 import org.scalatest.funspec.AnyFunSpec
 import scmindex.*
+import cats.effect.unsafe.implicits.global
 
 class FiltersetFlatSpec extends AnyFunSpec {
 
   describe("Given valid sexpr") {
     it("should parse it") {
-      val index = read("""
+      val index = SexprParser.read("""
         (((name . "testname") ;; test comment
          (code . "testcode")
          (file . "testfile")))
@@ -15,12 +17,12 @@ class FiltersetFlatSpec extends AnyFunSpec {
       }
       val loader = (file: String) => {
         if (file == "testfile") {
-          read("(((foo bar) . #t) ((foo baz) . #f))").toOption
+          IO.pure(SexprParser.read("(((foo bar) . #t) ((foo baz) . #f))"))
         } else  {
-          None
+          IO.pure(Left(Exception("")))
         }
       }
-      loadFiltersets(index, loader) match {
+      Filterset.loadFiltersets(index, loader).unsafeRunSync() match {
         case Right(filtersets) =>  {
           assert(1 == filtersets.size)
           val f = filtersets.head

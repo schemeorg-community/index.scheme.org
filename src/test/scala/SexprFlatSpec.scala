@@ -5,7 +5,7 @@ class SexprFlatSpec extends AnyFunSpec {
   describe("Pair to list unpacking") {
     val pair = SexprPair(SexprSymbol("a"), SexprPair(SexprSymbol("b"), SexprNull))
     it("should work") {
-      val (lst, tail) = pairToList(pair)
+      val (lst, tail) = Sexpr.pairToList(pair)
       assert(tail == SexprNull)
       assert(lst == List(SexprSymbol("a"), SexprSymbol("b")))
     }
@@ -13,9 +13,9 @@ class SexprFlatSpec extends AnyFunSpec {
   describe("alist to map unpacking") {
     val alist = "((test . \"foo\") (test2 bar baz) (desc . \"test\"))"
     it("should work") {
-      read(alist)
+      SexprParser.read(alist)
         .flatMap { sexpr =>
-          alistToMap(sexpr)
+          Sexpr.alistToMap(sexpr)
         } match {
         case Right(map) => {
           assert(map.get("test") == Some(SexprString("foo")))
