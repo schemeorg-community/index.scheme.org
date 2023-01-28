@@ -91,7 +91,7 @@ window.addEventListener('load', () => {
 });
 
 window.addEventListener('keydown', e => {
-    if (e.ctrlKey && e.keyCode == 70) { 
+    if (e.ctrlKey && e.keyCode == 191) {
         let el = document.getElementById('query-field');
         if (el) {
             e.preventDefault();
