@@ -12,7 +12,7 @@ Scheme index search consists of control pane on the left, and result list in the
 
 === Control pane
 
-In the control pane, optionally select values from the filter list, optionally enter search query in the text field, and press either enter or button with magnifying glass to display the results. You can use control + f to quickly focus to the query text field.
+In the control pane, optionally select values from the filter list, optionally enter search query in the text field, and press either enter or button with magnifying glass to display the results. You can use control + / to quickly focus to the query text field.
 
 === Result list
 
