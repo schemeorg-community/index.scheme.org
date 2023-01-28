@@ -6,8 +6,8 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) *)
-   (((or char? char-set? procedure?) (string? s) (integer? start)) *)
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) *)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -18,8 +18,8 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) *)
-   (((or char? char-set? procedure?) (string? s) (integer? start)) *)
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) *)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -128,8 +128,8 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) string?)
-   (((or char? char-set? procedure?) (string? s) (integer? start)) string?)
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) string?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -140,8 +140,8 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) string?)
-   (((or char? char-set? procedure?) (string? s) (integer? start)) string?)
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) string?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -152,8 +152,8 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) string?)
-   (((or char? char-set? procedure?) (string? s) (integer? start)) string?)
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) string?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -685,9 +685,9 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) (or integer? #f))
-   (((or char? char-set? procedure?) (string? s) (integer? start))
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start))
     (or integer? #f))
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -698,9 +698,9 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) (or integer? #f))
-   (((or char? char-set? procedure?) (string? s) (integer? start))
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start))
     (or integer? #f))
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -711,9 +711,9 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) (or integer? #f))
-   (((or char? char-set? procedure?) (string? s) (integer? start))
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start))
     (or integer? #f))
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -724,9 +724,9 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) (or integer? #f))
-   (((or char? char-set? procedure?) (string? s) (integer? start))
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start))
     (or integer? #f))
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))
@@ -737,8 +737,8 @@
   (signature
    case-lambda
    ((((or char? char-set? procedure?) c) (string? s)) integer?)
-   (((or char? char-set? procedure?) (string? s) (integer? start)) integer?)
-   (((or char? char-set? procedure?)
+   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) integer?)
+   ((((or char? char-set? procedure?) c)
      (string? s)
      (integer? start)
      (integer? end))

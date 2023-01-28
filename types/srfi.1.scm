@@ -22,7 +22,7 @@
   (signature lambda ((integer? n) (procedure? init-proc)) list?)
   (subsigs (init-proc (lambda ((integer? i)) *)))
   (tags pure)
-  (tags . "Returns an n-element list. Element i of the list, where 0 <= i < n, is produced by (init-proc i). No guarantee is made about the dynamic order in which init-proc is applied to these indices."))
+  (desc . "Returns an n-element list. Element i of the list, where 0 <= i < n, is produced by (init-proc i). No guarantee is made about the dynamic order in which init-proc is applied to these indices."))
  ((name . "list-copy")
   (signature
    case-lambda
