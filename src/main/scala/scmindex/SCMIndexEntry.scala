@@ -75,6 +75,23 @@ object SCMIndexEntry {
     }
   }
 
+  def returnTypes(e: SCMIndexEntry): List[String] = {
+    def returnType(r: ReturnType): List[String] = {
+      r match {
+        case Predicate(p) => List(p)
+        case Values(v) => v.flatMap(returnType)
+        case UnionReturnType(v) => v.flatMap(returnType)
+        case _ => List()
+      }
+    }
+    def returnTypesInLambda(l: SigLambda): List[String] = returnType(l.`return`)
+    e.signature match {
+      case SigCaseLambda(cases) => cases.flatMap(returnTypesInLambda)
+      case l: SigLambda => returnTypesInLambda(l)
+      case _ => List()
+    }
+  }
+
   def parseSCMIndexEntries(lib: String, sexpr: Sexpr): Either[Exception, List[SCMIndexEntry]] = {
     Sexpr.sexprToProperList(sexpr)
       .flatMap { lst =>
@@ -145,7 +162,7 @@ object SCMIndexEntry {
   def parseParams(sexpr: Sexpr): Either[Exception, List[Parameter]] = {
     def parseParam(sexpr: Sexpr): Either[Exception, Parameter] = {
       sexpr match {
-        case SexprSymbol("...") => Right(Parameter("", Ellipsis))
+        case SexprSymbol("...") => Right(Parameter("...", Ellipsis))
         case SexprSymbol(name) => Right(Parameter(name, Unknown))
         case pair: SexprPair => {
           Sexpr.sexprToProperList(pair).flatMap {

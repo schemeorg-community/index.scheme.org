@@ -28,7 +28,7 @@ object SolrIndexer {
     d.setField("tags", e.tags.asJava)
     d.setField("param_names", SCMIndexEntry.paramNames(e).asJava)
     d.setField("param_types", SCMIndexEntry.paramTypes(e).asJava)
-    //d.setField("return_types", e.returnTypes())
+    d.setField("return_types", SCMIndexEntry.returnTypes(e).asJava)
     d.setField("description", e.description)
     d
   }
@@ -38,7 +38,7 @@ object SolrIndexer {
       def index(entries: Vector[SCMIndexEntry]) = IO {
         c.deleteByQuery("*:*")
         for (index <- Range(0, entries.size)) {
-          c.add(indexEntryToSolr(index, entries(index)), 5000)
+          c.add(indexEntryToSolr(index, entries(index)), 1000)
         }
       }
       def parseFacet(f: FacetField): List[FacetValue] = {
@@ -63,10 +63,10 @@ object SolrIndexer {
         val facets: Map[String, List[FacetValue]] = resp.getFacetFields.asScala
           .map((e: FacetField) => (e.getName, parseFacet(e)))
           .to(Map)
-        val libsF = facets.get("libs").getOrElse(List())
-        val paramsF = facets.get("params").getOrElse(List())
-        val returnsF = facets.get("returns").getOrElse(List())
-        val tagsF = facets.get("tags").getOrElse(List())
+        val libsF = facets.getOrElse("lib", List())
+        val paramsF = facets.getOrElse("param_types", List())
+        val returnsF = facets.getOrElse("return_types", List())
+        val tagsF = facets.getOrElse("tags", List())
         val indeces = resp.getResults.asScala.map(d => d.getFieldValue("index").asInstanceOf[Int]).toList
         IndexerResponse(resp.getResults.getNumFound.toInt, libsF, paramsF, returnsF, tagsF, indeces)
       }
