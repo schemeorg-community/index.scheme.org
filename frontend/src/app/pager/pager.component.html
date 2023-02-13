@@ -1,0 +1,11 @@
+<footer class="pager" aria-label="Pager">
+    <ng-container *ngFor="let page of pages | async">
+        <span class="pager__gap" *ngIf="page.gap">...</span>
+        <a class="pager__page pager__page--inactive" (click)="onPageClick.emit(page.number)" *ngIf="!page.gap && page.link">
+            {{page.number}}
+        </a>
+        <span class="pager__page pager__page--active" *ngIf="!page.gap && !page.link">
+            {{page.number}}
+        </span>
+    </ng-container>
+</footer>

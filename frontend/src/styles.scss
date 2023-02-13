@@ -1,7 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-
-.theme-light,
-.theme-default
+.theme-light
 {
     --text-color-against-accent: white;
     --text-color-against-bg: black;
@@ -17,4 +15,106 @@
 
     --tag-color: white;
     --tag-bg-color: #555;
+}
+
+.theme-dark {
+    --text-color-against-accent: black;
+    --text-color-against-bg: white;
+    --text-color-muted: #ccc;
+    --bg-color: #303030;
+    --bg-color2: #404040;
+    --accent-color: #e77;
+    --secondary-color: #aae;
+    --tertary-color: #6d6;
+
+    --nav-bg-color: var(--bg-color);
+    --nav-text-color: var(--text-color-against-bg);
+
+    --tag-color: white;
+    --tag-bg-color: #555;
+}
+
+.checklist-item {
+
+    display: block;
+    padding: 0.1em;
+    vertical-align: middle;
+    cursor: pointer;
+
+    &:hover {
+        .checklist-item__value-input,
+        .checklist-item__value-input + .checklist-item__value-text {
+            opacity: 0.8;
+        }
+    }
+
+    &__value-input {
+        -webkit-appearance: none;
+        appearance: none;
+        margin: 0;
+        border: 2px solid var(--text-color-muted);
+        width: 1em;
+        height: 1em;
+        border-radius: 50%;
+
+        &:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+
+            & + .checklist-item__value-text {
+                color: var(--accent-color);
+            }
+        }
+    }
+
+    &__value-text {
+        color: var(--text-color-muted);
+    }
+}
+
+.primary-button {
+    height: 2.5em;
+    margin-left: 5px;
+    margin-right: 5px;
+    min-width: 60px;
+    background-color: var(--accent-color);
+    border: none;
+    border-radius: 10px;
+    color: var(--text-color-against-accent);
+    font-size: 1em;
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
+
+body {
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+}
+
+fieldset {
+    border: none;
+}
+
+@keyframes animate-enter {
+    0% {
+        opacity: 0.1;
+        transform: translate(0,100px);
+    }
+    100% {
+    }
+}
+
+.animated-enter {
+  animation-duration: 0.7s;
+  animation-name: animate-enter;
+  animation-delay: 0.0s;
+  animation-fill-mode: backwards;
+  animation-timing-function: cubic-bezier(0.13, 0.79, 0.09, 1.03);
+  overflow: hidden;
 }
