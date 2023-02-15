@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
+import { Params } from '@angular/router';
 import { ReplaySubject, Observable, map } from 'rxjs';
-import { SearchItem, Signature, FuncSignature } from '../model';
+import { SearchItem, Signature } from '../model';
 
 @Component({
     selector: 'app-search-item',
@@ -40,7 +41,7 @@ export class SearchItemComponent {
     }
 
     @Input()
-    routerResolver!: (type: 'param' | 'return' | 'tag', value: string) => { routerLink: string[]; queryParams: any };
+    routerResolver!: (type: 'param' | 'return' | 'tag', value: string) => { routerLink: string[]; queryParams: Params };
 
     isAuxiliaryType(type: string) {
         switch (type) {
@@ -70,10 +71,10 @@ export class SearchItemComponent {
     highlightLiterals(literals: string[], pattern: string): TextPart[] {
         const parts: TextPart[] = [];
         let index = 0;
-        while(true) {
+        for (;;) {
             let nextLiteralIndex = -1;
             let nextLiteral = '';
-            for (let l of literals) {
+            for (const l of literals) {
                 const i = pattern.indexOf(l, index);
                 if (i == -1)
                     continue;
@@ -117,16 +118,7 @@ interface Lib {
 
 interface Tag {
     label: string;
-    link: { routerLink: string[]; queryParams: any };
-}
-
-interface Sexpr {
-    text: string;
-}
-
-interface Subsyntax {
-    name: string;
-    rules: Sexpr[];
+    link: { routerLink: string[]; queryParams: Params };
 }
 
 interface ComponentSearchItem {

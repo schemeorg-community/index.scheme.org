@@ -3,15 +3,15 @@
         <a [href]="item.lib.href" class="search-item__lib-link">{{item.lib.label}}</a>
     </div>
     <div class="search-item__main-signature signature">
-        <ng-container *ngIf="item.signature.type == 'function'">
+        <ng-container *ngIf="item.signature.type === 'function'">
             <div *ngFor="let variant of item.signature.variants">
                 <ng-container *ngTemplateOutlet="function_signature; context: {name: item.name, variant: variant, nolink: false}"/>
             </div>
         </ng-container>
-        <ng-container *ngIf="item.signature.type == 'value'">
+        <ng-container *ngIf="item.signature.type === 'value'">
             <ng-container *ngTemplateOutlet="value_signature; context: {name: item.name, value: item.signature.value}"/>
         </ng-container>
-        <ng-container *ngIf="item.signature.type == 'syntax'">
+        <ng-container *ngIf="item.signature.type === 'syntax'">
             <div *ngFor="let variant of item.signature.patterns">
                 <ng-container *ngTemplateOutlet="syntax_signature; context: {name: item.name, variant: variant, literals: item.signature.literals}"/>
             </div>
@@ -21,24 +21,24 @@
     <div class="search-item__extra-info">
         <div class="search-item__block search-item__block--params" *ngIf="item.subsignatures">
             <div class="search-item__param-signature signature" *ngFor="let subsig of item.subsignatures">
-                <ng-container *ngIf="subsig.signature.type == 'function'">
+                <ng-container *ngIf="subsig.signature.type === 'function'">
                     <div *ngFor="let variant of subsig.signature.variants">
                         <ng-container *ngTemplateOutlet="function_signature; context: {name: subsig.name, variant: variant, nolink: true}"/>
                     </div>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type == 'value'">
+                <ng-container *ngIf="subsig.signature.type === 'value'">
                     <ng-container *ngTemplateOutlet="value_signature; context: {name: subsig.name, value: subsig.signature.value}"/>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type == 'vector'">
+                <ng-container *ngIf="subsig.signature.type === 'vector'">
                     <ng-container *ngTemplateOutlet="vector_signature; context: {name: subsig.name, element: subsig.signature.element}"/>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type == 'list'">
+                <ng-container *ngIf="subsig.signature.type === 'list'">
                     <ng-container *ngTemplateOutlet="list_signature; context: {name: subsig.name, element: subsig.signature.element}"/>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type == 'alist'">
+                <ng-container *ngIf="subsig.signature.type === 'alist'">
                     <ng-container *ngTemplateOutlet="alist_signature; context: {name: subsig.name, car: subsig.signature.car, cdr: subsig.signature.cdr}"/>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type == 'pattern'">
+                <ng-container *ngIf="subsig.signature.type === 'pattern'">
                     <ng-container *ngTemplateOutlet="pattern_signature; context: {name: subsig.name, literals: getSyntaxLiterals(item.signature), patterns: subsig.signature.patterns}"/>
                 </ng-container>
             </div>
@@ -68,30 +68,30 @@
 </ng-template>
 
 <ng-template #function_return let-return="return" let-nolink="nolink">
-    <ng-container *ngIf="return.type != 'undefined'">
+    <ng-container *ngIf="return.type !== 'undefined'">
         =&gt; 
         <ng-container *ngTemplateOutlet="function_return_internal; context: {return: return, nolink: nolink}"/>
     </ng-container>
 </ng-template>
 
 <ng-template #function_return_internal let-return="return" let-nolink="nolink">
-    <ng-container *ngIf="return.kind == 'return' && return.type == '#f'">
+    <ng-container *ngIf="return.kind === 'return' && return.type === '#f'">
         <span class="signature__false-literal">{{return.type}}</span>
     </ng-container>
-    <ng-container *ngIf="return.kind == 'return' && !isAuxiliaryType(return.type)">
+    <ng-container *ngIf="return.kind === 'return' && !isAuxiliaryType(return.type)">
         <ng-container *ngIf="!nolink"><a *ngIf="routerResolver('return', return.type); let link" class="signature__type" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{return.type}}</a></ng-container>
         <ng-container *ngIf="nolink"><span class="signature__type">{{return.type}}</span></ng-container>
     </ng-container>
-    <ng-container *ngIf="return.kind == 'return' && isAuxiliaryType(return.type) && return.type != '#f'">
+    <ng-container *ngIf="return.kind === 'return' && isAuxiliaryType(return.type) && return.type !== '#f'">
         {{return.type}}
     </ng-container>
-    <ng-container *ngIf="return.kind == 'values'">
+    <ng-container *ngIf="return.kind === 'values'">
         (values 
         <ng-container *ngFor="let r of return.items">
             &ngsp;<ng-container *ngTemplateOutlet="function_return_internal; context: {return: r}"/>
         </ng-container>)
     </ng-container>
-    <ng-container *ngIf="return.kind == 'or'">
+    <ng-container *ngIf="return.kind === 'or'">
         <ng-container *ngFor="let r of return.items; let last = last">
             <ng-container *ngTemplateOutlet="function_return_internal; context: {return: r}">
             </ng-container>
@@ -139,7 +139,7 @@
 </ng-template>
 
 <ng-template #colored_text let-part="part">
-    <ng-container *ngIf="part.kind == 'plain'">{{part.text}}</ng-container>
-    <span class="signature__syntax" *ngIf="part.kind == 'literal'">{{part.text}}</span>
-    <span class="signature__syntax" *ngIf="part.kind == 'name'">{{part.text}}</span>
+    <ng-container *ngIf="part.kind === 'plain'">{{part.text}}</ng-container>
+    <span class="signature__syntax" *ngIf="part.kind === 'literal'">{{part.text}}</span>
+    <span class="signature__syntax" *ngIf="part.kind === 'name'">{{part.text}}</span>
 </ng-template>

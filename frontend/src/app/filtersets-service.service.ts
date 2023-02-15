@@ -11,11 +11,11 @@ export class FiltersetsService {
 
   constructor(private http: HttpClient) {}
 
-  public filtersets: Observable<String[]> = this.load().pipe(shareReplay());
+  public filtersets: Observable<string[]> = this.load().pipe(shareReplay());
 
   private load() {
       //TODO parameterize url
-    return this.http.get<String[]>("https://index.scheme.org/rest/filterset");
+    return this.http.get<string[]>("/rest/filterset");
   }
 
   public query(request: IndexQuery) {
@@ -27,18 +27,18 @@ export class FiltersetsService {
             .set('start', (request.page - 1) * 40)
             .set('rows', 40);
       if (request.libs)
-          for (let l of request.libs)
+          for (const l of request.libs)
               params = params.append('lib', l);
       if (request.params)
-          for (let p of request.params)
+          for (const p of request.params)
               params = params.append('param', p);
       if (request.returns)
-          for (let r of request.returns)
+          for (const r of request.returns)
               params = params.append('return', r);
       if (request.tags)
-          for (let t of request.tags)
+          for (const t of request.tags)
               params = params.append('tag', t);
-    return this.http.get<IndexResponse>("https://index.scheme.org/rest/filterset/" + request.filterset + "/search", {
+    return this.http.get<IndexResponse>("/rest/filterset/" + request.filterset + "/search", {
       params
     });
   }

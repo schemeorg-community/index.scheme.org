@@ -1,6 +1,6 @@
-import { BehaviorSubject, ReplaySubject, Observable, map, combineLatest } from 'rxjs';
+import { ReplaySubject, Observable, map, combineLatest } from 'rxjs';
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 import { FiltersetsService } from '../filtersets-service.service';
 import { IndexResponse, IndexQuery, SearchItem } from '../model';
 
@@ -114,7 +114,7 @@ export class SearchPageComponent {
             });
     }
 
-    seachItemRouterResolver(type: 'param' | 'return' | 'tag', value: string): { routerLink: string[], queryParams: any } {
+    seachItemRouterResolver(type: 'param' | 'return' | 'tag', value: string): { routerLink: string[], queryParams: Params } {
         switch (type) {
             case 'param':
                 return {

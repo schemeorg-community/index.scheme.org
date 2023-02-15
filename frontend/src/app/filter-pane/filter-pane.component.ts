@@ -1,17 +1,17 @@
-import { BehaviorSubject, Subject, ReplaySubject, combineLatest, first } from 'rxjs';
+import { Subject, ReplaySubject, combineLatest, first } from 'rxjs';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IndexQuery, IndexResponse, ResponseFacetValue } from '../model';
-import { faCoffee, faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: 'filter-pane',
+  selector: 'app-filter-pane',
   templateUrl: './filter-pane.component.html',
   styleUrls: ['./filter-pane.component.scss']
 })
 export class FilterPaneComponent {
 
   @Input()
-  collapsed: boolean = false;
+  collapsed = false;
 
   @Input()
   set query(value: IndexQuery) {
@@ -37,7 +37,7 @@ export class FilterPaneComponent {
 
   query$: Subject<IndexQuery>;
   response$: Subject<IndexResponse>;
-  filterset: string = '';
+  filterset = '';
   facets: Facet[] = [];
   queryString = '';
 
@@ -113,7 +113,7 @@ interface Facet {
   collapsed: boolean;
 }
 
-interface FacetOption {
+export interface FacetOption {
   name: string;
   value: string;
   checked: boolean;

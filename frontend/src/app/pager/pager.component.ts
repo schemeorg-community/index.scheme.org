@@ -63,7 +63,7 @@ export class PagerComponent {
   }
 
   @Output()
-  onPageClick = new EventEmitter<number>();
+  pageClick = new EventEmitter<number>();
 
 }
 

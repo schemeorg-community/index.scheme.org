@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Observable, pipe, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { FiltersetsService } from '../filtersets-service.service';
 
 @Component({
@@ -26,9 +26,9 @@ export class IndexPageComponent {
 
   downloads: Download[] = [];
 
-  exampleUrl: String = "curl 'https://index.scheme.org/rest/filterset/chibi/search?query=define-record-type&facet=false'";
+  exampleUrl = "curl 'https://index.scheme.org/rest/filterset/chibi/search?query=define-record-type&facet=false'";
 
-  exampleResponse: String = `{"items":[{"lib":"(scheme
+  exampleResponse = `{"items":[{"lib":"(scheme
             base)","name":"define-record-type","type":"syntax","func_signature":null,"syntax_signature":{"literals":[],"patterns":[{"pattern":"(name
             constructor pred field
             ...)","type":null}]},"func_param_signatures":[],"syntax_subsyntax_signatures":[{"name":"constructor","patterns":["(constructor-name
@@ -39,9 +39,9 @@ export class IndexPageComponent {
 
 
 interface Download {
-  url: String;
-  checksum: String;
-  name: String;
+  url: string;
+  checksum: string;
+  name: string;
 }
 
 interface FiltersetGroup {
@@ -49,6 +49,6 @@ interface FiltersetGroup {
 }
 
 interface Filterset {
-  code: String;
-  name: String;
+  code: string;
+  name: string;
 }

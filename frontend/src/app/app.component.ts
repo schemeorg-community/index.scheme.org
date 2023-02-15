@@ -1,5 +1,5 @@
 import { Component, HostBinding } from '@angular/core';
-import { NavigationEnd, Router, UrlSegment, UrlTree } from '@angular/router';
+import { NavigationEnd, Router  } from '@angular/router';
 import { filter, map, Observable } from 'rxjs';
 import { combineLatest } from 'rxjs';
 import { FiltersetsService } from './filtersets-service.service';
@@ -15,8 +15,8 @@ export class AppComponent {
 
   constructor(filtersetSvc: FiltersetsService, router: Router) {
       this.navbarItems = combineLatest(filtersetSvc.filtersets, router.events).pipe(
-          filter(([filtersets, event]) => event instanceof NavigationEnd),
-          map(([filtersets, event]) => {
+          filter(([_, event]) => event instanceof NavigationEnd),
+          map(([filtersets, _]) => {
               return [{
                   label: 'Home',
                   link: '/',
@@ -61,8 +61,8 @@ export class AppComponent {
 }
 
 interface NavbarItem {
-    label: String;
-    link?: String;
+    label: string;
+    link?: string;
     items: NavbarItem[];
     isActive: boolean;
 }

@@ -60,14 +60,6 @@ export interface VectorSignature {
 
 export type Signature = FuncSignature | SyntaxSignature | ValueSignature | PatternSignature | AlistSignature | ListSignature | VectorSignature;
 
-export interface SpecValues {
-    field: string;
-    values: {
-        value: string;
-        desc: string;
-    }[];
-}
-
 export interface SearchItem {
     lib: string;
     name: string;
@@ -77,11 +69,10 @@ export interface SearchItem {
         name: string;
         signature: Signature;
     }[];
-    spec_values: SpecValues[]
+    description: string;
 }
 
 export interface IndexResponse {
     total: number;
     items: SearchItem[];
 }
-

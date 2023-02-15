@@ -1,5 +1,5 @@
 <div class="search-page">
-    <filter-pane *ngIf="filterpaneParams | async; let params"
+    <app-filter-pane *ngIf="filterpaneParams | async; let params"
                  [query]="params.query"
                  [response]="params.response"
                  [collapsed]="facetCollapsed"
@@ -11,6 +11,6 @@
         <div class="definition-list__content-shadow" *ngIf="results | async; let results">
             <app-search-item *ngFor="let result of results" [searchitem]="result" [routerResolver]="seachItemRouterResolver"/>
         </div>
-        <app-pager *ngIf="pagerParams | async; let pager" [pageSize]="pager.pageSize" [page]="pager.page" [total]="pager.total" (onPageClick)="onPageClick($event)"/>
+        <app-pager *ngIf="pagerParams | async; let pager" [pageSize]="pager.pageSize" [page]="pager.page" [total]="pager.total" (pageClick)="onPageClick($event)"/>
     </section>
 </div>
