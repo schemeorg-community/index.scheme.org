@@ -45,6 +45,19 @@ object SolrIndexer {
         f.getValues.asScala.toList.map(c => FacetValue(c.getName, c.getCount.toInt))
       }
 
+      def get(lib: String, name: String): IO[Option[Int]] = IO {
+        val q = SolrQuery();
+        q.setRequestHandler("/search")
+        q.setQuery("")
+        q.setRows(1);
+        q.setFilterQueries(s"name_precise: ${ClientUtils.escapeQueryChars(name)}", s"lib: ${ClientUtils.escapeQueryChars(lib)}")
+        val resp = c.query(q);
+        if (resp.getResults.getNumFound == 0)
+          None
+        else
+          Some(resp.getResults.get(0).getFieldValue("index").asInstanceOf[Int])
+      }
+
       def query(query: String, lib: List[String], param: List[String], returns: List[String], tags: List[String], pageSize: Int, offset: Int): IO[IndexerResponse] = IO {
         val q = SolrQuery();
         q.setRequestHandler("/search")
@@ -56,7 +69,7 @@ object SolrIndexer {
           makeMultivalueClause("lib", lib, "OR"),
           makeMultivalueClause("param_types", param, "AND"),
           makeMultivalueClause("return_types", returns, "AND"),
-          makeMultivalueClause("tag", tags, "AND")
+          makeMultivalueClause("tags", tags, "AND")
         )
         q.setFilterQueries(fqs:_*)
         val resp = c.query(q)

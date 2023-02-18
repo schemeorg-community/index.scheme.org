@@ -356,13 +356,10 @@ Consult logback documentation for details.
 
 == REST API
 
-All of the following endpoints accept `wt` query parameter.
-If the parameter's value is `sexpr`, the results are returned as if with `write`, using scheme-json convention
-as defined in srfi 180. Otherwise, results are returned as json.
 
 === `/rest/filterset`
 
-List of filtersets as strings. For all endpoints below, `{filterset name}` must correspond to one of the values returned here.
+List of filtersets as strings. For all endpoints below, `{filterset name}` must correspond to one of the code here.
 
 JSON schema
 [source,json]
@@ -370,7 +367,15 @@ JSON schema
 {
     "type": "array",
     "items": {
-        "type": "string"
+        "type": "object",
+        "properties": {
+            "code": {
+                "type": "string"
+            },
+            "name": {
+                "type": "string"
+            }
+        }
     }
 }
 ----

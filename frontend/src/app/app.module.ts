@@ -9,6 +9,7 @@ import { FilterPaneComponent } from './filter-pane/filter-pane.component';
 import { SearchPageComponent } from './search-page/search-page.component';
 import { HttpClientModule } from '@angular/common/http';
 import { SearchItemComponent } from './search-item/search-item.component';
+import { SingleEntryPageComponent } from './single-entry-page/single-entry-page.component';
 import { PagerComponent } from './pager/pager.component';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -21,6 +22,7 @@ import { FacetFilterPipe } from './facet-filter.pipe';
         FilterPaneComponent,
         SearchPageComponent,
         SearchItemComponent,
+        SingleEntryPageComponent,
         PagerComponent,
         FacetFilterPipe
     ],

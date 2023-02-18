@@ -106,7 +106,7 @@ object WebController {
   object TagQueryParamMatcher extends OptionalMultiQueryParamDecoderMatcher[String]("tag")
 
   def makeRoutes[T : Indexer](model: Model[T]) = HttpRoutes.of[IO] {
-    case GET -> Root / "rest" / "filterset" => Ok(model.filtersets.map(f => f.code).asJson)
+    case GET -> Root / "rest" / "filterset" => Ok(model.filtersets.map(f => Map("code" -> f.code, "name" -> f.name)).asJson)
     case GET -> Root / "rest" / "filterset" / filterset / "tags" => getFacetOptions(model, filterset, "tags")
     case GET -> Root / "rest" / "filterset" / filterset / "params" => getFacetOptions(model, filterset, "params")
     case GET -> Root / "rest" / "filterset" / filterset / "returns" => getFacetOptions(model, filterset, "returns")
@@ -123,6 +123,10 @@ object WebController {
         case Some(resp) => Ok(resp.asJson)
         case _ => NotFound()
       }
+    }
+    case GET -> Root / "rest" / "filterset" / filterset / lib / name => Model.get(model, lib, name).flatMap {
+      case Some(e) => Ok(e)
+      case _ => NotFound()
     }
   }.orNotFound
 

@@ -2,6 +2,7 @@ import { Subject, ReplaySubject, combineLatest, first } from 'rxjs';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IndexQuery, IndexResponse, ResponseFacetValue } from '../model';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { FiltersetsService } from '../filtersets-service.service';
 
 @Component({
   selector: 'app-filter-pane',
@@ -41,13 +42,16 @@ export class FilterPaneComponent {
   facets: Facet[] = [];
   queryString = '';
 
-  constructor() {
+  constructor(private filtersetSvc: FiltersetsService) {
     this.query$ = new ReplaySubject<IndexQuery>(1);
     this.response$ = new ReplaySubject<IndexResponse>(1);
 
+    combineLatest(this.query$, filtersetSvc.filtersetNameMap).subscribe(([query, nameMap]) => {
+      this.filterset = nameMap[query.filterset] || '';
+    });
+
     combineLatest(this.query$, this.response$).subscribe(([query, response]) => {
       this.facets = this.readFacetFromResponse(query, response);
-      this.filterset = query.filterset;
       this.queryString = query.query || '';
     });
   }

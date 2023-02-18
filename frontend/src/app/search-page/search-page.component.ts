@@ -14,6 +14,7 @@ export class SearchPageComponent {
     @ViewChild('results_container')
     resultsContainer?: ElementRef;
 
+    filterset = '';
     indexQuery: Observable<IndexQuery>;
     response = new ReplaySubject<IndexResponse>(1);
     filterpaneParams: Observable<FilterpaneParams>;
@@ -28,6 +29,7 @@ export class SearchPageComponent {
     ) {
         this.indexQuery = combineLatest(route.paramMap, route.queryParams).pipe(map(([params, queryParams]) => {
             const filterset = params.get('filterset') || '';
+            this.filterset = filterset;
             const query = queryParams['query'] || undefined;
             let page: number | undefined;
             if (queryParams['page']) {
@@ -114,8 +116,13 @@ export class SearchPageComponent {
             });
     }
 
-    seachItemRouterResolver(type: 'param' | 'return' | 'tag', value: string): { routerLink: string[], queryParams: Params } {
+    seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name', value: string): { routerLink: string[], queryParams: Params } | null {
         switch (type) {
+            case 'name':
+                return {
+                    routerLink: [`/filterset/${this.filterset}/${item.lib}/${item.name}`],
+                    queryParams: {}
+                };
             case 'param':
                 return {
                     routerLink: [],

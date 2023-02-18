@@ -7,6 +7,10 @@
         <ng-container *ngFor="let item of navbarItems | async">
           <ng-container *ngTemplateOutlet="navbaritem; context: {item: item}"/>
         </ng-container>
+        <li class="navbar__list-item">
+            <a href="/README.html"
+                class="navbar__link navbar__link--clickable">Documentation</a>
+        </li>
     </ul>
     <div id="theme-cb-wrapper">
         <select #themecb id="theme-cb" (change)="onSelectTheme(themecb.value)" [(ngModel)]="selectedTheme">

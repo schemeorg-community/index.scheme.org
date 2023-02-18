@@ -9,7 +9,7 @@
                  [class.search-page__controls--hidden]="facetCollapsed" />
     <section class="search-page__search-result definition-list animated-enter" aria-label="Search results" #results_container>
         <div class="definition-list__content-shadow" *ngIf="results | async; let results">
-            <app-search-item *ngFor="let result of results" [searchitem]="result" [routerResolver]="seachItemRouterResolver"/>
+            <app-search-item *ngFor="let result of results" [searchitem]="result" [routerResolver]="seachItemRouterResolver.bind(this)"/>
         </div>
         <app-pager *ngIf="pagerParams | async; let pager" [pageSize]="pager.pageSize" [page]="pager.page" [total]="pager.total" (pageClick)="onPageClick($event)"/>
     </section>

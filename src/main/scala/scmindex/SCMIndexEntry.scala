@@ -2,7 +2,8 @@ package scmindex
 
 import cats.data.EitherT
 import cats.effect.IO
-import cats.implicits._
+import cats.implicits.*
+import scmindex.Sexpr.sexprToProperList
 
 import java.security.Signature
 
@@ -26,12 +27,13 @@ case class Parameter(name: String, `type`: ParamType)
 case class PatternAndType(pattern: Sexpr, `type`: Option[ReturnType])
 
 sealed trait Signature
-case class SigValue(predicate: String) extends Signature
-case class SigLambda(params: List[Parameter], `return`: ReturnType) extends Signature
+sealed trait SubSignature extends Signature
+
+case class SigValue(predicate: String) extends Signature, SubSignature
+case class SigLambda(params: List[Parameter], `return`: ReturnType) extends Signature, SubSignature
 case class SigCaseLambda(cases: List[SigLambda]) extends Signature
 case class SigSyntaxRules(keywords: List[String], rules: List[PatternAndType]) extends Signature
 
-sealed trait SubSignature extends Signature
 case class AList(car: Parameter, cdr: Parameter) extends SubSignature
 case class SCMList(el: Parameter) extends SubSignature
 case class SCMVector(el: Parameter) extends SubSignature
@@ -275,8 +277,26 @@ object SCMIndexEntry {
   }
 
   def parseSubsigs(sexpr: Sexpr): Either[Exception, List[SubSigEntry]] = {
-    //TODO
-    Right(List())
+    sexprToProperList(sexpr).flatMap { lst =>
+      lst.partitionMap(parseSubsig) match {
+        case (Nil, values) => Right(values)
+        case (err :: _, _) => Left(err)
+      }
+    }
+  }
+
+  def parseSubsig(sexpr: Sexpr): Either[Exception, SubSigEntry] = {
+    sexprToProperList(sexpr).flatMap {
+      case SexprSymbol(name) :: s :: Nil => doParseSubsig(name, s)
+      case s => Left(Exception("Wrong subsignature format: " + s))
+    }
+  }
+
+  def doParseSubsig(name: String, sexpr: Sexpr): Either[Exception, SubSigEntry] = {
+    sexpr match {
+      case SexprPair(SexprString("lambda"), rest) => parseLambdaSignature(sexpr).map{ l => SubSigEntry(name, l) }
+      case _ => Right(SubSigEntry("TODO", SigValue("TODO"))) //TODO
+    }
   }
 
   def readListOfSymbols(sexpr: Sexpr, err: String): Either[Exception, List[String]] = {

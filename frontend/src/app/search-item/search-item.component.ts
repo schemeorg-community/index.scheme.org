@@ -18,6 +18,7 @@ export class SearchItemComponent {
             const res: ComponentSearchItem = {
                 name: s.name,
                 description: s.description,
+                searchItem: s,
                 lib: {
                     href: '',
                     label: s.lib
@@ -25,7 +26,7 @@ export class SearchItemComponent {
                 tags: s.tags.map(t => {
                     return {
                         label: t,
-                        link: this.routerResolver('tag', t)
+                        link: this.routerResolver(s, 'tag', t)
                     };
                 }),
                 signature: s.signature,
@@ -41,7 +42,7 @@ export class SearchItemComponent {
     }
 
     @Input()
-    routerResolver!: (type: 'param' | 'return' | 'tag', value: string) => { routerLink: string[]; queryParams: Params };
+    routerResolver!: (item: SearchItem, type: 'param' | 'return' | 'tag' | 'name', value: string) => { routerLink: string[], queryParams: Params } | null;
 
     isAuxiliaryType(type: string) {
         switch (type) {
@@ -118,10 +119,11 @@ interface Lib {
 
 interface Tag {
     label: string;
-    link: { routerLink: string[]; queryParams: Params };
+    link: { routerLink: string[]; queryParams: Params } | null;
 }
 
 interface ComponentSearchItem {
+    searchItem: SearchItem,
     name: string;
     description: string;
     lib: Lib;

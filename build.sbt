@@ -1,11 +1,10 @@
-ThisBuild / version := "0.1.0-SNAPSHOT"
+ThisBuild / version := "0.0.3"
 
 ThisBuild / scalaVersion := "3.2.1"
 
 libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.4"
 libraryDependencies += "org.apache.solr" % "solr-solrj" % "8.11.1"
 libraryDependencies += "org.apache.solr" % "solr-core" % "8.11.1"
-libraryDependencies += "com.lihaoyi" %% "cask" % "0.8.3"
 libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.1"
 libraryDependencies += "ch.qos.logback" % "logback-core" % "1.2.6"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.6"
@@ -24,8 +23,23 @@ libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"
 
 scalacOptions ++= Seq("-Xmax-inlines", "1000")
 
-
 lazy val root = (project in file("."))
   .settings(
-    name := "r7rs-index-site"
+    name := "r7rs-index-site",
+    assembly / mainClass := Some("scmindex.Main")
   )
+
+ThisBuild / assemblyMergeStrategy := {
+  case PathList("META-INF", "services", xs @ _*) => MergeStrategy.concat
+  case PathList("META-INF", "services", xs @ _*) => MergeStrategy.concat
+  case "module-info.class" => MergeStrategy.discard
+  case s if s.matches("^META-INF/.*\\.SF$") => MergeStrategy.discard
+  case s if s.matches("^META-INF/.*\\.DSA$") => MergeStrategy.discard
+  case s if s.matches("^META-INF/.*\\.RSA$") => MergeStrategy.discard
+  case PathList("META-INF", xs @ _*) =>
+      (xs map {_.toLowerCase}) match {
+          case ("manifest.mf" :: Nil) | ("index.list" :: Nil) | ("dependencies" :: Nil) => MergeStrategy.discard
+              case _ => MergeStrategy.last
+      }
+  case _  => MergeStrategy.last
+}

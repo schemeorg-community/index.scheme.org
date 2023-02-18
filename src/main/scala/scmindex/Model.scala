@@ -31,4 +31,8 @@ object Model {
     QueryResult(resp.total, resp.libs, resp.params, resp.returns, resp.tags, indexEntries)
   }
 
+  def get[T: Indexer](model: Model[T], lib: String, name: String): IO[Option[SCMIndexEntry]] = {
+    model.indexer.get(lib, name).map{ maybeIndex => maybeIndex.map(index => model.entries(index))}
+  }
+
 }

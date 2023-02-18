@@ -1,0 +1,3 @@
+<ng-container *ngIf="entry | async; let e">
+    <app-search-item [searchitem]="e" [routerResolver]="seachItemRouterResolver.bind(this)"/>
+</ng-container>

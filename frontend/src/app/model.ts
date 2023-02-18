@@ -91,3 +91,8 @@ export interface IndexResponse {
     returns: ResponseFacetValue[];
     tags: ResponseFacetValue[];
 }
+
+export interface Filterset {
+    code: string;
+    name: string;
+}

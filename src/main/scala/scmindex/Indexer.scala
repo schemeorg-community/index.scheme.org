@@ -10,6 +10,8 @@ trait Indexer[A] {
   extension (a: A) {
     def index(entries: Vector[SCMIndexEntry]): IO[Unit]
     def query(query: String, lib: List[String], param: List[String], returns: List[String], tags: List[String], pageSize: Int, offset: Int): IO[IndexerResponse]
+
+    def get(lib: String, name: String): IO[Option[Int]]
     def listFacetOptions(lib: List[String], facetName: String): IO[List[String]]
   }
 }

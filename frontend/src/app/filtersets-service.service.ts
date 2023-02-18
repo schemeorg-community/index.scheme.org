@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { IndexResponse, IndexQuery } from './model';
-import { Observable, shareReplay } from 'rxjs';
+import { IndexResponse, IndexQuery, Filterset, SearchItem } from './model';
+import { Observable, shareReplay, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,11 +11,16 @@ export class FiltersetsService {
 
   constructor(private http: HttpClient) {}
 
-  public filtersets: Observable<string[]> = this.load().pipe(shareReplay());
+  public filtersets: Observable<Filterset[]> = this.load().pipe(shareReplay());
+
+  public filtersetNameMap: Observable<{[key: string]: string}> = this.filtersets.pipe(map(filtersets => {
+      const m: {[key: string]: string}  = {};
+      filtersets.forEach(f => m[f.code] = f.name);
+      return m;
+  }));
 
   private load() {
-      //TODO parameterize url
-    return this.http.get<string[]>("/rest/filterset");
+    return this.http.get<Filterset[]>("/rest/filterset");
   }
 
   public query(request: IndexQuery) {
@@ -24,8 +29,7 @@ export class FiltersetsService {
           params = params.set('query', request.query);
       if (request.page)
           params = params
-            .set('start', (request.page - 1) * 40)
-            .set('rows', 40);
+            .set('page', request.page)
       if (request.libs)
           for (const l of request.libs)
               params = params.append('lib', l);
@@ -41,6 +45,10 @@ export class FiltersetsService {
     return this.http.get<IndexResponse>("/rest/filterset/" + request.filterset + "/search", {
       params
     });
+  }
+
+  public get(filterset: string, lib: string, name: string): Observable<SearchItem> {
+      return this.http.get<SearchItem>(`/rest/filterset/${filterset}/${lib}/${name}`);
   }
 
 }

@@ -12,14 +12,14 @@ export class IndexPageComponent {
   filtersetGroups: Observable<FiltersetGroup[]>;
 
   constructor(filtersetsService: FiltersetsService) {
-    this.filtersetGroups = filtersetsService.filtersets.pipe(map(codes => {
+      const isRnrs = (code: string) => {
+          return code.match(/r.rs/);
+      };
+    this.filtersetGroups = filtersetsService.filtersets.pipe(map(filtersets => {
       return [{
-        filtersets: codes.map(code => {
-          return {
-            code,
-            name: code
-          };
-        })
+        filtersets: filtersets.filter(f => isRnrs(f.code))
+      }, {
+        filtersets: filtersets.filter(f => !isRnrs(f.code))
       }];
     }));
   }
