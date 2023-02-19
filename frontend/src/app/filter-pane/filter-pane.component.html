@@ -1,0 +1,65 @@
+<aside class="filter-pane__hidden-controls" *ngIf="collapsed">
+    <button id="search-controls-open" class="filter-pane__controls-open" aria-label="Expand search controls"
+        (click)="collapseChange.emit(false)">
+        <fa-icon [icon]="faCircleRight"></fa-icon>
+    </button>
+    <span class="filter-pane__controls-hidden-header-text">Search controls</span>
+</aside>
+<aside class="filter-pane__controls" aria-label="Search controls" *ngIf="!collapsed">
+    <div class="filter-pane__controls-visible-header">
+        <h2 class="filter-pane__controls-visible-header-text">{{filterset}}</h2>
+        <button id="search-controls-close" class="filter-pane__controls-close" aria-label="Collapse search controls"
+            (click)="collapseChange.emit(true)">
+            <fa-icon [icon]="faCircleLeft"></fa-icon>
+        </button>
+    </div>
+    <form #form method="get" action="" class="filter-pane__filter-form" id="search-form"
+        (submit)="onSearch(form)">
+        <div class="filter-pane__query-cnt">
+            <input id="query-field" name="query" autocomplete="off" value="{{queryString}}" class="filter-pane__query"
+                placeholder="Search ..." aria-label="Search text" #querytextfield>
+            <button type="submit" aria-label="Search" class="primary-button">
+                <fa-icon [icon]="faSearch"></fa-icon>
+            </button>
+        </div>
+        <div class="filter-pane__facets">
+            <div class="filter-pane__facet-wrap" *ngFor="let facet of facets">
+                <fieldset class="filter-pane__facet" *ngIf="facet.options.length">
+                    <legend class="filter-pane__facet-legend">{{facet.title}}</legend>
+                    <div class="filter-pane__facet-controls" *ngIf="facet.showControls">
+                        <button class="filter-pane__facet-button"
+                            [attr.aria-label]="'Collapse ' + facet.title + ' facet'" *ngIf="!facet.collapsed"
+                            (click)="facet.collapsed = true">
+                            <fa-icon [icon]="faFolderOpen"></fa-icon>
+                        </button>
+                        <button class="filter-pane__facet-button" [attr.aria-label]="'Expand ' + facet.title + ' facet'"
+                            *ngIf="facet.collapsed" (click)="facet.collapsed = false">
+                            <fa-icon [icon]="faFolderClosed"></fa-icon>
+                        </button>
+                        <input class="filter-pane__facet-search" 
+                               placeholder="Filter {{facet.title}} facet ..."
+                               [ngModelOptions]="{standalone: true}"
+                               [(ngModel)]="facet.filter"
+                               [attr.aria-label]="'Filter ' + facet.title + ' facet'" 
+                               *ngIf="!facet.collapsed">
+                    </div>
+                    <ng-container *ngIf="!facet.collapsed">
+                        <label class="filter-pane__facet-option checklist-item" *ngFor="let option of facet.options | facetFilter: facet.filter">
+                            <input type="checkbox" 
+                                   name="{{option.name}}"
+                                   value="{{option.value}}"
+                                   class="checklist-item__value-input"
+                                   [checked]="option.checked">
+                            &ngsp;
+                            <span class="checklist-item__value-text">
+                                <span class="filter-pane__facet-value">{{option.label}}</span>
+                                &ngsp;
+                                <span class="filter-pane__facet-count">({{option.count}})</span>
+                            </span>
+                        </label>
+                    </ng-container>
+                </fieldset>
+            </div>
+        </div>
+    </form>
+</aside>

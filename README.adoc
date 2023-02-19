@@ -49,10 +49,6 @@ Selecting multiple tags, will return results that contain *all* of the given tag
 
 Selecting multiple parameter types will return results that match *all* of the given types. 
 
-Some types contain logical "parent" / more general types, eg. *number?* is a parent of *integer?*. When searching by parameter type, the procedures that take parent type will be matched. However, the results with more precise "child" type are weight more heavily and should appear at the start of the search.
-
-Some types are defined as a union of other types; for example *list?* is a union of *pair?* and *null?*. If loose parameter filtering is enabled under settings, the composing parts will be treated as parent of union type; ie searching for *list?* you'd be also presented with procedures applicable to *pair?*. On one hand this presents extra results you might be interested, on the other hand those results might not be applicable in general case.
-
 Selecting multiple return types will return results that match *all* of the given types. As and in case filter by parameter type, when filtering by return type the type hierarchy is taken into consideration. Searching by a "parent" return type will also yield procedures returning more precise "child" types.
 
 The text query is parsed by edismax parser (read more about it https://solr.apache.org/guide/6_6/the-dismax-query-parser.html#the-dismax-query-parser), and is used to filter by name and parameter / subsyntax names. This means it supports and interprets common searching syntax, such as using "-" in front of the word to exclude results containing said word. This has its disadvantages; eg. if you tried to search for coercion functions and typed "->string" (without quotes) into the search input field, you wouldn't find anything interesting, because the leading minus was interpreted specially. Instead, you'd have to search using "exact phrase", by putting double quotes around the search.
@@ -62,63 +58,34 @@ The text query is parsed by edismax parser (read more about it https://solr.apac
 
 === Download
 
-Prebuilt versions are available at https://github.com/arvyy/r7rs-index-site/releases
+Select prebuilt versions are available at https://github.com/arvyy/r7rs-index-site/releases
 
 Docker image (always corresponding to latest deployed version) may be pulled from `arvyy/scheme-index:master`.
 
 === Building native
 
-Build processes requires following tools on path:
-
-* `ant` - Apache Ant build tool
-
-* `mvn` - Apache maven project tool
-
-* `asciidoctor` - Asciidoctor documentation compiler
-
-* `sass` - SCSS compiler
-
-* (optional) `npm` - nodejs / npm tooling to build CLI client application.
-
-You can build scheme index by running `ant` from the root of the source directory. Pass `-DbuildClient=true` to include CLI client application build.
-
-After the build successfully completes, you should find everything scheme index needs in `dist` directory.
+Build server by running `sbt clean assembly`. The output will be a jar file in `target/scala-*/scheme-index.jar`
+Build frontend by running `npm run build` in subfolder `frontend`. The output will be in `frontend/dist/frontend`
+Build documentation using `asciidoctor README.adoc`. The output will be `README.html`
 
 === Running native
 
-Once you have obtained a built version, you can run it using:
+Once built, you'll need a webserver to serve static files and proxy to API.
+The webserver should:
 
-```
-java -jar scheme-index.jar
-```
+* proxy to api on `/rest` endpoints
+* return static files on direct match
+* return index.html for other paths.
+
+To launch API backend, run `java -jar scheme-index.jar`
 
 Note that working directory is important; type files, configuration are resolved relative to the working dir, not relative to jar file.
 
 See <<Configuration>> section for configuring the application behavior.
 
-=== Building docker image
-
-Build a docker image using
-
-```
-docker build -t scmindex-builder:latest -f docker/base/Dockerfile .
-docker build -t scheme-index -f docker/scheme-index/Dockerfile .
-```
-
-The built image has same structure as a native build, under path `/app` inside the image.
-
 === Running docker image
 
-To run with docker, execute
-
-```
-docker run -p 8080:8080 --init scheme-index
-```
-
-The application resides in `/app` location. Consult rest of the documentation for details, but in particular you might want to mount a volume 
-to `/app/logs` to catch log files, or a volume file to `/app/config/configuration.scm` to overwrite index config.
-
-You can build & run locally built images using
+Run locally built images using docker-compose
 
 ```
 cd docker
@@ -133,49 +100,6 @@ To run deployed images from registry use
 cd docker
 mkdir logs
 docker-compose up
-```
-
-=== Running in development (native)
-
-First, install dependencies under kawa-web-collection submodule (make sure the git submodule is initialized / updated)
-
-```
-cd kawa-web-collection
-mvn install
-```
-
-Afterwards, run the application with
-
-```
-mvn kawa:run
-```
-
-Launch sass compiler with
-
-```
-sass -w src/main/scss/main.scss static/css/scmindex.css
-```
-
-Execute unit tests using
-
-```
-mvn test
-```
-
-=== Running in development (docker)
-
-Make sure kawa-web-collection submodule is initialized
-
-Run with
-
-```
-docker-compose -f docker/docker-compose.dev.yml up app sass nginx
-```
-
-Execute unit tests using
-
-```
-docker-compose -f docker/docker-compose.dev.yml up test
 ```
 
 == Configuration
@@ -212,14 +136,6 @@ The following is exhaustive list of valid properties
 | Which port to use. Relevant only if enable-web is `#t`
 | 8080
 
-| cache-templates
-| Whether templates should be cached (ie compiled once and remembered). Use `#f` in development, so that you don't need to restart the app to see changes
-| #t
-
-| serve-static
-| Whether application should serve static resources from ./static folder. Use `#f` if you have some other web server (eg nginx in front) serving the content.
-| #t
-
 | spec-index
 | Index of definitions to load (see Identifiers definitions section)
 | "./types/index.scm"
@@ -227,18 +143,6 @@ The following is exhaustive list of valid properties
 | filterset-index 
 | Index of filtersets to load (see Filterset definitions section)
 | "filters/index.scm"
-
-| sqlite-data
-| File to use for sqlite data
-| "sqlitedb"
-
-| enable-user-settings
-| Allow user to save certain settings in cookies and show settings page
-| #t
-
-| downloads
-| Location of downloads config file, listing available CLI app downloads. The file should be a list, where each item is an alist with symbol keys name, checksum, and url and string values. It's not an error if file doesn't exist.
-| "config/downloads.scm"
 |===
 
 === Identifiers definitions
@@ -325,16 +229,6 @@ one of as described in `signature` section, as well as additionally:
 
 * `(vector <element>)` - describes an list datastrucutre, where `<element>` has same format as function parameter definition;
 
-| syntax-param-signatures
-| Applicable only to syntax type. The value is a list, where each element is itself a 2 element list. First element is a symbol, matching one of the symbols in the signature.
-Second argument is parameter type definition, as described under functions. This allows annotating syntax when it expects to receive values of certain types for specific places in the pattern. 
-
-| parameterized-by
-| List of strings, denoting parameters created by `make-parameter` that influence behavior of this entry
-
-| spec-values
-| Sometimes procedures have very limited input set for specific parameter (eg. using symbols as a union). Sometimes procedures handle values with specific logic when it detects specific format in it (eg. printf format specifier). In both cases it's sensible to list these special handlings, and this is what this field is for. The value of spec-values is an alist, where car corresponds to parameter name, and cdr is a list. Each element in said list is also a list - where first element corresponds to specific value (written as a string), and cadr corresponds to the value's description (also a string).
-
 |===
 
 === Filterset definitions
@@ -366,13 +260,10 @@ Consult logback documentation for details.
 
 == REST API
 
-All of the following endpoints accept `wt` query parameter.
-If the parameter's value is `sexpr`, the results are returned as if with `write`, using scheme-json convention
-as defined in srfi 180. Otherwise, results are returned as json.
 
 === `/rest/filterset`
 
-List of filtersets as strings. For all endpoints below, `{filterset name}` must correspond to one of the values returned here.
+List of filtersets as strings. For all endpoints below, `{filterset name}` must correspond to one of the code here.
 
 JSON schema
 [source,json]
@@ -380,7 +271,15 @@ JSON schema
 {
     "type": "array",
     "items": {
-        "type": "string"
+        "type": "object",
+        "properties": {
+            "code": {
+                "type": "string"
+            },
+            "name": {
+                "type": "string"
+            }
+        }
     }
 }
 ----
@@ -455,23 +354,6 @@ JSON schema
 
 '''
 
-=== `/rest/filterset/{filterset name}/parameterized`
-
-Dynamic parameters (ie., ones created with `make-parameter`) that affect procedures in the index.
-
-JSON schema
-[source,json]
-----
-{
-    "type": "array",
-    "items": {
-        "type": "string"
-    }
-}
-----
-
-'''
-
 === `/rest/filterset/{filterset name}/search` 
 
 Returns found identifiers and faceting meta data.
@@ -498,14 +380,8 @@ Query parameters
 | param
 | param type filter. Possible values returned in `/rest/params`. The parameter can appear multiple times, and the result will include procedures which contain all given parameter types.
 
-| filter_loose
-| whether enable loose filtering as described in <<Filtering logic>>
-
 | return
 | return type filter. Possible values returned in `/rest/returns`. The parameter can appear multiple times, and the result will include procedures which contain all given return types.
-
-| parameterized
-| return parameterization filter. Possible values returned in `/rest/parameterized`. The parameter can appear multiple times, and the result will include procedures which are parameterized by all values.
 
 | facet
 | whether to return facet information of the query. Defaults to "true"

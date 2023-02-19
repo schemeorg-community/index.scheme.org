@@ -3,28 +3,20 @@ version: 2.1
 jobs:
   unittest:
     docker:
-      - image: cimg/openjdk:11.0
+      - image: sbtscala/scala-sbt:eclipse-temurin-jammy-17.0.5_8_1.8.2_3.2.2
     steps:
       - checkout
       - run:
           name: Test
           command: |
-            cd kawa-web-collection
-            git submodule update --init
-            mvn install -DskipTests=true
-            cd ..
-            mvn test
+            sbt test
 
   build:
     machine: true
     steps:
       - checkout
       - run: |
-          cd kawa-web-collection
-          git submodule update --init
-          cd ..
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
-          docker build -t scmindex-builder:latest -f docker/base/Dockerfile .
           docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/scheme-index/Dockerfile .
           docker build -t arvyy/scheme-index-nginx:$CIRCLE_BRANCH -f docker/nginx/Dockerfile .
       - run: |

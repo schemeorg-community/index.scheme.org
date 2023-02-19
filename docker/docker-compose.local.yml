@@ -1,15 +1,8 @@
 services:
-  base:
-    image: scmindex-builder:latest
-    build:
-      dockerfile: ./docker/base/Dockerfile
-      context: ..
   app:
     build:
       dockerfile: ./docker/scheme-index/Dockerfile
       context: ..
-    depends_on:
-      - base
     volumes:
       - type: bind
         source: ./logs
@@ -19,8 +12,6 @@ services:
     build:
       dockerfile: ./docker/nginx/Dockerfile
       context: ..
-    depends_on:
-      - base
     ports:
       - "80:80"
       - "443:443"
