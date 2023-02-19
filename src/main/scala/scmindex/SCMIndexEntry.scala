@@ -207,6 +207,7 @@ object SCMIndexEntry {
   def parseReturn(sexpr: Sexpr): Either[Exception, ReturnType] = {
     sexpr match {
       case SexprSymbol("undefined") => Right(Undefined)
+      case SexprSymbol("*") => Right(Unknown)
       case SexprSymbol("...") => Right(Ellipsis)
       case SexprSymbol(pred) => Right(Predicate(pred))
       case SexprBool(false) => Right(LiteralFalse)
