@@ -3,21 +3,27 @@ ThisBuild / version := "0.0.3"
 ThisBuild / scalaVersion := "3.2.1"
 
 libraryDependencies += "org.typelevel" %% "cats-effect" % "3.4.4"
-libraryDependencies += "org.apache.solr" % "solr-solrj" % "8.11.1"
-libraryDependencies += "org.apache.solr" % "solr-core" % "8.11.1"
-libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.1"
-libraryDependencies += "ch.qos.logback" % "logback-core" % "1.2.6"
-libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.6"
 
+val solrVersion = "8.11.1"
+libraryDependencies += ("org.apache.solr" % "solr-solrj" % solrVersion)
+  .exclude("org.apache.logging.log4j", "log4j-slf4j-impl")
+  .exclude("org.apache.logging.log4j", "log4j-core")
+libraryDependencies += "org.apache.solr" % "solr-core" % solrVersion
+
+libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.1"
+
+val logbackVersion = "1.2.6"
+libraryDependencies += "ch.qos.logback" % "logback-core" % logbackVersion
+libraryDependencies += "ch.qos.logback" % "logback-classic" % logbackVersion
 
 val http4sVersion = "1.0.0-M37"
 libraryDependencies ++= Seq(
   "org.http4s" %% "http4s-dsl" % http4sVersion,
   "org.http4s" %% "http4s-ember-server" % http4sVersion,
   "org.http4s" %% "http4s-circe" % http4sVersion,
-  "io.circe" %% "circe-generic" % "0.14.3"
 )
 
+libraryDependencies += "io.circe" %% "circe-generic" % "0.14.3"
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"
 

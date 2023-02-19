@@ -12,7 +12,7 @@ case class SexprSymbol(name: String) extends Sexpr {
   override def toString: String = name
 }
 case class SexprString(value: String) extends Sexpr {
-  override def toString: String = s"\"$value\""
+  override def toString: String = value
 }
 case class SexprNumber(i: Int) extends Sexpr {
   override def toString: String = "" + i

@@ -160,26 +160,26 @@ object SCMIndexEntry {
       case _ => Left(Exception("Invalid lambda signature, expected a pair"))
     }
   }
-
-  def parseParams(sexpr: Sexpr): Either[Exception, List[Parameter]] = {
-    def parseParam(sexpr: Sexpr): Either[Exception, Parameter] = {
-      sexpr match {
-        case SexprSymbol("...") => Right(Parameter("...", Ellipsis))
-        case SexprSymbol(name) => Right(Parameter(name, Unknown))
-        case pair: SexprPair => {
-          Sexpr.sexprToProperList(pair).flatMap {
-            case t :: SexprSymbol(name) :: Nil => {
-              parseType(t) match {
-                case Right(t) => Right(Parameter(name, t))
-                case Left(err) => Left(err)
-              }
+  def parseParam(sexpr: Sexpr): Either[Exception, Parameter] = {
+    sexpr match {
+      case SexprSymbol("...") => Right(Parameter("...", Ellipsis))
+      case SexprSymbol(name) => Right(Parameter(name, Unknown))
+      case pair: SexprPair => {
+        Sexpr.sexprToProperList(pair).flatMap {
+          case t :: SexprSymbol(name) :: Nil => {
+            parseType(t) match {
+              case Right(t) => Right(Parameter(name, t))
+              case Left(err) => Left(err)
             }
-            case _ => Left(Exception("invalid parameter definition"))
           }
+          case _ => Left(Exception("invalid parameter definition"))
         }
-        case _ => Left(Exception("invalid parameter definition"))
       }
+      case _ => Left(Exception("invalid parameter definition"))
     }
+  }
+  def parseParams(sexpr: Sexpr): Either[Exception, List[Parameter]] = {
+
     Sexpr.sexprToProperList(sexpr).flatMap { paramSexprs =>
       paramSexprs.map(parseParam).partitionMap(identity) match {
         case (Nil, params) => Right(params)
@@ -293,10 +293,22 @@ object SCMIndexEntry {
   }
 
   def doParseSubsig(name: String, sexpr: Sexpr): Either[Exception, SubSigEntry] = {
-    sexpr match {
-      case SexprPair(SexprString("lambda"), rest) => parseLambdaSignature(sexpr).map{ l => SubSigEntry(name, l) }
-      case _ => Right(SubSigEntry("TODO", SigValue("TODO"))) //TODO
-    }
+    (sexpr match {
+      case SexprPair(SexprSymbol("lambda"), cdr) => parseLambdaSignature(cdr)
+      case SexprPair(SexprSymbol("value"), cdr) => parseValueSignature(cdr)
+      case SexprPair(SexprSymbol("list"), SexprPair(param, SexprNull)) => parseParam(param).map(p => SCMList(p))
+      case SexprPair(SexprSymbol("vector"), SexprPair(param, SexprNull)) => parseParam(param).map(p => SCMVector(p))
+      case SexprPair(SexprSymbol("alist"), SexprPair(car, SexprPair(cdr, SexprNull))) =>
+        parseParam(car).flatMap { parsedCar =>
+          parseParam(cdr).map { parsedCdr =>
+            AList(parsedCar, parsedCdr)
+          }
+        }
+      case SexprPair(SexprSymbol("pattern"), cdr) => sexprToProperList(cdr).map { lst =>
+        Patterns(lst)
+      }
+      case _ => Left(Exception(s"Unrecognized subsignature pattern: ${sexpr}"))
+    }).map{ l => SubSigEntry(name, l) }
   }
 
   def readListOfSymbols(sexpr: Sexpr, err: String): Either[Exception, List[String]] = {

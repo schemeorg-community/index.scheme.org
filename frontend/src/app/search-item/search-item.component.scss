@@ -152,6 +152,10 @@ $media-breakpoint: 600px;
         font-weight: bold;
         color: var(--accent-color);
     }
+    &__name--syntax {
+        font-weight: bold;
+        color: var(--tertary-color);
+    }
     &__type {
         font-weight: bold;
         color: var(--secondary-color);

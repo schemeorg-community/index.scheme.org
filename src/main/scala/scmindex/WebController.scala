@@ -16,6 +16,7 @@ import cats.data.EitherT
 import org.slf4j.LoggerFactory
 import io.circe.*
 import io.circe.generic.semiauto.*
+import scmindex.Sexpr.sexprToProperList
 
 object WebController {
 
@@ -75,10 +76,32 @@ object WebController {
       }
     }
 
-    def encodeSubsignature(subSigEntry: SubSigEntry): Json = {
+    def patternToString(pattern: Sexpr): String = {
+      pattern match {
+        case SexprPair(SexprSymbol("_append"), rest) => {
+          sexprToProperList(rest) match {
+            case Right(lst) => lst.map(_.toString).mkString("")
+            case Left(_) => rest.toString
+          }
+        }
+        case _ => pattern.toString
+      }
+    }
+
+    def encodeSubSignature(sub: SubSignature): Json = {
+      sub match {
+        case Patterns(patterns) => Json.obj(("type", "pattern".asJson), ("patterns", patterns.map(patternToString).asJson))
+        case AList(car, cdr) => Json.obj(("type", "alist".asJson), ("car", encodeParam(car)), ("cdr", encodeParam(cdr)))
+        case SCMList(t) => Json.obj(("type", "list".asJson), ("element", encodeParam(t)))
+        case SCMVector(t) => Json.obj(("type", "vector".asJson), ("element", encodeParam(t)))
+        case _ => encodeSignature(sub)
+      }
+    }
+
+    def encodeSubSignatureEntry(subSigEntry: SubSigEntry): Json = {
       Json.obj(
         ("name", Json.fromString(subSigEntry.paramName)),
-        ("signature", encodeSignature(subSigEntry.signature)))
+        ("signature", encodeSubSignature(subSigEntry.signature)))
     }
 
     override def apply(a: SCMIndexEntry): Json = {
@@ -87,9 +110,9 @@ object WebController {
         ("name", Json.fromString(a.name)),
         ("description", Json.fromString(a.description)),
         ("signature", encodeSignature(a.signature)),
-        ("subsignatures", Json.arr(a.subsignatures.map(encodeSubsignature):_*)),
-        ("tags", Json.arr(a.tags.map(Json.fromString(_)):_*)),
-        ("param_types", Json.arr(SCMIndexEntry.paramTypes(a).map(Json.fromString(_)):_*))
+        ("subsignatures", Json.arr(a.subsignatures.map(encodeSubSignatureEntry):_*)),
+        ("tags", Json.arr(a.tags.map(Json.fromString(_)):_*))
+        //("param_types", Json.arr(SCMIndexEntry.paramTypes(a).map(Json.fromString(_)):_*))
         //("return_types", Json.arr(paramTypes(a).map(Json.fromString(_)):_*)), TODO
       )
     }

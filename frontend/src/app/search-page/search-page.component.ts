@@ -3,6 +3,7 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { FiltersetsService } from '../filtersets-service.service';
 import { IndexResponse, IndexQuery, SearchItem } from '../model';
+import { RouterLink } from '../search-item/search-item.component';
 
 @Component({
   selector: 'app-search-page',
@@ -116,7 +117,7 @@ export class SearchPageComponent {
             });
     }
 
-    seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name', value: string): { routerLink: string[], queryParams: Params } | null {
+    seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name' | 'lib', value: string): RouterLink | null {
         switch (type) {
             case 'name':
                 return {
@@ -137,6 +138,11 @@ export class SearchPageComponent {
                 return {
                     routerLink: [],
                     queryParams: { 'tag': value }
+                };
+            case 'lib':
+                return {
+                    routerLink: [],
+                    queryParams: { 'lib': value }
                 };
         }
     }

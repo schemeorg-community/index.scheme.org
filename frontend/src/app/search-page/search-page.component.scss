@@ -13,24 +13,6 @@ app-pager {
     align-self: center;
 }
 
-
-.definition-list {
-
-    padding: 2em;
-    background-color: var(--bg-color);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    @media (max-width: $padding-breakpoint) {
-            padding: 0;
-    }
-
-    &__content-shadow {
-        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 24px;
-    }
-}
-
 :host {
     align-self: stretch;
     height: 100%;

@@ -20,7 +20,7 @@ export class SearchItemComponent {
                 description: s.description,
                 searchItem: s,
                 lib: {
-                    href: '',
+                    link: this.routerResolver(s, 'lib', s.lib),
                     label: s.lib
                 },
                 tags: s.tags.map(t => {
@@ -42,7 +42,7 @@ export class SearchItemComponent {
     }
 
     @Input()
-    routerResolver!: (item: SearchItem, type: 'param' | 'return' | 'tag' | 'name', value: string) => { routerLink: string[], queryParams: Params } | null;
+    routerResolver!: RouterLinkResolver;
 
     isAuxiliaryType(type: string) {
         switch (type) {
@@ -55,18 +55,9 @@ export class SearchItemComponent {
         }
     }
 
-    highlightSyntaxSignature(name: string, literals: string[], pattern: string): TextPart[] {
-        const parts: TextPart[] = [];
+    highlightSyntaxSignature(literals: string[], pattern: string): TextPart[] {
         const firstSpace = pattern.indexOf(' ');
-        parts.push({
-            kind: 'plain',
-            text: '('
-        });
-        parts.push({
-            kind: 'name',
-            text: name
-        });
-        return [...parts, ...this.highlightLiterals(literals, pattern.substring(firstSpace))];
+        return [...this.highlightLiterals(literals, pattern.substring(firstSpace))];
     }
 
     highlightLiterals(literals: string[], pattern: string): TextPart[] {
@@ -113,13 +104,13 @@ export class SearchItemComponent {
 }
 
 interface Lib {
-    href: string;
     label: string;
+    link: RouterLink | null;
 }
 
 interface Tag {
     label: string;
-    link: { routerLink: string[]; queryParams: Params } | null;
+    link: RouterLink | null;
 }
 
 interface ComponentSearchItem {
@@ -139,3 +130,6 @@ interface TextPart {
     kind: 'plain' | 'literal' | 'name';
     text: string;
 }
+
+export type RouterLink = { routerLink: string[]; queryParams: Params };
+export type RouterLinkResolver = (item: SearchItem, type: 'param' | 'return' | 'tag' | 'name' | 'lib', value: string) => RouterLink | null

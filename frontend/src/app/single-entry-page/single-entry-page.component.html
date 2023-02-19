@@ -1,3 +1,8 @@
 <ng-container *ngIf="entry | async; let e">
-    <app-search-item [searchitem]="e" [routerResolver]="seachItemRouterResolver.bind(this)"/>
+    <section class="definition-list animated-enter" [attr.aria-label]="e.name">
+        <div class="definition-list__content-shadow">
+            <app-search-item [searchitem]="e" [routerResolver]="seachItemRouterResolver.bind(this)"/>
+        </div>
+        <a class="single-page__return" routerLink="../../search">Back to search</a>
+    </section>
 </ng-container>

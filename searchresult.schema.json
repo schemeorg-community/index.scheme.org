@@ -44,28 +44,6 @@
                 }
             }
         },
-        "spec-value-block":{
-            "type":"object",
-            "properties":{
-                "field":{
-                    "type":"string"
-                },
-                "values":{
-                    "type":"array",
-                    "items":{
-                        "type":"object",
-                        "properties":{
-                            "value":{
-                                "type":"string"
-                            },
-                            "desc":{
-                                "type":"string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "param":{
             "type":"object",
             "properties":{
@@ -275,36 +253,6 @@
                     "type":"array",
                     "items":{
                         "type":"string"
-                    }
-                },
-                "param_types":{
-                    "type":"array",
-                    "items":{
-                        "type":"string"
-                    }
-                },
-                "return_types":{
-                    "type":"array",
-                    "items":{
-                        "type":"string"
-                    }
-                },
-                "super_types":{
-                    "type":"array",
-                    "items":{
-                        "type":"string"
-                    }
-                },
-                "parameterized_by":{
-                    "type":"array",
-                    "items":{
-                        "type":"string"
-                    }
-                },
-                "spec_values":{
-                    "type":"array",
-                    "items":{
-                        "$ref":"#/$defs/spec-value-block"
                     }
                 }
             }

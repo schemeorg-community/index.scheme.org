@@ -17,7 +17,7 @@
         (submit)="onSearch(form)">
         <div class="filter-pane__query-cnt">
             <input id="query-field" name="query" autocomplete="off" value="{{queryString}}" class="filter-pane__query"
-                placeholder="Search ..." aria-label="Search text">
+                placeholder="Search ..." aria-label="Search text" #querytextfield>
             <button type="submit" aria-label="Search" class="primary-button">
                 <fa-icon [icon]="faSearch"></fa-icon>
             </button>

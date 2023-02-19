@@ -1,4 +1,6 @@
-/* You can add global styles to this file, and also import other style files */
+$padding-breakpoint: 1000px;
+$media-breakpoint: 600px;
+
 .theme-light
 {
     --text-color-against-accent: white;
@@ -118,3 +120,21 @@ fieldset {
   animation-timing-function: cubic-bezier(0.13, 0.79, 0.09, 1.03);
   overflow: hidden;
 }
+
+.definition-list {
+
+    padding: 2em;
+    background-color: var(--bg-color);
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    @media (max-width: $padding-breakpoint) {
+            padding: 0;
+    }
+
+    &__content-shadow {
+        box-shadow: rgba(0, 0, 0, 0.1) 0px 0px 24px;
+    }
+}
+

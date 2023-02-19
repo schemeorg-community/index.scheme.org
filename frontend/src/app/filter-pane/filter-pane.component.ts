@@ -1,5 +1,5 @@
 import { Subject, ReplaySubject, combineLatest, first } from 'rxjs';
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { IndexQuery, IndexResponse, ResponseFacetValue } from '../model';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { FiltersetsService } from '../filtersets-service.service';
@@ -29,6 +29,15 @@ export class FilterPaneComponent {
 
   @Output()
   queryChange = new EventEmitter<IndexQuery>();
+
+  @ViewChild('querytextfield')
+  queryTextfield!: ElementRef;
+
+  @HostListener('window:keydown.control./', ['$event'])
+  focusQueryField(event: KeyboardEvent) {
+      event.preventDefault();
+      this.queryTextfield.nativeElement.focus();
+  }
 
   faSearch = faMagnifyingGlass;
   faFolderOpen = faFolderOpen;

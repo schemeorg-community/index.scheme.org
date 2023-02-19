@@ -1,6 +1,6 @@
 <article class="search-item" *ngIf="componentSearchItem | async; let item">
     <div class="search-item__lib">
-        <a [href]="item.lib.href" class="search-item__lib-link">{{item.lib.label}}</a>
+        <a *ngIf="item.lib.link; let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams" class="search-item__lib-link">{{item.lib.label}}</a>
     </div>
     <div class="search-item__main-signature signature">
         <ng-container *ngIf="item.signature.type === 'function'">
@@ -9,7 +9,7 @@
             </div>
         </ng-container>
         <ng-container *ngIf="item.signature.type === 'value'">
-            <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: item.name, value: item.signature.value}"/>
+            <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: item.name, value: item.signature.value, toplevel: true}"/>
         </ng-container>
         <ng-container *ngIf="item.signature.type === 'syntax'">
             <div *ngFor="let variant of item.signature.patterns">
@@ -27,7 +27,7 @@
                     </div>
                 </ng-container>
                 <ng-container *ngIf="subsig.signature.type === 'value'">
-                    <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: subsig.name, value: subsig.signature.value}"/>
+                    <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: subsig.name, value: subsig.signature.value, toplevel: false}"/>
                 </ng-container>
                 <ng-container *ngIf="subsig.signature.type === 'vector'">
                     <ng-container *ngTemplateOutlet="vector_signature; context: {item: item.searchItem, name: subsig.name, element: subsig.signature.element}"/>
@@ -101,12 +101,13 @@
     </ng-container>
 </ng-template>
 
-<ng-template #value_signature let-item="item" let-name="name" let-value="value">
-    <span class="signature__name">{{name}}</span> <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: value}"/>
+<ng-template #value_signature let-item="item" let-name="name" let-value="value" let-toplevel="toplevel">
+    <a class="signature__name" *ngIf="toplevel && routerResolver(item, 'name', item.name); let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{name}}</a><span class="signature__name" *ngIf="!toplevel || !routerResolver(item, 'name', item.name)">{{name}}</span> <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: value}"/>
 </ng-template>
 
 <ng-template #syntax_signature let-item="item" let-variant="variant" let-literals="literals">
-    <ng-container *ngFor="let part of highlightSyntaxSignature(item.name, literals, variant.pattern)">
+    (<span class="signature__name--syntax" *ngIf="!routerResolver(item, 'name', item.name)">{{item.name}}</span><a class="signature__name--syntax" *ngIf="routerResolver(item, 'name', item.name); let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{item.name}}</a>
+    <ng-container *ngFor="let part of highlightSyntaxSignature(literals, variant.pattern)">
         <ng-container *ngTemplateOutlet="colored_text; context: {part: part}"/>
     </ng-container>
     <ng-container *ngIf="variant.type">

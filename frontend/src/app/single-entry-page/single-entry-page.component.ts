@@ -3,6 +3,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, mergeMap } from 'rxjs';
 import { FiltersetsService } from '../filtersets-service.service';
 import { SearchItem } from '../model';
+import { RouterLink } from '../search-item/search-item.component';
 
 @Component({
   selector: 'app-single-entry-page',
@@ -23,7 +24,7 @@ export class SingleEntryPageComponent {
             }));
     }
 
-    seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name', value: string): { routerLink: string[], queryParams: Params } | null {
+    seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name' | 'lib', value: string): RouterLink | null {
         switch (type) {
             case 'name':
                 return null;
@@ -41,6 +42,11 @@ export class SingleEntryPageComponent {
                 return {
                     routerLink: ['../../search'],
                     queryParams: { 'tag': value }
+                };
+            case 'lib':
+                return {
+                    routerLink: ['../../search'],
+                    queryParams: { 'lib': value }
                 };
         }
     }
