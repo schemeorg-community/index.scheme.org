@@ -58,63 +58,34 @@ The text query is parsed by edismax parser (read more about it https://solr.apac
 
 === Download
 
-Prebuilt versions are available at https://github.com/arvyy/r7rs-index-site/releases
+Select prebuilt versions are available at https://github.com/arvyy/r7rs-index-site/releases
 
 Docker image (always corresponding to latest deployed version) may be pulled from `arvyy/scheme-index:master`.
 
 === Building native
 
-Build processes requires following tools on path:
-
-* `ant` - Apache Ant build tool
-
-* `mvn` - Apache maven project tool
-
-* `asciidoctor` - Asciidoctor documentation compiler
-
-* `sass` - SCSS compiler
-
-* (optional) `npm` - nodejs / npm tooling to build CLI client application.
-
-You can build scheme index by running `ant` from the root of the source directory. Pass `-DbuildClient=true` to include CLI client application build.
-
-After the build successfully completes, you should find everything scheme index needs in `dist` directory.
+Build server by running `sbt clean assembly`. The output will be a jar file in `target/scala-*/scheme-index.jar`
+Build frontend by running `npm run build` in subfolder `frontend`. The output will be in `frontend/dist/frontend`
+Build documentation using `asciidoctor README.adoc`. The output will be `README.html`
 
 === Running native
 
-Once you have obtained a built version, you can run it using:
+Once built, you'll need a webserver to serve static files and proxy to API.
+The webserver should:
 
-```
-java -jar scheme-index.jar
-```
+* proxy to api on `/rest` endpoints
+* return static files on direct match
+* return index.html for other paths.
+
+To launch API backend, run `java -jar scheme-index.jar`
 
 Note that working directory is important; type files, configuration are resolved relative to the working dir, not relative to jar file.
 
 See <<Configuration>> section for configuring the application behavior.
 
-=== Building docker image
-
-Build a docker image using
-
-```
-docker build -t scmindex-builder:latest -f docker/base/Dockerfile .
-docker build -t scheme-index -f docker/scheme-index/Dockerfile .
-```
-
-The built image has same structure as a native build, under path `/app` inside the image.
-
 === Running docker image
 
-To run with docker, execute
-
-```
-docker run -p 8080:8080 --init scheme-index
-```
-
-The application resides in `/app` location. Consult rest of the documentation for details, but in particular you might want to mount a volume 
-to `/app/logs` to catch log files, or a volume file to `/app/config/configuration.scm` to overwrite index config.
-
-You can build & run locally built images using
+Run locally built images using docker-compose
 
 ```
 cd docker
@@ -129,49 +100,6 @@ To run deployed images from registry use
 cd docker
 mkdir logs
 docker-compose up
-```
-
-=== Running in development (native)
-
-First, install dependencies under kawa-web-collection submodule (make sure the git submodule is initialized / updated)
-
-```
-cd kawa-web-collection
-mvn install
-```
-
-Afterwards, run the application with
-
-```
-mvn kawa:run
-```
-
-Launch sass compiler with
-
-```
-sass -w src/main/scss/main.scss static/css/scmindex.css
-```
-
-Execute unit tests using
-
-```
-mvn test
-```
-
-=== Running in development (docker)
-
-Make sure kawa-web-collection submodule is initialized
-
-Run with
-
-```
-docker-compose -f docker/docker-compose.dev.yml up app sass nginx
-```
-
-Execute unit tests using
-
-```
-docker-compose -f docker/docker-compose.dev.yml up test
 ```
 
 == Configuration

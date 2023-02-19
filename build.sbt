@@ -33,7 +33,8 @@ scalacOptions ++= Seq("-Xmax-inlines", "1000")
 
 lazy val root = (project in file("."))
   .settings(
-    name := "r7rs-index-site",
+    name := "scheme-index",
+    assemblyJarName in assembly := "scheme-index.jar",
     assembly / mainClass := Some("scmindex.Main")
   )
 

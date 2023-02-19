@@ -112,8 +112,6 @@ object WebController {
         ("signature", encodeSignature(a.signature)),
         ("subsignatures", Json.arr(a.subsignatures.map(encodeSubSignatureEntry):_*)),
         ("tags", Json.arr(a.tags.map(Json.fromString(_)):_*))
-        //("param_types", Json.arr(SCMIndexEntry.paramTypes(a).map(Json.fromString(_)):_*))
-        //("return_types", Json.arr(paramTypes(a).map(Json.fromString(_)):_*)), TODO
       )
     }
   }
@@ -128,6 +126,7 @@ object WebController {
   object ParamQueryParamMatcher extends OptionalMultiQueryParamDecoderMatcher[String]("param")
   object ReturnQueryParamMatcher extends OptionalMultiQueryParamDecoderMatcher[String]("return")
   object TagQueryParamMatcher extends OptionalMultiQueryParamDecoderMatcher[String]("tag")
+  object FacetQueryParamMatcher extends OptionalQueryParamDecoderMatcher[Boolean]("facet")
 
   def makeRoutes[T : Indexer](model: Model[T]) = HttpRoutes.of[IO] {
     case GET -> Root / "rest" / "filterset" => Ok(model.filtersets.map(f => Map("code" -> f.code, "name" -> f.name)).asJson)
@@ -142,10 +141,16 @@ object WebController {
       :? ReturnQueryParamMatcher(returns)
       :? TagQueryParamMatcher(tags)
       :? StartQueryParamMatcher(start)
-      :? RowsQueryParamMatcher(rows) =>
+      :? RowsQueryParamMatcher(rows)
+      :? FacetQueryParamMatcher(facet) =>
     {
       Model.query(model, filterset, query.getOrElse(""), libs.getOrElse(List()), params.getOrElse(List()), returns.getOrElse(List()), tags.getOrElse(List()), start.getOrElse(0), rows.getOrElse(40)).flatMap {
-        case Some(resp) => Ok(resp.asJson)
+        case Some(resp) => {
+          val respToReturn = 
+            if (facet.getOrElse(true)) resp
+            else QueryResult(resp.total, List(), List(), List(), List(), resp.items)
+          Ok(respToReturn.asJson)
+        }
         case _ => NotFound()
       }
     }
