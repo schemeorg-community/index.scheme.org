@@ -41,8 +41,6 @@ export class AppComponent {
       this.selectedTheme = window.localStorage.getItem('theme') || 'default';
   }
 
-  title = 'frontend';
-
   @HostBinding('class.theme-light')
   get lightTheme() {
       const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;

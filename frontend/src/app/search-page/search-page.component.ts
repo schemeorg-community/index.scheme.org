@@ -121,7 +121,7 @@ export class SearchPageComponent {
         switch (type) {
             case 'name':
                 return {
-                    routerLink: [`/filterset/${this.filterset}/${item.lib}/${item.name}`],
+                    routerLink: [`/filterset/${this.filterset}/${encodeURIComponent(item.lib)}/${encodeURIComponent(item.name)}`],
                     queryParams: {}
                 };
             case 'param':

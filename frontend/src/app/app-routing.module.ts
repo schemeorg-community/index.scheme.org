@@ -5,11 +5,16 @@ import { SearchPageComponent } from './search-page/search-page.component';
 import { SingleEntryPageComponent } from './single-entry-page/single-entry-page.component';
 
 const routes: Routes = [{
-    path: '', component: IndexPageComponent
+    path: '', 
+    component: IndexPageComponent,
+    title: 'Scheme Index'
 }, {
-    path: 'filterset/:filterset/search', component: SearchPageComponent
+    path: 'filterset/:filterset/search', 
+    component: SearchPageComponent,
+    title: 'Scheme Index | Search'
 }, {
-    path: 'filterset/:filterset/:lib/:name', component: SingleEntryPageComponent
+    path: 'filterset/:filterset/:lib/:name',
+    component: SingleEntryPageComponent
 }];
 
 @NgModule({

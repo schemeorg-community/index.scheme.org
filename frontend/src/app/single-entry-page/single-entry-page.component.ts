@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable, mergeMap } from 'rxjs';
 import { FiltersetsService } from '../filtersets-service.service';
@@ -16,12 +17,19 @@ export class SingleEntryPageComponent {
 
     constructor(
         route: ActivatedRoute,
-        svc: FiltersetsService
+        svc: FiltersetsService,
+        title: Title
     ) {
         this.entry = route.paramMap.pipe(
             mergeMap(params => {
                 return svc.get(params.get('filterset') || '', params.get('lib') || '', params.get('name') || '');
             }));
+        route.paramMap.subscribe(params => {
+            const name = params.get('name');
+            const t = name? `${name} | Scheme Index` : 'Scheme Index';
+            console.log('WTF', t);
+            title.setTitle(t);
+        });
     }
 
     seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name' | 'lib', value: string): RouterLink | null {

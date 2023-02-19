@@ -8,7 +8,9 @@ val solrVersion = "8.11.1"
 libraryDependencies += ("org.apache.solr" % "solr-solrj" % solrVersion)
   .exclude("org.apache.logging.log4j", "log4j-slf4j-impl")
   .exclude("org.apache.logging.log4j", "log4j-core")
-libraryDependencies += "org.apache.solr" % "solr-core" % solrVersion
+libraryDependencies += ("org.apache.solr" % "solr-core" % solrVersion)
+  .exclude("org.apache.logging.log4j", "log4j-slf4j-impl")
+  .exclude("org.apache.logging.log4j", "log4j-core")
 
 libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.1"
 
