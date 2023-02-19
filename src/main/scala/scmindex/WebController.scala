@@ -122,7 +122,8 @@ object WebController {
   def log = LoggerFactory.getLogger("routes")
 
   object QueryQueryParamMatcher extends OptionalQueryParamDecoderMatcher[String]("query")
-  object PageQueryParamMatcher extends OptionalQueryParamDecoderMatcher[Int]("page")
+  object StartQueryParamMatcher extends OptionalQueryParamDecoderMatcher[Int]("start")
+  object RowsQueryParamMatcher extends OptionalQueryParamDecoderMatcher[Int]("rows")
   object LibsQueryParamMatcher extends OptionalMultiQueryParamDecoderMatcher[String]("lib")
   object ParamQueryParamMatcher extends OptionalMultiQueryParamDecoderMatcher[String]("param")
   object ReturnQueryParamMatcher extends OptionalMultiQueryParamDecoderMatcher[String]("return")
@@ -140,9 +141,10 @@ object WebController {
       :? ParamQueryParamMatcher(params)
       :? ReturnQueryParamMatcher(returns)
       :? TagQueryParamMatcher(tags)
-      :? PageQueryParamMatcher(page) =>
+      :? StartQueryParamMatcher(start)
+      :? RowsQueryParamMatcher(rows) =>
     {
-      Model.query(model, filterset, query.getOrElse(""), libs.getOrElse(List()), params.getOrElse(List()), returns.getOrElse(List()), tags.getOrElse(List()), page.getOrElse(1) - 1).flatMap {
+      Model.query(model, filterset, query.getOrElse(""), libs.getOrElse(List()), params.getOrElse(List()), returns.getOrElse(List()), tags.getOrElse(List()), start.getOrElse(0), rows.getOrElse(40)).flatMap {
         case Some(resp) => Ok(resp.asJson)
         case _ => NotFound()
       }

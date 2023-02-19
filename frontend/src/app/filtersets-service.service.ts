@@ -29,7 +29,8 @@ export class FiltersetsService {
           params = params.set('query', request.query);
       if (request.page)
           params = params
-            .set('page', request.page)
+            .set('start', (request.page - 1) * 40)
+            .set('rows', 40)
       if (request.libs)
           for (const l of request.libs)
               params = params.append('lib', l);

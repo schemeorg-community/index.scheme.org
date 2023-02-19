@@ -16,11 +16,12 @@ object Model {
                         params: List[String],
                         returns: List[String],
                         tags: List[String],
-                        page: Int): IO[Option[QueryResult]] = {
+                        start: Int,
+                        rows: Int): IO[Option[QueryResult]] = {
     val optt = for {
       filterset <- OptionT.fromOption[IO](model.filtersets.find(f => f.code == filtersetCode))
       libsToSolr = if libs.isEmpty then filterset.libs else libs.intersect(filterset.libs)
-      resp <- OptionT.liftF(model.indexer.query(queryString, libsToSolr, params, returns, tags, model.config.pageSize, model.config.pageSize * page))
+      resp <- OptionT.liftF(model.indexer.query(queryString, libsToSolr, params, returns, tags, rows, start))
     } yield makeQueryResult(model.entries, resp)
     optt.value
   }
