@@ -5,6 +5,7 @@ import cats.effect.IO
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
 import scala.annotation.tailrec
+import scala.collection.mutable
 
 sealed trait Lexeme
 case object Open extends Lexeme
@@ -40,25 +41,38 @@ class Lexer(val source: String) {
     loop(pos)
   }
   def readStringLiteral(): Option[StringLexeme] = {
+
     @tailrec
-    def findEnd(from: Int): Option[Int] = {
-      val end = source.indexOf('"', from)
-      if (end == -1) {
-        None
-      } else if (source.charAt(end - 1) == '\\') {
-        findEnd(end + 1)
-      } else {
-        Some(end)
+    def runner(sb: mutable.StringBuilder): Option[StringLexeme] = {
+      if (pos >= source.length)
+        None;
+      else source.charAt(pos) match {
+        case '"' => {
+          pos += 1
+          Some(StringLexeme(sb.toString()))
+        }
+        case '\\' => {
+          pos += 1;
+          if (source.length <= pos) None
+          else {
+            pos += 1
+            source.charAt(pos - 1) match {
+              case '\\' | '"' => runner(sb.append(source.charAt(pos - 1)))
+              case 't' => runner(sb.append('\t'))
+              case 'n' => runner(sb.append('\n'))
+              case 'r' => runner(sb.append('\r'))
+              case _ => None
+            }
+          }
+        }
+        case c => {
+          pos += 1
+          runner(sb.append(c))
+        }
       }
     }
-    findEnd(pos + 1) match {
-      case Some(end) => {
-        val l = StringLexeme(source.substring(pos + 1, end))
-        pos = end + 1
-        Some(l)
-      }
-      case _ => None
-    }
+    pos += 1;
+    runner(mutable.StringBuilder())
   }
   def readIntLiteral(): Option[IntegerLexeme] = {
     @tailrec

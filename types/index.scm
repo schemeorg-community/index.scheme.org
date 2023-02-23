@@ -2,7 +2,7 @@
  (r5rs . "types/r5rs.scm")
  ;; r6rs
  ((rnrs base (6)) . "types/rnrs.base.6.scm")
- ((rnrs arithmetic bitwise (6)) . "types/rnrs.arithmetic.flonum.6.scm")
+ ((rnrs arithmetic bitwise (6)) . "types/rnrs.arithmetic.bitwise.6.scm")
  ((rnrs arithmetic fixnum (6)) . "types/rnrs.arithmetic.fixnum.6.scm")
  ((rnrs arithmetic flonum (6)) . "types/rnrs.arithmetic.flonum.6.scm")
  ((rnrs bytevectors (6)) . "types/rnrs.bytevectors.6.scm")
