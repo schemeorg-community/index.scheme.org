@@ -1,2 +1,6 @@
-(((name . "command-line") (signature lambda () list?))
- ((name . "exit") (signature case-lambda (() undefined) ((obj) undefined))))
+(((name . "command-line") 
+  (signature lambda () list?)
+  (desc . "Returns a nonempty list of strings. The first element is an implementation-specific name for the running top-level program. The remaining elements are command-line arguments according to the operating system's conventions."))
+ ((name . "exit")
+  (signature case-lambda (() undefined) ((obj) undefined))
+  (desc . "Exits the running program and communicates an exit value to the operating system. If no argument is supplied, the exit procedure should communicate to the operating system that the program exited normally. If an argument is supplied, the exit procedure should translate the argument into an appropriate exit value for the operating system. If obj is #f, the exit is assumed to be abnormal.")))
