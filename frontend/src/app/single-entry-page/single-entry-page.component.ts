@@ -26,7 +26,7 @@ export class SingleEntryPageComponent {
             }));
         route.paramMap.subscribe(params => {
             const name = params.get('name');
-            const t = name? `${name} | Scheme Index` : 'Scheme Index';
+            const t = name? `${decodeURIComponent(name)} | Scheme Index` : 'Scheme Index';
             console.log('WTF', t);
             title.setTitle(t);
         });

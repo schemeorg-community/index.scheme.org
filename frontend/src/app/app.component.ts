@@ -1,8 +1,8 @@
 import { Component, HostBinding } from '@angular/core';
 import { NavigationEnd, Router  } from '@angular/router';
-import { filter, map, Observable, startWith } from 'rxjs';
-import { combineLatest } from 'rxjs';
+import { filter, map, Observable, startWith, combineLatest } from 'rxjs';
 import { FiltersetsService } from './filtersets-service.service';
+import { faHome, faSearch, faFile } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -13,6 +13,8 @@ export class AppComponent {
 
   navbarItems: Observable<NavbarItem[]>;
 
+  faFile = faFile;
+
   constructor(filtersetSvc: FiltersetsService, router: Router) {
       const routeChange = router.events.pipe(
           filter((event) => event instanceof NavigationEnd),
@@ -22,11 +24,13 @@ export class AppComponent {
           map(([filtersets, _]) => {
               return [{
                   label: 'Home',
+                  icon: faHome,
                   link: '/',
                   isActive: router.isActive('/', true),
                   items: []
               }, {
                   label: 'Search',
+                  icon: faSearch,
                   isActive: router.isActive(router.parseUrl('/filterset'), false),
                   items: filtersets.map(f => { return {
                           label: f.name,
@@ -64,6 +68,7 @@ export class AppComponent {
 interface NavbarItem {
     label: string;
     link?: string;
+    icon?: any;
     externallink?: boolean;
     items: NavbarItem[];
     isActive: boolean;

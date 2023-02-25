@@ -30,7 +30,7 @@ app-pager {
         flex: 1;
         transition-property: flex;
         transition-duration: 0.2s;
-        overflow: scroll;
+        overflow: auto;
     }
 
     &__controls--hidden {

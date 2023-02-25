@@ -62,8 +62,9 @@
 
 <ng-template #function_param let-param="param" let-item="item" let-nolink="nolink">
     <ng-container *ngIf="param.types.length">(<ng-container *ngFor="let type of param.types; let last = last">
-            <ng-container *ngIf="!nolink"><a *ngIf="routerResolver(item, 'param', type); let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams" class="signature__type">{{type}}</a></ng-container>
-            <ng-container *ngIf="nolink"><span class="signature__type">{{type}}</span></ng-container>
+            <ng-container *ngIf="!nolink && type !== '#f'"><a *ngIf="routerResolver(item, 'param', type); let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams" class="signature__type">{{type}}</a></ng-container>
+            <ng-container *ngIf="nolink && type !== '#f'"><span class="signature__type">{{type}}</span></ng-container>
+            <ng-container *ngIf="type === '#f'"><span class="signature__false-literal">{{type}}</span></ng-container>
             <ng-container *ngIf="!last">/</ng-container></ng-container>&ngsp;{{param.name}})</ng-container>
     <ng-container *ngIf="!param.types.length">{{param.name}}</ng-container>
 </ng-template>

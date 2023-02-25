@@ -8,8 +8,10 @@
           <ng-container *ngTemplateOutlet="navbaritem; context: {item: item}"/>
         </ng-container>
         <li class="navbar__list-item">
-            <a href="/README.html"
-                class="navbar__link navbar__link--clickable">Documentation</a>
+            <a href="/README.html" class="navbar__link navbar__link--clickable">
+                <fa-icon [icon]="faFile"></fa-icon>
+                Documentation
+            </a>
         </li>
     </ul>
     <div id="theme-cb-wrapper">
@@ -27,12 +29,15 @@
 
 <ng-template #navbaritem let-item="item">
     <li class="navbar__list-item">
-        <span class="navbar__link navbar__link--active" *ngIf="item.isActive"><span
-                [attr.class]="item.cls"></span>&nbsp;{{item.label}}</span>
-        <a [routerLink]="item.link" class="navbar__link navbar__link--clickable"
-            *ngIf="!item.isActive && item.link"><span [attr.class]="item.cls"></span>&nbsp;{{item.label}}</a>
-        <span class="navbar__link" *ngIf="!item.isActive && !item.link"><span
-                [attr.class]="item.cls"></span>&nbsp;{{item.label}}</span>
+        <span class="navbar__link navbar__link--active" *ngIf="item.isActive">
+            <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>&nbsp;{{item.label}}
+        </span>
+        <a [routerLink]="item.link" class="navbar__link navbar__link--clickable" *ngIf="!item.isActive && item.link">
+            <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>&nbsp;{{item.label}}
+        </a>
+        <span class="navbar__link" *ngIf="!item.isActive && !item.link">
+            <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>&nbsp;{{item.label}}
+        </span>
         <ul class="navbar__list navbar__list--nestedlevel" *ngIf="item.items.length > 0">
           <ng-container *ngFor="let item of item.items">
             <ng-container *ngTemplateOutlet="navbaritem; context: {item: item}" />
