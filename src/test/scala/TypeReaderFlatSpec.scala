@@ -14,8 +14,6 @@ class TypeReaderFlatSpec extends AnyFunSpec {
         "",
         "",
         "",
-        0,
-        "",
         "")
       SCMIndexEntry.loadSignatures(config).unsafeRunSync() match {
         case Right(signatures) => {
