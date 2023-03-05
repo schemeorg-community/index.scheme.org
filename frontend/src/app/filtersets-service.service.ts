@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { IndexResponse, IndexQuery, Filterset, SearchItem } from './model';
-import { Observable, shareReplay, map } from 'rxjs';
+import { IndexResponse, IndexQuery, Filterset, Download, SearchItem } from './model';
+import { Observable, shareReplay, map, catchError, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +13,8 @@ export class FiltersetsService {
 
   public filtersets: Observable<Filterset[]> = this.load().pipe(shareReplay());
 
+  public downloads: Observable<Download[]> = this.loadDownloads().pipe(shareReplay());
+
   public filtersetNameMap: Observable<{[key: string]: string}> = this.filtersets.pipe(map(filtersets => {
       const m: {[key: string]: string}  = {};
       filtersets.forEach(f => m[f.code] = f.name);
@@ -21,6 +23,12 @@ export class FiltersetsService {
 
   private load() {
     return this.http.get<Filterset[]>("/rest/filterset");
+  }
+
+  private loadDownloads() {
+    return this.http.get<Download[]>("/downloads.json").pipe(
+        catchError(_ => of([]))
+    );
   }
 
   public query(request: IndexQuery) {

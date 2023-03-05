@@ -22,7 +22,7 @@ const args = parse<ISchemeIndexArgs>({
         type: String,
         alias: 'f',
         optional: true,
-        description: 'Filterset (scheme implementation) to use (required for non-interactive mode)'
+        description: 'Filterset code (scheme implementation) to use (required for non-interactive mode)'
     },
     query: {
         type: String,

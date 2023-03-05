@@ -10,11 +10,9 @@ import {
     AlistSignature,
     ListSignature,
     VectorSignature,
-    Signature,
-    SearchItem,
-    SpecValues,
     IndexResponse,
-    IndexQuery
+    IndexQuery,
+    Filterset
 } from './interfaces';
 
 import {
@@ -34,7 +32,7 @@ const rl = readline.createInterface({
 });
 
 function rlPrompt(p: string): Promise<string> {
-    return new Promise((acc, rej) => {
+    return new Promise((acc, _) => {
         rl.question(p, (resp) => {
             acc(resp);
             rl.pause();
@@ -64,7 +62,8 @@ async function runRepl() {
     rl.write(`Using server: ${args.url}${EOL}`);
     rl.write(`Run with "--help" for help${EOL}`);
     if (!args.filterset) {
-        args.filterset = await selectFilterset();
+        let filterset = await selectFilterset();
+        args.filterset = filterset.code;
     }
     let lastQuery = null;
     let page = 0;
@@ -102,7 +101,7 @@ async function runRepl() {
 }
 
 function renderResp(page: number, resp: IndexResponse) {
-    const horSep = '----------------------------------------------------' + EOL;
+    const horSep = EOL + '----------------------------------------------------' + EOL + EOL;
     resp.items.forEach(item => {
         rl.write(horSep);
         rl.write(`${item.name}: ${item.signature.type}${EOL}`);
@@ -135,7 +134,8 @@ function renderResp(page: number, resp: IndexResponse) {
             const tags = item.tags.map(t => `[${t}]`).join(' ');
             rl.write(tags + EOL);
         }
-        renderSpecValues(item.spec_values);
+        if (item.description)
+            rl.write(item.description.replace('\n', EOL) + EOL);
         rl.write(`From ${item.lib}${EOL}`);
     });
     rl.write(horSep);
@@ -183,15 +183,6 @@ function renderValue(s: ValueSignature) {
     rl.write(returnToString(s.value) + EOL);
 }
 
-function renderSpecValues(vals: SpecValues[]) {
-    vals.forEach(v => {
-        rl.write(`${v.field}:${EOL}`);
-        v.values.forEach(e => {
-            rl.write(`    ${e.value}: ${e.desc}${EOL}`);
-        });
-    });
-}
-
 function renderAList(lst: AlistSignature) {
     return `'((${paramToString(lst.car)} . ${paramToString(lst.cdr)}) ...)`;
 }
@@ -211,11 +202,11 @@ function renderPattern(name: string, p: PatternSignature) {
     });
 }
 
-async function selectFilterset(): Promise<string> {
+async function selectFilterset(): Promise<Filterset> {
     const opts = await loadFiltersets();
     rl.write('Select filterset' + EOL);
     opts.forEach((f, i) => {
-        rl.write(`${i + 1}. ${f}${EOL}`);
+        rl.write(`${i + 1}. ${f.name} (code: ${f.code})${EOL}`);
     });
     while (true) {
         const filtersetIndex = await rlPrompt('> ');
@@ -240,6 +231,7 @@ function parseQuery(query: string): IndexQuery {
             queryWords.push(w);
     });
     return {
+        filterset: args.filterset,
         query: queryWords.join(' '),
         params,
         returns

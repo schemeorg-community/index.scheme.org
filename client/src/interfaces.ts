@@ -1,9 +1,3 @@
-export interface IndexQuery {
-    query: string;
-    params: string[];
-    returns: string[];
-}
-
 export interface FuncSignatureReturn {
     kind: 'or' | 'values' | 'return';
     items: FuncSignatureReturn[];
@@ -72,7 +66,31 @@ export interface SearchItem {
     description: string;
 }
 
+export interface ResponseFacetValue {
+    value: string;
+    count: number;
+}
+
+export interface IndexQuery {
+    filterset: string;
+    query?: string;
+    libs?: string[];
+    params?: string[];
+    returns?: string[];
+    tags?: string[];
+    page?: number;
+}
+
 export interface IndexResponse {
     total: number;
     items: SearchItem[];
+    libs: ResponseFacetValue[];
+    params: ResponseFacetValue[];
+    returns: ResponseFacetValue[];
+    tags: ResponseFacetValue[];
+}
+
+export interface Filterset {
+    code: string;
+    name: string;
 }

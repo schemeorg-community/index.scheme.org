@@ -96,3 +96,8 @@ export interface Filterset {
     code: string;
     name: string;
 }
+
+export interface Download {
+    url: string;
+    name: string;
+}

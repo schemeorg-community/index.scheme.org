@@ -11,9 +11,7 @@ case class Config(
   solrHome: String,
   solrUrl: String,
   solrCore: String,
-  pageSize: Int,
-  filtersetIndex: String,
-  downloadsConfig: String)
+  filtersetIndex: String)
 
 object Config {
 
@@ -47,10 +45,8 @@ object Config {
       solrHome <- getString(map, "solr-home", "./solrhome")
       solrUrl <- getString(map, "solr-url", "http://localhost:8983/solr")
       solrCore <- getString(map, "solr-core", "scmindex")
-      pageSize <- getInt(map, "page-size", 40)
       filtersetIndex <- getString(map, "filterset-idnex", "filters/index.scm")
-      downloadsConfig <- getString(map, "downloads-config", "./config/downloads.scm")
-    } yield Config(port, specIndex, solrEmbed, solrHome, solrUrl, solrCore, pageSize, filtersetIndex, downloadsConfig)
+    } yield Config(port, specIndex, solrEmbed, solrHome, solrUrl, solrCore, filtersetIndex)
   }
 
   given SignatureLoader[Config] with {

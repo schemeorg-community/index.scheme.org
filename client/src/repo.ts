@@ -1,5 +1,5 @@
 import { args } from './args';
-import { IndexResponse, IndexQuery } from './interfaces';
+import { IndexResponse, IndexQuery, Filterset } from './interfaces';
 import * as rm from 'typed-rest-client/RestClient';
 import { IRequestQueryParams } from 'typed-rest-client/Interfaces';
 
@@ -7,17 +7,17 @@ const restc: rm.RestClient = new rm.RestClient('scheme-index-url', args.url);
 
 export async function loadPossibleParams(): Promise<string[]> {
     const resp = await restc.get<string[]>(`rest/filterset/${args.filterset}/params`);
-    return await resp.result;
+    return resp.result;
 }
 
 export async function loadPossibleReturns(): Promise<string[]> {
     const resp = await restc.get<string[]>(`rest/filterset/${args.filterset}/returns`);
-    return await resp.result;
+    return resp.result;
 }
 
-export async function loadFiltersets(): Promise<string[]> {
-    const resp = await restc.get<string[]>('rest/filterset');
-    return await resp.result;
+export async function loadFiltersets(): Promise<Filterset[]> {
+    const resp = await restc.get<Filterset[]>('rest/filterset');
+    return resp.result;
 }
 
 export async function runIndexQuery(q: IndexQuery, offset: number): Promise<IndexResponse> {
@@ -31,6 +31,6 @@ export async function runIndexQuery(q: IndexQuery, offset: number): Promise<Inde
             query: q.query
         }
     };
-    const resp = await restc.get<IndexResponse>(`rest/filterset/${args.filterset}/search`, { queryParameters });
-    return await resp.result;
+    const resp = await restc.get<IndexResponse>(`rest/filterset/${q.filterset}/search`, { queryParameters });
+    return resp.result;
 }
