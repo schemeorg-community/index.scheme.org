@@ -18,7 +18,7 @@
         libraries might be missing.</p>
 
     <ng-container *ngIf="downloads | async; let downloads">
-        <ng-container *ngIf="downloads.length > 0">
+        <ng-container *ngIf="downloads.length >= 0">
             <h2 class="index-page__header">Download command line application</h2>
             <div class="index-page__download" *ngFor="let download of downloads">
                 <a class="index-page__download-link" href="{{download.url}}">{{download.name}}</a>
@@ -27,13 +27,7 @@
             non-interactive execution mode. The later can be integrated with your editor of choice. For example; if you use vim, add following to
             your .vimrc to be able to lookup signature of an identifier under the cursor using "\?".
             <div class="codeblock">
-                <p class="codeblock__preformatted">let g:scmindexFilterset="r7rs_small"
-                fu! ScmIndexGet()
-                let wordUnderCursor = expand("&lt;cword&gt;")
-                let result = system("scmindex -f " . g:scmindexFilterset . " -q " . wordUnderCursor . " -s")
-                echo result
-                endfunc
-                nnoremap &lt;silent&gt; &lt;leader&gt;? :call ScmIndexGet()&lt;cr&gt;</p>
+                <p class="codeblock__preformatted">{{exampleVimConfig}}</p>
             </div>
         </ng-container>
     </ng-container>
