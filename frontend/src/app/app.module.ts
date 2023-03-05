@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 
@@ -11,6 +11,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SearchItemComponent } from './search-item/search-item.component';
 import { SingleEntryPageComponent } from './single-entry-page/single-entry-page.component';
 import { PagerComponent } from './pager/pager.component';
+import { IndexErrorHandler } from './index-error-handler';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FacetFilterPipe } from './facet-filter.pipe';
@@ -33,7 +34,10 @@ import { FacetFilterPipe } from './facet-filter.pipe';
         AppRoutingModule,
         FontAwesomeModule
     ],
-    providers: [],
+    providers: [
+        IndexErrorHandler, {
+        provide: ErrorHandler, useExisting: IndexErrorHandler
+    }],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

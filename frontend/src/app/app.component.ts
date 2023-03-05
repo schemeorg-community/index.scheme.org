@@ -2,7 +2,8 @@ import { Component, HostBinding } from '@angular/core';
 import { NavigationEnd, Router  } from '@angular/router';
 import { filter, map, Observable, startWith, combineLatest } from 'rxjs';
 import { FiltersetsService } from './filtersets-service.service';
-import { faHome, faSearch, faFile } from '@fortawesome/free-solid-svg-icons';
+import { faHome, faSearch, faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { IndexErrorHandler } from './index-error-handler';
 
 @Component({
   selector: 'app-root',
@@ -14,8 +15,9 @@ export class AppComponent {
   navbarItems: Observable<NavbarItem[]>;
 
   faFile = faFile;
+  faTimes = faTimes;
 
-  constructor(filtersetSvc: FiltersetsService, router: Router) {
+  constructor(filtersetSvc: FiltersetsService, router: Router, public errorHandler: IndexErrorHandler) {
       const routeChange = router.events.pipe(
           filter((event) => event instanceof NavigationEnd),
           startWith(router)
@@ -61,6 +63,10 @@ export class AppComponent {
 
   public onSelectTheme(theme: string) {
       window.localStorage.setItem('theme', theme);
+  }
+
+  public closeErrorWindow() {
+      this.errorHandler.clear();
   }
 
 }
