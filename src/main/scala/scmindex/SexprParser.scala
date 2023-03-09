@@ -1,11 +1,14 @@
 package scmindex
 
 import cats.effect.IO
+import org.slf4j.LoggerFactory
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
 import scala.annotation.tailrec
 import scala.collection.mutable
+
+def log = LoggerFactory.getLogger("sexpr-parser")
 
 sealed trait Lexeme
 case object Open extends Lexeme
@@ -151,6 +154,7 @@ object SexprParser {
       case SymbolLexeme("#t") #:: rest => Right(SexprBool(true), rest)
       case SymbolLexeme("#f") #:: rest => Right(SexprBool(false), rest)
       case SymbolLexeme(content) #:: rest => Right(SexprSymbol(content), rest)
+      case LazyList() => Left(Exception(s"Unexpected EOF while reading sexpr"))
       case _ => Left(Exception(s"Failed to parse sexpr: ${lexemes}"))
     }
   }

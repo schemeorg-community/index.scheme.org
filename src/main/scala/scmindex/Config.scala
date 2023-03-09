@@ -3,6 +3,9 @@ package scmindex
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
 import cats.effect.IO
+import org.slf4j.LoggerFactory
+
+def log = LoggerFactory.getLogger("config")
 
 case class Config(
   port: Int,
@@ -56,6 +59,7 @@ object Config {
       def loadLibrary(file: String) = IO {
         val path = Path.of(file)
         val content = Files.readString(path, StandardCharsets.UTF_8)
+        log.info(s"Loading library ${file}")
         SexprParser.read(content)
       }
     }

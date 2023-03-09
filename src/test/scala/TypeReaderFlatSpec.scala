@@ -19,7 +19,10 @@ class TypeReaderFlatSpec extends AnyFunSpec {
         case Right(signatures) => {
           assert(signatures.size > 0)
         }
-        case Left(err) => fail(err)
+        case Left(err) => {
+          err.printStackTrace()
+          fail(err)
+        }
       }
     }
   }

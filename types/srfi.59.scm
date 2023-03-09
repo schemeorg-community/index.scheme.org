@@ -37,4 +37,4 @@
  ((name . "vicinity:suffix?")
   (signature lambda ((char? chr)) boolean?)
   (tags pure)
-  (desc . "Returns the `#t' if chr is a vicinity suffix character; and #f otherwise. Typical vicinity suffixes are `/', `:', and `\'.")))
+  (desc . "Returns the `#t' if chr is a vicinity suffix character; and #f otherwise. Typical vicinity suffixes are `/', `:', and `\\'.")))
