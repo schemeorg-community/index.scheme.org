@@ -5,8 +5,6 @@ import java.nio.file.{Files, Path}
 import cats.effect.IO
 import org.slf4j.LoggerFactory
 
-def log = LoggerFactory.getLogger("config")
-
 case class Config(
   port: Int,
   specIndex: String,
@@ -17,6 +15,8 @@ case class Config(
   filtersetIndex: String)
 
 object Config {
+
+  def log = LoggerFactory.getLogger("config")
 
   def readFromSexpr(sexpr: Sexpr): Either[Exception, Config] = {
     def getString(map: Map[String, Sexpr], key: String, default: String): Either[Exception, String] = {

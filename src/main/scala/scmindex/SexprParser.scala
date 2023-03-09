@@ -8,8 +8,6 @@ import java.nio.file.{Files, Path}
 import scala.annotation.tailrec
 import scala.collection.mutable
 
-def log = LoggerFactory.getLogger("sexpr-parser")
-
 sealed trait Lexeme
 case object Open extends Lexeme
 case object Close extends Lexeme
