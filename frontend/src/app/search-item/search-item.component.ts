@@ -70,6 +70,13 @@ export class SearchItemComponent {
                 const i = pattern.indexOf(l, index);
                 if (i == -1)
                     continue;
+                //do not highlight if it's inside another identifier
+                const prec = pattern.charAt(i - 1);
+                const follow = pattern.charAt(i + l.length);
+                if (prec && prec.match(/[^ ()]/))
+                    continue;
+                if (follow && follow.match(/[^ ()]/))
+                    continue;
                 if (nextLiteralIndex == -1 || i < nextLiteralIndex) {
                     nextLiteralIndex = i;
                     nextLiteral = l;
