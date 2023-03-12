@@ -1,6 +1,6 @@
-import { ReplaySubject, Observable, map, combineLatest } from 'rxjs';
+import { ReplaySubject, Observable, map, combineLatest, first } from 'rxjs';
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router, Params } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FiltersetsService } from '../filtersets-service.service';
 import { IndexResponse, IndexQuery, SearchItem } from '../model';
 import { RouterLink } from '../search-item/search-item.component';
@@ -26,9 +26,9 @@ export class SearchPageComponent {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private svc: FiltersetsService
+        svc: FiltersetsService
     ) {
-        this.indexQuery = combineLatest(route.paramMap, route.queryParams).pipe(map(([params, queryParams]) => {
+        this.indexQuery = combineLatest([route.paramMap, route.queryParams]).pipe(map(([params, queryParams]) => {
             const filterset = params.get('filterset') || '';
             this.filterset = filterset;
             const query = queryParams['query'] || undefined;
@@ -61,7 +61,11 @@ export class SearchPageComponent {
             };
         }));
         this.indexQuery.subscribe(q => {
-            svc.query(q).subscribe(resp => this.response.next(resp));
+            svc.query(q).pipe(first()).subscribe(resp => this.response.next(resp));
+            // collapse filter panel for small screens on query
+            if (window.innerWidth < 600) {
+                this.facetCollapsed = true;
+            }
             if (this.resultsContainer)
                 this.resultsContainer.nativeElement.scroll({ 
                     top: 0, 
@@ -69,13 +73,13 @@ export class SearchPageComponent {
                     behavior: 'smooth' 
                 });
         });
-        this.filterpaneParams = combineLatest(this.indexQuery, this.response).pipe(map(([query, response]) => {
+        this.filterpaneParams = combineLatest([this.indexQuery, this.response]).pipe(map(([query, response]) => {
             return {
                 query,
                 response
             };
         }));
-        this.pagerParams = combineLatest(this.indexQuery, this.response).pipe(map(([query, response]) => {
+        this.pagerParams = combineLatest([this.indexQuery, this.response]).pipe(map(([query, response]) => {
             if (!response.total)
                 return null;
             return {
