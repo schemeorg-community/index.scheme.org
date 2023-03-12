@@ -2,7 +2,7 @@ import { Subject, ReplaySubject, combineLatest, first } from 'rxjs';
 import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { IndexQuery, IndexResponse, ResponseFacetValue } from '../model';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { FiltersetsService } from '../filtersets-service.service';
+import { IndexService } from '../index.service';
 
 @Component({
   selector: 'app-filter-pane',
@@ -51,15 +51,15 @@ export class FilterPaneComponent {
   facets: Facet[] = [];
   queryString = '';
 
-  constructor(private filtersetSvc: FiltersetsService) {
+  constructor(filtersetSvc: IndexService) {
     this.query$ = new ReplaySubject<IndexQuery>(1);
     this.response$ = new ReplaySubject<IndexResponse>(1);
 
-    combineLatest(this.query$, filtersetSvc.filtersetNameMap).subscribe(([query, nameMap]) => {
+    combineLatest([this.query$, filtersetSvc.filtersetNameMap]).subscribe(([query, nameMap]) => {
       this.filterset = nameMap[query.filterset] || '';
     });
 
-    combineLatest(this.query$, this.response$).subscribe(([query, response]) => {
+    combineLatest([this.query$, this.response$]).subscribe(([query, response]) => {
       this.facets = this.readFacetFromResponse(query, response);
       this.queryString = query.query || '';
     });

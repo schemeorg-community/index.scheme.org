@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, mergeMap } from 'rxjs';
-import { FiltersetsService } from '../filtersets-service.service';
+import { IndexService } from '../index.service';
 import { SearchItem } from '../model';
 import { RouterLink } from '../search-item/search-item.component';
 
@@ -17,7 +17,7 @@ export class SingleEntryPageComponent {
 
     constructor(
         route: ActivatedRoute,
-        svc: FiltersetsService,
+        svc: IndexService,
         title: Title
     ) {
         this.entry = route.paramMap.pipe(
@@ -32,7 +32,7 @@ export class SingleEntryPageComponent {
         });
     }
 
-    seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name' | 'lib', value: string): RouterLink | null {
+    seachItemRouterResolver(_: SearchItem, type: 'param' | 'return' | 'tag' | 'name' | 'lib', value: string): RouterLink | null {
         switch (type) {
             case 'name':
                 return null;

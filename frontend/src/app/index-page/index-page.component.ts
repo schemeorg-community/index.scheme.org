@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { FiltersetsService } from '../filtersets-service.service';
+import { IndexService } from '../index.service';
 import { Download } from '../model';
 
 @Component({
@@ -13,7 +13,7 @@ export class IndexPageComponent {
     filtersetGroups: Observable<FiltersetGroup[]>;
     downloads: Observable<Download[]>;
 
-    constructor(filtersetsService: FiltersetsService) {
+    constructor(filtersetsService: IndexService) {
         const isRnrs = (code: string) => {
             return code.match(/r.rs/);
         };

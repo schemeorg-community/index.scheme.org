@@ -1,7 +1,7 @@
 import { ReplaySubject, Observable, map, combineLatest, first } from 'rxjs';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { FiltersetsService } from '../filtersets-service.service';
+import { IndexService } from '../index.service';
 import { IndexResponse, IndexQuery, SearchItem } from '../model';
 import { RouterLink } from '../search-item/search-item.component';
 
@@ -26,7 +26,7 @@ export class SearchPageComponent {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        svc: FiltersetsService
+        svc: IndexService
     ) {
         this.indexQuery = combineLatest([route.paramMap, route.queryParams]).pipe(map(([params, queryParams]) => {
             const filterset = params.get('filterset') || '';

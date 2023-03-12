@@ -15,7 +15,7 @@ export class PagerComponent {
   pages: Observable<Page[]>;
 
   constructor() {
-    this.pages = combineLatest(this.page$, this.total$, this.pageSize$).pipe(map(([page, total, pageSize]) => {
+    this.pages = combineLatest([this.page$, this.total$, this.pageSize$]).pipe(map(([page, total, pageSize]) => {
       const pageCount = Math.ceil(total / pageSize);
       const pages = new Set<number>();
       pages.add(1);

@@ -6,8 +6,7 @@ import { Observable, shareReplay, map, catchError, of } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-//TODO rename
-export class FiltersetsService {
+export class IndexService {
 
   constructor(private http: HttpClient) {}
 

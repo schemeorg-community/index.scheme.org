@@ -1,7 +1,7 @@
 import { Component, HostBinding } from '@angular/core';
 import { NavigationEnd, Router  } from '@angular/router';
 import { filter, map, Observable, startWith, combineLatest } from 'rxjs';
-import { FiltersetsService } from './filtersets-service.service';
+import { IndexService } from './index.service';
 import { faHome, faSearch, faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { IndexErrorHandler } from './index-error-handler';
 
@@ -17,23 +17,23 @@ export class AppComponent {
   faFile = faFile;
   faTimes = faTimes;
 
-  constructor(filtersetSvc: FiltersetsService, router: Router, public errorHandler: IndexErrorHandler) {
+  constructor(filtersetSvc: IndexService, router: Router, public errorHandler: IndexErrorHandler) {
       const routeChange = router.events.pipe(
           filter((event) => event instanceof NavigationEnd),
           startWith(router)
       );
-      this.navbarItems = combineLatest(filtersetSvc.filtersets, routeChange).pipe(
+      this.navbarItems = combineLatest([filtersetSvc.filtersets, routeChange]).pipe(
           map(([filtersets, _]) => {
               return [{
                   label: 'Home',
                   icon: faHome,
                   link: '/',
-                  isActive: router.isActive('/', true),
+                  isActive: router.isActive('/', {paths: 'exact', queryParams: 'exact', fragment: 'ignored', matrixParams: 'ignored'}),
                   items: []
               }, {
                   label: 'Search',
                   icon: faSearch,
-                  isActive: router.isActive(router.parseUrl('/filterset'), false),
+                  isActive: router.isActive(router.parseUrl('/filterset'), {paths: 'subset', queryParams: 'subset', fragment: 'ignored', matrixParams: 'ignored'}),
                   items: filtersets.map(f => { return {
                           label: f.name,
                           link: `filterset/${f.code}/search`,
