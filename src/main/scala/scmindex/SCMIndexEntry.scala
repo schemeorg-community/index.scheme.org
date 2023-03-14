@@ -157,7 +157,7 @@ object SCMIndexEntry {
           }
         }
       }
-      case _ => Left(Exception("Invalid lambda signature, expected a pair"))
+      case _ => Left(Exception(s"Invalid lambda signature, expected a pair: ${sexpr}"))
     }
   }
   def parseParam(sexpr: Sexpr): Either[Exception, Parameter] = {
@@ -172,10 +172,10 @@ object SCMIndexEntry {
               case Left(err) => Left(err)
             }
           }
-          case _ => Left(Exception("invalid parameter definition"))
+          case _ => Left(Exception(s"invalid parameter definition: ${sexpr}"))
         }
       }
-      case _ => Left(Exception("invalid parameter definition"))
+      case _ => Left(Exception(s"invalid parameter definition: ${sexpr}"))
     }
   }
   def parseParams(sexpr: Sexpr): Either[Exception, List[Parameter]] = {

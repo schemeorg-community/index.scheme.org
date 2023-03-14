@@ -15,7 +15,7 @@
   (tags pure)
   (desc . "Determines lseq equality, given an element-equality procedure. Two lseqs are equal if they are of the same length, and their corresponding elements are equal, as determined by elt=?. When elt=? is called, its first argument is always from lseq1 and its second argument is from lseq2.
 The dynamic order in which the elt=? procedure is applied to pairs of elements is not specified.
-The elt=? procedure must be consistent with eq?. This implies that two lseqs which are eq? are always lseq=?, as well; implementations may exploit this fact to \"short-cut\ " the element-by-element equality tests."))
+The elt=? procedure must be consistent with eq?. This implies that two lseqs which are eq? are always lseq=?, as well; implementations may exploit this fact to \"short-cut\" the element-by-element equality tests."))
  ((name . "lseq-car")
   (signature lambda ((lseq? lseq)) *)
   (tags pure)
