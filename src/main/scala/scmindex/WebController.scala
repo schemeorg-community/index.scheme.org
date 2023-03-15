@@ -69,7 +69,7 @@ object WebController {
             Json.obj(
               ("pattern", rule.pattern.toString.asJson),
               ("type", rule.`type` match {
-                case Some(Predicate(p)) => p.asJson
+                case Some(ret) => encodeReturn(ret)
                 case None => Json.Null
               }))
           }:_*)))

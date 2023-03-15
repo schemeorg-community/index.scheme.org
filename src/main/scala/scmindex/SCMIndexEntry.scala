@@ -90,6 +90,10 @@ object SCMIndexEntry {
     e.signature match {
       case SigCaseLambda(cases) => cases.flatMap(returnTypesInLambda)
       case l: SigLambda => returnTypesInLambda(l)
+      case SigSyntaxRules(keywords, patterns) => patterns.flatMap {
+        case PatternAndType(_, Some(ret)) => returnType(ret)
+        case _ => List()
+      }
       case _ => List()
     }
   }

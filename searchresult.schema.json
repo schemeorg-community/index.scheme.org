@@ -125,7 +125,7 @@
                             },
                             "type":{
                                 "types":[
-                                    "string",
+                                    "$ref":"#/$defs/return",
                                     "null"
                                 ]
                             }

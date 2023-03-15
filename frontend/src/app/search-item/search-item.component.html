@@ -112,7 +112,7 @@
         <ng-container *ngTemplateOutlet="colored_text; context: {part: part}"/>
     </ng-container>
     <ng-container *ngIf="variant.type">
-        <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: {kind: 'return', type: variant.type, items: []}}"/>
+        <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: variant.type}"/>
     </ng-container>
 </ng-template>
 
