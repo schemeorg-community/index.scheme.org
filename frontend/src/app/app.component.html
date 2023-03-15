@@ -46,7 +46,7 @@
     </li>
 </ng-template>
 
-<div class="overlay" *ngIf="errorHandler.error$ | async; let err">
+<div class="overlay" *ngIf="(errorHandler.error$ | async) as err">
     <div class="error-window animated-enter">
         <button class="error-window-close primary-button" (click)="closeErrorWindow()"><fa-icon [icon]="faTimes"></fa-icon></button>
         <div class="error-window-message"><fa-icon [icon]="err.icon"></fa-icon> {{err.message}}</div>

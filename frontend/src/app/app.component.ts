@@ -34,7 +34,8 @@ export class AppComponent {
                   label: 'Search',
                   icon: faSearch,
                   isActive: router.isActive(router.parseUrl('/filterset'), {paths: 'subset', queryParams: 'subset', fragment: 'ignored', matrixParams: 'ignored'}),
-                  items: filtersets.map(f => { return {
+                  items: filtersets.map(f => {
+                      return {
                           label: f.name,
                           link: `filterset/${f.code}/search`,
                           isActive: false,

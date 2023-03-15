@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { ErrorHandler, Injectable } from "@angular/core";
+import { ErrorHandler, Injectable, NgZone } from "@angular/core";
 import { faCoffee, faExclamation, IconDefinition } from "@fortawesome/free-solid-svg-icons";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 
@@ -9,24 +9,28 @@ export class IndexErrorHandler implements ErrorHandler {
     public error$: Observable<ErrorInfo | null>;
     private _error$: Subject<ErrorInfo | null>;
 
-    constructor() {
+    constructor(private zone: NgZone) {
         this._error$ = new BehaviorSubject<ErrorInfo | null>(null);
-        this.error$ = this._error$;
+        this.error$ = this._error$.asObservable();
     }
 
     handleError(error: any): void {
         if (error instanceof HttpErrorResponse) {
             if (error.status > 500) {
-                this._error$.next({
-                    icon: faCoffee,
-                    message: 'Index service is being updated, please retry after a couple of minutes.',
-                    details: error.message
+                this.zone.run(() => {
+                    this._error$.next({
+                        icon: faCoffee,
+                        message: 'Index service is being updated, please retry after a couple of minutes.',
+                        details: error.message
+                    });
                 });
             } else {
-                this._error$.next({
-                    icon: faExclamation,
-                    message: 'Unrecognized error. Please report issue on github',
-                    details: error.message
+                this.zone.run(() => {
+                    this._error$.next({
+                        icon: faExclamation,
+                        message: 'Unrecognized error. Please report issue on github',
+                        details: error.message
+                    });
                 });
             }
         }
