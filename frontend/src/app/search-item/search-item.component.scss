@@ -45,8 +45,8 @@ $media-breakpoint: 600px;
 
 
    &__block-description {
-       white-space: pre;
-        color: var(--text-color-muted);
+       white-space: pre-wrap;
+       color: var(--text-color-muted);
    }
 
    &__spec-value-field-name {
