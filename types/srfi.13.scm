@@ -1,7 +1,11 @@
-(((name . "string?") (signature lambda (obj) boolean?) (tags pure predicate))
+(((name . "string?")
+  (signature lambda (obj) boolean?)
+  (tags pure predicate)
+  (desc . "Returns #t if obj is a string, otherwise returns #f."))
  ((name . "string-null?")
   (signature lambda ((string? s)) boolean?)
-  (tags pure))
+  (tags pure)
+  (desc . "Is s the empty string?"))
  ((name . "string-every")
   (signature
    case-lambda
@@ -13,7 +17,8 @@
      (integer? end))
     *))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Checks to see if the given criteria is true of every character in s, proceeding from left (index start) to right (index end). If char/char-set/pred is a character, it is tested for equality with the elements of s. If char/char-set/pred is a character set, the elements of s are tested for membership in the set. If char/char-set/pred is a predicate procedure, it is applied to the elements of s. The predicate is \"witness-generating:\". If string-every returns true, the returned true value is the one produced by the final application of the predicate to s[end-1]. If string-every is applied to an empty sequence of characters, it simply returns #t. If string-every applies the predicate to the final element of the selected sequence (i.e., s[end-1]), that final application is a tail call."))
  ((name . "string-any")
   (signature
    case-lambda
@@ -25,31 +30,40 @@
      (integer? end))
     *))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Checks to see if the given criteria is true of every character in s, proceeding from left (index start) to right (index end). If char/char-set/pred is a character, it is tested for equality with the elements of s. If char/char-set/pred is a character set, the elements of s are tested for membership in the set. If char/char-set/pred is a predicate procedure, it is applied to the elements of s. The predicate is \"witness-generating:\". If string-any returns true, the returned true value is the one produced by the application of the predicate. If string-any is applied to an empty sequence of characters, it simply returns #t. If string-every applies the predicate to the final element of the selected sequence (i.e., s[end-1]), that final application is a tail call."))
  ((name . "make-string")
   (signature
    case-lambda
    (((integer? k)) string?)
    (((integer? k) (char? char)) string?))
-  (tags pure))
- ((name . "string") (signature lambda ((char? char) ...) string?) (tags pure))
+  (tags pure)
+  (desc . "make-string returns a newly allocated string of length len. If char is given, then all elements of the string are initialized to char, otherwise the contents of the string are unspecified."))
+ ((name . "string") 
+  (signature lambda ((char? char) ...) string?)
+  (tags pure)
+  (desc . "Returns a newly allocated string composed of the argument characters."))
  ((name . "string-tabulate")
   (signature lambda ((procedure? proc) (integer? len)) string?)
   (subsigs (proc (lambda ((integer? index)) char?)))
-  (tags pure))
+  (tags pure)
+  (desc . "Proc is an integer->char procedure. Construct a string of size len by applying proc to each index to produce the corresponding string element. The order in which proc is applied to the indices is not specified."))
  ((name . "string->list")
   (signature
    case-lambda
    (((string? string)) list?)
    (((string? string) (integer? start)) list?)
    (((string? string) (integer? start) (integer? end)) list?))
-  (tags pure))
+  (tags pure)
+  (desc . "string->list returns a newly allocated list of the characters that make up the given string."))
  ((name . "list->string")
   (signature lambda ((list? list)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "list->string returns a newly allocated string formed from the characters in the list char-list, which must be a list of characters."))
  ((name . "reverse-list->string")
   (signature lambda ((list? list)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "An efficient implementation of (compose list->string reverse)"))
  ((name . "string-join")
   (signature
    case-lambda
@@ -57,55 +71,63 @@
    (((list? string-list) (string? delimiter)) string?)
    (((list? string-list) (string? delimiter) (symbol? grammar)) string?))
   (tags pure)
-  (spec-values
-   (grammar
-    ("'infix"
-     "infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty string -- note, however, that parsing an empty string with an infix or separator grammar is ambiguous. Is it an empty list, or a list of one element, the empty string?")
-    ("'strict-infix"
-     "same as 'infix, but will raise an error if given an empty list.")
-    ("'suffix"
-     "suffix or terminator grammar: insert the delimiter after every list element. This grammar has no ambiguities.")
-    ("'prefix"
-     "prefix grammar: insert the delimiter before every list element. This grammar has no ambiguities."))))
+  (desc . "This procedure is a simple unparser --- it pastes strings together using the delimiter string.
+The grammar argument is a symbol that determines how the delimiter is used, and defaults to 'infix.
+  'infix means an infix or separator grammar: insert the delimiter between list elements. An empty list will produce an empty string -- note, however, that parsing an empty string with an infix or separator grammar is ambiguous. Is it an empty list, or a list of one element, the empty string?
+  'strict-infix means the same as 'infix, but will raise an error if given an empty list.
+  'suffix means a suffix or terminator grammar: insert the delimiter after every list element. This grammar has no ambiguities.
+  'prefix means a prefix grammar: insert the delimiter before every list element. This grammar has no ambiguities.
+The delimiter is the string used to delimit elements; it defaults to a single space \" \"."))
  ((name . "string-length")
   (signature lambda ((string? string)) integer?)
-  (tags pure))
+  (tags pure)
+  (desc . "Returns the number of characters in the string s."))
  ((name . "string-ref")
   (signature lambda ((string? string) (integer? k)) char?)
-  (tags pure))
+  (tags pure)
+  (desc . "Returns character s[i] using zero-origin indexing. I must be a valid index of s."))
  ((name . "string-copy")
   (signature
    case-lambda
    (((string? string)) string?)
    (((string? string) (integer? start)) string?)
    (((string? string) (integer? start) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "string-copy is extended from its R5RS definition by the addition of its optional start/end parameters. In contrast to substring/shared, it is guaranteed to produce a freshly-allocated string."))
  ((name . "substring/shared")
   (signature
    case-lambda
    (((string? string)) string?)
    (((string? string) (integer? start)) string?)
    (((string? string) (integer? start) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "substring/shared returns a string whose contents are the characters of s beginning with index start (inclusive) and ending with index end (exclusive). It differs from the R5RS substring in two ways:
+* The end parameter is optional, not required.
+* substring/shared may return a value that shares memory with s or is eq? to s."))
  ((name . "string-copy!")
   (signature
    case-lambda
    (((string? to) (integer? at) (string? from)) undefined)
    (((string? to) (integer? at) (string? from) (integer? start)) undefined)
    (((string? to) (integer? at) (string? from) (integer? start) (integer? end))
-    undefined)))
+    undefined))
+  (desc . " Copy the sequence of characters from index range [start,end) in string s to string target, beginning at index tstart. The characters are copied left-to-right or right-to-left as needed -- the copy is guaranteed to work, even if target and s are the same string. It is an error if the copy operation runs off the end of the target string."))
  ((name . "string-take")
   (signature lambda ((string? s) (integer? nchars)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "string-take returns the first nchars of s"))
  ((name . "string-drop")
   (signature lambda ((string? s) (integer? nchars)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "string-drop returns all but the first nchars of s."))
  ((name . "string-take-right")
   (signature lambda ((string? s) (integer? nchars)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "string-take-right returns the last nchars of s"))
  ((name . "string-drop-right")
   (signature lambda ((string? s) (integer? nchars)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "string-drop-right returns all but the last nchars of s."))
  ((name . "string-pad")
   (signature
    case-lambda
@@ -114,7 +136,8 @@
    (((string? s) (integer? len) (char? char) (integer? start)) string?)
    (((string? s) (integer? len) (char? char) (integer? start) (integer? end))
     string?))
-  (tags pure))
+  (tags pure)
+  (desc . "Build a string of length len comprised of s padded on the left by as many occurrences of the character char as needed. If s has more than len chars, it is truncated on the left to length len. Char defaults to #\\space. If len <= end-start, the returned value is allowed to share storage with s, or be exactly s (if len = end-start). "))
  ((name . "string-pad-right")
   (signature
    case-lambda
@@ -123,52 +146,70 @@
    (((string? s) (integer? len) (char? char) (integer? start)) string?)
    (((string? s) (integer? len) (char? char) (integer? start) (integer? end))
     string?))
-  (tags pure))
+  (tags pure)
+  (desc . "Build a string of length len comprised of s padded on the right by as many occurrences of the character char as needed. If s has more than len chars, it is truncated on the right to length len. Char defaults to #\\space. If len <= end-start, the returned value is allowed to share storage with s, or be exactly s (if len = end-start). "))
  ((name . "string-trim")
   (signature
    case-lambda
-   ((((or char? char-set? procedure?) c) (string? s)) string?)
-   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) string?)
-   ((((or char? char-set? procedure?) c)
-     (string? s)
+   (((string? s) ((or char? char-set? procedure?) c)) string?)
+   (((string? s) ((or char? char-set? procedure?) c) (integer? start)) string?)
+   (((string? s)
+     ((or char? char-set? procedure?) c)
      (integer? start)
      (integer? end))
     string?))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Trim s by skipping over all characters on the left that satisfy the second parameter char/char-set/pred:
+* if it is a character char, characters equal to char are trimmed;
+* if it is a char set cs, characters contained in cs are trimmed;
+* if it is a predicate pred, it is a test predicate that is applied to the characters in s; a character causing it to return true is skipped.
+Char/char-set/pred defaults to the character set char-set:whitespace defined in SRFI 14."))
  ((name . "string-trim-right")
   (signature
    case-lambda
-   ((((or char? char-set? procedure?) c) (string? s)) string?)
-   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) string?)
-   ((((or char? char-set? procedure?) c)
-     (string? s)
+   (((string? s) ((or char? char-set? procedure?) c)) string?)
+   (((string? s) ((or char? char-set? procedure?) c) (integer? start)) string?)
+   (((string? s)
+     ((or char? char-set? procedure?) c)
      (integer? start)
      (integer? end))
     string?))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Trim s by skipping over all characters on the right that satisfy the second parameter char/char-set/pred:
+* if it is a character char, characters equal to char are trimmed;
+* if it is a char set cs, characters contained in cs are trimmed;
+* if it is a predicate pred, it is a test predicate that is applied to the characters in s; a character causing it to return true is skipped.
+Char/char-set/pred defaults to the character set char-set:whitespace defined in SRFI 14."))
  ((name . "string-trim-both")
   (signature
    case-lambda
-   ((((or char? char-set? procedure?) c) (string? s)) string?)
-   ((((or char? char-set? procedure?) c) (string? s) (integer? start)) string?)
-   ((((or char? char-set? procedure?) c)
-     (string? s)
+   (((string? s) ((or char? char-set? procedure?) c)) string?)
+   (((string? s) ((or char? char-set? procedure?) c) (integer? start)) string?)
+   (((string? s)
+     ((or char? char-set? procedure?) c)
      (integer? start)
      (integer? end))
     string?))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Trim s by skipping over all characters on both sides that satisfy the second parameter char/char-set/pred:
+* if it is a character char, characters equal to char are trimmed;
+* if it is a char set cs, characters contained in cs are trimmed;
+* if it is a predicate pred, it is a test predicate that is applied to the characters in s; a character causing it to return true is skipped.
+Char/char-set/pred defaults to the character set char-set:whitespace defined in SRFI 14."))
  ((name . "string-set!")
-  (signature lambda ((string? string) (integer? k) (char? char)) undefined))
+  (signature lambda ((string? string) (integer? i) (char? char)) undefined)
+  (desc . "i must be a valid index of s. string-set! stores char in element i of s. Constant string literals appearing in code are immutable; it is an error to use them in a string-set!."))
  ((name . "string-fill!")
   (signature
    case-lambda
-   (((string? string) (char? fill)) undefined)
-   (((string? string) (char? fill) (integer? start)) undefined)
-   (((string? string) (char? fill) (integer? start) (integer? end))
-    undefined)))
+   (((string? s) (char? fill)) undefined)
+   (((string? s) (char? fill) (integer? start)) undefined)
+   (((string? s) (char? fill) (integer? start) (integer? end))
+    undefined))
+  (desc . "Stores char in every element of s. string-fill is extended from the R5RS definition to take optional start/end arguments. "))
  ((name . "string-compare")
   (signature
    case-lambda
@@ -216,7 +257,8 @@
    (proc< (lambda ((integer? index)) *))
    (proc= (lambda ((integer? index)) *))
    (proc> (lambda ((integer? index)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Apply proc<, proc=, or proc> to the mismatch index, depending upon whether s1 is less than, equal to, or greater than s2. The \"mismatch index\" is the largest index i such that for every 0 <= j < i, s1[j] = s2[j] -- that is, i is the first position that doesn't match. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2. The mismatch index is always an index into s1; in the case of proc=, it is always end1; we observe the protocol in this redundant case for uniformity."))
  ((name . "string-compare-ci")
   (signature
    case-lambda
@@ -264,7 +306,8 @@
    (proc< (lambda ((integer? index)) *))
    (proc= (lambda ((integer? index)) *))
    (proc> (lambda ((integer? index)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Apply proc<, proc=, or proc> to the mismatch index, depending upon whether s1 is less than, equal to, or greater than s2 in case-insensitive way. The \"mismatch index\" is the largest index i such that for every 0 <= j < i, s1[j] = s2[j] -- that is, i is the first position that doesn't match. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2. The mismatch index is always an index into s1; in the case of proc=, it is always end1; we observe the protocol in this redundant case for uniformity."))
  ((name . "string=")
   (signature
    case-lambda
@@ -284,7 +327,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string<>")
   (signature
    case-lambda
@@ -304,7 +348,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string<")
   (signature
    case-lambda
@@ -324,7 +369,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string>")
   (signature
    case-lambda
@@ -344,7 +390,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string<=")
   (signature
    case-lambda
@@ -364,7 +411,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string>=")
   (signature
    case-lambda
@@ -384,7 +432,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-ci=")
   (signature
    case-lambda
@@ -404,7 +453,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters, case-insensitive. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-ci<>")
   (signature
    case-lambda
@@ -424,7 +474,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters, case-insensitive. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-ci<")
   (signature
    case-lambda
@@ -444,7 +495,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters, case-insensitive. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-ci>")
   (signature
    case-lambda
@@ -464,7 +516,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters, case-insensitive. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-ci<=")
   (signature
    case-lambda
@@ -484,7 +537,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters, case-insensitive. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-ci>=")
   (signature
    case-lambda
@@ -504,7 +558,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lexicographic extensions to strings of the corresponding ordering on characters, case-insensitive. If two strings differ in length but are the same up to the length of the shorter string, the shorter string is considered to be lexicographically less than the longer string. The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-hash")
   (signature
    case-lambda
@@ -512,7 +567,8 @@
    (((string? s) (integer? bound)) integer?)
    (((string? s) (integer? bound) (integer? start)) integer?)
    (((string? s) (integer? bound) (integer? start) (integer? end)) integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "Compute a hash value for the string s. Bound is a non-negative exact integer specifying the range of the hash function. A positive value restricts the return value to the range [0,bound). If bound is either zero or not given, the implementation may use an implementation-specific default value, chosen to be as large as is efficiently practical. For instance, the default range might be chosen for a given implementation to map all strings into the range of integers that can be represented with a single machine word. The optional start/end indices restrict the hash operation to the indicated substring of s."))
  ((name . "string-hash-ci")
   (signature
    case-lambda
@@ -520,7 +576,8 @@
    (((string? s) (integer? bound)) integer?)
    (((string? s) (integer? bound) (integer? start)) integer?)
    (((string? s) (integer? bound) (integer? start) (integer? end)) integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "Compute a hash value for the string s, case-insensitive. Bound is a non-negative exact integer specifying the range of the hash function. A positive value restricts the return value to the range [0,bound). If bound is either zero or not given, the implementation may use an implementation-specific default value, chosen to be as large as is efficiently practical. For instance, the default range might be chosen for a given implementation to map all strings into the range of integers that can be represented with a single machine word. The optional start/end indices restrict the hash operation to the indicated substring of s."))
  ((name . "string-prefix-length")
   (signature
    case-lambda
@@ -540,7 +597,8 @@
      (integer? start2)
      (integer? end2))
     integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "Return the length of the longest common prefix of the two strings."))
  ((name . "string-suffix-length")
   (signature
    case-lambda
@@ -560,7 +618,8 @@
      (integer? start2)
      (integer? end2))
     integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "Return the length of the longest common suffix of the two strings."))
  ((name . "string-prefix-length-ci")
   (signature
    case-lambda
@@ -580,7 +639,8 @@
      (integer? start2)
      (integer? end2))
     integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "Return the length of the longest common prefix of the two strings, case-insensitive."))
  ((name . "string-suffix-length-ci")
   (signature
    case-lambda
@@ -600,7 +660,8 @@
      (integer? start2)
      (integer? end2))
     integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "Return the length of the longest common suffix of the two strings, case-insensitive."))
  ((name . "string-prefix?")
   (signature
    case-lambda
@@ -620,7 +681,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Is s1 a prefix of s2? The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-suffix?")
   (signature
    case-lambda
@@ -640,7 +702,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Is s1 a suffix of s2? The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-prefix-ci?")
   (signature
    case-lambda
@@ -660,7 +723,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Is s1 a prefix of s2, case-insensitive? The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-suffix-ci?")
   (signature
    case-lambda
@@ -680,7 +744,8 @@
      (integer? start2)
      (integer? end2))
     boolean?))
-  (tags pure))
+  (tags pure)
+  (desc . "Is s1 a suffix of s2, case-insensitive? The optional start/end indices restrict the comparison to the indicated substrings of s1 and s2."))
  ((name . "string-index")
   (signature
    case-lambda
@@ -693,7 +758,12 @@
      (integer? end))
     (or integer? #f)))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "string-index searches through the string from the left, returning the index of the first occurrence of a character which
+* equals char/char-set/pred (if it is a character);
+* is in char/char-set/pred (if it is a character set);
+* satisfies the predicate char/char-set/pred (if it is a procedure).
+If no match is found, the functions return false. The start and end parameters specify the beginning and end indices of the search; the search includes the start index, but not the end index."))
  ((name . "string-index-right")
   (signature
    case-lambda
@@ -706,7 +776,12 @@
      (integer? end))
     (or integer? #f)))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "string-index-right searches through the string from the right, returning the index of the first occurrence of a character which
+* equals char/char-set/pred (if it is a character);
+* is in char/char-set/pred (if it is a character set);
+* satisfies the predicate char/char-set/pred (if it is a procedure).
+If no match is found, the functions return false. The start and end parameters specify the beginning and end indices of the search; the search includes the start index, but not the end index."))
  ((name . "string-skip")
   (signature
    case-lambda
@@ -719,7 +794,12 @@
      (integer? end))
     (or integer? #f)))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "string-skip searches through the string from the left, returning the index of the first occurrence of a character which doesn't
+* equals char/char-set/pred (if it is a character);
+* is in char/char-set/pred (if it is a character set);
+* satisfies the predicate char/char-set/pred (if it is a procedure).
+If no match is found, the functions return false. The start and end parameters specify the beginning and end indices of the search; the search includes the start index, but not the end index."))
  ((name . "string-skip-right")
   (signature
    case-lambda
@@ -732,7 +812,12 @@
      (integer? end))
     (or integer? #f)))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "string-skip-right searches through the string from the right, returning the index of the first occurrence of a character which doesn't
+* equals char/char-set/pred (if it is a character);
+* is in char/char-set/pred (if it is a character set);
+* satisfies the predicate char/char-set/pred (if it is a procedure).
+If no match is found, the functions return false. The start and end parameters specify the beginning and end indices of the search; the search includes the start index, but not the end index."))
  ((name . "string-count")
   (signature
    case-lambda
@@ -744,7 +829,8 @@
      (integer? end))
     integer?))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Return a count of the number of characters in s that satisfy the char/char-set/pred argument. If this argument is a procedure, it is applied to the character as a predicate; if it is a character set, the character is tested for membership; if it is a character, it is used in an equality test."))
  ((name . "string-contains")
   (signature
    case-lambda
@@ -765,7 +851,8 @@
      (integer? start2)
      (integer? end2))
     (or integer? #f)))
-  (tags pure))
+  (tags pure)
+  (desc . "Does string s1 contain string s2? Return the index in s1 where s2 occurs as a substring, or false. The optional start/end indices restrict the operation to the indicated substrings."))
  ((name . "string-contains-ci")
   (signature
    case-lambda
@@ -786,85 +873,100 @@
      (integer? start2)
      (integer? end2))
     (or integer? #f)))
-  (tags pure))
+  (tags pure)
+  (desc . "Does string s1 contain string s2, case-insensitive? Return the index in s1 where s2 occurs as a substring, or false. The optional start/end indices restrict the operation to the indicated substrings."))
  ((name . "string-titlecase")
   (signature
    case-lambda
    (((string? s)) string?)
    (((string? s) (integer? start)) string?)
    (((string? s) (integer? start) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "For every character c in the selected range of s, if c is preceded by a cased character, it is downcased; otherwise it is titlecased."))
  ((name . "string-titlecase!")
   (signature
    case-lambda
    (((string? s)) undefined)
    (((string? s) (integer? start)) undefined)
-   (((string? s) (integer? start) (integer? end)) undefined)))
+   (((string? s) (integer? start) (integer? end)) undefined))
+  (desc . "For every character c in the selected range of s, if c is preceded by a cased character, it is downcased; otherwise it is titlecased. String is changed in-place."))
  ((name . "string-upcase")
   (signature
    case-lambda
    (((string? s)) string?)
    (((string? s) (integer? start)) string?)
    (((string? s) (integer? start) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "Raise the case of the alphabetic characters in the string."))
  ((name . "string-upcase!")
   (signature
    case-lambda
    (((string? s)) undefined)
    (((string? s) (integer? start)) undefined)
-   (((string? s) (integer? start) (integer? end)) undefined)))
+   (((string? s) (integer? start) (integer? end)) undefined))
+  (desc . "Raise the case of the alphabetic characters in the string. String is changed in-place."))
  ((name . "string-downcase")
   (signature
    case-lambda
    (((string? s)) string?)
    (((string? s) (integer? start)) string?)
    (((string? s) (integer? start) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "Lower the case of the alphabetic characters in the string."))
  ((name . "string-downcase!")
   (signature
    case-lambda
    (((string? s)) undefined)
    (((string? s) (integer? start)) undefined)
-   (((string? s) (integer? start) (integer? end)) undefined)))
+   (((string? s) (integer? start) (integer? end)) undefined))
+  (desc . "Lower the case of the alphabetic characters in the string. String is changed in-place."))
  ((name . "string-reverse")
   (signature
    case-lambda
    (((string? s)) string?)
    (((string? s) (integer? start)) string?)
    (((string? s) (integer? start) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "Reverse the string."))
  ((name . "string-reverse!")
   (signature
    case-lambda
    (((string? s)) undefined)
    (((string? s) (integer? start)) undefined)
-   (((string? s) (integer? start) (integer? end)) undefined)))
+   (((string? s) (integer? start) (integer? end)) undefined))
+  (desc . "Reverse the string. String is changed in-place."))
  ((name . "string-append")
   (signature lambda ((string? string) ...) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "Returns a newly allocated string whose characters form the concatenation of the given strings."))
  ((name . "string-concatenate")
   (signature lambda ((list? string-list)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "Append the elements of string-list together into a single string. Guaranteed to return a freshly allocated string. Note that the (apply string-append string-list) idiom is not robust for long lists of strings, as some Scheme implementations limit the number of arguments that may be passed to an n-ary procedure."))
  ((name . "string-append/shared")
   (signature lambda ((string? string) ...) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "Variant of string-append that is permitted to return result that shares storage with its parameters. If string-append/shared is applied to just one argument, it may return exactly that argument, whereas string-append is required to allocate a fresh string."))
  ((name . "string-concatenate/shared")
   (signature lambda ((list? string-list)) string?)
-  (tags pure))
+  (tags pure)
+  (desc . "Variant of string-concatenate that is permitted to return result that shares storage with its parameters."))
  ((name . "string-concatenate-reverse")
   (signature
    case-lambda
    (((list? string-list)) string?)
    (((list? string-list) (string? final-string)) string?)
    (((list? string-list) (string? final-string) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "With no optional arguments, the function is equivalent to (string-concatenate (reverse string-list)). If the optional argument final-string is specified, it is consed onto the beginning of string-list before performing the list-reverse and string-concatenate operations. If the optional argument end is given, only the first end characters of final-string are added to the string list."))
  ((name . "string-concatenate-reverse/shared")
   (signature
    case-lambda
    (((list? string-list)) string?)
    (((list? string-list) (string? final-string)) string?)
    (((list? string-list) (string? final-string) (integer? end)) string?))
-  (tags pure))
+  (tags pure)
+  (desc . "With no optional arguments, the function is equivalent to (string-concatenate/shared (reverse string-list)). If the optional argument final-string is specified, it is consed onto the beginning of string-list before performing the list-reverse and string-concatenate operations. If the optional argument end is given, only the first end characters of final-string are added to the string list."))
  ((name . "string-map")
   (signature
    case-lambda
@@ -872,14 +974,16 @@
    (((procedure? proc) (string? s) (integer? start)) string?)
    (((procedure? proc) (string? s) (integer? start) (integer? end)) string?))
   (subsigs (proc (lambda ((char? c) ...) char?)))
-  (tags pure))
+  (tags pure)
+  (desc . "Proc is a char->char procedure; it is mapped over s. string-map returns the result string and does not alter its s parameter."))
  ((name . "string-map!")
   (signature
    case-lambda
    (((procedure? proc) (string? s)) undefined)
    (((procedure? proc) (string? s) (integer? start)) undefined)
    (((procedure? proc) (string? s) (integer? start) (integer? end)) undefined))
-  (subsigs (proc (lambda ((char? c) ...) char?))))
+  (subsigs (proc (lambda ((char? c) ...) char?)))
+  (desc . "Proc is a char->char procedure; it is mapped over s. string-map! is the in-place side-effecting variant."))
  ((name . "string-fold")
   (signature
    case-lambda
@@ -887,7 +991,8 @@
    (((procedure? kons) knil (string? s) (integer? start)) *)
    (((procedure? kons) knil (string? s) (integer? start) (integer? end)) *))
   (subsigs (kons (lambda ((char? c) state) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "The left-fold operator maps the kons procedure across the string from left to right (... (kons s[2] (kons s[1] (kons s[0] knil))))"))
  ((name . "string-fold-right")
   (signature
    case-lambda
@@ -895,7 +1000,8 @@
    (((procedure? kons) knil (string? s) (integer? start)) *)
    (((procedure? kons) knil (string? s) (integer? start) (integer? end)) *))
   (subsigs (kons (lambda ((char? c) state) *)))
-  (tags pure))
+  (tags pure)
+  (desc . " The right-fold operator maps the kons procedure across the string from right to left (kons s[0] (... (kons s[end-3] (kons s[end-2] (kons s[end-1] knil)))))"))
  ((name . "string-unfold")
   (signature
    case-lambda
@@ -913,7 +1019,14 @@
    (f (lambda (seed) *))
    (g (lambda (seed) *))
    (make-final (lambda (seed) string?)))
-  (tags pure))
+  (tags pure)
+  (desc . "This is a fundamental constructor for strings.
+* G is used to generate a series of \"seed\" values from the initial seed: seed, (g seed), (g^2 seed), (g^3 seed), ...
+* P tells us when to stop -- when it returns true when applied to one of these seed values.
+* F maps each seed value to the corresponding character in the result string. These chars are assembled into the string in a left-to-right order.
+* Base is the optional initial/leftmost portion of the constructed string; it defaults to the empty string \"\".
+* Make-final is applied to the terminal seed value (on which p returns true) to produce the final/rightmost portion of the constructed string. It defaults to (lambda (x) \"\").
+The final string constructed does not share storage with either base or the value produced by make-final."))
  ((name . "string-unfold-right")
   (signature
    case-lambda
@@ -931,21 +1044,30 @@
    (f (lambda (seed) *))
    (g (lambda (seed) *))
    (make-final (lambda (seed) string?)))
-  (tags pure))
+  (tags pure)
+  (desc . " This is a fundamental constructor for strings.
+* G is used to generate a series of \"seed\" values from the initial seed: seed, (g seed), (g2 seed), (g3 seed), ...
+* P tells us when to stop -- when it returns true when applied to one of these seed values.
+* F maps each seed value to the corresponding character in the result string. These chars are assembled into the string in a right-to-left order.
+* Base is the optional initial/rightmost portion of the constructed string; it defaults to the empty string \"\".
+* Make-final is applied to the terminal seed value (on which P returns true) to produce the final/leftmost portion of the constructed string. It defaults to (lambda (x) \"\").
+The final string constructed does not share storage with either base or the value produced by make-final."))
  ((name . "string-for-each")
   (signature
    case-lambda
    (((procedure? proc) (string? s)) undefined)
    (((procedure? proc) (string? s) (integer? start)) undefined)
    (((procedure? proc) (string? s) (integer? start) (integer? end)) undefined))
-  (subsigs (proc (lambda ((char? c)) undefined))))
+  (subsigs (proc (lambda ((char? c)) undefined)))
+  (desc . "Apply proc to each character in s. string-for-each is required to iterate from start to end in increasing order."))
  ((name . "string-for-each-index")
   (signature
    case-lambda
    (((procedure? proc) (string? s)) undefined)
    (((procedure? proc) (string? s) (integer? start)) undefined)
    (((procedure? proc) (string? s) (integer? start) (integer? end)) undefined))
-  (subsigs (proc (lambda ((integer? index)) undefined))))
+  (subsigs (proc (lambda ((integer? index)) undefined)))
+  (desc . "Apply proc to each index of s, in order. The optional start/end pairs restrict the endpoints of the loop. This is simply a method of looping over a string that is guaranteed to be safe and correct."))
  ((name . "xsubstring")
   (signature
    case-lambda
@@ -954,7 +1076,8 @@
    (((string? s) (integer? from) (integer? to) (integer? start)) string?)
    (((string? s) (integer? from) (integer? to) (integer? start) (integer? end))
     string?))
-  (tags pure))
+  (tags pure)
+  (desc . "This is the \"extended substring\" procedure that implements replicated copying of a substring of some string. S is a string; start and end are optional arguments that demarcate a substring of s, defaulting to 0 and the length of s (i.e., the whole string). Replicate this substring up and down index space, in both the positive and negative directions. xsubstring returns the substring of this string beginning at index from, and ending at to (which defaults to from+(end-start))."))
  ((name . "string-xcopy!")
   (signature
    case-lambda
@@ -980,7 +1103,8 @@
      (integer? sto)
      (integer? start)
      (integer? end))
-    undefined)))
+    undefined))
+  (desc . "Exactly the same as xsubstring, but the extracted text is written into the string target starting at index tstart. This operation is not defined if (eq? target s) or these two arguments share storage -- you cannot copy a string on top of itself."))
  ((name . "string-replace")
   (signature
    case-lambda
@@ -998,7 +1122,8 @@
      (integer? start2)
      (integer? end2))
     string?))
-  (tags pure))
+  (tags pure)
+  (desc . "Segment of characters in s1 from start1 to end1 is replaced by the segment of characters in s2 from start2 to end2. If start1=end1, this simply splices the s2 characters into s1 at the specified index."))
  ((name . "string-tokenize")
   (signature
    case-lambda
@@ -1006,7 +1131,11 @@
    (((string? s) (char-set? token-set)) list?)
    (((string? s) (char-set? token-set) (integer? start)) list?)
    (((string? s) (char-set? token-set) (integer? start) (integer? end)) list?))
-  (tags pure))
+  (tags pure)
+  (desc . "Split the string s into a list of substrings, where each substring is a maximal non-empty contiguous sequence of characters from the character set token-set.
+* token-set defaults to char-set:graphic (see SRFI 14 for more on character sets and char-set:graphic).
+* If start or end indices are provided, they restrict string-tokenize to operating on the indicated substring of s.
+This function provides a minimal parsing facility for simple applications. More sophisticated parsers that handle quoting and backslash effects can easily be constructed using regular-expression systems; be careful not to use string-tokenize in contexts where more serious parsing is needed."))
  ((name . "string-filter")
   (signature
    case-lambda
@@ -1018,7 +1147,8 @@
      (integer? end))
     string?))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Filter the string s, retaining only those characters that satisfy the char/char-set/pred argument. If this argument is a procedure, it is applied to the character as a predicate; if it is a char-set, the character is tested for membership; if it is a character, it is used in an equality test. If the string is unaltered by the filtering operation, the function may return either s or a copy of s."))
  ((name . "string-delete")
   (signature
    case-lambda
@@ -1030,34 +1160,52 @@
      (integer? end))
     string?))
   (subsigs (c (lambda ((char? char)) *)))
-  (tags pure))
+  (tags pure)
+  (desc . "Filter the string s, retaining only those characters that do not satisfy the char/char-set/pred argument. If this argument is a procedure, it is applied to the character as a predicate; if it is a char-set, the character is tested for membership; if it is a character, it is used in an equality test. If the string is unaltered by the filtering operation, the function may return either s or a copy of s."))
  ((name . "string-parse-start+end")
   (signature
    lambda
    ((procedure? proc) (string? s) (list? args))
    (values list? integer? integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "string-parse-start+end may be used to parse a pair of optional start/end arguments from an argument list, defaulting them to 0 and the length of some string s, respectively. Let the length of string s be slen.
+* If args = (), the function returns (values '() 0 slen)
+* If args = (i), i is checked to ensure it is an exact integer, and that 0 <= i <= slen. Returns (values (cdr args) i slen).
+* If args = (i j ...), i and j are checked to ensure they are exact integers, and that 0 <= i <= j <= slen. Returns (values (cddr args) i j).
+If any of the checks fail, an error condition is raised, and proc is used as part of the error condition -- it should be the client procedure whose argument list string-parse-start+end is parsing."))
  ((name . "string-parse-final-start+end")
   (signature
    lambda
    ((procedure? proc) (string? s) (list? args))
    (values integer? integer?))
-  (tags pure))
+  (tags pure)
+  (desc . "string-parse-final-start+end is exactly the same as string-parse-start+end, except that the args list passed to it is required to be of length two or less; if it is longer, an error condition is raised. It may be used when the optional start/end parameters are final arguments to the procedure."))
  ((name . "let-string-start+end")
   (signature
    syntax-rules
    ()
    ((_ (start end) proc s args body ...))
    ((_ (rest start end) proc s args body ...)))
-  (subsigs (proc (value procedure?)) (s (value string?)) (args (value list?))))
+  (subsigs (proc (value procedure?)) (s (value string?)) (args (value list?)))
+  (desc . "Syntactic sugar for an application of string-parse-start+end or string-parse-final-start+end. If a rest variable is given, the form is equivalent to
+(call-with-values
+    (lambda () (string-parse-start+end proc-exp s-exp args-exp))
+  (lambda (rest start end) body ...))
+
+If no rest variable is given, the form is equivalent to
+(call-with-values
+    (lambda () (string-parse-final-start+end proc-exp s-exp args-exp))
+  (lambda (start end) body ...))"))
  ((name . "check-substring-spec")
   (signature
    lambda
    ((procedure? proc) (string? s) (integer? start) (integer? end))
-   undefined))
+   undefined)
+  (desc . "Check values s, start and end to ensure they specify a valid substring. This means that s is a string, start and end are exact integers, and 0 <= start <= end <= (string-length s). If the values are not proper check-substring-spec raises an error condition. proc is used as part of the error condition, and should be the procedure whose parameters we are checking."))
  ((name . "substring-spec-ok?")
   (signature lambda ((string? s) (integer? start) (integer? end)) boolean?)
-  (tags pure))
+  (tags pure)
+  (desc . "Check values s, start and end to ensure they specify a valid substring. This means that s is a string, start and end are exact integers, and 0 <= start <= end <= (string-length s). If the values are not proper substring-spec-ok? returns false."))
  ((name . "make-kmp-restart-vector")
   (signature
    case-lambda
@@ -1066,7 +1214,11 @@
    (((string? s) (procedure? c=) (integer? start)) vector?)
    (((string? s) (procedure? c=) (integer? start) (integer? end)) vector?))
   (subsigs (c= (lambda ((char? a) (char? b)) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "Build a Knuth-Morris-Pratt \"restart vector,\" which is useful for quickly searching character sequences for the occurrence of string s (or the substring of s demarcated by the optional start/end parameters, if provided). C= is a character-equality function used to construct the restart vector. It defaults to char=?; use char-ci=? instead for case-folded string search.
+The definition of the restart vector rv for string s is: If we have matched chars 0..i-1 of s against some search string ss, and s[i] doesn't match ss[k], then reset i := rv[i], and try again to match ss[k]. If rv[i] = -1, then punt ss[k] completely, and move on to ss[k+1] and s[0].
+In other words, if you have matched the first i chars of s, but the i+1'th char doesn't match, rv[i] tells you what the next-longest prefix of s is that you have matched.
+The optional start/end parameters restrict the restart vector to the indicated substring of pat; rv is end - start elements long. If start > 0, then rv is offset by start elements from pat. That is, rv[i] describes pattern element pat[i + start]. Elements of rv are themselves indices that range just over [0, end-start), not [start, end)."))
  ((name . "kmp-step")
   (signature
    lambda
@@ -1078,7 +1230,10 @@
     (integer? p-start))
    integer?)
   (subsigs (c= (lambda ((char? a) (char? b)) boolean?)))
-  (tags pure))
+  (tags pure)
+  (desc . "This function encapsulates the work performed by one step of the KMP string search; it can be used to scan strings, input ports, or other on-line character sources for fixed strings.
+Pat is the non-empty string specifying the text for which we are searching. Rv is the Knuth-Morris-Pratt restart vector for the pattern, as constructed by make-kmp-restart-vector. The pattern begins at pat[p-start], and is (vector-length rv) characters long. C= is the character-equality function used to construct the restart vector, typically char=? or char-ci=?.
+Suppose the pattern is N characters in length: pat[p-start, p-start + n). We have already matched i characters: pat[p-start, p-start + i). (P-start is typically zero.) C is the next character in the input stream. kmp-step returns the new i value -- that is, how much of the pattern we have matched, including character c. When i reaches n, the entire pattern has been matched."))
  ((name . "string-kmp-partial-search")
   (signature
    case-lambda
@@ -1110,4 +1265,14 @@
      (integer? s-end))
     integer?))
   (subsigs (c= (lambda ((char? a) (char? b)) boolean?)))
-  (tags pure)))
+  (tags pure)
+  (desc . "Applies kmp-step across s; optional s-start/s-end bounds parameters restrict search to a substring of s. The pattern is (vector-length rv) characters long; optional p-start index indicates non-zero start of pattern in pat.
+Suppose plen = (vector-length rv) is the length of the pattern. I is an integer index into the pattern (that is, 0 <= i < plen) indicating how much of the pattern has already been matched. (This means the pattern must be non-empty -- plen > 0.)
+* On success, returns -j, where j is the index in s bounding the end of the pattern -- e.g., a value that could be used as the end parameter in a call to substring/shared.
+* On continue, returns the current search state i' (an index into rv) when the search reached the end of the string. This is a non-negative integer.
+
+Hence:
+* A negative return value indicates success, and says where in the string the match occured.
+* A non-negative return value provides the i to use for continued search in a following string.
+
+This utility is designed to allow searching for occurrences of a fixed string that might extend across multiple buffers of text. This is why, for example, we do not provide the index of the start of the match on success -- it may have occurred in a previous buffer.")))
