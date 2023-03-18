@@ -167,7 +167,7 @@ object SexprParser {
         case Dot #:: rest => {
           read(rest).flatMap {
             case (sexpr, Close #:: rest) => Right(Sexpr.parseListToPairs(content.reverse, sexpr), rest)
-            case _ => Left(Exception("Bad dotted list"))
+            case _ => Left(Exception(s"Bad dotted list: ${lexemes}"))
           }
         }
         case _ => read(lexemes) match {
