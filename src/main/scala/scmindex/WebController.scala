@@ -94,7 +94,7 @@ object WebController {
         case AList(car, cdr) => Json.obj(("type", "alist".asJson), ("car", encodeParam(car)), ("cdr", encodeParam(cdr)))
         case SCMList(t) => Json.obj(("type", "list".asJson), ("element", encodeParam(t)))
         case SCMVector(t) => Json.obj(("type", "vector".asJson), ("element", encodeParam(t)))
-        case _ => encodeSignature(sub)
+        case s: Signature => encodeSignature(s)
       }
     }
 
@@ -179,17 +179,20 @@ object WebController {
       .toRight(NotFound("Filterset not found"))
 
   def runServer[T : Indexer](model: Model[T]): IO[ExitCode] = {
-    EmberServerBuilder
-      .default[IO]
-      .withHost(ipv4"0.0.0.0")
-      .withPort(port"8080")
-      .withHttpApp(makeRoutes(model))
-      .withErrorHandler(err => IO {
-        log.error("Error handling", err)
-        Response(InternalServerError)
-      })
-      .build
-      .use(_ => IO.never)
-      .as(ExitCode.Success)
+    for {
+      port <- IO.fromOption(Port.fromInt(model.config.port))(Exception("Misconfigured port"))
+      res <- EmberServerBuilder
+        .default[IO]
+        .withHost(ipv4"0.0.0.0")
+        .withPort(port)
+        .withHttpApp(makeRoutes(model))
+        .withErrorHandler(err => IO {
+          log.error("Error handling", err)
+          Response(InternalServerError)
+        })
+        .build
+        .use(_ => IO.never)
+        .as(ExitCode.Success)
+    } yield res
   }
 }

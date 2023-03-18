@@ -7,7 +7,6 @@ import scmindex.Sexpr.sexprToProperList
 
 import java.security.Signature
 
-//TODO rename
 case class IndexEntry(file: String, exclude: List[String])
 
 sealed trait ParamType
@@ -27,7 +26,7 @@ case class Parameter(name: String, `type`: ParamType)
 case class PatternAndType(pattern: Sexpr, `type`: Option[ReturnType])
 
 sealed trait Signature
-sealed trait SubSignature extends Signature
+sealed trait SubSignature
 
 case class SigValue(predicate: String) extends Signature, SubSignature
 case class SigLambda(params: List[Parameter], `return`: ReturnType) extends Signature, SubSignature
@@ -119,34 +118,30 @@ object SCMIndexEntry {
 
   def parseSCMIndexEntry(lib: String, sexpr: Sexpr): Either[Exception, SCMIndexEntry] = {
     Sexpr.alistToMap(sexpr).flatMap { map =>
-      val name = map.get("name") match {
-        case Some(SexprString(n)) => Right(n)
-        case Some(_) => Left(Exception("Name should be a string"))
-        case _ => Left(Exception("Missing name"))
-      }
-      val tags = map.get("tags") match {
-        case Some(sexpr) => readListOfSymbols(sexpr, "tags should be a list of symbols")
-        case None => Right(List())
-      }
-      val desc = map.get("desc") match {
-        case Some(SexprString(desc)) => Right(desc)
-        case Some(_) => Left(Exception("Description should be a string"))
-        case None => Right("")
-      }
-      val signature = map.get("signature") match {
-        case Some(sexpr) => parseSignature(sexpr)
-        case None => Left(Exception("Missing signature"))
-      }
-      val subsigs = map.get("subsigs") match  {
-        case Some(sexpr) => parseSubsigs(sexpr)
-        case None => Right(List())
-      }
-      (name, signature, subsigs, tags, desc) match {
-        case (Right(name), Right(sig), Right(subsigs), Right(tags), Right(desc)) => Right(SCMIndexEntry(name, lib, sig, subsigs, tags, desc))
-        case _ => List(name, signature, subsigs, tags, desc).partitionMap(identity) match {
-          case (err :: _, _) => Left(Exception("Failed to parse scm index entry", err))
+      for {
+        name <- map.get("name") match {
+          case Some(SexprString(n)) => Right(n)
+          case Some(_) => Left(Exception("Name should be a string"))
+          case _ => Left(Exception("Missing name"))
         }
-      }
+        tags <- map.get("tags") match {
+          case Some(sexpr) => readListOfSymbols(sexpr, "tags should be a list of symbols")
+          case None => Right(List())
+        }
+        desc <- map.get("desc") match {
+          case Some(SexprString(desc)) => Right(desc)
+          case Some(_) => Left(Exception("Description should be a string"))
+          case None => Right("")
+        }
+        signature <- map.get("signature") match {
+          case Some(sexpr) => parseSignature(sexpr)
+          case None => Left(Exception("Missing signature"))
+        }
+        subsigs <- map.get("subsigs") match  {
+          case Some(sexpr) => parseSubsigs(sexpr)
+          case None => Right(List())
+        }
+      } yield (SCMIndexEntry(name, lib, signature, subsigs, tags, desc))
     }
   }
 
@@ -163,12 +158,10 @@ object SCMIndexEntry {
   def parseLambdaSignature(sexpr: Sexpr) = {
     sexpr match {
       case SexprPair(args, SexprPair(returns, SexprNull)) => {
-        (parseParams(args), parseReturn(returns)) match {
-          case (Right(params), Right(returns)) => Right(SigLambda(params, returns))
-          case (params, returns) => List(params, returns).partitionMap(identity) match {
-            case (err :: _, _) => Left(Exception("Failed to parse lambda signature", err))
-          }
-        }
+        for {
+          params <- parseParams(args)
+          returns <- parseReturn(returns)
+        } yield SigLambda(params, returns)
       }
       case _ => Left(Exception(s"Invalid lambda signature, expected a pair: ${sexpr}"))
     }

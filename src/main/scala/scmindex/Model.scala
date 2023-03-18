@@ -28,7 +28,6 @@ object Model {
 
   def makeQueryResult(entries: Vector[SCMIndexEntry], resp: IndexerResponse): QueryResult = {
     val indexEntries = resp.items.map(entries(_))
-    //QueryResult(indexEntries, resp.facets, resp.total)
     QueryResult(resp.total, resp.libs, resp.params, resp.returns, resp.tags, indexEntries)
   }
 

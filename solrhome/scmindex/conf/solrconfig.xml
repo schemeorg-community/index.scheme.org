@@ -97,7 +97,6 @@
            <str name="facet.field">param_types</str>
            <str name="facet.field">return_types</str>
            <str name="facet.field">tags</str>
-           <str name="facet.field">parameterized_by</str>
         </lst>
     </requestHandler>
 

@@ -29,18 +29,9 @@ $media-breakpoint: 600px;
         align-items: stretch;
     }
 
-    &__controls--hidden {
+    &__hidden-controls {
+        display: flex;
         padding-top: 10px;
-        flex: 0;
-        min-width: unset;
-        overflow: visible;
-        background-color: var(--bg-color);
-    }
-
-    &__controls-hidden-header {
-        padding-top: 10px;
-        flex: 1;
-        align-self: start;
         flex-direction: column;
         align-items: center;
         background-color: var(--nav-bg-color);

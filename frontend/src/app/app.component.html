@@ -14,8 +14,8 @@
             </a>
         </li>
     </ul>
-    <div id="theme-cb-wrapper">
-        <select #themecb id="theme-cb" (change)="onSelectTheme(themecb.value)" [(ngModel)]="selectedTheme">
+    <div class="theme-cb-wrapper">
+        <select #themecb class="theme-cb" (change)="onSelectTheme(themecb.value)" [(ngModel)]="selectedTheme">
             <option value="default">System default</option>
             <option value="light">Light</option>
             <option value="dark">Dark</option>
