@@ -70,11 +70,20 @@ object SCMIndexEntry {
     def paramTypesInLambda(l: SigLambda): List[String] = {
       l.params.map(_.`type`).flatMap(singleParamType)
     }
-    e.signature match {
+    val typesInSig = e.signature match {
       case SigCaseLambda(cases) => cases.flatMap(paramTypesInLambda)
       case l: SigLambda => paramTypesInLambda(l)
       case _ => List()
     }
+    val typesInSubtypes = e.subsignatures.flatMap {
+      case SubSigEntry(paramName, SigValue(predicate)) => 
+        if (paramName != "return")
+          List(predicate)
+        else
+          List()
+      case _ => List()
+    }
+    typesInSig ++ typesInSubtypes
   }
 
   def returnTypes(e: SCMIndexEntry): List[String] = {
