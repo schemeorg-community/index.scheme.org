@@ -180,6 +180,7 @@ Group has following properties:
 
 | desc
 | A textual description applicable for entire group
+|===
 
 Single identifier has following properties:
 
