@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Params } from '@angular/router';
 import { ReplaySubject, Observable, map } from 'rxjs';
-import { SearchItem, SearchItemSingle, Signature } from '../model';
+import { SearchItem, SearchItemSingle, Signature } from 'scmindex-common';
 
 @Component({
     selector: 'app-search-item',

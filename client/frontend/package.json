@@ -24,7 +24,8 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.12.0"
+    "zone.js": "~0.12.0",
+    "scmindex-common": "file:../common"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.1.2",

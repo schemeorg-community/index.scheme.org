@@ -1,3 +1,4 @@
+/*
 export interface FuncSignatureReturn {
     kind: 'or' | 'values' | 'return';
     items: FuncSignatureReturn[];
@@ -94,3 +95,4 @@ export interface Filterset {
     code: string;
     name: string;
 }
+*/

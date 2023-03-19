@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { IndexService } from '../index.service';
-import { Download } from '../model';
+import { Download } from 'scmindex-common';
 
 @Component({
     selector: 'app-index-page',

@@ -1,5 +1,5 @@
 import { args } from './args';
-import { IndexResponse, IndexQuery, Filterset } from './interfaces';
+import { IndexResponse, IndexQuery, Filterset } from 'scmindex-common';
 import * as rm from 'typed-rest-client/RestClient';
 import { IRequestQueryParams } from 'typed-rest-client/Interfaces';
 

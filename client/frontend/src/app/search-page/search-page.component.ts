@@ -2,7 +2,7 @@ import { ReplaySubject, Observable, map, combineLatest, first } from 'rxjs';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IndexService } from '../index.service';
-import { IndexResponse, IndexQuery, SearchItem } from '../model';
+import { IndexResponse, IndexQuery, SearchItem } from 'scmindex-common';
 import { RouterLink } from '../search-item/search-item.component';
 
 @Component({

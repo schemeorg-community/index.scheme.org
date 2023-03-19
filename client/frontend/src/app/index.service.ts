@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { IndexResponse, IndexQuery, Filterset, Download, SearchItem } from './model';
+import { IndexResponse, IndexQuery, Filterset, Download, SearchItem } from 'scmindex-common';
 import { Observable, shareReplay, map, catchError, of } from 'rxjs';
 
 @Injectable({

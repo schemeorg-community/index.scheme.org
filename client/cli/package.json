@@ -18,6 +18,7 @@
   },
   "dependencies": {
     "ts-command-line-args": "^2.3.1",
-    "typed-rest-client": "^1.8.9"
+    "typed-rest-client": "^1.8.9",
+    "scmindex-common": "file:../common"
   }
 }

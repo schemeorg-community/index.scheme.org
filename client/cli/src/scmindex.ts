@@ -12,8 +12,9 @@ import {
     VectorSignature,
     IndexResponse,
     IndexQuery,
-    Filterset
-} from './interfaces';
+    Filterset,
+    SearchItemSingle
+} from 'scmindex-common';
 
 import {
     loadPossibleParams,
@@ -100,42 +101,55 @@ async function runRepl() {
     }
 }
 
+function renderSingle(item: SearchItemSingle) {
+    rl.write(`${item.name}: ${item.signature.type}${EOL}`);
+    if (item.signature.type == 'function') 
+        renderFunction(item.signature);
+    if (item.signature.type == 'syntax')
+        renderSyntax(item.signature);
+    if (item.signature.type == 'value')
+        renderValue(item.signature);
+    item.subsignatures
+    .filter((s): s is { name: string; signature: PatternSignature } => s.signature.type == 'pattern')
+    .forEach(s => renderPattern(s.name, s.signature));
+    item.subsignatures
+    .filter(s => s.signature.type != 'pattern')
+    .forEach(s => {
+        rl.write(`${s.name} => `);
+        if (s.signature.type == 'function') 
+            renderFunction(s.signature);
+        if (s.signature.type == 'value')
+            renderValue(s.signature);
+        if (s.signature.type == 'list')
+            renderList(s.signature);
+        if (s.signature.type == 'alist')
+            renderAList(s.signature);
+        if (s.signature.type == 'vector')
+            renderVector(s.signature);
+    });
+    rl.write(EOL);
+    if (item.tags.length) {
+        const tags = item.tags.map(t => `[${t}]`).join(' ');
+        rl.write(tags + EOL);
+    }
+    if (item.description)
+        rl.write(item.description.replace('\n', EOL) + EOL);
+}
+
 function renderResp(page: number, resp: IndexResponse) {
     const horSep = EOL + '----------------------------------------------------' + EOL + EOL;
     resp.items.forEach(item => {
         rl.write(horSep);
-        rl.write(`${item.name}: ${item.signature.type}${EOL}`);
-        if (item.signature.type == 'function') 
-            renderFunction(item.signature);
-        if (item.signature.type == 'syntax')
-            renderSyntax(item.signature);
-        if (item.signature.type == 'value')
-            renderValue(item.signature);
-        item.subsignatures
-            .filter((s): s is { name: string; signature: PatternSignature } => s.signature.type == 'pattern')
-            .forEach(s => renderPattern(s.name, s.signature));
-        item.subsignatures
-            .filter(s => s.signature.type != 'pattern')
-            .forEach(s => {
-                rl.write(`${s.name} => `);
-                if (s.signature.type == 'function') 
-                    renderFunction(s.signature);
-                if (s.signature.type == 'value')
-                    renderValue(s.signature);
-                if (s.signature.type == 'list')
-                    renderList(s.signature);
-                if (s.signature.type == 'alist')
-                    renderAList(s.signature);
-                if (s.signature.type == 'vector')
-                    renderVector(s.signature);
+        if (item.kind == 'single')
+            renderSingle(item);
+        else {
+            item.entries.forEach(itemInternal => {
+                renderSingle(itemInternal);
+                rl.write(EOL);
             });
-        rl.write(EOL);
-        if (item.tags.length) {
-            const tags = item.tags.map(t => `[${t}]`).join(' ');
-            rl.write(tags + EOL);
+            if (item.description)
+                rl.write(item.description.replace('\n', EOL) + EOL);
         }
-        if (item.description)
-            rl.write(item.description.replace('\n', EOL) + EOL);
         rl.write(`From ${item.lib}${EOL}`);
     });
     rl.write(horSep);

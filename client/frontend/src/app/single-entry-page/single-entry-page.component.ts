@@ -3,7 +3,7 @@ import { Title } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, mergeMap } from 'rxjs';
 import { IndexService } from '../index.service';
-import { SearchItem } from '../model';
+import { SearchItem } from 'scmindex-common';
 import { RouterLink } from '../search-item/search-item.component';
 
 @Component({

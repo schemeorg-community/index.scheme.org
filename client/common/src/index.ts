@@ -1,5 +1,3 @@
-//TODO unify with CLI
-
 export interface FuncSignatureReturn {
     kind: 'or' | 'values' | 'return';
     items: FuncSignatureReturn[];

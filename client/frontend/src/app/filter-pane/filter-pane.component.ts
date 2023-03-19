@@ -1,6 +1,6 @@
 import { Subject, ReplaySubject, combineLatest, first } from 'rxjs';
 import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild } from '@angular/core';
-import { IndexQuery, IndexResponse, ResponseFacetValue } from '../model';
+import { IndexQuery, IndexResponse, ResponseFacetValue } from 'scmindex-common';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { IndexService } from '../index.service';
 
