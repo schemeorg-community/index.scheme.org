@@ -21,15 +21,31 @@ object SolrIndexer {
     new Http2SolrClient.Builder(solrUrl).build()
 
   private def indexEntryToSolr(index: Int, e: SCMIndexEntry): SolrInputDocument = {
+    val name = e match {
+      case e:SCMIndexEntrySingle => List(e.name)
+      case e:SCMIndexEntryGroup => e.entries.map(_.name)
+    }
+    val lib = e match {
+      case e:SCMIndexEntrySingle => e.lib
+      case e:SCMIndexEntryGroup => e.lib
+    }
+    val tags = e match {
+      case e:SCMIndexEntrySingle => e.tags
+      case e:SCMIndexEntryGroup => e.entries.flatMap(_.tags)
+    }
+    val description = e match {
+      case e:SCMIndexEntrySingle => e.description
+      case e:SCMIndexEntryGroup => e.description
+    }
     val d = new SolrInputDocument()
     d.setField("index", index)
-    d.setField("name", e.name)
-    d.setField("lib", e.lib)
-    d.setField("tags", e.tags.asJava)
+    d.setField("name", name.asJava)
+    d.setField("lib", lib)
+    d.setField("tags", tags.asJava)
     d.setField("param_names", SCMIndexEntry.paramNames(e).asJava)
     d.setField("param_types", SCMIndexEntry.paramTypes(e).asJava)
     d.setField("return_types", SCMIndexEntry.returnTypes(e).asJava)
-    d.setField("description", e.description)
+    d.setField("description", description)
     d
   }
 

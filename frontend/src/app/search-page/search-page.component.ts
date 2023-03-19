@@ -124,8 +124,9 @@ export class SearchPageComponent {
     seachItemRouterResolver(item: SearchItem, type: 'param' | 'return' | 'tag' | 'name' | 'lib', value: string): RouterLink | null {
         switch (type) {
             case 'name':
+                const name = item.kind == 'single'? item.name : item.entries[0].name;
                 return {
-                    routerLink: [`/filterset/${this.filterset}/${encodeURIComponent(item.lib)}/${encodeURIComponent(item.name)}`],
+                    routerLink: [`/filterset/${this.filterset}/${encodeURIComponent(item.lib)}/${encodeURIComponent(name)}`],
                     queryParams: {}
                 };
             case 'param':

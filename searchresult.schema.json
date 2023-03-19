@@ -217,9 +217,41 @@
                 "$ref":"#/$defs/vector-signature"
             }]
         },
-        "search-item":{
+        "search-item": {
+            "oneOf": [{
+                "$ref":"#/$defs/search-item-single"
+            },{
+                "$ref":"#/$defs/search-item-group"
+            }]
+        },
+        "search-item-group":{
             "type":"object",
             "properties":{
+                "kind":{
+                    "type":"string",
+                    "pattern":"^group$"
+                },
+                "lib":{
+                    "type":"string"
+                },
+                "entries": {
+                    "type": "array",
+                    "items": {
+                        "$ref":"#/$defs/search-item-single"
+                    }
+                },
+                "description":{
+                    "type":"string"
+                }
+            }
+        },
+        "search-item-single":{
+            "type":"object",
+            "properties":{
+                "kind":{
+                    "type":"string",
+                    "pattern":"^single$"
+                },
                 "lib":{
                     "type":"string"
                 },

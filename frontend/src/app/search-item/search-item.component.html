@@ -1,58 +1,70 @@
-<article class="search-item" *ngIf="componentSearchItem | async; let item">
+<article class="search-item" *ngIf="componentSearchItemGroup | async; let group">
     <div class="search-item__lib">
-        <a *ngIf="item.lib.link; let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams" class="search-item__lib-link">{{item.lib.label}}</a>
+        <a *ngIf="group.lib.link; let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams" class="search-item__lib-link">{{group.lib.label}}</a>
     </div>
-    <div class="search-item__main-signature signature">
-        <ng-container *ngIf="item.signature.type === 'function'">
-            <div *ngFor="let variant of item.signature.variants">
-                <ng-container *ngTemplateOutlet="function_signature; context: {item: item.searchItem, name: item.name, variant: variant, nolink: false}"/>
-            </div>
-        </ng-container>
-        <ng-container *ngIf="item.signature.type === 'value'">
-            <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: item.name, value: item.signature.value, toplevel: true}"/>
-        </ng-container>
-        <ng-container *ngIf="item.signature.type === 'syntax'">
-            <div *ngFor="let variant of item.signature.patterns">
-                <ng-container *ngTemplateOutlet="syntax_signature; context: {item: item.searchItem, variant: variant, literals: item.signature.literals}"/>
-            </div>
-        </ng-container>
-    </div>
+    <ng-container *ngFor="let e of group.entries">
+        <ng-container *ngTemplateOutlet="single; context: {item: e}"></ng-container>
+    </ng-container>
+    <div class="search-item__description" *ngIf="group.description">{{group.description}}</div>
+</article>
 
-    <div class="search-item__extra-info">
-        <div class="search-item__block search-item__block--params" *ngIf="item.subsignatures">
-            <div class="search-item__param-signature signature" *ngFor="let subsig of item.subsignatures">
-                <ng-container *ngIf="subsig.signature.type === 'function'">
-                    <div *ngFor="let variant of subsig.signature.variants">
-                        <ng-container *ngTemplateOutlet="function_signature; context: {item: item.searchItem, name: subsig.name, variant: variant, nolink: true}"/>
+<ng-template #single let-item="item">
+    <div class="search-item__entry">
+        <div class="search-item__head">
+            <div class="search-item__main-signature signature">
+                <ng-container *ngIf="item.signature.type === 'function'">
+                    <div *ngFor="let variant of item.signature.variants">
+                        <ng-container *ngTemplateOutlet="function_signature; context: {item: item.searchItem, name: item.name, variant: variant, nolink: false}">
+                        </ng-container>
                     </div>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type === 'value'">
-                    <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: subsig.name, value: subsig.signature.value, toplevel: false}"/>
+                <ng-container *ngIf="item.signature.type === 'value'">
+                    <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: item.name, value: item.signature.value, toplevel: true}"/>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type === 'vector'">
-                    <ng-container *ngTemplateOutlet="vector_signature; context: {item: item.searchItem, name: subsig.name, element: subsig.signature.element}"/>
+                <ng-container *ngIf="item.signature.type === 'syntax'">
+                    <div *ngFor="let variant of item.signature.patterns">
+                        <ng-container *ngTemplateOutlet="syntax_signature; context: {item: item.searchItem, variant: variant, literals: item.signature.literals}">
+                        </ng-container>
+                    </div>
                 </ng-container>
-                <ng-container *ngIf="subsig.signature.type === 'list'">
-                    <ng-container *ngTemplateOutlet="list_signature; context: {item: item.searchItem, name: subsig.name, element: subsig.signature.element}"/>
-                </ng-container>
-                <ng-container *ngIf="subsig.signature.type === 'alist'">
-                    <ng-container *ngTemplateOutlet="alist_signature; context: {item: item.searchItem, name: subsig.name, car: subsig.signature.car, cdr: subsig.signature.cdr}"/>
-                </ng-container>
-                <ng-container *ngIf="subsig.signature.type === 'pattern'">
-                    <ng-container *ngTemplateOutlet="pattern_signature; context: {name: subsig.name, literals: getSyntaxLiterals(item.signature), patterns: subsig.signature.patterns}"/>
+            </div>
+            <div class="search-item__tags" *ngIf="item.tags.length">
+                <ng-container *ngFor="let tag of item.tags">
+                    <a class="search-item__tag search-item__tag-{{tag.label}}" *ngIf="tag.link; let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{tag.label}}</a>
                 </ng-container>
             </div>
         </div>
 
-        <div class="search-item__block search-item__block-description" *ngIf="item.description">{{item.description}}</div>
-    </div>
+        <div class="search-item__extra-info">
+            <div class="search-item__block search-item__block--params" *ngIf="item.subsignatures">
+                <div class="search-item__param-signature signature" *ngFor="let subsig of item.subsignatures">
+                    <ng-container *ngIf="subsig.signature.type === 'function'">
+                        <div *ngFor="let variant of subsig.signature.variants">
+                            <ng-container *ngTemplateOutlet="function_signature; context: {item: item.searchItem, name: subsig.name, variant: variant, nolink: true}"/>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="subsig.signature.type === 'value'">
+                        <ng-container *ngTemplateOutlet="value_signature; context: {item: item.searchItem, name: subsig.name, value: subsig.signature.value, toplevel: false}"/>
+                    </ng-container>
+                    <ng-container *ngIf="subsig.signature.type === 'vector'">
+                        <ng-container *ngTemplateOutlet="vector_signature; context: {item: item.searchItem, name: subsig.name, element: subsig.signature.element}"/>
+                    </ng-container>
+                    <ng-container *ngIf="subsig.signature.type === 'list'">
+                        <ng-container *ngTemplateOutlet="list_signature; context: {item: item.searchItem, name: subsig.name, element: subsig.signature.element}"/>
+                    </ng-container>
+                    <ng-container *ngIf="subsig.signature.type === 'alist'">
+                        <ng-container *ngTemplateOutlet="alist_signature; context: {item: item.searchItem, name: subsig.name, car: subsig.signature.car, cdr: subsig.signature.cdr}"/>
+                    </ng-container>
+                    <ng-container *ngIf="subsig.signature.type === 'pattern'">
+                        <ng-container *ngTemplateOutlet="pattern_signature; context: {name: subsig.name, literals: getSyntaxLiterals(item.signature), patterns: subsig.signature.patterns}"/>
+                    </ng-container>
+                </div>
+            </div>
 
-    <div class="search-item__tags" *ngIf="item.tags.length">
-        <ng-container *ngFor="let tag of item.tags">
-            <a class="search-item__tag search-item__tag-{{tag.label}}" *ngIf="tag.link; let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{tag.label}}</a>
-        </ng-container>
+            <div class="search-item__block search-item__description" *ngIf="item.description">{{item.description}}</div>
+        </div>
     </div>
-</article>
+</ng-template>
 
 <ng-template #function_signature let-name="name" let-item="item" let-variant="variant" let-nolink="nolink">
     (<span class="signature__name" *ngIf="nolink || !routerResolver(item, 'name', name)">{{name}}</span><a class="signature__name" *ngIf="!nolink && routerResolver(item, 'name', name); let link" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{name}}</a>

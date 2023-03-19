@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Params } from '@angular/router';
 import { ReplaySubject, Observable, map } from 'rxjs';
-import { SearchItem, Signature } from '../model';
+import { SearchItem, SearchItemSingle, Signature } from '../model';
 
 @Component({
     selector: 'app-search-item',
@@ -11,28 +11,26 @@ import { SearchItem, Signature } from '../model';
 export class SearchItemComponent {
 
     searchitem$ = new ReplaySubject<SearchItem>(1);
-    componentSearchItem: Observable<ComponentSearchItem>;
+    componentSearchItemGroup: Observable<ComponentSearchItemGroup>;
 
     constructor() {
-        this.componentSearchItem = this.searchitem$.pipe(map(s => {
-            const res: ComponentSearchItem = {
-                name: s.name,
-                description: s.description,
-                searchItem: s,
+        this.componentSearchItemGroup = this.searchitem$.pipe(map(s => {
+            var entries: ComponentSearchItem[];
+            var groupDesc = '';
+            if (s.kind == 'single') {
+                entries = [this.searchItemSingleToComponentSearchItem(s)];
+            } else {
+                entries = s.entries.map(e => this.searchItemSingleToComponentSearchItem(e));
+                groupDesc = s.description;
+            }
+            return {
                 lib: {
                     link: this.routerResolver(s, 'lib', s.lib),
                     label: s.lib
                 },
-                tags: s.tags.map(t => {
-                    return {
-                        label: t,
-                        link: this.routerResolver(s, 'tag', t)
-                    };
-                }),
-                signature: s.signature,
-                subsignatures: s.subsignatures
+                description: groupDesc,
+                entries: entries
             };
-            return res;
         }));
     }
 
@@ -43,6 +41,26 @@ export class SearchItemComponent {
 
     @Input()
     routerResolver!: RouterLinkResolver;
+
+    searchItemSingleToComponentSearchItem(s: SearchItemSingle) {
+        return {
+            name: s.name,
+            description: s.description,
+            searchItem: s,
+            lib: {
+                link: this.routerResolver(s, 'lib', s.lib),
+                label: s.lib
+            },
+            tags: s.tags.map(t => {
+                return {
+                    label: t,
+                    link: this.routerResolver(s, 'tag', t)
+                };
+            }),
+            signature: s.signature,
+            subsignatures: s.subsignatures
+        };
+    }
 
     isAuxiliaryType(type: string) {
         switch (type) {
@@ -131,6 +149,12 @@ interface ComponentSearchItem {
         name: string;
         signature: Signature;
     }[];
+}
+
+interface ComponentSearchItemGroup {
+    lib: Lib;
+    description: string;
+    entries: ComponentSearchItem[];
 }
 
 interface TextPart {

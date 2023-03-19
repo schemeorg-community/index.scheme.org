@@ -56,7 +56,8 @@ export interface VectorSignature {
 
 export type Signature = FuncSignature | SyntaxSignature | ValueSignature | PatternSignature | AlistSignature | ListSignature | VectorSignature;
 
-export interface SearchItem {
+export interface SearchItemSingle {
+    kind: 'single';
     lib: string;
     name: string;
     signature: Signature;
@@ -67,6 +68,15 @@ export interface SearchItem {
     }[];
     description: string;
 }
+
+export interface SearchItemGroup {
+    kind: 'group';
+    lib: string;
+    description: string;
+    entries: SearchItemSingle[];
+}
+
+export type SearchItem = SearchItemSingle | SearchItemGroup;
 
 export interface ResponseFacetValue {
     value: string;

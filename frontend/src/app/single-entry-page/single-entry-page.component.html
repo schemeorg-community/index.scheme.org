@@ -1,5 +1,5 @@
 <ng-container *ngIf="entry | async; let e">
-    <section class="definition-list animated-enter" [attr.aria-label]="e.name">
+    <section class="definition-list animated-enter">
         <div class="definition-list__content-shadow">
             <app-search-item [searchitem]="e" [routerResolver]="seachItemRouterResolver.bind(this)"/>
         </div>
