@@ -7,7 +7,7 @@ import scmindex.Sexpr.sexprToProperList
 
 import java.security.Signature
 
-case class IndexEntry(file: String, exclude: List[String])
+case class ContentFile(file: String, exclude: List[String])
 
 sealed trait ParamType
 sealed trait ReturnType
@@ -40,11 +40,13 @@ case class Patterns(patterns: List[Sexpr]) extends SubSignature
 
 case class SubSigEntry(paramName: String, signature: SubSignature)
 
-case class SCMIndexEntry(name: String, lib: String, signature: Signature, subsignatures: List[SubSigEntry], tags: List[String], description: String)
+sealed trait SCMIndexEntry
+case class SCMIndexEntrySingle(name: String, lib: String, signature: Signature, subsignatures: List[SubSigEntry], tags: List[String], description: String) extends SCMIndexEntry
+case class SCMIndexEntryGroup(lib: String, entries: List[SCMIndexEntrySingle], description: String) extends SCMIndexEntry
 
 object SCMIndexEntry {
 
-  def paramNames(e: SCMIndexEntry): List[String] = {
+  def paramNamesSingle(e: SCMIndexEntrySingle): List[String] = {
     def singleParamNames(parameter: Parameter): List[String] = {
       List(parameter.name)
     }
@@ -58,7 +60,14 @@ object SCMIndexEntry {
     }
   }
 
-  def paramTypes(e: SCMIndexEntry): List[String] = {
+  def paramNames(e: SCMIndexEntry): List[String] = {
+    e match {
+      case s: SCMIndexEntrySingle => paramNamesSingle(s)
+      case SCMIndexEntryGroup(_, entries, _) => entries.flatMap{ paramNamesSingle(_) }
+    }
+  }
+
+  def paramTypesSingle(e: SCMIndexEntrySingle): List[String] = {
     def singleParamType(p: ParamType): List[String] = {
       p match {
         case Predicate(identifier) => List(identifier)
@@ -85,7 +94,14 @@ object SCMIndexEntry {
     typesInSig ++ typesInSubtypes
   }
 
-  def returnTypes(e: SCMIndexEntry): List[String] = {
+  def paramTypes(e: SCMIndexEntry): List[String] = {
+    e match {
+      case s: SCMIndexEntrySingle => paramTypesSingle(s)
+      case SCMIndexEntryGroup(_, entries, _) => entries.flatMap{ paramTypesSingle(_) }
+    }
+  }
+
+  def returnTypesSingle(e: SCMIndexEntrySingle): List[String] = {
     def returnType(r: ReturnType): List[String] = {
       r match {
         case Predicate(p) => List(p)
@@ -106,6 +122,13 @@ object SCMIndexEntry {
     }
   }
 
+  def returnTypes(e: SCMIndexEntry): List[String] = {
+    e match {
+      case s: SCMIndexEntrySingle => returnTypesSingle(s)
+      case SCMIndexEntryGroup(_, entries, _) => entries.flatMap{ returnTypesSingle(_) }
+    }
+  }
+
   def parseSCMIndexEntries(lib: String, sexpr: Sexpr): Either[Exception, List[SCMIndexEntry]] = {
     Sexpr.sexprToProperList(sexpr)
       .flatMap { lst =>
@@ -117,6 +140,26 @@ object SCMIndexEntry {
   }
 
   def parseSCMIndexEntry(lib: String, sexpr: Sexpr): Either[Exception, SCMIndexEntry] = {
+    Sexpr.alistToMap(sexpr).flatMap { map =>
+      map.get("group") match {
+        case Some(group) => for {
+          groupContentSexprList <- Sexpr.sexprToProperList(group)
+          desc <- map.get("desc") match {
+            case Some(SexprString(desc)) => Right(desc)
+            case Some(_) => Left(Exception("Description should be a string"))
+            case None => Right("")
+          }
+          groupContent <- groupContentSexprList.partitionMap{ el => parseSCMIndexEntrySingle(lib, el) } match {
+            case (Nil, items) => Right(items)
+            case (err :: _, _) => Left(err)
+          }
+        } yield SCMIndexEntryGroup(lib, groupContent, desc)
+        case None => parseSCMIndexEntrySingle(lib, sexpr)
+      }
+    }
+  }
+
+  def parseSCMIndexEntrySingle(lib: String, sexpr: Sexpr): Either[Exception, SCMIndexEntrySingle] = {
     Sexpr.alistToMap(sexpr).flatMap { map =>
       for {
         name <- map.get("name") match {
@@ -141,7 +184,7 @@ object SCMIndexEntry {
           case Some(sexpr) => parseSubsigs(sexpr)
           case None => Right(List())
         }
-      } yield (SCMIndexEntry(name, lib, signature, subsigs, tags, desc))
+      } yield (SCMIndexEntrySingle(name, lib, signature, subsigs, tags, desc))
     }
   }
 
@@ -331,10 +374,10 @@ object SCMIndexEntry {
     }
   }
 
-  def loadSignatures[T](loader: T)(using SignatureLoader[T]): IO[Either[Exception, List[SCMIndexEntry]]] = {
-    def parseIndexEntry(sexpr: Sexpr): Either[Exception, IndexEntry] = {
+  def loadSignatures[T : SignatureLoader](loader: T): IO[Either[Exception, List[SCMIndexEntry]]] = {
+    def parseIndexEntry(sexpr: Sexpr): Either[Exception, ContentFile] = {
       sexpr match {
-        case SexprString(v) => Right(IndexEntry(v, List()))
+        case SexprString(v) => Right(ContentFile(v, List()))
         case _ => for {
           map <- Sexpr.alistToMap(sexpr)
           fileSexpr <- map.get("file").toRight(Exception("missing file field"))
@@ -351,10 +394,10 @@ object SCMIndexEntry {
             case (Nil, vals) => Right(vals)
             case (err :: _, _) => Left(Exception("Failed to load signature", err))
           }
-        } yield IndexEntry(file, exclude)
+        } yield ContentFile(file, exclude)
       }
     }
-    def readLibraryList(sexpr: Sexpr): Either[Exception, List[(String, IndexEntry)]] = {
+    def readLibraryList(sexpr: Sexpr): Either[Exception, List[(String, ContentFile)]] = {
       for {
         lst <- Sexpr.sexprToProperList(sexpr)
         entries <- {
@@ -379,7 +422,15 @@ object SCMIndexEntry {
           for {
             libSexpr <- EitherT(loader.loadLibrary(meta.file))
             entries <- EitherT.fromEither(parseSCMIndexEntries(libName, libSexpr).map {
-              entries => entries.filter { e => !meta.exclude.contains(e.name) }
+              entries => entries
+                .map {
+                  case e: SCMIndexEntrySingle => e
+                  case SCMIndexEntryGroup(lib, lst, desc) => SCMIndexEntryGroup(lib, lst.filter{e => !meta.exclude.contains(e.name) }, desc)
+                }
+                .filter {
+                  case e: SCMIndexEntrySingle => !meta.exclude.contains(e.name)
+                  case _ => true
+                }
             })
           } yield entries
         }

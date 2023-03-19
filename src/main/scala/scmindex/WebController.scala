@@ -104,8 +104,9 @@ object WebController {
         ("signature", encodeSubSignature(subSigEntry.signature)))
     }
 
-    override def apply(a: SCMIndexEntry): Json = {
+    def encodeSCMIndexEntrySingle(a: SCMIndexEntrySingle): Json = {
       Json.obj(
+        ("kind", "single".asJson),
         ("lib", Json.fromString(a.lib)),
         ("name", Json.fromString(a.name)),
         ("description", Json.fromString(a.description)),
@@ -113,6 +114,22 @@ object WebController {
         ("subsignatures", Json.arr(a.subsignatures.map(encodeSubSignatureEntry):_*)),
         ("tags", Json.arr(a.tags.map(Json.fromString(_)):_*))
       )
+    }
+
+    def encodeSCMIndexEntryGroup(a: SCMIndexEntryGroup): Json = {
+      Json.obj(
+        ("kind", "group".asJson),
+        ("lib", Json.fromString(a.lib)),
+        ("description", Json.fromString(a.description)),
+        ("entries", Json.arr(a.entries.map(encodeSCMIndexEntrySingle):_*))
+      )
+    }
+
+    override def apply(a: SCMIndexEntry): Json = {
+      a match {
+        case e: SCMIndexEntrySingle => encodeSCMIndexEntrySingle(e)
+        case e: SCMIndexEntryGroup => encodeSCMIndexEntryGroup(e)
+      }
     }
   }
 

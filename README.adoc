@@ -166,7 +166,22 @@ Alternatively, `cdr` might be a string, in which case it's treated as a file pat
 )
 ```
 
-Each definitions file is a list of entries, where each entry is an association list, using symbols as keys. An entry may be defining a function, a syntax macro, or a plain value.
+Each definitions file is a list of entries, where each entry is an association list, using symbols as keys. Each entry either describes a group of identifiers, or a single identifier. 
+
+Group has following properties:
+
+[cols="1m,3a"]
+|===
+| key
+| description
+
+| group
+| A list of identifiers under the group. Each entry must have format as described under a table for single idenfier entry.
+
+| desc
+| A textual description applicable for entire group
+
+Single identifier has following properties:
 
 [cols="1m,3a"]
 |===
@@ -228,6 +243,9 @@ one of as described in `signature` section, as well as additionally:
 * `(list <element>)` - describes an list datastrucutre, where `<element>` has same format as function parameter definition;
 
 * `(vector <element>)` - describes an list datastrucutre, where `<element>` has same format as function parameter definition;
+
+| desc
+| Textual description.
 
 |===
 
