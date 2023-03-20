@@ -1,5 +1,4 @@
-(
- ((name . "set")
+(((name . "set")
   (signature lambda ((comparator? comparator) element ...) set?)
   (tags pure)
   (desc . "Returns a newly allocated empty set. The comparator argument is a SRFI 114 comparator, which is used to control and distinguish the elements of the set. The elements are used to initialize the set."))
