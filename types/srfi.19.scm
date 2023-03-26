@@ -322,20 +322,19 @@
   (tags pure)
   (desc . "Converts an input string to a date, using the template string. The input string must match the template string as is; except escape characters (indicate by the tilde) indicate special converters which (1) move to the next character in the input string fulfilling a criterion; (2) read a value, and (3) act on this value in some way.
 
-Ch   Skip to            Read                              Set
-~~   any                read literal ~                    nothing
-~a   char-alphabetic?   abbreviated weekday in locale     nothing
-~A   char-alphabetic?   full weekday in locale            nothing
-~b   char-alphabetic?   abbreviated month name in locale  nothing
-~B   char-alphabetic?   full month name in locale         nothing
-~d   char-numeric?      day of month                      date-day
-~e   any                day of month, blank padded        date-day
-~h   char-alphabetic?   same as ~b                        nothing
-~H   char-numeric?      hour                              date-hour
-~k   any                hour, blank padded                date-hour
-~m   char-numeric?      month                             date-month
-~M   char-numeric?      minute                            date-minute
-~S   char-numeric?      second                            date-second
-~y   any                2-digit year                      date-year within 50 years
-~Y   char-numeric?      year                              date-year
-~z   any                time zone                         date-zone-offset ")))
+Char: ~~. Skip to: any. Read: read literal ~ . Set: nothing.
+Char: ~a. Skip to: char-alphabetic?. Read: abbreviated weekday in locale . Set: nothing.
+Char: ~A. Skip to: char-alphabetic?. Read: full weekday in locale . Set: nothing.
+Char: ~b. Skip to: char-alphabetic?. Read: abbreviated month name in locale . Set: nothing.
+Char: ~B. Skip to: char-alphabetic?. Read: full month name in locale . Set: nothing.
+Char: ~d. Skip to: char-numeric?. Read: day of month . Set: date-day.
+Char: ~e. Skip to: any. Read: day of month, blank padded . Set: date-day.
+Char: ~h. Skip to: char-alphabetic?. Read: same as ~b . Set: nothing.
+Char: ~H. Skip to: char-numeric?. Read: hour . Set: date-hour.
+Char: ~k. Skip to: any. Read: hour, blank padded . Set: date-hour.
+Char: ~m. Skip to: char-numeric?. Read: month . Set: date-month.
+Char: ~M. Skip to: char-numeric?. Read: minute . Set: date-minute.
+Char: ~S. Skip to: char-numeric?. Read: second . Set: date-second.
+Char: ~y. Skip to: any. Read: 2-digit year . Set: date-year within 50 years.
+Char: ~Y. Skip to: char-numeric?. Read: year . Set: date-year.
+Char: ~z. Skip to: any. Read: time zone . Set: date-zone-offset.")))
