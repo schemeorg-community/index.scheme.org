@@ -3,8 +3,8 @@
  ;; r6rs
  ((rnrs base (6)) . #t)
  ((rnrs arithmetic bitwise (6)) . #t)
- ((rnrs arithmetic fixnum (6)) . #t)
- ((rnrs arithmetic flonum (6)) . #t)
+ ((rnrs arithmetic fixnums (6)) . #t)
+ ((rnrs arithmetic flonums (6)) . #t)
  ((rnrs bytevectors (6)) . #t)
  ((rnrs conditions (6)) . #t)
  ((rnrs control (6)) . #t)

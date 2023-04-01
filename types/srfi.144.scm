@@ -107,7 +107,7 @@ So that the value of this variable can be determined at compile time, R7RS imple
      (signature lambda ((flonum? x) (flonum? y) (flonum? z) ...) boolean?)
      (tags pure)))
   (desc . "These procedures return #t if their arguments are (respectively): equal, monotonically increasing, monotonically decreasing, monotonically nondecreasing, or monotonically nonincreasing; they return #f otherwise. These predicates must be transitive. (C99 =, <, > <=, >= operators respectively)"))
- ((name . "flunordered")
+ ((name . "flunordered?")
   (signature lambda ((flonum? x) (flonum? y)) boolean?)
   (tags pure)
   (desc . "Returns #t if x and y are unordered according to IEEE rules. This means that one of them is a NaN."))

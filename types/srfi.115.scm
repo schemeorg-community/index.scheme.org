@@ -111,7 +111,7 @@ The grammar for cset-sre is as follows.
     at-least
     **
     repeated
-    \|
+    |\||
     or
     :
     seq
@@ -163,7 +163,7 @@ The grammar for cset-sre is as follows.
      (at-least n sre ...)
      (** n m sre ...)
      (repeated n m sre ...)
-     (\| sre ...)
+     (|\|| sre ...)
      (or sre ...)
      (: sre ...)
      (seq sre ...)
@@ -206,7 +206,7 @@ The grammar for cset-sre is as follows.
   (signature lambda ((regexp? re)) *)
   (tags pure)
   (desc . "Returns an SRE corresponding to the given regexp re. The SRE will be equivalent to (will match the same strings) but not necessarily equal? to the SRE originally used to compile re. Mutating the result may invalidate re, causing unspecified results if subsequently used for matching."))
- ((name . "charset->sre")
+ ((name . "char-set->sre")
   (signature lambda ((charset? char-set)) *)
   (tags pure)
   (desc . "Returns an SRE corresponding to the given SRFI 14 character set. The resulting SRE expands the character set into notation which does not make use of embedded SRFI 14 character sets, and so is suitable for writing portably."))

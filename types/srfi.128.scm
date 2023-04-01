@@ -6,7 +6,7 @@
   (signature lambda ((comparator? comparator)) boolean?)
   (tags pure)
   (desc . "Returns #t if comparator has a supplied ordering predicate, and #f otherwise."))
- ((name . "comparatory-hashable?")
+ ((name . "comparator-hashable?")
   (signature lambda ((comparator? comparator)) boolean?)
   (tags pure)
   (desc . "Returns #t if comparator has a supplied hash function, and #f otherwise."))
