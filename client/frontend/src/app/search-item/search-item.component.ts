@@ -74,8 +74,10 @@ export class SearchItemComponent {
     }
 
     highlightSyntaxSignature(literals: string[], pattern: string): TextPart[] {
-        const firstSpace = pattern.indexOf(' ');
-        return [...this.highlightLiterals(literals, pattern.substring(firstSpace))];
+        // name is already rendered in template and needs to be removed before rendering rest of signature
+        const ommitedPrefix = pattern.match(/(^\([^\s)]*)(?:(?:\s)|(?:\)$))/);
+        const ommitedPrefixEnd = ommitedPrefix? ommitedPrefix[1].length : 0;
+        return [...this.highlightLiterals(literals, pattern.substring(ommitedPrefixEnd))];
     }
 
     highlightLiterals(literals: string[], pattern: string): TextPart[] {
