@@ -3,6 +3,8 @@
     <p>Scheme index allows searching for Scheme procedures, syntax and constants through types, tags, and names. Please
         see <a class="index-page__text-link" href="/README.html#_userguide_for_site_visitors">user guide</a> for
         details.
+    </p>
+    <p>Click on one of boxes below to get started</p>
 
     <div class="index-page__filtersets" *ngFor="let group of filtersetGroups | async">
         <ng-container *ngFor="let filterset of group.filtersets">
@@ -12,10 +14,7 @@
         </ng-container>
     </div>
 
-    <p class="index-page__completeness-note">There are no guarantees about completeness of index for any of the scheme
-        implementations.
-        Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs and implementation specific
-        libraries might be missing.</p>
+    <p class="index-page__completeness-note">Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs might be missing.</p>
 
     <ng-container *ngIf="downloads | async; let downloads">
         <ng-container *ngIf="downloads.length >= 0">

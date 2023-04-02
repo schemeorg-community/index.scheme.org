@@ -68,10 +68,10 @@ export class FilterPaneComponent {
 
   readFacetFromResponse(request: IndexQuery, queryResponse: IndexResponse): Facet[] {
     return [
-      this.convertFacet('lib', 'Lib', queryResponse.libs, request.libs || []),
-      this.convertFacet('tag', 'Tag', queryResponse.tags, request.tags || []),
-      this.convertFacet('param', 'Params', queryResponse.params, request.params || []),
-      this.convertFacet('return', 'Returns', queryResponse.returns, request.returns || [])
+      this.convertFacet('lib', 'Libraries', queryResponse.libs, request.libs || []),
+      this.convertFacet('tag', 'Tags', queryResponse.tags, request.tags || []),
+      this.convertFacet('param', 'Parameter types', queryResponse.params, request.params || []),
+      this.convertFacet('return', 'Return types', queryResponse.returns, request.returns || [])
     ];
   }
 
