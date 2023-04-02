@@ -17,12 +17,15 @@ case class IntegerLexeme(content: Int) extends Lexeme
 case class SymbolLexeme(content: String) extends Lexeme
 
 class Lexer(val source: String) {
+
   var pos: Int = 0;
+
   def skipWhitespace(): Unit = {
     while (pos < source.length && (source.charAt(pos) == ' ' || source.charAt(pos) == '\n' || source.charAt(pos) == '\r')) {
       pos += 1
     }
   }
+
   def skipComment(): Unit = {
     if (pos < source.length && source.charAt(pos) == ';') {
       while (pos < source.length && source.charAt(pos) != '\n') {
@@ -31,6 +34,7 @@ class Lexer(val source: String) {
       pos += 1
     }
   }
+
   def skipWhitespaceAndComments(): Unit = {
     @tailrec
     def loop(startPos: Int): Unit = {
@@ -41,8 +45,8 @@ class Lexer(val source: String) {
     }
     loop(pos)
   }
-  def readStringLiteral(): Option[StringLexeme] = {
 
+  def readStringLiteral(): Option[StringLexeme] = {
     @tailrec
     def runner(sb: mutable.StringBuilder): Option[StringLexeme] = {
       if (pos >= source.length)
@@ -75,6 +79,7 @@ class Lexer(val source: String) {
     pos += 1;
     runner(mutable.StringBuilder())
   }
+
   def readIntLiteral(): Option[IntegerLexeme] = {
     @tailrec
     def findEnd(p: Int): Int = {
@@ -89,6 +94,7 @@ class Lexer(val source: String) {
     pos = newPos
     Some(l)
   }
+
   def readSymbol(): SymbolLexeme = {
     def break = List(' ', '\n', '\r', ';', ')', '(')
     def findEnd(): Int = {
@@ -103,6 +109,38 @@ class Lexer(val source: String) {
     pos = end
     l
   }
+
+  def readDelimitedSymbol(): Option[SymbolLexeme] = {
+    @tailrec
+    def runner(sb: mutable.StringBuilder): Option[SymbolLexeme] = {
+      if (pos >= source.length)
+        None;
+      else source.charAt(pos) match {
+        case '|' => {
+          pos += 1
+          Some(SymbolLexeme(sb.toString()))
+        }
+        case '\\' => {
+          pos += 1;
+          if (source.length <= pos) None
+          else {
+            pos += 1
+            source.charAt(pos - 1) match {
+              case '\\' | '|' => runner(sb.append(source.charAt(pos - 1)))
+              case _ => None
+            }
+          }
+        }
+        case c => {
+          pos += 1
+          runner(sb.append(c))
+        }
+      }
+    }
+    pos += 1;
+    runner(mutable.StringBuilder())
+  }
+
   def next(): Option[Lexeme] = {
     skipWhitespaceAndComments()
     def break = List(' ', '\n', '\r', ';', ')', '(')
@@ -121,6 +159,8 @@ class Lexer(val source: String) {
       readStringLiteral()
     } else if (Character.isDigit(source.charAt(pos))) {
       readIntLiteral()
+    } else if (source.charAt(pos) == '|') {
+      readDelimitedSymbol()
     } else {
       Some(readSymbol())
     }
