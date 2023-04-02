@@ -43,7 +43,7 @@
  ((scheme fixnum) . #t)
  ((scheme flonum) . #t)
  ((scheme mapping) . #t)
- ((scheme mapping hash) . #t)
+ ((scheme hashmap) . #t)
  ((scheme regex) . #t)
  ((scheme show) . #t)
  ((scheme vector base) . #t)

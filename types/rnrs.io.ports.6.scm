@@ -15,8 +15,8 @@ These options have no effect when a file is opened only for input. Symbols other
   (desc . "Returns #t if the argument is a valid buffer-mode symbol, and returns #f otherwise."))
  ((group
     ((name . "latin-1-codec") (signature lambda () codec) (tags pure))
-    ((name . "utf8-codec") (signature lambda () codec) (tags pure))
-    ((name . "utf16-codec") (signature lambda () codec) (tags pure)))
+    ((name . "utf-8-codec") (signature lambda () codec) (tags pure))
+    ((name . "utf-16-codec") (signature lambda () codec) (tags pure)))
   (desc . "These are predefined codecs for the ISO 8859-1, UTF-8, and UTF-16 encoding schemes.
 A call to any of these procedures returns a value that is equal in the sense of eqv? to the result of any other call to the same procedure."))
  ((name . "eol-style")

@@ -229,7 +229,7 @@ The delimiter is the string used to delimit elements; it defaults to a single sp
   (tags pure)
   (desc . "Returns character s[i] using a valid cursor or index of s. It differs from the R7RS procedure string-ref by accepting either a cursor or an index."))
  ((group
-    ((name . "substring/cursor")
+    ((name . "substring/cursors")
      (signature
        lambda
        ((string? s)
