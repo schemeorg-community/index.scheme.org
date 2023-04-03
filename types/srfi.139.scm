@@ -1,0 +1,8 @@
+(((name . "define-syntax-parameter")
+  (signature syntax-rules ()
+             ((_ keyword transformer-spec)))
+  (desc . "Binds <keyword> to the transformer obtained by evaluating <transformer spec>. The transformer provides the default expansion for the syntax parameter, and in the absence of syntax-parameterize, is functionally equivalent to define-syntax."))
+ ((name . "syntax-parameterize")
+  (signature syntax-rules ()
+             ((_ ((keyword transformer-spec) ...) body)))
+  (desc . "Adjusts the <keyword>s to use the transformer obtained by evaluating the corresponding <transformer>s in the expansion of the <body>. Each keyword must be bound to a syntax parameter. syntax-parameterize differs from let-syntax in that the binding is not shadowed, but adjusted, and so uses of the keyword in the expansion of <body> use the new transformers. This is somewhat similar to how parameterize adjusts the values of regular parameters, rather than creating new bindings.")))

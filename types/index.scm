@@ -253,9 +253,9 @@
  ((srfi 134) . "types/srfi.134.scm")
  ((srfi 135) . "types/srfi.135.scm")
  ;; ((srfi 136) . "types/srfi.136.scm") TODO
- ;; ((srfi 137) . "types/srfi.137.scm") TODO
- ;; ((srfi 138) . "types/srfi.138.scm") TODO
- ;; ((srfi 139) . "types/srfi.139.scm") TODO
+ ((srfi 137) . "types/srfi.137.scm")
+ ;; srfi 138 -- non-sexpr syntax
+ ((srfi 139) . "types/srfi.139.scm")
  ;; ((srfi 140) . "types/srfi.140.scm") TODO
  ((srfi 141) . "types/srfi.141.scm")
  ;; srfi 142 -- superceded
@@ -290,8 +290,11 @@
  ((srfi 160 f64) . "types/srfi.160.f64.scm")
  ((srfi 160 c64) . "types/srfi.160.c64.scm")
  ((srfi 160 c128) . "types/srfi.160.c128.scm")
+ ((srfi 161) . "types/srfi.161.scm")
  ((srfi 193) . "types/srfi.193.scm")
  ((srfi 219) . "types/srfi.219.scm")
+ ((srfi 236) . "types/srfi.236.scm")
+ ((srfi 239) . "types/srfi.239.scm")
 
  ;; specific implementation handling
  (bigloo . "types/r5rs.scm")
