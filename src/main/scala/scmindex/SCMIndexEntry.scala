@@ -194,7 +194,7 @@ object SCMIndexEntry {
       case SexprPair(SexprSymbol("case-lambda"), cdr) => parseCaseLambdaSignature(cdr)
       case SexprPair(SexprSymbol("value"), cdr) => parseValueSignature(cdr)
       case SexprPair(SexprSymbol("syntax-rules"), cdr) => parseSyntaxRulesSignature(cdr)
-      case _ => Left(Exception("Unrecognized signature"))
+      case _ => Left(Exception(s"Unrecognized signature: ${sexpr}"))
     }
   }
 
@@ -365,7 +365,7 @@ object SCMIndexEntry {
     Sexpr.sexprToProperList(sexpr).flatMap { lst =>
       val maybeValues = lst.partitionMap {
         case SexprSymbol(name) => Right(name)
-        case _ => Left(Exception("expected a symbol"))
+        case sexpr => Left(Exception(s"expected a symbol, got: ${sexpr}"))
       } match {
         case (Nil, values) => Right(values)
         case (err :: _, _) => Left(err)

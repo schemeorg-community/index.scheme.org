@@ -129,6 +129,8 @@
  ((srfi 160 f64) . #t)
  ((srfi 160 c64) . #t)
  ((srfi 160 c128) . #t)
+ ((srfi 162) . #t)
+ ((srfi 165) . #t)
  ((srfi 161) . #t)
  ((srfi 193) . #t)
  ((srfi 219) . #t)
