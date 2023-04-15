@@ -13,6 +13,8 @@
         (scheme process-context)
         (scheme list))
 
+(define testdir "integrationtest/schemeasserts/")
+
 (define (->string datum)
   (define port (open-output-string))
   (display datum port)
@@ -112,7 +114,7 @@
                 (loop (cdr content)
                       results))))))
   |#
-  (define testlist (with-input-from-file "integrationtest/testlist.scm" read))
+  (define testlist (with-input-from-file (string-append testdir "testlist.scm") read))
   (for-each
     (lambda (content-entry)
       (define lib (car content-entry))
@@ -129,7 +131,7 @@
 (define (generate-test-file impl lib lib-entries)
   (case impl
     ((chibi gauche)
-     (with-output-to-file (string-append "integrationtest/" (symbol->string impl) "-tests/" (lib->string lib) ".scm")
+     (with-output-to-file (string-append testdir (symbol->string impl) "-tests/" (lib->string lib) ".scm")
                           (lambda ()
                             (define testgroup (build-test-group lib lib-entries #t))
                             (when testgroup
@@ -139,7 +141,7 @@
                               (newline)
                               (write testgroup)))))
     ((chez)
-     (with-output-to-file (string-append "integrationtest/chez-tests/" (lib->string lib) ".scm")
+     (with-output-to-file (string-append testdir "chez-tests/" (lib->string lib) ".scm")
                           (lambda ()
                             (define testgroup (build-test-group lib lib-entries #t))
                             (when testgroup
@@ -149,7 +151,7 @@
                               (newline)
                               (write testgroup)))))
     ((guile)
-     (with-output-to-file (string-append "integrationtest/guile-tests/" (lib->string lib) ".scm")
+     (with-output-to-file (string-append testdir "guile-tests/" (lib->string lib) ".scm")
                           (lambda ()
                             (define testgroup (build-test-group lib lib-entries #t))
                             (define lib*
@@ -166,7 +168,7 @@
                               (newline)
                               (write testgroup)))))
     ((bigloo)
-     (with-output-to-file (string-append "integrationtest/bigloo-tests/" (lib->string lib) ".scm")
+     (with-output-to-file (string-append testdir "bigloo-tests/" (lib->string lib) ".scm")
                           (lambda ()
                             (define testgroup (build-test-group lib lib-entries #f))
                             (when testgroup

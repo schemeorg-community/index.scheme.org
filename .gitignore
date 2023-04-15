@@ -5,3 +5,13 @@ Test.log
 static/css/
 logs
 target
+.metals
+.idea
+.bsp
+/project
+node_modules
+.angular
+/.bloop
+/solrhome/scmindex/data
+/client/cli/out
+*.log

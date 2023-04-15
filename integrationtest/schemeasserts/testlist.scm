@@ -169,6 +169,8 @@
  ((srfi 133) . chibi)
  ((srfi 134) . chibi)
  ((srfi 135) . chibi)
+ ((srfi 137) . ignore)
+ ((srfi 139) . ignore)
  ((srfi 141) . chibi)
  ((srfi 143) . gauche)
  ((srfi 144) . gauche)
@@ -194,8 +196,11 @@
  ((srfi 160 f64) . gauche)
  ((srfi 160 c64) . gauche)
  ((srfi 160 c128) . gauche)
+ ((srfi 161) . ignore)
  ((srfi 193) . chibi)
  ((srfi 219) . chibi)
+ ((srfi 236) . ignore)
+ ((srfi 239) . ignore)
 
  (bigloo . ignore)
 

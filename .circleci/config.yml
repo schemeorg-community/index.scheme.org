@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  unittest:
+  unit-test:
     docker:
       - image: sbtscala/scala-sbt:eclipse-temurin-jammy-17.0.5_8_1.8.2_3.2.2
     steps:
@@ -11,7 +11,7 @@ jobs:
           command: |
             sbt test
 
-  build:
+  build-images:
     machine: true
     steps:
       - checkout
@@ -19,7 +19,32 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/scheme-index/Dockerfile .
           docker build -t arvyy/scheme-index-nginx:$CIRCLE_BRANCH -f docker/nginx/Dockerfile .
+          mkdir -p /workspace/images
+          docker save -o /workspace/images/scheme-index:$CIRCLE_BRANCH scheme-index:$CIRCLE_BRANCH
+          docker save -o /workspace/images/scheme-index-nginx:$CIRCLE_BRANCH scheme-index-nginx:$CIRCLE_BRANCH
+      - persist_to_workspace:
+          root: /workspace
+          paths:
+            - images
+
+  integration-test:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /workspace
       - run: |
+          docker load -i /workspace/images/scheme-index:$CIRCLE_BRANCH
+          docker load -i /workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
+          BRANCH=$CIRCLE_BRANCH docker compose up --abort-on-container-exit
+
+  upload-images:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /workspace
+      - run: |
+          docker load -i /workspace/images/scheme-index:$CIRCLE_BRANCH
+          docker load -i /workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
           docker push arvyy/scheme-index:$CIRCLE_BRANCH
           docker push arvyy/scheme-index-nginx:$CIRCLE_BRANCH
 
@@ -32,15 +57,19 @@ jobs:
             ssh $SSH_USER@$SSH_HOST "bash ~/update.sh"
 
 workflows:
-  sample:
+  main:
     jobs:
-      - unittest
-      - build:
+      - unit-test
+      - build-images
+      - integration-test:
           requires:
-            - unittest
+            - build-images
+      - upload-images:
+          requires:
+            - integration-test
       - deploy:
           requires:
-            - build
+            - upload-images
           filters:
             branches:
               only:

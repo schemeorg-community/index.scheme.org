@@ -124,9 +124,9 @@
                                 "type":"string"
                             },
                             "type":{
-                                "types":[
-                                    "$ref":"#/$defs/return",
-                                    "null"
+                                "oneOf":[
+                                    {"$ref":"#/$defs/return"},
+                                    {"type": "null"}
                                 ]
                             }
                         }
@@ -243,7 +243,8 @@
                 "description":{
                     "type":"string"
                 }
-            }
+            },
+            "required": ["kind", "lib", "entries", "description"]
         },
         "search-item-single":{
             "type":"object",
@@ -259,9 +260,6 @@
                     "type":"string"
                 },
                 "description":{
-                    "type":"string"
-                },
-                "type":{
                     "type":"string"
                 },
                 "signature": {
@@ -287,7 +285,8 @@
                         "type":"string"
                     }
                 }
-            }
+            },
+            "required": ["kind", "lib", "name", "description", "signature", "subsignatures", "tags"]
         }
     }
 }
