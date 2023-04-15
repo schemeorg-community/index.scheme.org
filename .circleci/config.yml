@@ -16,12 +16,11 @@ jobs:
     steps:
       - checkout
       - run: |
-          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/scheme-index/Dockerfile .
           docker build -t arvyy/scheme-index-nginx:$CIRCLE_BRANCH -f docker/nginx/Dockerfile .
           mkdir -p /tmp/workspace/images
-          docker save -o /tmp/workspace/images/scheme-index:$CIRCLE_BRANCH scheme-index:$CIRCLE_BRANCH
-          docker save -o /tmp/workspace/images/scheme-index-nginx:$CIRCLE_BRANCH scheme-index-nginx:$CIRCLE_BRANCH
+          docker save -o /tmp/workspace/images/scheme-index:$CIRCLE_BRANCH arvyy/scheme-index:$CIRCLE_BRANCH
+          docker save -o /tmp/workspace/images/scheme-index-nginx:$CIRCLE_BRANCH arvyy/scheme-index-nginx:$CIRCLE_BRANCH
       - persist_to_workspace:
           root: /tmp/workspace
           paths:
@@ -45,6 +44,7 @@ jobs:
       - run: |
           docker load -i /tmp/workspace/images/scheme-index:$CIRCLE_BRANCH
           docker load -i /tmp/workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker push arvyy/scheme-index:$CIRCLE_BRANCH
           docker push arvyy/scheme-index-nginx:$CIRCLE_BRANCH
 
