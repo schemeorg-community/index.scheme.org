@@ -31,9 +31,11 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
+      - checkout
       - run: |
           docker load -i /tmp/workspace/images/scheme-index:$CIRCLE_BRANCH
           docker load -i /tmp/workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
+          cd integrationtest/restassert
           BRANCH=$CIRCLE_BRANCH docker compose up --abort-on-container-exit
 
   upload-images:
