@@ -19,11 +19,11 @@ jobs:
           docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
           docker build -t arvyy/scheme-index:$CIRCLE_BRANCH -f docker/scheme-index/Dockerfile .
           docker build -t arvyy/scheme-index-nginx:$CIRCLE_BRANCH -f docker/nginx/Dockerfile .
-          mkdir -p /workspace/images
-          docker save -o /workspace/images/scheme-index:$CIRCLE_BRANCH scheme-index:$CIRCLE_BRANCH
-          docker save -o /workspace/images/scheme-index-nginx:$CIRCLE_BRANCH scheme-index-nginx:$CIRCLE_BRANCH
+          mkdir -p /tmp/workspace/images
+          docker save -o /tmp/workspace/images/scheme-index:$CIRCLE_BRANCH scheme-index:$CIRCLE_BRANCH
+          docker save -o /tmp/workspace/images/scheme-index-nginx:$CIRCLE_BRANCH scheme-index-nginx:$CIRCLE_BRANCH
       - persist_to_workspace:
-          root: /workspace
+          root: /tmp/workspace
           paths:
             - images
 
@@ -31,20 +31,20 @@ jobs:
     machine: true
     steps:
       - attach_workspace:
-          at: /workspace
+          at: /tmp/workspace
       - run: |
-          docker load -i /workspace/images/scheme-index:$CIRCLE_BRANCH
-          docker load -i /workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
+          docker load -i /tmp/workspace/images/scheme-index:$CIRCLE_BRANCH
+          docker load -i /tmp/workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
           BRANCH=$CIRCLE_BRANCH docker compose up --abort-on-container-exit
 
   upload-images:
     machine: true
     steps:
       - attach_workspace:
-          at: /workspace
+          at: /tmp/workspace
       - run: |
-          docker load -i /workspace/images/scheme-index:$CIRCLE_BRANCH
-          docker load -i /workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
+          docker load -i /tmp/workspace/images/scheme-index:$CIRCLE_BRANCH
+          docker load -i /tmp/workspace/images/scheme-index-nginx:$CIRCLE_BRANCH
           docker push arvyy/scheme-index:$CIRCLE_BRANCH
           docker push arvyy/scheme-index-nginx:$CIRCLE_BRANCH
 
