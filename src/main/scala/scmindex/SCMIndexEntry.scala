@@ -6,6 +6,7 @@ import cats.implicits.*
 import scmindex.Sexpr.sexprToProperList
 
 import java.security.Signature
+import org.slf4j.LoggerFactory
 
 case class ContentFile(file: String, exclude: List[String])
 
@@ -45,6 +46,8 @@ case class SCMIndexEntrySingle(name: String, lib: String, signature: Signature, 
 case class SCMIndexEntryGroup(lib: String, entries: List[SCMIndexEntrySingle], description: String) extends SCMIndexEntry
 
 object SCMIndexEntry {
+
+  def log = LoggerFactory.getLogger("scmindexentry")
 
   def paramNamesSingle(e: SCMIndexEntrySingle): List[String] = {
     def singleParamNames(parameter: Parameter): List[String] = {
@@ -147,14 +150,28 @@ object SCMIndexEntry {
           desc <- map.get("desc") match {
             case Some(SexprString(desc)) => Right(desc)
             case Some(_) => Left(Exception("Description should be a string"))
-            case None => Right("")
+            case None => {
+              log.warn("Missing description for group {} in library {}", group, lib)
+              Right("")
+            }
           }
           groupContent <- groupContentSexprList.partitionMap{ el => parseSCMIndexEntrySingle(lib, el) } match {
             case (Nil, items) => Right(items)
             case (err :: _, _) => Left(err)
           }
         } yield SCMIndexEntryGroup(lib, groupContent, desc)
-        case None => parseSCMIndexEntrySingle(lib, sexpr)
+        case None => {
+          val maybeEntry = parseSCMIndexEntrySingle(lib, sexpr)
+          maybeEntry match {
+            case Right(e) => {
+              if (e.description == "") {
+                log.warn("Missing description for {} in library {}", e.name, lib)
+              }
+            }
+            case _ => null
+          }
+          maybeEntry
+        }
       }
     }
   }
