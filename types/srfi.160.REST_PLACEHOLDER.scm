@@ -206,7 +206,8 @@ When multiple vectors are passed, pred? must take the same number of arguments a
     (tags pure)))
  (desc . "Return an @vector containing the elements of @vec that satisfy / do not satisfy pred?."))
 ((name . "@vector-swap!")
- (signature lambda ((@vector? @vector) (integer? i) (integer? j)) undefined))
+ (signature lambda ((@vector? @vec) (integer? i) (integer? j)) undefined)
+ (desc . "Interchanges the ith and jth elements of @vec."))
 ((name . "@vector-fill!")
  (signature
    case-lambda

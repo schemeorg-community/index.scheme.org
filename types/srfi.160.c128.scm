@@ -251,7 +251,8 @@ When multiple vectors are passed, pred? must take the same number of arguments a
     (tags pure)))
  (desc . "Return an c128vector containing the elements of c128vec that satisfy / do not satisfy pred?."))
 ((name . "c128vector-swap!")
- (signature lambda ((c128vector? c128vector) (integer? i) (integer? j)) undefined))
+ (signature lambda ((c128vector? c128vec) (integer? i) (integer? j)) undefined)
+ (desc . "Interchanges the ith and jth elements of c128vec."))
 ((name . "c128vector-fill!")
  (signature
    case-lambda

@@ -251,7 +251,8 @@ When multiple vectors are passed, pred? must take the same number of arguments a
     (tags pure)))
  (desc . "Return an s32vector containing the elements of s32vec that satisfy / do not satisfy pred?."))
 ((name . "s32vector-swap!")
- (signature lambda ((s32vector? s32vector) (integer? i) (integer? j)) undefined))
+ (signature lambda ((s32vector? s32vec) (integer? i) (integer? j)) undefined)
+ (desc . "Interchanges the ith and jth elements of s32vec."))
 ((name . "s32vector-fill!")
  (signature
    case-lambda

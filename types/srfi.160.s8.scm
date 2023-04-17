@@ -251,7 +251,8 @@ When multiple vectors are passed, pred? must take the same number of arguments a
     (tags pure)))
  (desc . "Return an s8vector containing the elements of s8vec that satisfy / do not satisfy pred?."))
 ((name . "s8vector-swap!")
- (signature lambda ((s8vector? s8vector) (integer? i) (integer? j)) undefined))
+ (signature lambda ((s8vector? s8vec) (integer? i) (integer? j)) undefined)
+ (desc . "Interchanges the ith and jth elements of s8vec."))
 ((name . "s8vector-fill!")
  (signature
    case-lambda
