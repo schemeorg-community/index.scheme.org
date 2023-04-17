@@ -10,4 +10,4 @@ RUN mkdir -p /app
 COPY integrationtest/restassert/runtest.sh /app/
 COPY searchresult.schema.json /app/
 WORKDIR /app
-ENTRYPOINT dockerize -wait tcp://app:8080 sh runtest.sh
+ENTRYPOINT dockerize -wait tcp://app:8080 -timeout 60s sh runtest.sh
