@@ -18,5 +18,5 @@ Then all of
 (imag-part z) => x2
 (magnitude z) => |x3|
 (angle z) =⇒ x_angle
-are true, where -pi <= x_angle <= π with x_angle = x4 + 2*pi*n for some integer n.
+are true, where -pi <= x_angle <= pi with x_angle = x4 + 2*pi*n for some integer n.
 The make-polar procedure may return an inexact complex number even if its arguments are exact. The real-part and imag-part procedures may return exact real numbers when applied to an inexact complex number if the corresponding argument passed to make-rectangular was exact.")))
