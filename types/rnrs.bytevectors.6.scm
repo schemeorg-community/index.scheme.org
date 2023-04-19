@@ -112,186 +112,204 @@ where lsource is the length of source and ltarget is the length of target. The b
     (integer? size))
    undefined)
   (desc . "bytevector-sint-set! stores the two's-complement representation of size size and specified by endianness into bytevector at indices k, ..., k + size − 1."))
- ((name . "bytevector->uint-list")
-  (signature
-   lambda
-   ((bytevector? bytevector) (symbol? endianness) (integer? size))
-   list?)
-  (tags pure))
- ((name . "bytevector->sint-list")
-  (signature
-   lambda
-   ((bytevector? bytevector) (symbol? endianness) (integer? size))
-   list?)
-  (tags pure))
- ((name . "uint-list->bytevector")
-  (signature
-   lambda
-   ((list? list) (symbol? endianness) (integer? size))
-   bytevector?)
-  (tags pure))
- ((name . "sint-list->bytevector")
-  (signature
-   lambda
-   ((list? list) (symbol? endianness) (integer? size))
-   bytevector?)
-  (tags pure))
- ((name . "bytevector-u16-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-s16-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-u16-native-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-s16-native-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-u16-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (integer? k)
-    (integer? n)
-    (symbol? endianness)
-    (integer? size))
-   undefined))
- ((name . "bytevector-s16-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (integer? k)
-    (integer? n)
-    (symbol? endianness)
-    (integer? size))
-   undefined))
- ((name . "bytevector-u16-native-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
-   undefined))
- ((name . "bytevector-s16-native-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
-   undefined))
- ((name . "bytevector-u32-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-s32-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-u32-native-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-s32-native-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-u32-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (integer? k)
-    (integer? n)
-    (symbol? endianness)
-    (integer? size))
-   undefined))
- ((name . "bytevector-s32-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (integer? k)
-    (integer? n)
-    (symbol? endianness)
-    (integer? size))
-   undefined))
- ((name . "bytevector-u32-native-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
-   undefined))
- ((name . "bytevector-s32-native-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
-   undefined))
- ((name . "bytevector-u64-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-s64-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-u64-native-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-s64-native-ref")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? size))
-   integer?)
-  (tags pure))
- ((name . "bytevector-u64-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (integer? k)
-    (integer? n)
-    (symbol? endianness)
-    (integer? size))
-   undefined))
- ((name . "bytevector-s64-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector)
-    (integer? k)
-    (integer? n)
-    (symbol? endianness)
-    (integer? size))
-   undefined))
- ((name . "bytevector-u64-native-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
-   undefined))
- ((name . "bytevector-s64-native-set!")
-  (signature
-   lambda
-   ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
-   undefined))
+ ((group
+    ((name . "bytevector->uint-list")
+     (signature
+       lambda
+       ((bytevector? bytevector) (symbol? endianness) (integer? size))
+       list?)
+     (tags pure))
+    ((name . "bytevector->sint-list")
+     (signature
+       lambda
+       ((bytevector? bytevector) (symbol? endianness) (integer? size))
+       list?)
+     (tags pure))
+    ((name . "uint-list->bytevector")
+     (signature
+       lambda
+       ((list? list) (symbol? endianness) (integer? size))
+       bytevector?)
+     (tags pure))
+    ((name . "sint-list->bytevector")
+     (signature
+       lambda
+       ((list? list) (symbol? endianness) (integer? size))
+       bytevector?)
+     (tags pure)))
+  (desc . "Size must be a positive exact integer object. For uint-list->bytevector, list must be a list of exact integer objects in the interval {0, ..., 256^mathitsize−1}. For sint-list->bytevector, list must be a list of exact integer objects in the interval {−256^mathitsize/2, ..., 256^mathitsize/2−1}. The length of bytevector or, respectively, of list must be divisible by size.
+These procedures convert between lists of integer objects and their consecutive representations according to size and endianness in the bytevector objects in the same way as bytevector->u8-list and u8-list->bytevector do for one-byte representations."))
+ ((group
+    ((name . "bytevector-u16-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-s16-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-u16-native-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-s16-native-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-u16-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector)
+        (integer? k)
+        (integer? n)
+        (symbol? endianness)
+        (integer? size))
+       undefined))
+    ((name . "bytevector-s16-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector)
+        (integer? k)
+        (integer? n)
+        (symbol? endianness)
+        (integer? size))
+       undefined))
+    ((name . "bytevector-u16-native-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
+       undefined))
+    ((name . "bytevector-s16-native-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
+       undefined)))
+  (desc . "K must be a valid index of bytevector; so must k + 1. For bytevector-u16-set! and bytevector-u16-native-set!, n must be an exact integer object in the interval {0, ..., 2^16−1}. For bytevector-s16-set! and bytevector-s16-native-set!, n must be an exact integer object in the interval {−2^15, ..., 2^15−1}.
+These retrieve and set two-byte representations of numbers at indices k and k + 1, according to the endianness specified by endianness. The procedures with u16 in their names deal with the unsigned representation; those with s16 in their names deal with the two's-complement representation.
+The procedures with native in their names employ the native endianness, and work only at aligned indices: k must be a multiple of 2.
+The ...-set! procedures return unspecified values."))
+ ((group
+    ((name . "bytevector-u32-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-s32-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-u32-native-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-s32-native-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-u32-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector)
+        (integer? k)
+        (integer? n)
+        (symbol? endianness)
+        (integer? size))
+       undefined))
+    ((name . "bytevector-s32-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector)
+        (integer? k)
+        (integer? n)
+        (symbol? endianness)
+        (integer? size))
+       undefined))
+    ((name . "bytevector-u32-native-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
+       undefined))
+    ((name . "bytevector-s32-native-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
+       undefined)))
+  (desc . "K, ..., k + 3 must be valid indices of bytevector. For bytevector-u32-set! and bytevector-u32-native-set!, n must be an exact integer object in the interval {0, ..., 2^32−1}. For bytevector-s32-set! and bytevector-s32-native-set!, n must be an exact integer object in the interval {−2^31, ..., 2^32−1}.
+These retrieve and set four-byte representations of numbers at indices k, ..., k + 3, according to the endianness specified by endianness. The procedures with u32 in their names deal with the unsigned representation; those with s32 with the two's-complement representation.
+The procedures with native in their names employ the native endianness, and work only at aligned indices: k must be a multiple of 4.
+The ...-set! procedures return unspecified values."))
+ ((group
+    ((name . "bytevector-u64-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-s64-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (symbol? endianness) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-u64-native-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-s64-native-ref")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? size))
+       integer?)
+     (tags pure))
+    ((name . "bytevector-u64-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector)
+        (integer? k)
+        (integer? n)
+        (symbol? endianness)
+        (integer? size))
+       undefined))
+    ((name . "bytevector-s64-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector)
+        (integer? k)
+        (integer? n)
+        (symbol? endianness)
+        (integer? size))
+       undefined))
+    ((name . "bytevector-u64-native-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
+       undefined))
+    ((name . "bytevector-s64-native-set!")
+     (signature
+       lambda
+       ((bytevector? bytevector) (integer? k) (integer? n) (integer? size))
+       undefined)))
+  (desc . "K, ..., k + 7 must be valid indices of bytevector. For bytevector-u64-set! and bytevector-u64-native-set!, n must be an exact integer object in the interval {0, ..., 2^64−1}. For bytevector-s64-set! and bytevector-s64-native-set!, n must be an exact integer object in the interval {−2^63, ..., 2^64−1}.
+These retrieve and set eight-byte representations of numbers at indices k, ..., k + 7, according to the endianness specified by endianness. The procedures with u64 in their names deal with the unsigned representation; those with s64 with the two's-complement representation.
+The procedures with native in their names employ the native endianness, and work only at aligned indices: k must be a multiple of 8.
+The ...-set! procedures return unspecified values."))
  ((name . "bytevector-ieee-single-ref")
   (signature
    lambda
