@@ -106,19 +106,34 @@
    lambda
    ((fixnum? i) (fixnum? j) (fixnum? k))
    (values fixnum? fixnum?))
-  (tags pure))
+  (tags pure)
+  (desc . "Returns the two fixnum results of the following computation:
+(let* ((s (+ fx1 fx2 fx3))
+       (s0 (mod0 s (expt 2 (fixnum-width))))
+       (s1 (div0 s (expt 2 (fixnum-width)))))
+  (values s0 s1))"))
  ((name . "fx-/carry")
   (signature
    lambda
    ((fixnum? i) (fixnum? j) (fixnum? k))
    (values fixnum? fixnum?))
-  (tags pure))
+  (tags pure)
+  (desc . "Returns the two fixnum results of the following computation:
+(let* ((d (- fx1 fx2 fx3))
+       (d0 (mod0 d (expt 2 (fixnum-width))))
+       (d1 (div0 d (expt 2 (fixnum-width)))))
+  (values d0 d1))"))
  ((name . "fx*/carry")
   (signature
    lambda
    ((fixnum? i) (fixnum? j) (fixnum? k))
    (values fixnum? fixnum?))
-  (tags pure))
+  (tags pure)
+  (desc . "Returns the two fixnum results of the following computation:
+(let* ((s (+ (* fx1 fx2) fx3))
+       (s0 (mod0 s (expt 2 (fixnum-width))))
+       (s1 (div0 s (expt 2 (fixnum-width)))))
+  (values s0 s1))"))
  ((name . "fxnot")
   (signature lambda ((fixnum? fx)) fixnum?)
   (tags pure)
