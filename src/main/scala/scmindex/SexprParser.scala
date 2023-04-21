@@ -205,9 +205,10 @@ object SexprParser {
           Right(Sexpr.parseListToPairs(content.reverse), rest)
         }
         case Dot #:: rest => {
-          read(rest).flatMap {
-            case (sexpr, Close #:: rest) => Right(Sexpr.parseListToPairs(content.reverse, sexpr), rest)
-            case _ => Left(Exception(s"Bad dotted list: ${lexemes}"))
+          read(rest) match {
+            case Right((sexpr, Close #:: rest)) => Right(Sexpr.parseListToPairs(content.reverse, sexpr), rest)
+            case Right(_) => Left(Exception(s"Bad dotted list: ${lexemes}"))
+            case Left(err) => Left(Exception(s"Failure parsing at ${lexemes}: ${err.getMessage()}", err));
           }
         }
         case _ => read(lexemes) match {
@@ -220,6 +221,9 @@ object SexprParser {
       case Close #:: rest => Right(SexprNull, rest)
       case Dot #:: rest => Left(Exception("Unexpected period"))
       case _ => readInside(lexemes, List())
+    } match {
+      case Left(err) => Left(Exception(s"Failure parsing at ${lexemes}: ${err.getMessage()}", err));
+      case r => r
     }
   }
 }
