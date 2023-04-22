@@ -145,28 +145,30 @@ Note: If flonums are represented in binary floating point, then implementations 
   (signature lambda ((flonum? fl)) flonum?)
   (tags pure)
   (desc . "Returns the integral flonum closest to fl whose absolute value is not larger than the absolute value of fl. Returns an infinity when given an infinity as an argument, and a NaN when given a NaN."))
- ((name . "flexp") 
-  (signature lambda ((flonum? fl)) flonum?)
-  (tags pure)
-  (desc . "Computes the base-e exponential of fl."))
- ((name . "fllog")
-  (signature
-   case-lambda
-   (((flonum? fl)) flonum?)
-   (((flonum? fl) (flonum? base)) flonum?))
-  (tags pure)
-  (desc . "The fllog procedure with a single argument computes the natural logarithm of fl (not the base ten logarithm); (fllog fl base) computes the base logarithm of fl1"))
- ((name . "flsin") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "flcos") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "fltan") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "flasin") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "flacos") (signature lambda ((flonum? x)) flonum?) (tags pure))
- ((name . "flatan")
-  (signature
-   case-lambda
-   (((flonum? x)) flonum?)
-   (((flonum? y) (flonum? x)) flonum?))
-  (tags pure))
+ ((group
+    ((name . "flexp") 
+     (signature lambda ((flonum? fl)) flonum?)
+     (tags pure))
+    ((name . "fllog")
+     (signature
+       case-lambda
+       (((flonum? fl)) flonum?)
+       (((flonum? fl) (flonum? base)) flonum?))
+     (tags pure))
+    ((name . "flsin") (signature lambda ((flonum? x)) flonum?) (tags pure))
+    ((name . "flcos") (signature lambda ((flonum? x)) flonum?) (tags pure))
+    ((name . "fltan") (signature lambda ((flonum? x)) flonum?) (tags pure))
+    ((name . "flasin") (signature lambda ((flonum? x)) flonum?) (tags pure))
+    ((name . "flacos") (signature lambda ((flonum? x)) flonum?) (tags pure))
+    ((name . "flatan")
+     (signature
+       case-lambda
+       (((flonum? x)) flonum?)
+       (((flonum? y) (flonum? x)) flonum?))
+     (tags pure)))
+  (desc . "These procedures compute the usual transcendental functions. The flexp procedure computes the base-e exponential of fl. The fllog procedure with a single argument computes the natural logarithm of fl (not the base ten logarithm); (fllog fl1 fl2) computes the base-fl2 logarithm of fl1. The flasin, flacos, and flatan procedures compute arcsine, arccosine, and arctangent, respectively. (flatan fl1 fl2) computes the arc tangent of fl1/fl2.
+See report section on \"Transcendental functions\" for the underlying mathematical operations. In the event that these operations do not yield a real result for the given arguments, the result may be a NaN, or may be some unspecified flonum.
+Implementations that use IEEE binary floating-point arithmetic should follow the relevant standards for these procedures."))
  ((name . "flsqrt")
   (signature lambda ((flonum? fl)) flonum?)
   (tags pure)
@@ -175,20 +177,33 @@ Note: If flonums are represented in binary floating point, then implementations 
   (signature lambda ((flonum? base) (flonum? power)) flonum?)
   (tags pure)
   (desc . "Either base should be non-negative, or, if base is negative, power should be an integer object. The flexpt procedure returns base raised to the power power. If base is negative and power is not an integer object, the result may be a NaN, or may be some unspecified flonum. If base is zero, then the result is zero."))
- ((name . "&no-infinities") (signature value record-type-descriptor?))
- ((name . "make-no-infinities-violation")
-  (signature lambda (obj) no-infinities-violation?)
-  (tags pure))
- ((name . "no-infinities-violation?")
-  (signature lambda (obj) boolean?)
-  (tags pure predicate))
- ((name . "&no-nans") (signature value record-type-descriptor?))
- ((name . "make-no-nans-violation")
-  (signature lambda (obj) no-nans-violation?)
-  (tags pure))
- ((name . "no-nans-violation?")
-  (signature lambda (obj) boolean?)
-  (tags pure predicate))
+ ((group
+    ((name . "&no-infinities") (signature value record-type-descriptor?))
+    ((name . "make-no-infinities-violation")
+     (signature lambda (obj) no-infinities-violation?)
+     (tags pure))
+    ((name . "no-infinities-violation?")
+     (signature lambda (obj) boolean?)
+     (tags pure predicate))
+    ((name . "&no-nans") (signature value record-type-descriptor?))
+    ((name . "make-no-nans-violation")
+     (signature lambda (obj) no-nans-violation?)
+     (tags pure))
+    ((name . "no-nans-violation?")
+     (signature lambda (obj) boolean?)
+     (tags pure predicate)))
+  (desc . "These condition types could be defined by the following code:
+(define-condition-type &no-infinities
+                       &implementation-restriction
+                       make-no-infinities-violation
+                       no-infinities-violation?)
+
+(define-condition-type &no-nans
+                       &implementation-restriction
+                       make-no-nans-violation
+                       no-nans-violation?)
+
+These types describe that a program has executed an arithmetic operations that is specified to return an infinity or a NaN, respectively, on a Scheme implementation that is not able to represent the infinity or NaN. (See report section on \"Representability of infinities and NaNs\".)"))
  ((name . "fixnum->flonum")
   (signature lambda ((fixnum? fx)) flonum?)
   (tags pure)
