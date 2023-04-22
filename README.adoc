@@ -1,14 +1,11 @@
 = Scheme index
 :toc: left
 
-Scheme index is a tool for indexing and searching through procedures and syntax from Scheme specifications and select SRFI libraries.
-The index may be used through a site (https://index.scheme.org) or through REST API.
+https://index.scheme.org[Scheme index] is a tool for indexing and searching through procedures, syntax, values from scheme specifications and SRFI libraries.
 
 image::screenshot.png[]
 
-== Userguide for site visitors
-
-Scheme index search consists of control pane on the left, and result list in the center. 
+== Userguide
 
 === Control pane
 
@@ -18,11 +15,11 @@ In the control pane, optionally select values from the filter list, optionally e
 
 Each result item is either a procedure, a macro, or a value. At the top it shows a library it is exported from. Identifiers that are exported from multiple libraries will appear in the result list multiple times. The library name can be clicked, which will result in starting new search using said library as a filter. On the right side top, associated list of tags with the result is shown. Tags are also clickable, and start a search using the clicked tag as a filter.
 
-Procedures and value names are rendered in *red*. Procedures are distinguished by being surrounded with parenthesis, as if being called. Following the name until the "=>" sign are parameters. If parameter is just a name, it means it has an unspecified type. Otherwise, parameter may be a list of type and name. Types are usually represented as predicate procedures (sometimes a type may be opaque or logical, and without a disjoint predicate function to distinguish it). It can also be a logical "or" of multiple types, separated by `/`. Sometimes `#f` literal is used as a type due to its significant role in scheme to act what would be `null` elsewhere. 
+Procedures and value names are rendered in *red*. Procedures are distinguished by being surrounded with parenthesis, as if being called. Following the name until the "=>" sign are parameters. If parameter is just a name, it means it has an unspecified type. Otherwise, parameter may be a list of type and name. Types are usually represented as predicate procedures (sometimes a type may be opaque or logical, and without a disjoint predicate function to distinguish it). `#f` literal can appear as a type due to its commonplace use to signify lack of a value. Type can also be a logical "or" of multiple types, separated by `/`. 
 
-After the "=>" sign is the return type. The return type is same as parameter type, and additionally may contain: 
+After the `=>` sign is the return type. The return type is same as parameter type, and additionally may contain: 
 
-* a "*" symbol (meaning it returns a value of unknown type); 
+* a `*` symbol (meaning it returns a value of unknown but usable type); 
 
 * a list with "values" word in car position (meaning it has a multivalue return); 
 
@@ -30,7 +27,7 @@ Types expressed as predicates in *blue* are links. Pressing on a type in paramet
 
 If one of parameters or return value is *procedure?*, *list?*, *vector?*, its signature might be further elaborated below the main procedure's signature.
 
-Macros are rendered in *green*. If macro is complex, some parts of it are grouped, and the syntax of those groups shown below the syntax of whole macro. Macro literals are also rendered in green. To make parenthesis more obvious, auxiliary parenthesis coloring is used, however this coloring doesn't signify any information.
+Macros are rendered in *green*. If macro is complex, some parts of it are grouped, and the syntax of those groups shown below the syntax of whole macro. Macro literals are also rendered in green.
 
 === Tags
 
@@ -38,7 +35,6 @@ Result items might have one or more of following tags
 
 * pure - this procedure is referentially transparent (as long as whatever procedure parameters it has are also referentially transparent). Procedures that return undefined value cannot be marked as pure;
 * predicate - this procedure that takes any object and returns a boolean. Such procedure may be used as a type;
-* parameter - this procedure was created with "make-parameter" and may be used in parameterize form;
 * deprecated - not recommended to be used, exists only for backwards compatibility with older SRFIs.
 
 === Filtering logic
@@ -51,7 +47,7 @@ Selecting multiple parameter types will return results that match *all* of the g
 
 Selecting multiple return types will return results that match *all* of the given types. As and in case filter by parameter type, when filtering by return type the type hierarchy is taken into consideration. Searching by a "parent" return type will also yield procedures returning more precise "child" types.
 
-The text query is parsed by edismax parser (read more about it https://solr.apache.org/guide/6_6/the-dismax-query-parser.html#the-dismax-query-parser), and is used to filter by name and parameter / subsyntax names. This means it supports and interprets common searching syntax, such as using "-" in front of the word to exclude results containing said word. This has its disadvantages; eg. if you tried to search for coercion functions and typed "->string" (without quotes) into the search input field, you wouldn't find anything interesting, because the leading minus was interpreted specially. Instead, you'd have to search using "exact phrase", by putting double quotes around the search.
+The text query is parsed using https://solr.apache.org/guide/6_6/the-dismax-query-parser.html#the-dismax-query-parser[edismax parser], and is used to filter by name, description and parameter / subsyntax names. This means it supports and interprets common searching syntax, such as using "-" in front of the word to exclude results containing said word. This has its disadvantages; if you tried to search for coercion functions and typed `->string` into the search input field, you wouldn't find relevant results, because the leading minus was interpreted specially. Instead, you'd have to search using "exact phrase", by putting double quotes around the search.
 
 
 == Obtaining and running index yourself
@@ -147,7 +143,7 @@ The following is exhaustive list of valid properties
 
 === Identifiers definitions
 
-Identifiers definitions are grouped into files (mostly one for each library), and a single root index file which defines names and paths to those files.
+Identifiers definitions are grouped into files (one file for each library), and a single root index file which defines names and paths to those files.
 The index file is specified in configuration under `spec-index` property, with a default value "./types/index.scm".
 
 Index should be a list of pairs - where `car` is a symbolic library name, and `cdr` is associated information regarding definitions to load from. `cdr` may be an alist, with following fields:
@@ -275,10 +271,11 @@ You can provide custom logging configuration by running
 java -Dlogback.configurationFile=/path/to/config.xml -jar scheme-index.jar
 ```
 
-Consult logback documentation for details.
+Consult https://logback.qos.ch/manual/configuration.html[Logback documentation] for details.
 
 == REST API
 
+Scheme index exposes following RESTful json API. The endpoints are tentatively stable; new properties might be added but existing properties are unlikely to be changed.
 
 === `/rest/filterset`
 
