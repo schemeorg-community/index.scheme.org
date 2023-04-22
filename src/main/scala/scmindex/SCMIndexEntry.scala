@@ -178,6 +178,11 @@ object SCMIndexEntry {
 
   def parseSCMIndexEntrySingle(lib: String, sexpr: Sexpr): Either[Exception, SCMIndexEntrySingle] = {
     Sexpr.alistToMap(sexpr).flatMap { map =>
+      map.keys.foreach { key =>
+        if (!List("name", "tags", "desc", "signature", "subsigs").contains(key)) {
+          log.warn("Unrecognized key {} in {}", key, sexpr);
+        }
+      }
       for {
         name <- map.get("name") match {
           case Some(SexprString(n)) => Right(n)

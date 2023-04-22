@@ -292,7 +292,22 @@
  ((srfi 160 c128) . "types/srfi.160.c128.scm")
  ((srfi 161) . "types/srfi.161.scm")
  ((srfi 162) . "types/srfi.162.scm")
+ ;; srfi 163 -- non-sexrp syntax
+ ;; ((srfi 164) . "types/srfi.164.scm") TODO
  ((srfi 165) . "types/srfi.165.scm")
+ ;; ((srfi 166) . "types/srfi.166.scm") TODO
+ ;; ((srfi 167) . "types/srfi.167.scm") TODO
+ ;; ((srfi 168) . "types/srfi.168.scm") TODO
+ ;; srfi 169 -- non-sexrp syntax
+ ;; ((srfi 170) . "types/srfi.170.scm") TODO
+ ;; ((srfi 171) . "types/srfi.171.scm") TODO
+ ;; srfi 172 -- reexports, probably not useful to duplicate
+ ;; ((srfi 173) . "types/srfi.173.scm") TODO
+ ;; ((srfi 174) . "types/srfi.174.scm") TODO
+ ;; ((srfi 175) . "types/srfi.175.scm") TODO
+ ;; srfi 176 -- meta srfi
+ ;; srfi 177 -- withdrawn
+ ;; ((srfi 178) . "types/srfi.178.scm") TODO
  ((srfi 193) . "types/srfi.193.scm")
  ((srfi 219) . "types/srfi.219.scm")
  ((srfi 236) . "types/srfi.236.scm")
