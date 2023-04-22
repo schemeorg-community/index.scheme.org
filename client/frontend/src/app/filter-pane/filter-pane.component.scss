@@ -23,7 +23,9 @@ $media-breakpoint: 600px;
     &__controls {
         background-color: var(--bg-color2);
         padding: 5px;
-        overflow-y: auto;
+        max-height: 100%;
+        overflow-y: hidden;
+        box-sizing: border-box;
         display: flex;
         flex-direction: column;
         align-items: stretch;
@@ -74,10 +76,13 @@ $media-breakpoint: 600px;
     &__filter-form {
         display: flex;
         flex-direction: column;
+        flex: 1;
+        overflow: hidden;
     }
 
     &__facets {
         margin-top: 10px;
+        flex: 1;
         overflow-y: auto;
     }
 

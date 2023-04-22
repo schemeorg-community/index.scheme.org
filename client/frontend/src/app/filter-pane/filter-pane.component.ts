@@ -68,29 +68,45 @@ export class FilterPaneComponent {
 
   readFacetFromResponse(request: IndexQuery, queryResponse: IndexResponse): Facet[] {
     return [
-      this.convertFacet('lib', 'Libraries', queryResponse.libs, request.libs || []),
-      this.convertFacet('tag', 'Tags', queryResponse.tags, request.tags || []),
-      this.convertFacet('param', 'Parameter types', queryResponse.params, request.params || []),
-      this.convertFacet('return', 'Return types', queryResponse.returns, request.returns || [])
+      this.convertFacet('lib', 'Libraries', queryResponse.libs, request.libs || [], (a, b) => this.librarySorter(a, b)),
+      this.convertFacet('tag', 'Tags', queryResponse.tags, request.tags || [], null),
+      this.convertFacet('param', 'Parameter types', queryResponse.params, request.params || [], null),
+      this.convertFacet('return', 'Return types', queryResponse.returns, request.returns || [], null)
     ];
   }
 
-  convertFacet(name: string, title: string, facet: ResponseFacetValue[], checked: string[]) {
-      const shown = facet
-      .filter(f => {
+  srfiRegexp: RegExp = /^\(srfi (\d+).*\)$/;
+  librarySorter(a: string, b: string): number {
+      const aSrfi = a.match(this.srfiRegexp);
+      const bSrfi = b.match(this.srfiRegexp);
+      if (!aSrfi && !bSrfi)
+          return a.localeCompare(b);
+      else if (aSrfi && !bSrfi)
+          return 1;
+      else if (!aSrfi && bSrfi)
+          return -1;
+      else if (aSrfi && bSrfi) {
+          return (+aSrfi[1]) - (+bSrfi[1]);
+      }
+      return 0;
+  }
+
+  convertFacet(name: string, title: string, facet: ResponseFacetValue[], checked: string[], sorter: ((a: string, b: string) => number) | null) {
+      const shown = facet.filter(f => {
           return f.count > 0 || checked.indexOf(f.value) != -1
       });
+      if (sorter) {
+          shown.sort((a, b) => sorter(a.value, b.value));
+      }
       return {
           name: name,
           title: title,
-          options: 
-              shown
-          .map(f => {
+          options: shown.map(f => {
               return {
                   name: name,
                   value: f.value,
                   checked: checked.indexOf(f.value) != -1,
-                      label: f.value,
+                  label: f.value,
                   count: f.count
               };
           }),
