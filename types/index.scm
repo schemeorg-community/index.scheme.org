@@ -217,7 +217,7 @@
  ;; srfi 103 -- withdrawn
  ;; srfi 104 -- withdrawn
  ;; srfi 105 -- non-sexpr syntax
- ;; ((srfi 106) . "types/srfi.106.scm") TODO
+ ((srfi 106) . "types/srfi.106.scm")
  ;; srfi 107 -- non-sexpr syntax
  ;; srfi 108 -- non-sexpr syntax
  ;; srfi 109 -- non-sexpr syntax

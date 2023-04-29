@@ -85,6 +85,7 @@
  ((srfi 99 records syntactic) . #t)
  ((srfi 100) . #t)
  ((srfi 101) . #t)
+ ((srfi 106) . #t)
  ((srfi 111) . #t)
  ((srfi 112) . #t)
  ((srfi 113) . #t)
