@@ -176,7 +176,7 @@
  ((srfi 67) . "types/srfi.67.scm")
  ;; srfi 68 -- withdrawn
  ((srfi 69) . "types/srfi.69.scm")
- ;; ((srfi 70) . "types/srfi.70.scm") TODO
+ ((srfi 70) . "types/srfi.70.scm")
  ((srfi 71) . "types/srfi.71.scm")
  ;; srfi 72 -- unpopular (TODO?)
  ;; srfi 73 -- withdrawn

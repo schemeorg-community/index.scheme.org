@@ -1,0 +1,10 @@
+(((group
+    ((name . "exact-floor")
+     (signature lambda ((real? x)) integer?))
+    ((name . "exact-ceiling")
+     (signature lambda ((real? x)) integer?))
+    ((name . "exact-truncate")
+     (signature lambda ((real? x)) integer?))
+    ((name . "exact-round")
+     (signature lambda ((real? x)) integer?) ))
+  (desc . "These procedures are the compositions of `inexact->exact' with `floor', `ceiling', `truncate', and `round'.")))
