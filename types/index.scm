@@ -157,7 +157,7 @@
  ((srfi 48) . "types/srfi.48.scm")
  ;; srfi 49 -- non-sexpr syntax
  ;; srfi 50 -- withdrawn
- ;; ((srfi 51) . "types/srfi.51.scm")
+ ((srfi 51) . "types/srfi.51.scm")
  ;; srfi 52 -- withdrawn
  ;; srfi 53 -- withdrawn
  ((srfi 54) . "types/srfi.54.scm")
