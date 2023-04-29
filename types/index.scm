@@ -203,7 +203,7 @@
  ;; ((srfi 94) . "types/srfi.94.scm") TODO
  ((srfi 95) . "types/srfi.95.scm")
  ;; ((srfi 96) . "types/srfi.96.scm") TODO
- ;; ((srfi 97) . "types/srfi.97.scm") TODO
+ ;; srfi 97 meta srfi
  ((srfi 98) . "types/srfi.98.scm")
  ((srfi 99) . "types/srfi.99.records.procedural.scm")
  ((srfi 99) . "types/srfi.99.records.inspection.scm")
@@ -211,7 +211,7 @@
  ((srfi 99 records procedural) . "types/srfi.99.records.procedural.scm")
  ((srfi 99 records inspection) . "types/srfi.99.records.inspection.scm")
  ((srfi 99 records syntactic) . "types/srfi.99.records.syntactic.scm")
- ;; ((srfi 100) . "types/srfi.100.scm") TODO
+ ((srfi 100) . "types/srfi.100.scm")
  ((srfi 101) . "types/srfi.101.scm")
  ;; srfi 102 -- withdrawn
  ;; srfi 103 -- withdrawn

@@ -82,6 +82,7 @@
  ((srfi 99 records procedural) . #t)
  ((srfi 99 records inspection) . #t)
  ((srfi 99 records syntactic) . #t)
+ ((srfi 100) . #t)
  ((srfi 101) . #t)
  ((srfi 111) . #t)
  ((srfi 112) . #t)
