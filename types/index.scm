@@ -229,7 +229,7 @@
  ((srfi 115) . "types/srfi.115.scm")
  ((srfi 116) . "types/srfi.116.scm")
  ((srfi 117) . "types/srfi.117.scm")
- ;; ((srfi 118) . "types/srfi.118.scm") TODO
+ ((srfi 118) . "types/srfi.118.scm")
  ;; srfi 119 -- unpopular (TODO?)
  ((srfi 120) . "types/srfi.120.scm")
  ;; srfi 121 -- superceded
