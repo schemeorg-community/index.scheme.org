@@ -237,7 +237,7 @@
  ;; ((srfi 123) . "types/srfi.123.scm") TODO
  ((srfi 124) . "types/srfi.124.scm")
  ((srfi 125) . "types/srfi.125.scm")
- ;; ((srfi 126) . "types/srfi.126.scm") TODO
+ ((srfi 126) . "types/srfi.126.scm")
  ((srfi 127) . "types/srfi.127.scm")
  ((srfi 128) . "types/srfi.128.scm")
  ((srfi 129) . "types/srfi.129.scm")
