@@ -1,4 +1,4 @@
-package scmindex
+package scmindex.core
 
 import cats.data.EitherT
 import cats.effect.IO
@@ -8,24 +8,26 @@ case class Filterset(code: String, name: String, libs: List[String])
 
 object Filterset {
 
-  def loadFiltersets(index: Sexpr, reader: (String) => IO[Either[Exception, Sexpr]]): IO[Either[Exception, List[Filterset]]] = {
-    Sexpr.sexprToProperList(index).map { lst =>
-      lst
-        .map({parseFilterset(_, reader)})
-        .sequence
-        .map { f =>
-          f.partitionMap(identity) match {
-            case (Nil, rights) => Right(rights)
-            case (first :: _, _) => Left(Exception("Failed to parse filtersets", first))
+  def loadFiltersets[T: Importer](importer: T): IO[Either[Exception, List[Filterset]]] = {
+    val eitherT = for {
+      index <- EitherT(importer.loadFiltersetIndex())
+      indexAsList <- EitherT.fromEither(Sexpr.sexprToProperList(index))
+      filtersets <- EitherT({
+        indexAsList
+          .map({parseFilterset(_, importer.loadFilterset)})
+          .sequence
+          .map { f =>
+            f.partitionMap(identity) match {
+              case (Nil, rights) => Right(rights)
+              case (first :: _, _) => Left(Exception("Failed to parse filtersets", first))
+            }
           }
-        }
-    } match {
-      case Right(v) => v
-      case Left(err) => IO(Left(err))
-    }
+      })
+    } yield filtersets
+    eitherT.value
   }
 
-  private def parseFilterset(sexpr: Sexpr, reader: (String) => IO[Either[Exception, Sexpr]]): IO[Either[Exception, Filterset]] = {
+  def parseFilterset(sexpr: Sexpr, reader: (String) => IO[Either[Exception, Sexpr]]): IO[Either[Exception, Filterset]] = {
     def getStringField(map: Map[String, Sexpr], field: String): Either[Exception, String] = {
       map.get(field) match {
         case Some(SexprString(value)) => Right(value)
@@ -44,7 +46,7 @@ object Filterset {
     res.value
   }
 
-  private def parseFiltersetLibs(sexpr: Sexpr): Either[Exception, List[String]] = {
+  def parseFiltersetLibs(sexpr: Sexpr): Either[Exception, List[String]] = {
     Sexpr.sexprToProperList(sexpr)
       .flatMap { terms =>
         val entries = terms.map {

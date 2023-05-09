@@ -1,5 +1,6 @@
 package scmindex
 
+import scmindex.core.*
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
 import cats.effect.IO
@@ -48,18 +49,23 @@ object Config {
       solrHome <- getString(map, "solr-home", "./solrhome")
       solrUrl <- getString(map, "solr-url", "http://localhost:8983/solr")
       solrCore <- getString(map, "solr-core", "scmindex")
-      filtersetIndex <- getString(map, "filterset-idnex", "filters/index.scm")
+      filtersetIndex <- getString(map, "filterset-index", "filters/index.scm")
     } yield Config(port, specIndex, solrEmbed, solrHome, solrUrl, solrCore, filtersetIndex)
   }
 
-  given SignatureLoader[Config] with {
+  given Importer[Config] with {
     extension (config: Config) {
       def loadIndex() = config.loadLibrary(config.specIndex)
-
       def loadLibrary(file: String) = IO {
         val path = Path.of(file)
         val content = Files.readString(path, StandardCharsets.UTF_8)
         log.info(s"Loading library ${file}")
+        SexprParser.read(content)
+      }
+      def loadFiltersetIndex() = config.loadLibrary(config.filtersetIndex)
+      def loadFilterset(file: String) = IO {
+        val path = Path.of(file)
+        val content = Files.readString(path, StandardCharsets.UTF_8)
         SexprParser.read(content)
       }
     }

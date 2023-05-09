@@ -1,12 +1,12 @@
-package scmindex
+package scmindex.core
 
 import cats.data.EitherT
 import cats.effect.IO
 import cats.implicits.*
-import scmindex.Sexpr.sexprToProperList
 
 import java.security.Signature
 import org.slf4j.LoggerFactory
+import scmindex.core.Sexpr.*
 
 case class ContentFile(file: String, exclude: List[String])
 
@@ -396,7 +396,7 @@ object SCMIndexEntry {
     }
   }
 
-  def loadSignatures[T : SignatureLoader](loader: T): IO[Either[Exception, List[SCMIndexEntry]]] = {
+  def loadSignatures[T : Importer](loader: T): IO[Either[Exception, List[SCMIndexEntry]]] = {
     def parseIndexEntry(sexpr: Sexpr): Either[Exception, ContentFile] = {
       sexpr match {
         case SexprString(v) => Right(ContentFile(v, List()))

@@ -12,8 +12,6 @@ libraryDependencies += ("org.apache.solr" % "solr-core" % solrVersion)
   .exclude("org.apache.logging.log4j", "log4j-slf4j-impl")
   .exclude("org.apache.logging.log4j", "log4j-core")
 
-libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.1"
-
 val logbackVersion = "1.2.6"
 libraryDependencies += "ch.qos.logback" % "logback-core" % logbackVersion
 libraryDependencies += "ch.qos.logback" % "logback-classic" % logbackVersion
@@ -26,7 +24,9 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies += "io.circe" %% "circe-generic" % "0.14.3"
-
+libraryDependencies += "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.14.1"
+libraryDependencies += "org.xerial" % "sqlite-jdbc" % "3.41.2.1"
+libraryDependencies += "com.zaxxer" % "HikariCP" % "5.0.1"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % "test"
 
 scalacOptions ++= Seq("-Xmax-inlines", "1000")

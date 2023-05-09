@@ -1,4 +1,4 @@
-package scmindex
+package scmindex.core
 
 import scala.annotation.tailrec
 

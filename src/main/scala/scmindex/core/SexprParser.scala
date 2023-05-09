@@ -1,4 +1,4 @@
-package scmindex
+package scmindex.core
 
 import cats.effect.IO
 import org.slf4j.LoggerFactory
