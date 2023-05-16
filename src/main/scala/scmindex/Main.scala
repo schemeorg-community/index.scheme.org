@@ -27,7 +27,8 @@ object Main extends IOApp {
           SolrIndexer.createEmbeddedSolrIndexer(cfg.solrHome, cfg.solrCore)
         else 
           SolrIndexer.createRemoteSolrIndexer(cfg.solrUrl)
-      storage = SqliteStorage.create("db") // TODO parameterize
+      storage <- EitherT.liftF(SqliteStorage.create("db")) // TODO parameterize
+      _ <- EitherT.liftF(storage.init())
       service = SCMIndexService(solrIndexer, storage)
       _ <- EitherT(SCMIndexService.runImport(service, cfg))
       exitCode <- EitherT.liftF(WebController.runServer(service, cfg.port))

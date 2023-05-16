@@ -58,7 +58,7 @@ object SCMIndexService {
   def getFacetOptions[T, S, ID](service: SCMIndexService[T, S], filterset: String, facetName: String)(using Indexer[T, ID], Storage[S, ID]): IO[Option[List[String]]]
   = {
     val optT = for {
-      filtersets <- OptionT.liftF(getFiltersets(service))
+      filtersets <- OptionT.liftF(service.storage.getFiltersets())
       maybeLibs = filtersets
         .find(x => x.code == filterset)
         .map(x => x.libs)

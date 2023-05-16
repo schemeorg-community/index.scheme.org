@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory
 import io.circe.*
 import io.circe.generic.semiauto.*
 import scmindex.core.*
+import scmindex.web.JSONEncoders.given
 
 object WebController {
 
@@ -62,7 +63,7 @@ object WebController {
       }
     }
     case GET -> Root / "rest" / "filterset" / filterset / lib / name => SCMIndexService.get(model, lib, name).flatMap {
-      case Some(e) => Ok(e)
+      case Some(e) => Ok(e.asJson)
       case _ => NotFound()
     }
   }.orNotFound
