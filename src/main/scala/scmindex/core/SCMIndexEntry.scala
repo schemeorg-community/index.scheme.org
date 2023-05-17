@@ -442,6 +442,7 @@ object SCMIndexEntry {
   def serializeParameter(p: Parameter): Sexpr = { 
     p match {
       case Parameter(name, Unknown) => SexprSymbol(name)
+      case Parameter(name, Ellipsis) => SexprSymbol("...")
       case Parameter(name, t) => makeSexprList(List(serializeParameterType(t), SexprSymbol(name)))
     }
   }
