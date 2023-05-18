@@ -10,6 +10,7 @@ class TypeReaderFlatSpec extends AnyFunSpec {
     it("should work") {
       val config = Config(
         80,
+        "db",
         "types/index.scm",
         false,
         "",
