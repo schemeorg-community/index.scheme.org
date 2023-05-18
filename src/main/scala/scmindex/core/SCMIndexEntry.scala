@@ -417,7 +417,7 @@ object SCMIndexEntry {
     }
     val keywords = makeListOfSymbols(sig.keywords)
     val rules = sig.rules.map(serializeRule)
-    makeSexprList(List(SexprSymbol("syntax-rules"), keywords, makeSexprList(rules)))
+    makeSexprList(List(SexprSymbol("syntax-rules"), keywords) ++ rules)
   }
 
   def serializeLambdaSignature(sig: SigLambda): Sexpr = {
