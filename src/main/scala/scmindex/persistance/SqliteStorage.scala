@@ -55,14 +55,14 @@ object SqliteStorage {
       def saveSingle(e: SCMIndexEntry): ConnectionIO[Int] = {
         def saveInternalSingle(e: SCMIndexEntrySingle, groupId: Option[Int]): ConnectionIO[Int] = {
           for {
-            id <- sql"insert into index_entry(group_id, lib, name, signature, description) values(${groupId}, ${e.lib}, ${e.name}, ${SCMIndexEntry.serializeSignature(e.signature).toString}, ${e.description})"
+            id <- sql"insert into index_entry(group_id, lib, name, signature, description) values(${groupId}, ${e.lib}, ${e.name}, ${SCMIndexEntry.serializeSignature(e.signature).write()}, ${e.description})"
               .update
               .withUniqueGeneratedKeys[Int]("id")
             _ <- e.tags.map(tag => {
                 sql"insert into index_entry_tag(index_entry_id, name) values(${id}, ${tag})".update.run
               }).sequence
             _ <- e.subsignatures.map(subsig => {
-                sql"insert into index_entry_subsignature(index_entry_id, name, signature) values(${id}, ${subsig.paramName}, ${SCMIndexEntry.serializeSubSignature(subsig.signature).toString})"
+                sql"insert into index_entry_subsignature(index_entry_id, name, signature) values(${id}, ${subsig.paramName}, ${SCMIndexEntry.serializeSubSignature(subsig.signature).write()})"
                   .update
                   .run
               }).sequence
