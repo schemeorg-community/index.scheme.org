@@ -1,5 +1,5 @@
 import org.scalatest.funspec.AnyFunSpec
-import scmindex.*
+import scmindex.core.*
 
 class LexerTest extends AnyFunSpec {
   describe("Given valid string") {

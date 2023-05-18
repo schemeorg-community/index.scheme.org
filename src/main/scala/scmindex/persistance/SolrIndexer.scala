@@ -1,7 +1,8 @@
-package scmindex
+package scmindex.persistance
 
 import cats.effect.IO
 
+import scmindex.core.*
 import java.nio.file.Path
 import org.apache.solr.client.solrj.{SolrClient, SolrQuery}
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer
@@ -49,12 +50,12 @@ object SolrIndexer {
     d
   }
 
-  given Indexer[SolrClient] with
+  given Indexer[SolrClient, Int] with
     extension (c: SolrClient) {
-      def index(entries: Vector[SCMIndexEntry]) = IO {
+      def index(entries: List[(Int, SCMIndexEntry)]) = IO {
         c.deleteByQuery("*:*")
-        for (index <- Range(0, entries.size)) {
-          c.add(indexEntryToSolr(index, entries(index)), 1000)
+        for (entry <- entries) {
+          c.add(indexEntryToSolr(entry._1, entry._2), 1000)
         }
       }
       def parseFacet(f: FacetField): List[FacetValue] = {
@@ -74,7 +75,7 @@ object SolrIndexer {
           Some(resp.getResults.get(0).getFieldValue("index").asInstanceOf[Int])
       }
 
-      def query(query: String, lib: List[String], param: List[String], returns: List[String], tags: List[String], pageSize: Int, offset: Int): IO[IndexerResponse] = IO {
+      def query(query: String, lib: List[String], param: List[String], returns: List[String], tags: List[String], pageSize: Int, offset: Int): IO[IndexerResponse[Int]] = IO {
         val q = SolrQuery();
         q.setRequestHandler("/search")
         q.setQuery(query)

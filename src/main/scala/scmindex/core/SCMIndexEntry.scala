@@ -1,12 +1,12 @@
-package scmindex
+package scmindex.core
 
 import cats.data.EitherT
 import cats.effect.IO
 import cats.implicits.*
-import scmindex.Sexpr.sexprToProperList
 
 import java.security.Signature
 import org.slf4j.LoggerFactory
+import scmindex.core.Sexpr.*
 
 case class ContentFile(file: String, exclude: List[String])
 
@@ -231,6 +231,7 @@ object SCMIndexEntry {
       case _ => Left(Exception(s"Invalid lambda signature, expected a pair: ${sexpr}"))
     }
   }
+
   def parseParam(sexpr: Sexpr): Either[Exception, Parameter] = {
     sexpr match {
       case SexprSymbol("...") => Right(Parameter("...", Ellipsis))
@@ -249,8 +250,8 @@ object SCMIndexEntry {
       case _ => Left(Exception(s"invalid parameter definition: ${sexpr}"))
     }
   }
-  def parseParams(sexpr: Sexpr): Either[Exception, List[Parameter]] = {
 
+  def parseParams(sexpr: Sexpr): Either[Exception, List[Parameter]] = {
     Sexpr.sexprToProperList(sexpr).flatMap { paramSexprs =>
       paramSexprs.map(parseParam).partitionMap(identity) match {
         case (Nil, params) => Right(params)
@@ -383,6 +384,78 @@ object SCMIndexEntry {
     }).map{ l => SubSigEntry(name, l) }
   }
 
+  def serializeSignature(sig: Signature): Sexpr = {
+    sig match {
+      case SigValue(predicate) => makeListOfSymbols(List("value", predicate))
+      case rules: SigSyntaxRules => serializeSyntaxRulesSignature(rules)
+      case l: SigLambda => serializeLambdaSignature(l)
+      case SigCaseLambda(variants) => makeSexprList(List(SexprSymbol("case-lambda")) ++ variants.map({ l =>
+        serializeLambdaSignature(l) match {
+          case SexprPair(SexprSymbol("lambda"), cdr) => cdr
+          case s => s
+        }
+      }))
+    }
+  }
+
+  def serializeSubSignature(subsig: SubSignature): Sexpr = {
+    subsig match {
+      case s: Signature => serializeSignature(s)
+      case AList(car, cdr) => makeSexprList(List(SexprSymbol("alist"), serializeParameter(car), serializeParameter(cdr)))
+      case SCMList(el) => makeSexprList(List(SexprSymbol("list"), serializeParameter(el)))
+      case SCMVector(el) => makeSexprList(List(SexprSymbol("vector"), serializeParameter(el)))
+      case Patterns(pats) => makeSexprList(List(SexprSymbol("pattern")) ++ pats)
+    }
+  }
+
+  def serializeSyntaxRulesSignature(sig: SigSyntaxRules): Sexpr = {
+    def serializeRule(r: PatternAndType): Sexpr = {
+      r match {
+        case PatternAndType(pat, None) => makeSexprList(List(pat))
+        case PatternAndType(pat, Some(t)) => makeSexprList(List(pat, serializeReturnType(t)))
+      }
+    }
+    val keywords = makeListOfSymbols(sig.keywords)
+    val rules = sig.rules.map(serializeRule)
+    makeSexprList(List(SexprSymbol("syntax-rules"), keywords) ++ rules)
+  }
+
+  def serializeLambdaSignature(sig: SigLambda): Sexpr = {
+    sig match {
+      case SigLambda(params, ret) => makeSexprList(List(
+        SexprSymbol("lambda"),
+        makeSexprList(params.map(serializeParameter)),
+        serializeReturnType(ret)))
+    }
+  }
+
+  def serializeReturnType(t: ReturnType): Sexpr = {
+    t match {
+      case Unknown => SexprSymbol("*")
+      case p: ParamType => serializeParameterType(p)
+      case Undefined => SexprSymbol("undefined")
+      case UnionReturnType(types) => makeSexprList(List(SexprSymbol("or")) ++ types.map(serializeReturnType))
+      case Values(types) => makeSexprList(List(SexprSymbol("values")) ++ types.map(serializeReturnType))
+    }
+  }
+
+  def serializeParameter(p: Parameter): Sexpr = { 
+    p match {
+      case Parameter(name, Unknown) => SexprSymbol(name)
+      case Parameter(name, Ellipsis) => SexprSymbol("...")
+      case Parameter(name, t) => makeSexprList(List(serializeParameterType(t), SexprSymbol(name)))
+    }
+  }
+
+  def serializeParameterType(t: ParamType): Sexpr = {
+    t match {
+      case Ellipsis => SexprSymbol("...")
+      case LiteralFalse => SexprBool(false)
+      case Predicate(identifier) => SexprSymbol(identifier)
+      case UnionParamType(types) => makeSexprList(List(SexprSymbol("or")) ++ types.map(serializeParameterType))
+    }
+  }
+
   def readListOfSymbols(sexpr: Sexpr, err: String): Either[Exception, List[String]] = {
     Sexpr.sexprToProperList(sexpr).flatMap { lst =>
       val maybeValues = lst.partitionMap {
@@ -396,7 +469,22 @@ object SCMIndexEntry {
     }
   }
 
-  def loadSignatures[T : SignatureLoader](loader: T): IO[Either[Exception, List[SCMIndexEntry]]] = {
+  def makeSexprList[T](lst: List[T], mapper: T => Sexpr): Sexpr = {
+    lst match {
+      case x :: rest => SexprPair(mapper(x), makeSexprList(rest, mapper))
+      case Nil => SexprNull
+    }
+  }
+
+  def makeSexprList(lst: List[Sexpr]): Sexpr = {
+    makeSexprList(lst, identity)
+  }
+
+  def makeListOfSymbols(strings: List[String]): Sexpr = {
+    makeSexprList(strings, SexprSymbol.apply)
+  }
+
+  def loadSignatures[T : Importer](loader: T): IO[Either[Exception, List[SCMIndexEntry]]] = {
     def parseIndexEntry(sexpr: Sexpr): Either[Exception, ContentFile] = {
       sexpr match {
         case SexprString(v) => Right(ContentFile(v, List()))

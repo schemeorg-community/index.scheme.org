@@ -1,5 +1,5 @@
 import org.scalatest.funspec.AnyFunSpec
-import scmindex.*
+import scmindex.core.*
 
 class SexprFlatSpec extends AnyFunSpec {
   describe("Pair to list unpacking") {
