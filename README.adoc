@@ -132,6 +132,10 @@ The following is exhaustive list of valid properties
 | Which port to use. Relevant only if enable-web is `#t`
 | 8080
 
+| db-path
+| Path to DB file used by SQLite
+| "db"
+
 | spec-index
 | Index of definitions to load (see Identifiers definitions section)
 | "./types/index.scm"

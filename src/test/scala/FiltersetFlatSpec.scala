@@ -1,6 +1,8 @@
 import cats.effect.IO
 import org.scalatest.funspec.AnyFunSpec
+import scmindex.core.*
 import scmindex.*
+import scmindex.given
 import cats.effect.unsafe.implicits.global
 
 class FiltersetFlatSpec extends AnyFunSpec {
@@ -17,12 +19,22 @@ class FiltersetFlatSpec extends AnyFunSpec {
       }
       val loader = (file: String) => {
         if (file == "testfile") {
-          IO.pure(SexprParser.read("(((foo bar) . #t) ((foo baz) . #f))"))
+          SexprParser.read("(((foo bar) . #t) ((foo baz) . #f))")
         } else  {
-          IO.pure(Left(Exception("")))
+          Left(Exception(""))
         }
       }
-      Filterset.loadFiltersets(index, loader).unsafeRunSync() match {
+
+      case class TestImporter() extends Importer[Any] {
+        extension (a: Any) {
+          override def loadIndex(): IO[Either[Exception, Sexpr]] = IO.pure(Left(Exception("")))
+          override def loadLibrary(file: String): IO[Either[Exception, Sexpr]] = IO.pure(Left(Exception("")))
+          override def loadFiltersetIndex(): IO[Either[Exception, Sexpr]] = IO.pure(Right(index))
+          override def loadFilterset(src: String): IO[Either[Exception, Sexpr]] = IO.pure(loader(src))
+        } 
+      }
+
+      Filterset.loadFiltersets(())(using TestImporter()).unsafeRunSync() match {
         case Right(filtersets) =>  {
           assert(1 == filtersets.size)
           val f = filtersets.head

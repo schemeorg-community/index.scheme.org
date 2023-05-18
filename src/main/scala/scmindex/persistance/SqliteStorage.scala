@@ -39,6 +39,19 @@ object SqliteStorage {
           ()
       }
 
+      def deleteAll(): IO[Unit] = {
+        val statements = for {
+          _ <- sql"delete from filterset_library".update.run
+          _ <- sql"delete from filterset".update.run
+          _ <- sql"delete from index_entry_tag".update.run
+          _ <- sql"delete from index_entry_subsignature".update.run
+          _ <- sql"delete from index_entry".update.run
+        } yield ()
+        t.transactor.use(xa => {
+          statements.transact(xa)
+        })
+      }
+
       def saveSingle(e: SCMIndexEntry): ConnectionIO[Int] = {
         def saveInternalSingle(e: SCMIndexEntrySingle, groupId: Option[Int]): ConnectionIO[Int] = {
           for {

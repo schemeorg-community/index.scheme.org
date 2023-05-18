@@ -5,6 +5,8 @@ import cats.effect.IO
 trait Storage[T, ID] {
   extension(t: T) {
 
+    def deleteAll(): IO[Unit]
+
     def init(): IO[Unit]
     def save(lst: List[SCMIndexEntry]): IO[List[(ID, SCMIndexEntry)]]
     def get(id: ID): IO[Option[SCMIndexEntry]]

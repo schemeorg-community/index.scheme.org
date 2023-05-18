@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 
 case class Config(
   port: Int,
+  dbPath: String,
   specIndex: String,
   solrEmbed: Boolean,
   solrHome: String,
@@ -44,13 +45,14 @@ object Config {
     for {
       map <- Sexpr.alistToMap(sexpr)
       port <- getInt(map, "port", 8080)
+      dbPath <- getString(map, "db-path", "db")
       specIndex <- getString(map, "spec-index", "types/index.scm")
       solrEmbed <- getBool(map, "solr-embed", true)
       solrHome <- getString(map, "solr-home", "./solrhome")
       solrUrl <- getString(map, "solr-url", "http://localhost:8983/solr")
       solrCore <- getString(map, "solr-core", "scmindex")
       filtersetIndex <- getString(map, "filterset-index", "filters/index.scm")
-    } yield Config(port, specIndex, solrEmbed, solrHome, solrUrl, solrCore, filtersetIndex)
+    } yield Config(port, dbPath, specIndex, solrEmbed, solrHome, solrUrl, solrCore, filtersetIndex)
   }
 
   given Importer[Config] with {

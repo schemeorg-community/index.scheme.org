@@ -72,6 +72,7 @@ object SCMIndexService {
     val eitherT = for {
       filtersets <- EitherT(Filterset.loadFiltersets(importer))
       indexEntries <- EitherT(SCMIndexEntry.loadSignatures(importer))
+      _ <- EitherT.liftF(service.storage.deleteAll())
       _ <- EitherT.liftF(service.storage.saveFiltersets(filtersets))
       saved <- EitherT.liftF(service.storage.save(indexEntries))
       _ <- EitherT.liftF(service.indexer.index(saved))

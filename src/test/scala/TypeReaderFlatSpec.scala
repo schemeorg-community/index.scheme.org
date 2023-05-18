@@ -1,4 +1,5 @@
 import org.scalatest.funspec.AnyFunSpec
+import scmindex.core.*
 import scmindex.*
 import scmindex.given
 import cats.effect.unsafe.implicits.global
