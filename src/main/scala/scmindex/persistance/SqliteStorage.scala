@@ -11,6 +11,7 @@ import com.zaxxer.hikari.HikariDataSource
 import cats.effect.kernel.Resource
 import cats.implicits._
 import cats.data.OptionT
+import cats.data.NonEmptyList
 
 
 case class SqliteStorage(datasource: DataSource, transactor: Resource[IO, Transactor[IO]])
@@ -87,12 +88,11 @@ object SqliteStorage {
         })
       }
 
-      def glueIndexEntry(entries: List[(Int, Option[Int], String, Option[String], Option[String], Option[String])], tags: List[(Int, String)], subsigs: List[(Int, String, String)]): Either[Exception, Option[SCMIndexEntry]] = {
-        val tagsMap = tags.groupMap(e => e._1)(e => e._2)
-        val subsigsMap = subsigs.groupMap(e => e._1)(e => for {
-            sigSexpr <- SexprParser.read(e._3)
-            sig <- SCMIndexEntry.doParseSubsig(e._2, sigSexpr)
-        } yield sig).mapValues(lst => lst.sequence)
+      def glueIndexEntry(
+        entries: List[(Int, Option[Int], String, Option[String], Option[String], Option[String])],
+        tagsMap: Map[Int, List[String]],
+        subsigsMap: Map[Int, List[SubSigEntry]]): Either[Exception, Option[SCMIndexEntry]] = 
+      {
         def rowToEntrySingle(e: (Int, Option[Int], String, Option[String], Option[String], Option[String])): Either[Exception, SCMIndexEntrySingle] = {
           for {
             sexprString <- e._5.toRight(Exception("Missing signature"))
@@ -100,9 +100,9 @@ object SqliteStorage {
             lib = e._3
             sigSexpr <- SexprParser.read(sexprString)
             sig <- SCMIndexEntry.parseSignature(sigSexpr)
-            subsigs <- subsigsMap.get(e._1) match {
+            subsigs = subsigsMap.get(e._1) match {
               case Some(e) => e
-              case None => Right(List())
+              case None => List()
             }
             tags = tagsMap.get(e._1) match {
               case Some(t) => t
@@ -123,24 +123,59 @@ object SqliteStorage {
         }
       }
 
-      def get(id: Int): IO[Option[SCMIndexEntry]] = {
-        val statements = for {
-          entries <- sql"select id, group_id, lib, name, signature, description from index_entry where id = $id or group_id = $id"
-            .query[(Int, Option[Int], String, Option[String], Option[String], Option[String])]
-            .to[List]
-          tags <- sql"select index_entry_id, name from index_entry_tag where index_entry_id = $id or index_entry_id in (select id from index_entry where group_id = $id)"
-            .query[(Int, String)]
-            .to[List]
-          subsigs <- sql"select index_entry_id, name, signature from index_entry_subsignature where index_entry_id = $id or index_entry_id in (select id from index_entry where group_id = $id)"
-            .query[(Int, String, String)]
-            .to[List]
-        } yield glueIndexEntry(entries, tags, subsigs)
-        t.transactor.use(xa => {
-          for {
-            result <- statements.transact(xa)
-            unwrapped <- IO.fromEither(result)
-          } yield unwrapped
-        })
+
+      def glueIndexEntries(
+        ids: List[Int],
+        entries: List[(Int, Option[Int], String, Option[String], Option[String], Option[String])],
+        tags: List[(Int, String)],
+        subsigs: List[(Int, String, String)]): Either[Exception, List[Option[SCMIndexEntry]]] = 
+      {
+        for {
+          subsigsMapEntries <- subsigs.map(s => for {
+            sigSexpr <- SexprParser.read(s._3)
+            sig <- SCMIndexEntry.doParseSubsig(s._2, sigSexpr)
+          } yield (s._1, sig)).sequence
+          subsigsMap = subsigsMapEntries.groupMap(e => e._1)(e => e._2)
+          tagsMap = tags.groupMap(e => e._1)(e => e._2)
+          indexEntries <- ids.map(id => {
+            val relevantEntries = entries.filter(e => {
+              e._1 == id || e._2.contains(id)
+            })
+            glueIndexEntry(relevantEntries, tagsMap, subsigsMap)
+          }).sequence
+        } yield indexEntries
+      }
+
+      def get(ids: List[Int]): IO[List[Option[SCMIndexEntry]]] = {
+        def doGet(ids: NonEmptyList[Int]) = {
+          val statements = for {
+            entries <- (fr"select id, group_id, lib, name, signature, description from index_entry where" ++ Fragments.in(fr"id", ids) ++ fr" or " ++ Fragments.in(fr"group_id", ids))
+              .query[(Int, Option[Int], String, Option[String], Option[String], Option[String])]
+              .to[List]
+            tags <- (fr"select index_entry_id, name from index_entry_tag where" ++ 
+              Fragments.in(fr"index_entry_id", ids) ++ 
+              fr" or index_entry_id in (select id from index_entry where " ++ 
+              Fragments.in(fr"group_id", ids) ++ fr")")
+              .query[(Int, String)]
+              .to[List]
+            subsigs <- (fr"select index_entry_id, name, signature from index_entry_subsignature where" ++
+              Fragments.in(fr"index_entry_id", ids) ++ 
+              fr" or index_entry_id in (select id from index_entry where " ++ 
+              Fragments.in(fr"group_id", ids) ++ fr")")
+              .query[(Int, String, String)]
+              .to[List]
+          } yield glueIndexEntries(ids.toList, entries, tags, subsigs)
+          t.transactor.use(xa => {
+            for {
+              result <- statements.transact(xa)
+              unwrapped <- IO.fromEither(result)
+            } yield unwrapped
+          })
+        }
+        NonEmptyList.fromList(ids) match {
+          case Some(lst) => doGet(lst)
+          case None => IO.pure(List())
+        }
       }
 
       def saveFilterset(f: Filterset): ConnectionIO[Unit] = {

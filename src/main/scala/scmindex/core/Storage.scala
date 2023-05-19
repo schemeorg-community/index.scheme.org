@@ -9,7 +9,7 @@ trait Storage[T, ID] {
 
     def init(): IO[Unit]
     def save(lst: List[SCMIndexEntry]): IO[List[(ID, SCMIndexEntry)]]
-    def get(id: ID): IO[Option[SCMIndexEntry]]
+    def get(ids: List[ID]): IO[List[Option[SCMIndexEntry]]]
 
     def saveFiltersets(f: List[Filterset]): IO[Unit]
     def getFiltersets(): IO[List[Filterset]]

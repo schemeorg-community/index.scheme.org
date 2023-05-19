@@ -30,10 +30,7 @@ object SCMIndexService {
           then filterset.libs
           else libs.intersect(filterset.libs)
         resp <- OptionT.liftF(service.indexer.query(queryString, libsToSolr, params, returns, tags, rows, start))
-        entriesIO = resp.items
-          .map { id => service.storage.get(id) }
-          .sequence
-          .map {lst => lst.flatMap(_.toList)}
+        entriesIO = service.storage.get(resp.items).map {lst => lst.flatMap(_.toList)}
         entries <- OptionT.liftF(entriesIO)
       } yield QueryResult(resp.total, resp.libs, resp.params, resp.returns, resp.tags, entries)
       optt.value
@@ -46,7 +43,7 @@ object SCMIndexService {
   (using Indexer[T, ID], Storage[S, ID]): IO[Option[SCMIndexEntry]] = {
     val e = for {
       id <- OptionT(service.indexer.get(lib, name))
-      entry <- OptionT(service.storage.get(id))
+      entry <- OptionT(service.storage.get(List(id)).map(lst => lst.get(0).get))
     } yield entry
     e.value
   }
