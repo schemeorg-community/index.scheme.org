@@ -2,6 +2,8 @@ package scmindex.persistance
 
 import javax.sql.DataSource
 import scmindex.core.*
+import scmindex.core.SexprWriter.*
+import scmindex.core.SCMIndexEntry.*
 import cats.effect.IO
 import org.flywaydb.core.Flyway
 import doobie.*
@@ -56,14 +58,14 @@ object SqliteStorage {
       def saveSingle(e: SCMIndexEntry): ConnectionIO[Int] = {
         def saveInternalSingle(e: SCMIndexEntrySingle, groupId: Option[Int]): ConnectionIO[Int] = {
           for {
-            id <- sql"insert into index_entry(group_id, lib, name, signature, description) values(${groupId}, ${e.lib}, ${e.name}, ${SCMIndexEntry.serializeSignature(e.signature).write()}, ${e.description})"
+            id <- sql"insert into index_entry(group_id, lib, name, signature, description) values(${groupId}, ${e.lib}, ${e.name}, ${write(serializeSignature(e.signature))}, ${e.description})"
               .update
               .withUniqueGeneratedKeys[Int]("id")
             _ <- e.tags.map(tag => {
                 sql"insert into index_entry_tag(index_entry_id, name) values(${id}, ${tag})".update.run
               }).sequence
             _ <- e.subsignatures.map(subsig => {
-                sql"insert into index_entry_subsignature(index_entry_id, name, signature) values(${id}, ${subsig.paramName}, ${SCMIndexEntry.serializeSubSignature(subsig.signature).write()})"
+                sql"insert into index_entry_subsignature(index_entry_id, name, signature) values(${id}, ${subsig.paramName}, ${write(serializeSubSignature(subsig.signature))})"
                   .update
                   .run
               }).sequence

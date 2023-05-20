@@ -3,59 +3,14 @@ package scmindex.core
 import scala.annotation.tailrec
 
 sealed trait Sexpr {
-  def write(): String = toString()
+  override def toString(): String = SexprWriter.display(this)
 }
-
-case class SexprBool(value: Boolean) extends Sexpr {
-  override def toString: String = {
-    if (value) "#t" else "#f"
-  }
-  override def write() = toString()
-}
-case class SexprSymbol(name: String) extends Sexpr {
-  override def toString: String = name
-  override def write() = {
-    if (name.contains("|")) {
-      "|" +
-      name
-        .replace("\\", "\\\\")
-        .replace("|", "\\|")
-      + "|"
-    } else name
-  }
-}
-case class SexprString(value: String) extends Sexpr {
-  override def toString: String = value
-  override def write() = 
-    "\"" +
-    value
-      .replace("\\", "\\\\") 
-      .replace("\n", "\\\\n")
-      .replace("\r", "\\\\r")
-      .replace("\t", "\\\\t")
-      + "\""
-}
-case class SexprNumber(i: Int) extends Sexpr {
-  override def toString: String = "" + i
-  override def write() = toString()
-}
-case class SexprPair(car: Sexpr, cdr: Sexpr) extends Sexpr {
-  def stringify(toStr: Sexpr => String) = {
-    val (lst, tail) = Sexpr.pairToList(this)
-    val lstStr = lst.map(toStr(_)).mkString(" ")
-    val tailStr = tail match {
-      case SexprNull => ""
-      case _ => " . " + toStr(tail)
-    }
-    "(" + lstStr + tailStr + ")"
-  }
-  override def toString: String = stringify(sexpr => sexpr.toString)
-  override def write() = stringify(sexpr => sexpr.write())
-}
-
-case object SexprNull extends Sexpr {
-  override def toString: String = "()"
-}
+case class SexprBool(value: Boolean) extends Sexpr
+case class SexprSymbol(name: String) extends Sexpr
+case class SexprString(value: String) extends Sexpr
+case class SexprNumber(i: Int) extends Sexpr
+case class SexprPair(car: Sexpr, cdr: Sexpr) extends Sexpr
+case object SexprNull extends Sexpr { }
 
 object Sexpr {
   def parseListToPairs(value: List[Sexpr]): Sexpr = {

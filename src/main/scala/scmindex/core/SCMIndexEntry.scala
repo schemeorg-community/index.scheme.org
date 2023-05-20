@@ -117,11 +117,11 @@ object SCMIndexEntry {
     e.signature match {
       case SigCaseLambda(cases) => cases.flatMap(returnTypesInLambda)
       case l: SigLambda => returnTypesInLambda(l)
+      case SigValue(predicate) => List(predicate)
       case SigSyntaxRules(keywords, patterns) => patterns.flatMap {
         case PatternAndType(_, Some(ret)) => returnType(ret)
         case _ => List()
       }
-      case _ => List()
     }
   }
 
@@ -449,6 +449,7 @@ object SCMIndexEntry {
 
   def serializeParameterType(t: ParamType): Sexpr = {
     t match {
+      case Unknown => SexprSymbol("unknown") // should never happen
       case Ellipsis => SexprSymbol("...")
       case LiteralFalse => SexprBool(false)
       case Predicate(identifier) => SexprSymbol(identifier)
