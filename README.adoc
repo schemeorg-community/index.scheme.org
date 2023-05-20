@@ -60,9 +60,13 @@ Docker image (always corresponding to latest deployed version) may be pulled fro
 
 === Building native
 
-Build server by running `sbt clean assembly`. The output will be a jar file in `target/scala-*/scheme-index.jar`
-Build frontend by running `npm run build` in subfolder `frontend`. The output will be in `frontend/dist/frontend`
-Build documentation using `asciidoctor README.adoc`. The output will be `README.html`
+Build server by running `sbt clean assembly`. The output will be a jar file in `target/scala-*/scheme-index.jar`.
+
+Build frontend by running `npm run build` in subfolder `client/frontend`. The output will be in `client/frontend/dist/frontend`.
+
+Build CLI app by running `npm run build` in subfolder `client/cli`. The output will be in `client/cli/dist`.
+
+Build documentation using `asciidoctor README.adoc`. The output will be `README.html`.
 
 === Running native
 
