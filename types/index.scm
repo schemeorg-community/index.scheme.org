@@ -308,6 +308,7 @@
  ;; srfi 176 -- meta srfi
  ;; srfi 177 -- withdrawn
  ;; ((srfi 178) . "types/srfi.178.scm") TODO
+ ((srfi 180) . "types/srfi.180.scm")
  ((srfi 193) . "types/srfi.193.scm")
  ((srfi 219) . "types/srfi.219.scm")
  ((srfi 236) . "types/srfi.236.scm")
