@@ -274,7 +274,7 @@
  ((srfi 154) . "types/srfi.154.scm")
  ;; srfi 155 -- unpopular (TODO?)
  ((srfi 156) . "types/srfi.156.scm")
- ;; srfi 157 -- unpopular (TODO?)
+ ((srfi 157) . "types/srfi.157.scm")
  ((srfi 158) . "types/srfi.158.scm")
  ((srfi 159) . "types/srfi.159.scm")
  ((srfi 160 base) . "types/srfi.160.base.scm")

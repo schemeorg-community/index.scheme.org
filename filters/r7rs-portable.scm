@@ -156,6 +156,7 @@
  ((srfi 152) . #t)
  ((srfi 154) . #t)
  ((srfi 156) . #t)
+ ((srfi 157) . #t)
  ((srfi 158) . #t)
  ((srfi 159) . #t)
  ((srfi 160 base) . #t)

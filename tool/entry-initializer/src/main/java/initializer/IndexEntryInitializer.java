@@ -159,9 +159,9 @@ public class IndexEntryInitializer {
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         c.insets = new Insets(4, 4, 4, 4);
-        c.ipady = 200;
         var desc = new JTextArea();
         var scroll = new JScrollPane(desc);
+        scroll.setPreferredSize(new Dimension(500, 200));
         addChangeListener(desc, text -> data.set(2, text));
         p.add(scroll, c);
 

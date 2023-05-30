@@ -51,6 +51,7 @@ In the case where nesting of arrays or objects reaches the value returned by the
     (array-end (lambda (obj seed) *))
     (object-start (lambda (obj seed) *))
     (object-end (lambda (obj seed) *)))
+  (tags pure)
   (desc . "Fundamental JSON iterator.
 
 json-fold will read the JSON text from PORT-OR-GENERATOR, which has (current-input-port) as its default value. json-fold will call the procedures passed as argument:
@@ -97,10 +98,13 @@ The default value of json-nesting-depth-limit is +inf.0.
 A proper value should be set on a per-application basis to mitigate the risks of denial-of-service attacks."))
  ((name . "json-null?")
   (signature lambda (obj) boolean?)
+  (tags pure)
   (desc . "Return #t if OBJ is the Scheme symbol 'null, which represents the JSON null in Scheme. In all other cases, return #f."))
  ((name . "json-error-reason")
   (signature lambda ((json-error? err)) string?)
+  (tags pure)
   (desc . "Return a string explaining the reason for the error. This should be human-readable."))
  ((name . "json-error?")
   (signature lambda (obj) boolean?)
+  (tags pure)
   (desc . "Returns #t if OBJ is an error object that is specific to this library.")))
