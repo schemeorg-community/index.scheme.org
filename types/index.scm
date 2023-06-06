@@ -256,7 +256,7 @@
  ((srfi 137) . "types/srfi.137.scm")
  ;; srfi 138 -- non-sexpr syntax
  ((srfi 139) . "types/srfi.139.scm")
- ;; ((srfi 140) . "types/srfi.140.scm") TODO
+ ((srfi 140) . "types/srfi.140.scm")
  ((srfi 141) . "types/srfi.141.scm")
  ;; srfi 142 -- superceded
  ((srfi 143) . "types/srfi.143.scm")
