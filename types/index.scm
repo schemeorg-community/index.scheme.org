@@ -234,7 +234,7 @@
  ((srfi 120) . "types/srfi.120.scm")
  ;; srfi 121 -- superceded
  ;; srfi 122 -- superceded
- ;; ((srfi 123) . "types/srfi.123.scm") TODO
+ ((srfi 123) . "types/srfi.123.scm")
  ((srfi 124) . "types/srfi.124.scm")
  ((srfi 125) . "types/srfi.125.scm")
  ((srfi 126) . "types/srfi.126.scm")
@@ -315,15 +315,15 @@
  ((srfi 239) . "types/srfi.239.scm")
 
  ;; specific implementation handling
- (bigloo . "types/r5rs.scm")
- (bigloo . "types/srfi.0.scm")
- (bigloo . "types/srfi.2.scm")
- (bigloo . "types/srfi.6.scm")
- (bigloo . "types/srfi.8.scm")
- (bigloo . "types/srfi.9.scm")
- (bigloo . "types/srfi.18.scm")
- (bigloo . "types/srfi.28.scm")
- (bigloo . "types/srfi.34.scm")
+ ;(bigloo . "types/r5rs.scm")
+ ;(bigloo . "types/srfi.0.scm")
+ ;(bigloo . "types/srfi.2.scm")
+ ;(bigloo . "types/srfi.6.scm")
+ ;(bigloo . "types/srfi.8.scm")
+ ;(bigloo . "types/srfi.9.scm")
+ ;(bigloo . "types/srfi.18.scm")
+ ;(bigloo . "types/srfi.28.scm")
+ ;(bigloo . "types/srfi.34.scm")
 
 
 

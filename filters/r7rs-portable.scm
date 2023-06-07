@@ -129,6 +129,7 @@
  ((srfi 117) . #t)
  ((srfi 118) . #t)
  ((srfi 120) . #t)
+ ((srfi 123) . #t)
  ((srfi 124) . #t)
  ((srfi 125) . #t)
  ((srfi 126) . #t)
