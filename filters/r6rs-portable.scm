@@ -143,6 +143,7 @@
  ((srfi 165) . #t)
  ((srfi 161) . #t)
  ((srfi 180) . #t)
+ ((srfi 190) . #t)
  ((srfi 193) . #t)
  ((srfi 219) . #t)
  ((srfi 236) . #t)
