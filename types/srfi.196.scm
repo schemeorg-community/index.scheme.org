@@ -1,0 +1,241 @@
+(((name . "range")
+  (signature lambda ((integer? length) (procedure? indexer)) range?)
+  (subsigs
+    (indexer (lambda ((integer? index)) *)))
+  (tags pure)
+  (desc . "Returns a range whose length (number of elements) is length. The indexer procedure returns the nth element (where 0 ≤ n < length) of the range, given n. This procedure must run in O(1) time. The range returned is compact, although indexer may close over arbitrarily large data structures. The average accessing time of the resulting range is the average time needed to run indexer."))
+ ((name . "numeric-range")
+  (signature case-lambda 
+             (((numbger? start) (numbger? end)) range?)
+             (((numbger? start) (numbger? end) (numbger? step)) range?))
+  (tags pure)
+  (desc . "Returns a numeric range, a special case of a range specified by an inclusive lower bound start, an exclusive upper bound end, and a step value (default 1), all of which can be exact or inexact real numbers. This constructor produces the sequence
+    start, (+ start step), (+ start (* 2 step)), …, (+ start (* n step)), 
+
+where n is the greatest integer such that (+ start (* n step)) < end if step is positive, or such that (+ start (* n step)) > end if step is negative. It is is an error if an n satisfying this condition cannot be determined, or if step is numerically zero. This procedure must run in O(1) time. The average accessing time of the resulting range must be O(1).
+Note that an effect of this definition is that the elements of a range over inexact numbers are enumerated by multiplying the index by the step value rather than by adding the step value to itself repeatedly. This reduces the likelihood of roundoff errors."))
+ ((name . "iota-range")
+  (signature case-lambda 
+             (((integer? length)) range?)
+             (((integer? length) (number? start)) range?)
+             (((integer? length) (number? start) (number? step)) range?))
+  (tags pure)
+  (desc . "Returns an iota-numeric range, a special case of a range specified by a length (a non-negative exact integer) as well as an inclusive lower bound start (default 0) and a step value (default 1), both of which can be exact or inexact real numbers. This constructor produces the sequence
+    start, (+ start step), (+ start (* 2 step)), …, (+ start (* (- length 1) step)), 
+
+This procedure must run in O(1) time. The average accessing time of the resulting range must be O(1).
+Note that an effect of this definition is that the elements of a range over inexact numbers are enumerated by multiplying the index by the step value rather than by adding the step value to itself repeatedly. This reduces the likelihood of roundoff errors."))
+ ((name . "vector-range")
+  (signature lambda ((vector? vector)) range?)
+  (tags pure)
+  (desc . "Returns a range whose elements are those of vector. The procedure must run in O(1) time. The average accessing time of the resulting range must be O(1). It is an error to mutate vector."))
+ ((name . "string-range")
+  (signature lambda ((string? string)) range?)
+  (tags pure)
+  (desc . "Returns a range whose elements are those of string. It is an error to mutate string. This procedure must run in O(n) time, where n is the length of string. The average accessing time of the resulting range must be O(1).
+In a Scheme that guarantees O(1) random access to strings, range-ref on a range created by string-range can simply call string-ref, and the resulting range is compact. But if only O(n) access is available, this procedure may have to copy the string's characters into a vector, resulting in an expanded range."))
+ ((name . "range-append")
+  (signature lambda ((range? range) ...) range?)
+  (tags pure)
+  (desc . "Returns a range whose elements are the elements of the ranges in order. This procedure must run in O(n) + O(k) time, where n is the total number of elements in all the ranges and k is the number of ranges. The result is usually expanded but may be compact. The average accessing time of the resulting range is asymptotically bounded by maximum of the average accessing times of the ranges."))
+ ((name . "range-reverse")
+  (signature lambda ((range? range)) range?)
+  (tags pure)
+  (desc . "Returns a range whose elements are the elements of the range but in reverse order. This procedure must run in O(s) time, where s is the total accessing time of range. The resulting range may be expanded, and should have O(1) average accessing time."))
+ ((name . "range?")
+  (signature lambda (obj) boolean?)
+  (tags pure)
+  (desc . "Returns #t if obj is a range and #f otherwise. This procedure must run in O(1) time."))
+ ((name . "range=?")
+  (signature lambda ((procedure? equal) (range? range1) (range? range2) ...) boolean?)
+  (subsigs
+    (equal (lambda (el1 el2) boolean?)))
+  (tags pure)
+  (desc . "Returns #t if all the ranges are of the same length and if their corresponding values are the same in the sense of equal, and #f otherwise. The runtime of this procedure is O(s) + O(k), where s is the sum of the total accessing times of the ranges and k is the number of ranges."))
+ ((name . "range-length")
+  (signature lambda ((range? range)) integer?)
+  (tags pure)
+  (desc . "Returns the length (number of elements) of range. This procedure must run in O(1) time."))
+ ((name . "range-ref")
+  (signature lambda ((range? range) (integer? n)) *)
+  (tags pure)
+  (desc . "Returns the nth element of range. It is an error if n is less than 0 or greater than or equal to the length of range. The running time of this procedure must be asymptotically equal to the average accessing time of range."))
+ ((name . "range-first")
+  (signature lambda ((range? range)) *)
+  (tags pure)
+  (desc . "Equivalent (in running time as well) to (range-ref range 0)."))
+ ((name . "range-last")
+  (signature lambda ((range? range)) *)
+  (tags pure)
+  (desc . "Equivalent (in running time as well) to (range-ref range (- (range-length range) 1))."))
+ ((name . "range-split-at")
+  (signature lambda ((range? range) (integer? index)) (values range? range?))
+  (tags pure)
+  (desc . "Returns two values: (range-take range index) and (range-drop range index). It is an error if index is not an exact integer between 0 and the length of range, both inclusive. This procedure must run in O(1) time."))
+ ((name . "subrange")
+  (signature lambda ((range? range) (integer? start) (integer? end)) range?)
+  (tags pure)
+  (desc . "Returns a range which contains the elements of range from index start, inclusive, through index end, exclusive. This procedure must run in O(1) time. The average accessing time of the resulting range is asymptotically bounded by the average accessing time of range."))
+ ((name . "range-segment")
+  (signature lambda ((range? range) (integer? length)) list?)
+  (subsigs
+    (return (list (range? range))))
+  (desc . "Returns a list of ranges representing the consecutive subranges of length length. The last range is allowed to be shorter than length. The procedure must run in O(k) time, where k is the number of ranges returned. The average accessing time of the ranges is asymptotically bounded by the average accessing time of range."))
+ ((group
+    ((name . "range-take")
+     (signature lambda ((range? range) (integer? count)) range?)
+     (tags pure))
+    ((name . "range-take-right")
+     (signature lambda ((range? range) (integer? count)) range?)
+     (tags pure)))
+  (desc . "Returns a range which contains the first/last count elements of range. The average accessing time of the resulting ranges is asymptotically bounded by the average accessing time of range."))
+ ((group
+    ((name . "range-drop")
+     (signature lambda ((range? range) (integer? count)) range?)
+     (tags pure))
+    ((name . "range-drop-right")
+     (signature lambda ((range? range) (integer? count)) range?)
+     (tags pure)))
+  (desc . "Returns a range which contains all except the first/last count elements of range. These procedures must run in O(1) time. The average accessing time of the resulting ranges is asymptotically bounded by the average accessing time respectively of range."))
+ ((name . "range-count")
+  (signature lambda ((procedure? pred) (range? range1) (range? range2) ...) integer?)
+  (subsigs
+    (pred (lambda (obj) boolean?)))
+  (tags pure)
+  (desc . "Applies pred element-wise to the elements of ranges and returns the number of applications which returned true values. If more than one range is given and not all ranges have the same length, range-count terminates when the shortest range is exhausted. The runtime of this procedure is O(s) where s is the sum of the total accessing times of the ranges."))
+ ((name . "range-any")
+  (signature lambda ((procedure? pred) (range? range1) (range? range2) ...) *)
+  (subsigs
+    (pred (lambda (obj) boolean?)))
+  (desc . "Invokes pred element-wise to the elements of the ranges until one call returns a true value, and then returns that value. Otherwise, #f is returned. If more than one range is given and not all ranges have the same length, range-any terminates when the shortest range is exhausted. The runtime of this procedure is O(s) where s is the sum of the total accessing times of the ranges."))
+ ((name . "range-every")
+  (signature lambda ((procedure? pred) (range? range1) (range? range2) ...) *)
+  (subsigs
+    (pred (lambda (obj) boolean?)))
+  (desc . "Applies pred element-wise to the elements of the ranges and returns true if pred returns true on every application. Specifically it returns the last value returned by pred, or #t if pred was never invoked. Otherwise, #f is returned. If more than one range is given and not all ranges have the same length, range-every terminates when the shortest range is exhausted. The runtime of this procedure is O(s) + O(k), where s is the sum of the total accessing times of the ranges and k is the number of ranges."))
+ ((group
+     ((name . "range-map")
+      (signature lambda ((procedure? proc) (range? range1) (range? range2) ...) range?)
+      (subsigs
+        (proc (lambda (el1 el2 ...) *)))
+      (tags pure))
+     ((name . "range-map->list")
+      (signature lambda ((procedure? proc) (range? range1) (range? range2) ...) list?)
+      (subsigs
+        (proc (lambda (el1 el2 ...) *)))
+      (tags pure))
+     ((name . "range-map->vector")
+      (signature lambda ((procedure? proc) (range? range1) (range? range2) ...) vector?)
+      (subsigs
+        (proc (lambda (el1 el2 ...) *)))
+      (tags pure)))
+  (desc . "Applies proc element-wise to the elements of the ranges and returns a range/list/vector of the results, in order. If more than one range is given and not all ranges have the same length, these procedures terminate when the shortest range is exhausted. The dynamic order in which proc is actually applied to the elements is unspecified. The runtime of these procedures is O(s) where s is the sum of the total accessing times of the ranges. The range-map procedure eagerly computes its result and returns an expanded range. Its average accessing time is O(1)."))
+ ((name . "range-for-each")
+  (signature lambda ((procedure? proc) (range? range1) (range? range2) ...) undefined)
+  (subsigs
+    (proc (lambda (el1 el2 ...) undefined)))
+  (desc . "Applies proc element-wise to the elements of the ranges in order. Returns an unspecified result. If more than one range is given and not all ranges have the same length, range-for-each terminates when the shortest range is exhausted. The runtime of this procedure is O(s) where s is the sum of the total accessing times of the ranges."))
+ ((group
+     ((name . "range-filter-map")
+      (signature lambda ((procedure? proc) (range? range1) (range? range2) ...) range?)
+      (subsigs
+        (proc (lambda (el1 el2 ...) *)))
+      (tags pure))
+     ((name . "range-filter-map->list")
+      (signature lambda ((procedure? proc) (range? range1) (range? range2) ...) list?)
+      (subsigs
+        (proc (lambda (el1 el2 ...) *)))
+      (tags pure)))
+  (desc . "Applies proc element-wise to the elements of the ranges and returns a range/list of the true values returned by proc. If more than one range is given and not all ranges have the same length, these procedures terminate when the shortest range is exhausted. The dynamic order in which proc is actually applied to the elements is unspecified. The range-filter-map procedure eagerly computes its result and returns an expanded range. The runtime of these procedures is O(n) where n is the sum of the total accessing times of the ranges."))
+ ((group
+    ((name . "range-filter")
+     (signature lambda ((procedure? proc) (range? range)) range?)
+     (subsigs
+       (proc (lambda (el) boolean?)))
+     (tags pure))
+    ((name . "range-filter->list")
+     (signature lambda ((procedure? proc) (range? range)) list?)
+     (subsigs
+       (proc (lambda (el) boolean?)))
+     (tags pure))
+    ((name . "range-remove")
+     (signature lambda ((procedure? proc) (range? range)) range?)
+     (subsigs
+       (proc (lambda (el) boolean?)))
+     (tags pure))
+    ((name . "range-remove->list")
+     (signature lambda ((procedure? proc) (range? range)) list?)
+     (subsigs
+       (proc (lambda (el) boolean?)))
+     (tags pure)))
+  (desc . "Returns a range/list containing the elements of range that satisfy / do not satisfy pred. The runtime of these procedures is O(s) where s is the sum of the total accessing times of the ranges.
+The range-filter and range-remove procedures eagerly compute their results and return expanded ranges. Their average accessing time is O(1)."))
+ ((group
+    ((name . "range-fold")
+     (signature lambda ((procedure? kons) nil (range? range1) (range? range2) ...) *)
+     (subsigs
+       (kons (lambda (state el1 el2 ...) *)))
+     (tags pure))
+    ((name . "range-fold-right")
+     (signature lambda ((procedure? kons) nil (range? range1) (range? range2) ...) *)
+     (subsigs
+       (kons (lambda (state el1 el2 ...) *)))
+     (tags pure)))
+  (desc . "Folds kons over the elements of ranges in order / reverse order. kons is applied as (kons state (range-ref range1 i) (range-ref range2 i) …) where state is the result of the previous invocation and i is the current index. For the first invocation, nil is used as the first argument. Returns the result of the last invocation, or nil if there was no invocation. If more than one range is given and not all ranges have the same length, these procedures terminate when the shortest range is exhausted. The runtime of these procedures must be O(s) where s is the sum of the total accessing times of the ranges."))
+ ((group
+    ((name . "range-index")
+     (signature lambda ((procedure? pred) (range? range1) (range? range2) ...) (or #f integer?))
+     (subsigs
+       (pred (lambda (el1 el2 ...) boolean?)))
+     (tags pure))
+    ((name . "range-index-right")
+     (signature lambda ((procedure? pred) (range? range1) (range? range2) ...) (or #f integer?))
+     (subsigs
+       (pred (lambda (el1 el2 ...) boolean?)))
+     (tags pure)))
+  (desc . "Applies pred element-wise to the elements of ranges and returns the index of the first/last element at which pred returns true. Otherwise, returns #f. If more than one range is given and not all ranges have the same length, range-index terminates when the shortest range is exhausted. It is an error if the ranges passed to range-index-right do not all have the same lengths. The runtime of these procedures must be O(s) where s is the sum of the total accessing times of the ranges."))
+ ((group
+    ((name . "range-take-while")
+     (signature lambda ((procedure? pred) (range? range)) range?)
+     (subsigs
+       (pred (lambda (el) boolean?)))
+     (tags pure))
+    ((name . "range-take-while-right")
+     (signature lambda ((procedure? pred) (range? range)) range?)
+     (subsigs
+       (pred (lambda (el) boolean?)))
+     (tags pure)))
+  (desc . "Returns a range containing the leading/trailing elements of range that satisfy pred up to the first/last one that does not. The runtime of these procedures is asymptotically bounded by the total accessing time of the range. The average accessing time of the resulting range is O(1)."))
+ ((group
+    ((name . "range-drop-while")
+     (signature lambda ((procedure? pred) (range? range)) range?)
+     (subsigs
+       (pred (lambda (el) boolean?)))
+     (tags pure))
+    ((name . "range-drop-while-right")
+     (signature lambda ((procedure? pred) (range? range)) range?)
+     (subsigs
+       (pred (lambda (el) boolean?)))
+     (tags pure)))
+  (desc . "Returns a range that omits leading/trailing elements of range that satisfy pred until the first/last one that does not. The runtime of these procedures is asymptotically bounded by the total accessing time of the range. The average accessing time of the resulting range is O(1)."))
+ ((group
+    ((name . "range->list")
+     (signature lambda ((range? range)) list?)
+     (tags pure))
+    ((name . "range->vector")
+     (signature lambda ((range? range)) vector?)
+     (tags pure))
+    ((name . "range->string")
+     (signature lambda ((range? range)) string?)
+     (tags pure)))
+  (desc . "Returns a list/vector/string containing the elements of range in order. It is an error to modify the result of range->vector or of range->string. In the case of range->string, it is an error if any element of range is not a character. The running times of these procedures is O(s) where s is the total accessing time for range."))
+ ((name . "vector->range")
+  (signature lambda ((vector? vector)) range?)
+  (tags pure)
+  (desc . "Returns an expanded range whose elements are those of vector. Note that, unlike vector-range, it is not an error to mutate vector; future mutations of vector are guaranteed not to affect the range returned by vector->range. This procedure must run in O(n) where n is the length of vector. Otherwise, this procedure is equivalent to vector-range."))
+ ((name . "range->generator")
+  (signature lambda ((range? range)) procedure?)
+  (subsigs
+    (return (lambda () *)))
+  (tags pure)
+  (desc . "Returns a SRFI 158 generator that generates the elements of range in order. This procedure must run in O(1) time, and the running time of each call of the generator is asymptotically bounded by the average accessing time of range.")))
