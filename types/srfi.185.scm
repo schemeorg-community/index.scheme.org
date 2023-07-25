@@ -1,0 +1,31 @@
+(((name . "string-append-linear!")
+  (signature lambda ((string? dst) ((or string? char?) string-or-char) ...) string?)
+  (desc . "This procedure returns a string which extends dst by appending each additional string-or-char (in order) to the end of dst. A character argument and a string argument of length 1 are treated exactly the same way. The result can either be dst itself or a newly allocated string.
+There is no requirement that this procedure execute in constant time, even amortised (i.e. average) constant time."))
+ ((name . "string-replace-linear!")
+  (signature case-lambda 
+             (((string? dst) (integer? dst-start) (integer? dst-end) (string? src)) string?)
+             (((string? dst) (integer? dst-start) (integer? dst-end) (string? src) (integer? src-start)) string?)
+             (((string? dst) (integer? dst-start) (integer? dst-end) (string? src) (integer? src-start) (integer? src-end)) string?))
+  (desc . "Returns a string which has the same characters as dst, except that the characters between dst-start and dst-end have been replaced with the characters of the string src between src-start and src-end. The result can either be dst itself or a newly allocated string.
+The number of characters from src may be different than the number replaced in dst, so the result may be larger or smaller than the previous length of dst. The special case where dst-start is equal to dst-end corresponds to insertion; the case where src-start is equal to src-end corresponds to deletion. The order in which characters are copied is unspecified, except that if the source and destination overlap, copying takes place as if the source is first copied into a temporary string and then into the destination. (This can be achieved without allocating storage by making sure to copy in the correct direction in such circumstances.)
+When src is a string then (string-append-linear! dst src) is equivalent to (string-replace-linear! dst (string-length dst) (string-length dst) src)."))
+ ((name . "string-append!")
+  (signature syntax-rules () 
+             ((_ place string-or-char ...)))
+  (subsigs
+    (string-or-char (value string?))
+    (string-or-char (value char?)))
+  (desc . "This macro sets place to the result of invoking (string-append-linear! place string-or-char ...). It returns an unspecified value."))
+ ((name . "string-replace!")
+  (signature syntax-rules () 
+             ((_ dst-place dst-start dst-end src))
+             ((_ dst-place dst-start dst-end src src-start))
+             ((_ dst-place dst-start dst-end src src-start src-end)))
+  (subsigs
+    (dst-start (value integer?))
+    (dst-end (value integer?))
+    (src (value string?))
+    (src-start (value integer?))
+    (src-end (value integer?)))
+  (desc . "This macro sets dst-place to the result of applying string-replace-linear! to its arguments. The result is an unspecified value.")))

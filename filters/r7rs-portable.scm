@@ -178,6 +178,7 @@
  ((srfi 162) . #t)
  ((srfi 165) . #t)
  ((srfi 180) . #t)
+ ((srfi 185) . #t)
  ((srfi 190) . #t)
  ((srfi 193) . #t)
  ((srfi 196) . #t)

@@ -309,6 +309,7 @@
  ;; srfi 177 -- withdrawn
  ;; ((srfi 178) . "types/srfi.178.scm") TODO
  ((srfi 180) . "types/srfi.180.scm")
+ ((srfi 185) . "types/srfi.185.scm")
  ((srfi 190) . "types/srfi.190.scm")
  ((srfi 193) . "types/srfi.193.scm")
  ((srfi 196) . "types/srfi.196.scm")
