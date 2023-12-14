@@ -175,9 +175,13 @@ object SexprParser {
     }
   }
 
-  def readFromFile(file: String): IO[Either[Exception, Sexpr]] = IO {
-    val string = Files.readString(Path.of(file), StandardCharsets.UTF_8);
-    read(string)
+  def readFromFile(file: String): IO[Sexpr] =  {
+    for {
+      sourceString <- IO {
+        Files.readString(Path.of(file), StandardCharsets.UTF_8);
+      }
+      sexpr <- IO.fromEither(read(sourceString))
+    } yield sexpr
   }
 
   def read(source: String): Either[Exception, Sexpr] = {

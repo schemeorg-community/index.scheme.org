@@ -12,7 +12,6 @@ import io.circe.syntax.*
 import cats.effect.*
 import io.circe.*
 import org.http4s.circe.CirceEntityEncoder.*
-import cats.data.EitherT
 import org.slf4j.LoggerFactory
 import io.circe.*
 import io.circe.generic.semiauto.*
@@ -52,15 +51,23 @@ object WebController {
       :? RowsQueryParamMatcher(rows)
       :? FacetQueryParamMatcher(facet) =>
     {
-      SCMIndexService.query(model, filterset, query.getOrElse(""), libs.getOrElse(List()), params.getOrElse(List()), returns.getOrElse(List()), tags.getOrElse(List()), start.getOrElse(0), rows.getOrElse(40)).flatMap {
-        case Some(resp) => {
+      SCMIndexService.query(
+        model, 
+        filterset,
+        query.getOrElse(""),
+        libs.getOrElse(List()),
+        params.getOrElse(List()),
+        returns.getOrElse(List()),
+        tags.getOrElse(List()),
+        start.getOrElse(0),
+        rows.getOrElse(40))
+      .flatMap { resp =>
           val respToReturn = 
             if (facet.getOrElse(true)) resp
             else QueryResult(resp.total, List(), List(), List(), List(), resp.items)
           Ok(respToReturn.asJson)
-        }
-        case _ => NotFound()
       }
+      .recoverWith { _ => NotFound() }
     }
     case GET -> Root / "rest" / "filterset" / filterset / lib / name => SCMIndexService.get(model, lib, name).flatMap {
       case Some(e) => Ok(e.asJson)
@@ -69,10 +76,9 @@ object WebController {
   }.orNotFound
 
   def getFacetOptions[T, S, ID](model: SCMIndexService[T, S], filterset: String, facetName: String)(using Indexer[T, ID], Storage[S, ID]) = {
-    SCMIndexService.getFacetOptions(model, filterset, facetName).flatMap {
-      case Some(options) => Ok(options.asJson)
-      case _ => NotFound()
-    }
+    SCMIndexService.getFacetOptions(model, filterset, facetName)
+      .flatMap { options => Ok(options.asJson) }
+      .recoverWith(_ => NotFound())
   }
 
   def runServer[T, S, ID](service: SCMIndexService[T, S], port: Int)(using Indexer[T, ID], Storage[S, ID]): IO[ExitCode] = {

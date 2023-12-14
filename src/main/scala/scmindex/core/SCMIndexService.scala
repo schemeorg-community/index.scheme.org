@@ -2,8 +2,6 @@ package scmindex.core
 
 import cats.effect.IO
 import cats.implicits._
-import cats.data.OptionT
-import cats.data.EitherT
 
 case class SCMIndexService[T, S](indexer: T, storage: S)
 
@@ -21,19 +19,17 @@ object SCMIndexService {
     tags: List[String],
     start: Int,
     rows: Int)
-  (using Indexer[T, ID], Storage[S, ID]): IO[Option[QueryResult]] = {
-      val optt = for {
-        filtersets <- OptionT.liftF(service.storage.getFiltersets())
-        filterset <- OptionT.fromOption[IO](filtersets.find(f => f.code == filtersetCode))
+  (using Indexer[T, ID], Storage[S, ID]): IO[QueryResult] = {
+      for {
+        filtersets <- service.storage.getFiltersets()
+        filterset <- filtersets.find(f => f.code == filtersetCode).liftTo[IO](Exception("Filterset not found"))
         libsToSolr = 
           if libs.isEmpty 
           then filterset.libs
           else libs.intersect(filterset.libs)
-        resp <- OptionT.liftF(service.indexer.query(queryString, libsToSolr, params, returns, tags, rows, start))
-        entriesIO = service.storage.get(resp.items).map {lst => lst.flatMap(_.toList)}
-        entries <- OptionT.liftF(entriesIO)
+        resp <- service.indexer.query(queryString, libsToSolr, params, returns, tags, rows, start)
+        entries <- service.storage.get(resp.items).map {lst => lst.flatMap(_.toList)}
       } yield QueryResult(resp.total, resp.libs, resp.params, resp.returns, resp.tags, entries)
-      optt.value
   }
 
   def get[T, S, ID](
@@ -41,40 +37,37 @@ object SCMIndexService {
     lib: String,
     name: String)
   (using Indexer[T, ID], Storage[S, ID]): IO[Option[SCMIndexEntry]] = {
-    val e = for {
-      id <- OptionT(service.indexer.get(lib, name))
-      entry <- OptionT(service.storage.get(List(id)).map(lst => lst.get(0).get))
+    for {
+      id <- service.indexer.get(lib, name).flatMap{_.liftTo[IO](Exception("Signature not found"))}
+      entry <- service.storage.get(List(id)).map(lst => lst.get(0).get)
     } yield entry
-    e.value
   }
 
   def getFiltersets[T, S, ID](service: SCMIndexService[T, S])(using Storage[S, ID]): IO[List[Filterset]] = {
     service.storage.getFiltersets()
   }
 
-  def getFacetOptions[T, S, ID](service: SCMIndexService[T, S], filterset: String, facetName: String)(using Indexer[T, ID], Storage[S, ID]): IO[Option[List[String]]]
+  def getFacetOptions[T, S, ID](service: SCMIndexService[T, S], filterset: String, facetName: String)(using Indexer[T, ID], Storage[S, ID]): IO[List[String]]
   = {
-    val optT = for {
-      filtersets <- OptionT.liftF(service.storage.getFiltersets())
-      maybeLibs = filtersets
+    for {
+      filtersets <- service.storage.getFiltersets()
+      libs <- filtersets
         .find(x => x.code == filterset)
         .map(x => x.libs)
-      libs <- OptionT.fromOption(maybeLibs)
-      facets <- OptionT.liftF(service.indexer.listFacetOptions(libs, facetName))
+        .liftTo[IO](Exception("Filterset not found"))
+      facets <- service.indexer.listFacetOptions(libs, facetName)
     } yield facets
-    optT.value
   }
 
-  def runImport[T, S, ID, I](service: SCMIndexService[T, S], importer: I)(using Indexer[T, ID], Storage[S, ID], Importer[I]): IO[Either[Exception, Unit]] = {
-    val eitherT = for {
-      filtersets <- EitherT(Filterset.loadFiltersets(importer))
-      indexEntries <- EitherT(SCMIndexEntry.loadSignatures(importer))
-      _ <- EitherT.liftF(service.storage.deleteAll())
-      _ <- EitherT.liftF(service.storage.saveFiltersets(filtersets))
-      saved <- EitherT.liftF(service.storage.save(indexEntries))
-      _ <- EitherT.liftF(service.indexer.index(saved))
+  def runImport[T, S, ID, I](service: SCMIndexService[T, S], importer: I)(using Indexer[T, ID], Storage[S, ID], Importer[I]): IO[Unit] = {
+    for {
+      filtersets <- Filterset.loadFiltersets(importer)
+      indexEntries <- SCMIndexEntry.loadSignatures(importer)
+      _ <- service.storage.deleteAll()
+      _ <- service.storage.saveFiltersets(filtersets)
+      saved <- service.storage.save(indexEntries)
+      _ <- service.indexer.index(saved)
     } yield ()
-    eitherT.value
   }
 
 }

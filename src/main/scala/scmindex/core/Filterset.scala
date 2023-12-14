@@ -1,6 +1,5 @@
 package scmindex.core
 
-import cats.data.EitherT
 import cats.effect.IO
 import cats.implicits.*
 
@@ -8,42 +7,34 @@ case class Filterset(code: String, name: String, libs: List[String])
 
 object Filterset {
 
-  def loadFiltersets[T: Importer](importer: T): IO[Either[Exception, List[Filterset]]] = {
-    val eitherT = for {
-      index <- EitherT(importer.loadFiltersetIndex())
-      indexAsList <- EitherT.fromEither(Sexpr.sexprToProperList(index))
-      filtersets <- EitherT({
+  def loadFiltersets[T: Importer](importer: T): IO[List[Filterset]] = {
+    for {
+      index <- importer.loadFiltersetIndex()
+      indexAsList <- Sexpr.sexprToProperList(index).liftTo[IO]
+      filtersets <- {
         indexAsList
           .map({parseFilterset(_, importer.loadFilterset)})
           .sequence
-          .map { f =>
-            f.partitionMap(identity) match {
-              case (Nil, rights) => Right(rights)
-              case (first :: _, _) => Left(Exception("Failed to parse filtersets", first))
-            }
-          }
-      })
+      }
     } yield filtersets
-    eitherT.value
   }
 
-  def parseFilterset(sexpr: Sexpr, reader: (String) => IO[Either[Exception, Sexpr]]): IO[Either[Exception, Filterset]] = {
-    def getStringField(map: Map[String, Sexpr], field: String): Either[Exception, String] = {
+  def parseFilterset(sexpr: Sexpr, reader: (String) => IO[Sexpr]): IO[Filterset] = {
+    def getStringField(map: Map[String, Sexpr], field: String): IO[String] = {
       map.get(field) match {
-        case Some(SexprString(value)) => Right(value)
-        case Some(v) => Left(Exception(s"Expected string value for field ${field}, got: ${v.toString}"))
-        case None => Left(Exception(s"Missing ${field} field"))
+        case Some(SexprString(value)) => IO.pure(value)
+        case Some(v) => IO.raiseError(Exception(s"Expected string value for field ${field}, got: ${v.toString}"))
+        case None => IO.raiseError(Exception(s"Missing ${field} field"))
       }
     }
-    val res = for {
-      map <- EitherT.fromEither[IO](Sexpr.alistToMap(sexpr))
-      code <- EitherT.fromEither(getStringField(map, "code"))
-      name <- EitherT.fromEither(getStringField(map, "name"))
-      file <- EitherT.fromEither(getStringField(map, "file"))
-      libsSexpr <- EitherT(reader(file))
-      libs <- EitherT.fromEither(parseFiltersetLibs(libsSexpr))
+    for {
+      map <- IO.pure(Sexpr.alistToMap(sexpr)).rethrow
+      code <- getStringField(map, "code")
+      name <- getStringField(map, "name")
+      file <- getStringField(map, "file")
+      libsSexpr <- reader(file)
+      libs <- IO.pure(parseFiltersetLibs(libsSexpr)).rethrow
     } yield Filterset(code, name, libs)
-    res.value
   }
 
   def parseFiltersetLibs(sexpr: Sexpr): Either[Exception, List[String]] = {

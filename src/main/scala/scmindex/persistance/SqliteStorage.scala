@@ -12,7 +12,6 @@ import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import cats.effect.kernel.Resource
 import cats.implicits._
-import cats.data.OptionT
 import cats.data.NonEmptyList
 
 

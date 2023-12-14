@@ -2,7 +2,6 @@ package scmindex;
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
-import cats.data.EitherT
 import cats.effect.{ExitCode, IO, IOApp}
 import scmindex.persistance.*
 import scmindex.persistance.SolrIndexer.given
@@ -19,24 +18,19 @@ object Main extends IOApp {
       case x :: _ => x
     }
 
-    val modelEitherT = for {
-      configSexpr <- EitherT(SexprParser.readFromFile(configFile))
-      cfg <- EitherT.fromEither(Config.readFromSexpr(configSexpr))
+    for {
+      configSexpr <- SexprParser.readFromFile(configFile)
+      cfg <- IO.fromEither(Config.readFromSexpr(configSexpr))
       solrIndexer =
         if (cfg.solrEmbed) 
           SolrIndexer.createEmbeddedSolrIndexer(cfg.solrHome, cfg.solrCore)
         else 
           SolrIndexer.createRemoteSolrIndexer(cfg.solrUrl)
-      storage <- EitherT.liftF(SqliteStorage.create(cfg.dbPath))
-      _ <- EitherT.liftF(storage.init())
+      storage <- SqliteStorage.create(cfg.dbPath)
+      _ <- storage.init()
       service = SCMIndexService(solrIndexer, storage)
-      _ <- EitherT(SCMIndexService.runImport(service, cfg))
-      exitCode <- EitherT.liftF(WebController.runServer(service, cfg.port))
+      _ <- SCMIndexService.runImport(service, cfg)
+      exitCode <- WebController.runServer(service, cfg.port)
     } yield exitCode
-
-    modelEitherT.value.flatMap {
-      case Right(exitCode) => IO(exitCode)
-      case Left(err) => IO(err.printStackTrace()).as(ExitCode(1))
-    }
   }
 }

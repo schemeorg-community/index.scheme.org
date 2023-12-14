@@ -1,6 +1,5 @@
 package scmindex.core
 
-import cats.data.EitherT
 import cats.effect.IO
 import cats.implicits.*
 
@@ -485,7 +484,7 @@ object SCMIndexEntry {
     makeSexprList(strings, SexprSymbol.apply)
   }
 
-  def loadSignatures[T : Importer](loader: T): IO[Either[Exception, List[SCMIndexEntry]]] = {
+  def loadSignatures[T : Importer](loader: T): IO[List[SCMIndexEntry]] = {
     def parseIndexEntry(sexpr: Sexpr): Either[Exception, ContentFile] = {
       sexpr match {
         case SexprString(v) => Right(ContentFile(v, List()))
@@ -524,15 +523,15 @@ object SCMIndexEntry {
       } yield entries
     }
 
-    val result = for {
-      indexSexpr <- EitherT(loader.loadIndex())
-      libs <- EitherT.fromEither(readLibraryList(indexSexpr))
+    for {
+      indexSexpr <- loader.loadIndex()
+      libs <- IO.fromEither(readLibraryList(indexSexpr))
       entries <- {
         val stuff = libs.map { e =>
           val (libName, meta) = e
           for {
-            libSexpr <- EitherT(loader.loadLibrary(meta.file))
-            entries <- EitherT.fromEither(parseSCMIndexEntries(libName, libSexpr).map {
+            libSexpr <- loader.loadLibrary(meta.file)
+            entries <- IO.fromEither(parseSCMIndexEntries(libName, libSexpr)).map {
               entries => entries
                 .map {
                   case e: SCMIndexEntrySingle => e
@@ -542,12 +541,11 @@ object SCMIndexEntry {
                   case e: SCMIndexEntrySingle => !meta.exclude.contains(e.name)
                   case _ => true
                 }
-            })
+            }
           } yield entries
         }
         stuff.sequence.map { els => els.flatMap (identity) }
       }
     } yield entries
-    result.value
   }
 }

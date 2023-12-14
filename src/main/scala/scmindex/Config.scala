@@ -58,18 +58,24 @@ object Config {
   given Importer[Config] with {
     extension (config: Config) {
       def loadIndex() = config.loadLibrary(config.specIndex)
-      def loadLibrary(file: String) = IO {
-        val path = Path.of(file)
-        val content = Files.readString(path, StandardCharsets.UTF_8)
-        log.info(s"Loading library ${file}")
-        SexprParser.read(content)
-      }
+      def loadLibrary(file: String) = 
+        for {
+          content <- IO {
+            val path = Path.of(file)
+            log.info(s"Loading library ${file}")
+            Files.readString(path, StandardCharsets.UTF_8)
+          }
+          sexpr <- IO.fromEither(SexprParser.read(content))
+        } yield sexpr
       def loadFiltersetIndex() = config.loadLibrary(config.filtersetIndex)
-      def loadFilterset(file: String) = IO {
-        val path = Path.of(file)
-        val content = Files.readString(path, StandardCharsets.UTF_8)
-        SexprParser.read(content)
-      }
+      def loadFilterset(file: String) = 
+        for {
+          content <- IO {
+            val path = Path.of(file)
+            Files.readString(path, StandardCharsets.UTF_8)
+          }
+          sexpr <- IO.fromEither(SexprParser.read(content))
+        } yield sexpr
     }
   }
 
