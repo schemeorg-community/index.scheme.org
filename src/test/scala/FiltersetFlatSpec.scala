@@ -27,22 +27,21 @@ class FiltersetFlatSpec extends AnyFunSpec {
 
       case class TestImporter() extends Importer[Any] {
         extension (a: Any) {
-          override def loadIndex(): IO[Either[Exception, Sexpr]] = IO.pure(Left(Exception("")))
-          override def loadLibrary(file: String): IO[Either[Exception, Sexpr]] = IO.pure(Left(Exception("")))
-          override def loadFiltersetIndex(): IO[Either[Exception, Sexpr]] = IO.pure(Right(index))
-          override def loadFilterset(src: String): IO[Either[Exception, Sexpr]] = IO.pure(loader(src))
+          override def loadIndex(): IO[Sexpr] = IO.raiseError(Exception(""))
+          override def loadLibrary(file: String): IO[Sexpr] = IO.raiseError(Exception(""))
+          override def loadFiltersetIndex(): IO[Sexpr] = IO.pure(index)
+          override def loadFilterset(src: String): IO[Sexpr] = IO.fromEither(loader(src))
         } 
       }
 
       Filterset.loadFiltersets(())(using TestImporter()).unsafeRunSync() match {
-        case Right(filtersets) =>  {
+        case filtersets =>  {
           assert(1 == filtersets.size)
           val f = filtersets.head
           assert(f.code == "testcode")
           assert(f.name == "testname")
           assert(f.libs == List("(foo bar)"))
         }
-        case Left(err) => fail(err)
       }
     }
   }
