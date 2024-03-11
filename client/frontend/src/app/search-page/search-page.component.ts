@@ -1,11 +1,24 @@
 import { ReplaySubject, Observable, map, combineLatest, first } from 'rxjs';
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IndexService } from '../index.service';
 import { IndexResponse, IndexQuery, SearchItem } from 'scmindex-common';
-import { RouterLink } from '../search-item/search-item.component';
+import { RouterLink, SearchItemComponent } from '../search-item/search-item.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FilterPaneComponent } from '../filter-pane/filter-pane.component';
+import { PagerComponent } from '../pager/pager.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
+  imports: [
+      CommonModule,
+      RouterModule,
+      FontAwesomeModule,
+      FilterPaneComponent,
+      SearchItemComponent,
+      PagerComponent
+  ],
   selector: 'app-search-page',
   templateUrl: './search-page.component.html',
   styleUrls: ['./search-page.component.scss']

@@ -1,9 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { Params } from '@angular/router';
+import { Params, RouterModule } from '@angular/router';
 import { ReplaySubject, Observable, map } from 'rxjs';
 import { SearchItem, SearchItemSingle, Signature } from 'scmindex-common';
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule
+    ],
     selector: 'app-search-item',
     templateUrl: './search-item.component.html',
     styleUrls: ['./search-item.component.scss']

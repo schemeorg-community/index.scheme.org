@@ -2,8 +2,15 @@ import { Component } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { IndexService } from '../index.service';
 import { Download } from 'scmindex-common';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 @Component({
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule
+    ],
     selector: 'app-index-page',
     templateUrl: './index-page.component.html',
     styleUrls: ['./index-page.component.scss']

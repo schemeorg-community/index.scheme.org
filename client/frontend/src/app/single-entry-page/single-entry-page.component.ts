@@ -1,12 +1,19 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable, mergeMap } from 'rxjs';
 import { IndexService } from '../index.service';
 import { SearchItem } from 'scmindex-common';
-import { RouterLink } from '../search-item/search-item.component';
+import { RouterLink, SearchItemComponent } from '../search-item/search-item.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
+  imports: [
+      CommonModule,
+      RouterModule,
+      SearchItemComponent
+  ],
   selector: 'app-single-entry-page',
   templateUrl: './single-entry-page.component.html',
   styleUrls: ['./single-entry-page.component.scss']

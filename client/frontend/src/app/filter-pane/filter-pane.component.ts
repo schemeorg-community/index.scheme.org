@@ -3,8 +3,19 @@ import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewC
 import { IndexQuery, IndexResponse, ResponseFacetValue } from 'scmindex-common';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { IndexService } from '../index.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { FacetFilterPipe } from '../facet-filter.pipe';
 
 @Component({
+  standalone: true,
+  imports: [
+      CommonModule,
+      FormsModule,
+      FontAwesomeModule,
+      FacetFilterPipe
+  ],
   selector: 'app-filter-pane',
   templateUrl: './filter-pane.component.html',
   styleUrls: ['./filter-pane.component.scss']

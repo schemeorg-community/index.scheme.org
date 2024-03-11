@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { FacetOption } from './filter-pane/filter-pane.component';
 
 @Pipe({
-  name: 'facetFilter'
+  name: 'facetFilter',
+  standalone: true
 })
 export class FacetFilterPipe implements PipeTransform {
 
