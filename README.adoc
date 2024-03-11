@@ -91,7 +91,7 @@ Run locally built images using docker-compose
 cd docker
 mkdir logs
 docker rmi docker-nginx:latest docker-app:latest scmindex-builder:latest -f
-docker-compose -f docker/docker-compose.local.yml up
+docker-compose -f docker-compose.local.yml up
 ```
 
 To run deployed images from registry use
