@@ -1,7 +1,12 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ReplaySubject, Observable, combineLatest, map } from 'rxjs';
 
 @Component({
+  standalone: true,
+  imports: [
+      CommonModule
+  ],
   selector: 'app-pager',
   templateUrl: './pager.component.html',
   styleUrls: ['./pager.component.scss']

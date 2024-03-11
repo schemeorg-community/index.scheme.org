@@ -1,11 +1,21 @@
 import { Component, HostBinding } from '@angular/core';
-import { NavigationEnd, Router  } from '@angular/router';
+import { NavigationEnd, Router, RouterModule  } from '@angular/router';
 import { filter, map, Observable, startWith, combineLatest } from 'rxjs';
 import { IndexService } from './index.service';
 import { faHome, faSearch, faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { IndexErrorHandler } from './index-error-handler';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
+  standalone: true,
+  imports: [
+      CommonModule,
+      FormsModule,
+      RouterModule,
+      FontAwesomeModule
+  ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
