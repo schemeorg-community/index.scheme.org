@@ -11,4 +11,4 @@
     ((name . "~")
      (signature lambda (object field ...) *)
      (tags pure)))
-  (desc. "ref* (and its synonym ~) is like ref but for chained access.")))
+  (desc . "ref* (and its synonym ~) is like ref but for chained access.")))
