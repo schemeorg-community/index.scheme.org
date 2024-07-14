@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { IndexResponse, IndexQuery, Filterset, Download, SearchItem, SearchItemSingle, FuncSignatureReturn, ResponseFacetValue } from 'scmindex-common';
 import { Observable, shareReplay, map, catchError, of, combineLatest } from 'rxjs';
 import Fuse from 'fuse.js';
+//import MiniSearch from 'minisearch';
+import MiniSearch from 'node_modules/minisearch/dist/es';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class IndexService {
   public filtersets: Observable<Filterset[]> = this.loadFilters().pipe(shareReplay());
 
   private filtersetFilter$: Observable<{[index: string]: Set}>;
-  private searcher$: Observable<{ searcher: Fuse<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[]}>;
+  private searcher$: Observable<{ searcher: MiniSearch<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[]}>;
 
   constructor(private http: HttpClient) {
       this.filtersetFilter$ = this.filtersets.pipe(map(filters => {
@@ -70,7 +72,7 @@ export class IndexService {
         }));
   }
 
-  private executeSearch(searcher: Fuse<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[], request: IndexQuery, libs: Set): IndexResponse {
+  private executeSearch(searcher: MiniSearch<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[], request: IndexQuery, libs: Set): IndexResponse {
       function recordFacetValue(facet: {[index: string]: number }, value: string) {
           if (value == '#f')
               return;
@@ -99,8 +101,13 @@ export class IndexService {
       const paramsFacets: { [index: string]: number } = {};
       const returnsFacets: { [index: string]: number } = {};
       const libsFacets: { [index: string]: number } = {};
+      const config = {
+          boost: {
+              'name': 1000
+          }
+      };
       const found = request.query 
-          ? searcher.search(request.query).map(r => r.item)
+          ? searcher.search(request.query, config).map(r => all[r.id])
           : all;
       const start = 40 * ((request.page || 1) - 1);
       const end = start + 40;
@@ -164,24 +171,25 @@ export class IndexService {
       return result;
   }
 
-  private buildSearcher(data: SearchItem[]): { searcher: Fuse<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[] } {
-      const wrappedData = data.map(d => this.wrapSearchItem(d));
+  private buildSearcher(data: SearchItem[]): { searcher: MiniSearch<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[] } {
+      const wrappedData = data.map((d, i) => this.wrapSearchItem(i, d));
+      const searcher =  new MiniSearch<SearchItemIndexingWrap>({
+          idField: 'id',
+          fields: ['name', 'description']
+      });
+      searcher.addAll(wrappedData);
       return {
-          searcher: new Fuse(wrappedData, { 
-              keys: ['text'],
-              findAllMatches: true,
-              ignoreLocation: true
-          }),
+          searcher: searcher,
           all: wrappedData
       };
   }
 
-  private wrapSearchItem(e: SearchItem): SearchItemIndexingWrap {
-      const names: Set = {};
+  private wrapSearchItem(index: number, e: SearchItem): SearchItemIndexingWrap {
       const tags: Set = {};
       const params: Set = {};
       const returns: Set = {};
-      const text: string[] = [];
+      const name: string[] = [];
+      const names: Set = {};
 
       function processReturn(r: FuncSignatureReturn) {
           if (r.kind == 'return' && r.type != '...' && r.type != '*' && r.type != 'undefined') {
@@ -195,6 +203,7 @@ export class IndexService {
 
       function process(e: SearchItemSingle) {
           names[e.name] = true;
+          name.push(e.name);
           for (let tag of e.tags) {
               tags[tag] = true;
           }
@@ -221,8 +230,6 @@ export class IndexService {
                   }
               }
           }
-          
-          text.push(e.name);
       }
 
       if (e.kind == 'single') {
@@ -233,12 +240,12 @@ export class IndexService {
           }
       }
 
-      text.push(e.description);
-
       return {
+          id: index,
           data: e,
-          text,
-          names,
+          description: e.description,
+          names: names,
+          name: name.join(' '),
           tags,
           params,
           returns
@@ -250,8 +257,10 @@ export class IndexService {
 type Set = { [index: string]: boolean; };
 
 interface SearchItemIndexingWrap {
+    id: number;
     data: SearchItem;
-    text: string[];
+    name: string;
+    description: string;
     names: Set;
     tags: Set;
     params: Set;
