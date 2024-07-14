@@ -7,10 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build and export to Docker
-        uses: docker/build-push-action@v6
+      - uses: docker/build-push-action@v6
         with:
           push: false
-      - run: |
-          cd build
-          docker build -f Dockerfile ..
+          file: ./build/Dockerfile
