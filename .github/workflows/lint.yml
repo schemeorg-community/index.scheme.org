@@ -14,4 +14,5 @@ jobs:
           node-version: '20.x'
       - run: |
           cd scheme-index-app
+          npm install
           npm run lint

@@ -13,4 +13,4 @@ jobs:
           push: false
       - run: |
           cd build
-          docker build .. -f Dockerfile
+          docker build -f Dockerfile ..
