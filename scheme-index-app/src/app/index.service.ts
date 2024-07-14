@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { IndexResponse, IndexQuery, Filterset, SearchItem, SearchItemSingle, FuncSignatureReturn, ResponseFacetValue } from './index.types';
-import { Observable, shareReplay, map, catchError, of, combineLatest } from 'rxjs';
+import { Observable, shareReplay, map, combineLatest } from 'rxjs';
 import MiniSearch from 'node_modules/minisearch/dist/es';
 
 @Injectable({
@@ -19,9 +19,9 @@ export class IndexService {
   constructor(private http: HttpClient) {
       this.filtersetFilter$ = this.filtersets.pipe(map(filters => {
           const result: {[index: string]: Set} = {};
-          for (let f of filters) {
+          for (const f of filters) {
               const set: Set = {};
-              for (let lib of f.libs) {
+              for (const lib of f.libs) {
                   set[lib] = true;
               }
               result[f.code] = set;
@@ -55,7 +55,7 @@ export class IndexService {
   public get(filterset: string, lib: string, name: string): Observable<SearchItem> {
       return combineLatest([this.searcher$, this.filtersetFilter$])
         .pipe(map(([searcher, filters]) => {
-            for (let e of searcher.all) {
+            for (const e of searcher.all) {
                 if (!filters[filterset][e.data.lib])
                     continue;
                 if (e.data.lib != lib) {
@@ -80,13 +80,13 @@ export class IndexService {
           facet[value]++;
       }
       function recordFacetValues(facet: {[index: string]: number }, values: Set) {
-          for (let v in values) {
+          for (const v in values) {
               recordFacetValue(facet, v);
           }
       }
       function finalizeFacet(facet: {[index: string]: number}) {
           const facets: ResponseFacetValue[] = [];
-          for (let k in facet) {
+          for (const k in facet) {
               facets.push({
                   value: k,
                   count: facet[k]
@@ -112,13 +112,13 @@ export class IndexService {
       const returnData = [];
       let count = 0;
       top:
-      for (let e of found) {
+      for (const e of found) {
           if (!libs[e.data.lib]) {
               continue;
           }
           if (request.libs && request.libs.length) {
               let found = false;
-              for (let l of request.libs) {
+              for (const l of request.libs) {
                   if (e.data.lib == l) {
                       found = true;
                       continue;
@@ -129,21 +129,21 @@ export class IndexService {
               }
           }
           if (request.returns) {
-              for (let r of request.returns) {
+              for (const r of request.returns) {
                   if (!e.returns[r]) {
                       continue top;
                   }
               }
           }
           if (request.params) {
-              for (let p of request.params) {
+              for (const p of request.params) {
                   if (!e.params[p]) {
                       continue top;
                   }
               }
           }
           if (request.tags) {
-              for (let t of request.tags) {
+              for (const t of request.tags) {
                   if (!e.tags[t]) {
                       continue top;
                   }
@@ -193,7 +193,7 @@ export class IndexService {
           if (r.kind == 'return' && r.type != '...' && r.type != '*' && r.type != 'undefined') {
               returns[r.type] = true;
           } else {
-              for (let r2 of (r.items || [])) {
+              for (const r2 of (r.items || [])) {
                   processReturn(r2);
               }
           }
@@ -202,14 +202,14 @@ export class IndexService {
       function process(e: SearchItemSingle) {
           names[e.name] = true;
           name.push(e.name);
-          for (let tag of e.tags) {
+          for (const tag of e.tags) {
               tags[tag] = true;
           }
 
           if (e.signature.type == 'function') {
-              for (let variant of e.signature.variants) {
-                  for (let param of variant.params) {
-                      for (let type of param.types) {
+              for (const variant of e.signature.variants) {
+                  for (const param of variant.params) {
+                      for (const type of param.types) {
                           params[type] = true;
                       }
                   }
@@ -222,7 +222,7 @@ export class IndexService {
           }
 
           if (e.signature.type == 'syntax') {
-              for (let pat of e.signature.patterns) {
+              for (const pat of e.signature.patterns) {
                   if (pat.type) {
                       processReturn(pat.type);
                   }
@@ -233,7 +233,7 @@ export class IndexService {
       if (e.kind == 'single') {
           process(e);
       } else if (e.kind == 'group') {
-          for (let entry of e.entries) {
+          for (const entry of e.entries) {
               process(entry);
           }
       }
@@ -263,8 +263,4 @@ interface SearchItemIndexingWrap {
     tags: Set;
     params: Set;
     returns: Set;
-}
-
-interface Searcher {
-    data: SearchItem[];
 }

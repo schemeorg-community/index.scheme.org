@@ -21,8 +21,8 @@ export class SearchItemComponent {
 
     constructor() {
         this.componentSearchItemGroup = this.searchitem$.pipe(map(s => {
-            var entries: ComponentSearchItem[];
-            var groupDesc = '';
+            let entries: ComponentSearchItem[];
+            let groupDesc = '';
             if (s.kind == 'single') {
                 entries = [this.searchItemSingleToComponentSearchItem(s)];
             } else {

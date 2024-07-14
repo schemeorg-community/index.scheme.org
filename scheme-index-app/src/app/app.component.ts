@@ -2,8 +2,7 @@ import { Component, HostBinding } from '@angular/core';
 import { NavigationEnd, Router, RouterModule  } from '@angular/router';
 import { filter, map, Observable, startWith, combineLatest } from 'rxjs';
 import { IndexService } from './index.service';
-import { faHome, faSearch, faFile, faTimes } from '@fortawesome/free-solid-svg-icons';
-import { IndexErrorHandler } from './index-error-handler';
+import { faHome, faSearch, faFile, faTimes, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -85,7 +84,7 @@ export class AppComponent {
 interface NavbarItem {
     label: string;
     link?: string;
-    icon?: any;
+    icon?: IconDefinition;
     externallink?: boolean;
     items: NavbarItem[];
     isActive: boolean;
