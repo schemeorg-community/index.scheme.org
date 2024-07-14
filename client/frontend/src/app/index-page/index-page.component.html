@@ -1,10 +1,6 @@
 <main class="index-page animated-enter">
     <h1 class="index-page__header">Scheme index</h1>
-    <p>Scheme index allows searching for Scheme procedures, syntax and constants through types, tags, and names. Please
-        see <a class="index-page__text-link" href="/README.html#_userguide">user guide</a> for
-        details.
-    </p>
-    <p>Click on one of boxes below to get started</p>
+    <p>Scheme index allows searching for Scheme procedures, syntax and constants through types, tags, and names. 
 
     <div class="index-page__filtersets" *ngFor="let group of filtersetGroups | async">
         <ng-container *ngFor="let filterset of group.filtersets">
@@ -15,30 +11,6 @@
     </div>
 
     <p class="index-page__completeness-note">Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs might be missing.</p>
-
-    <ng-container *ngIf="downloads | async; let downloads">
-        <ng-container *ngIf="downloads.length >= 0">
-            <h2 class="index-page__header">Download command line application</h2>
-            <div class="index-page__download" *ngFor="let download of downloads">
-                <a class="index-page__download-link" href="{{download.url}}">{{download.name}}</a>
-            </div>
-            <p>Command line executable (thin rest client) provides an interactive (REPL) mode, as well as
-            non-interactive execution mode. The later can be integrated with your editor of choice. For example; if you use vim, add following to
-            your .vimrc to be able to lookup signature of an identifier under the cursor using "\?".
-            <div class="codeblock">
-                <p class="codeblock__preformatted">{{exampleVimConfig}}</p>
-            </div>
-        </ng-container>
-    </ng-container>
-
-    <h2 class="index-page__header">REST API</h2>
-    <p>Scheme index provides REST API integration.
-    <div class="codeblock">
-        <p><span class="codeblock__dollar">$</span>&nbsp;{{exampleUrl}}
-        </p>
-        <p>{{exampleResponse}}</p>
-    </div>
-    <p>Please consult <a class="index-page__text-link" href="/README.html">documentation</a> for details.</p>
 
     <h2 class="index-page__header">Report an issue</h2>
     <p>Please report any issues or suggestions you may have at <a class="index-page__text-link"

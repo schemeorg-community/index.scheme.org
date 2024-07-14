@@ -29,12 +29,14 @@ export class SingleEntryPageComponent {
     ) {
         this.entry = route.paramMap.pipe(
             mergeMap(params => {
-                return svc.get(params.get('filterset') || '', params.get('lib') || '', params.get('name') || '');
+                const filterset = decodeURIComponent(params.get('filterset') || '');
+                const lib = decodeURIComponent(params.get('lib') || '');
+                const name = decodeURIComponent(params.get('name') || '');
+                return svc.get(filterset, lib, name);
             }));
         route.paramMap.subscribe(params => {
             const name = params.get('name');
             const t = name? `${decodeURIComponent(name)} | Scheme Index` : 'Scheme Index';
-            console.log('WTF', t);
             title.setTitle(t);
         });
     }
