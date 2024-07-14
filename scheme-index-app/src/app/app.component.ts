@@ -26,7 +26,7 @@ export class AppComponent {
   faFile = faFile;
   faTimes = faTimes;
 
-  constructor(filtersetSvc: IndexService, router: Router, public errorHandler: IndexErrorHandler) {
+  constructor(filtersetSvc: IndexService, router: Router) {
       const routeChange = router.events.pipe(
           filter((event) => event instanceof NavigationEnd),
           startWith(router)
@@ -73,10 +73,6 @@ export class AppComponent {
 
   public onSelectTheme(theme: string) {
       window.localStorage.setItem('theme', theme);
-  }
-
-  public closeErrorWindow() {
-      this.errorHandler.clear();
   }
 
 }
