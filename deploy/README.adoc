@@ -1,0 +1,6 @@
+= Ansible deployment of the static site
+
+This folder contains deployment playbook. It is presumed that target uses nginx and systemd.
+
+. Build the static site (see ../build folder)
+. Invoke `ansible-playbook -i hosts deploy.yml -e content_zip_file=../build/schemeindex.zip` from this directory

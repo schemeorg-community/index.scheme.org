@@ -1,0 +1,7 @@
+all:
+  hosts:
+    index.scheme.org:
+      ansible_user: root
+      certs_location: /etc/letsencrypt/live/index.scheme.org/
+      nginx_conf_d_location: /etc/nginx/conf.d
+      root_location: /var/www/scheme_index
