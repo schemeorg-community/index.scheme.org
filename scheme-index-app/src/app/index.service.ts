@@ -99,14 +99,25 @@ export class IndexService {
       const paramsFacets: { [index: string]: number } = {};
       const returnsFacets: { [index: string]: number } = {};
       const libsFacets: { [index: string]: number } = {};
-      const config = {
-          boost: {
-              'name': 1000
-          }
-      };
-      const found = request.query 
-          ? searcher.search(request.query, config).map(r => all[r.id])
-          : all;
+      let found;
+      if (request.query) {
+          found = searcher.search({
+              combineWith: 'OR',
+              queries: [{
+                  fields: ['name'],
+                  tokenize: (str) => {
+                      return str.split(' ');
+                  },
+                  queries: [ request.query ]
+              }, {
+                  fields: ['description'],
+                  queries: [ request.query ]
+              }]
+          })
+          .map(r => all[r.id]);
+      } else {
+          found = all;
+      }
       const start = 40 * ((request.page || 1) - 1);
       const end = start + 40;
       const returnData = [];
@@ -173,7 +184,24 @@ export class IndexService {
       const wrappedData = data.map((d, i) => this.wrapSearchItem(i, d));
       const searcher =  new MiniSearch<SearchItemIndexingWrap>({
           idField: 'id',
-          fields: ['name', 'description']
+          fields: ['name', 'description'],
+          tokenize: (text: string, field: string | undefined) => { 
+              switch (field) {
+                  // split name on space only so that exact
+                  // name matches bubble to top (instead of partial matches that have `-` in them take priority)
+                  // fuzzy finding by name is done by copying name to description field
+                  case 'name':
+                      return text.split(' ');
+                  default:
+                      return MiniSearch.getDefault('tokenize')(text, field);
+              }
+          },
+          searchOptions: {
+              boost: {
+                  name: 1000
+              },
+              fuzzy: 0.1
+          }
       });
       searcher.addAll(wrappedData);
       return {
@@ -183,6 +211,7 @@ export class IndexService {
   }
 
   private wrapSearchItem(index: number, e: SearchItem): SearchItemIndexingWrap {
+      let desc = '';
       const tags: Set = {};
       const params: Set = {};
       const returns: Set = {};
@@ -202,6 +231,7 @@ export class IndexService {
       function process(e: SearchItemSingle) {
           names[e.name] = true;
           name.push(e.name);
+          desc += `${e.name} `;
           for (const tag of e.tags) {
               tags[tag] = true;
           }
@@ -238,10 +268,12 @@ export class IndexService {
           }
       }
 
+      desc += e.description;
+
       return {
           id: index,
           data: e,
-          description: e.description,
+          description: desc,
           names: names,
           name: name.join(' '),
           tags,
