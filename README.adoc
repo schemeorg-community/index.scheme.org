@@ -99,9 +99,9 @@ one of as described in `signature` section, as well as additionally:
 
 * `(alist <car> <cdr>)` - describes an alist datastrucutre, where `<car>` and `<cdr>` has same format as function parameter definition;
 
-* `(list <element>)` - describes an list datastrucutre, where `<element>` has same format as function parameter definition;
+* `(list <element>)` - describes a list datastrucutre, where `<element>` has same format as function parameter definition;
 
-* `(vector <element>)` - describes an list datastrucutre, where `<element>` has same format as function parameter definition;
+* `(vector <element>)` - describes a vector datastrucutre, where `<element>` has same format as function parameter definition.
 
 | desc
 | Textual description.
