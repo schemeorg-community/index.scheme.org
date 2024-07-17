@@ -10,7 +10,7 @@ import { provideServiceWorker } from '@angular/service-worker';
 
 bootstrapApplication(AppComponent, {
     providers: [
-    provideRouter([{
+        provideRouter([{
             path: '',
             component: IndexPageComponent,
             title: 'Scheme Index'
@@ -22,18 +22,10 @@ bootstrapApplication(AppComponent, {
             path: 'filterset/:filterset/:lib/:name',
             component: SingleEntryPageComponent
         }]),
-    provideHttpClient(),
-    provideServiceWorker('ngsw-worker.js', {
-        enabled: !isDevMode(),
-        registrationStrategy: 'registerWhenStable:30000'
-    }),
-    provideServiceWorker('ngsw-worker.js', {
-        enabled: !isDevMode(),
-        registrationStrategy: 'registerWhenStable:30000'
-    }),
-    provideServiceWorker('ngsw-worker.js', {
-        enabled: !isDevMode(),
-        registrationStrategy: 'registerWhenStable:30000'
-    })
-]
+        provideHttpClient(),
+        provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+        })
+    ]
 });
