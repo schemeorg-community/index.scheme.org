@@ -39,6 +39,6 @@ jobs:
           sudo apt-get install ansible
           ssh-keyscan -t rsa index.scheme.org >> ~/.ssh/known_hosts
           cd deploy
-          ansible-playbook -i hosts deploy.yml
+          ansible-playbook -i hosts deploy.yml -e content_zip_file=../build/schemeindex.zip
 
 
