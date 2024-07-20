@@ -32,7 +32,7 @@ jobs:
           name: schemeindex
           path: build/schemeindex.zip
       - run: |
-          apt-get install ansible
+          sudo apt-get install ansible
           cd deploy
           ansible-playbook -i hosts deploy.yml
 
