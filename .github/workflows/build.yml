@@ -34,7 +34,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: schemeindex
-          path: build/schemeindex.zip
+          path: build
       - run: |
           sudo apt-get install ansible
           ssh-keyscan -t rsa index.scheme.org >> ~/.ssh/known_hosts
