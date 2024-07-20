@@ -1,16 +1,31 @@
 <main class="index-page animated-enter">
     <h1 class="index-page__header">Scheme index</h1>
-    <p>Scheme index allows searching for Scheme procedures, syntax and constants through types, tags, and names. 
+    <p>
+        Scheme index project aims to catalog scheme procedures, syntax constructs, constants.
+        You are browsing its complementary static site GUI. Choose one of options below to start browsing. See 
+        <a class="index-page__text-link" href="https://github.com/schemeorg-community/index.scheme.org">git repository</a> for primary index data.
+    </p>
 
-    <div class="index-page__filtersets" *ngFor="let group of filtersetGroups | async">
-        <ng-container *ngFor="let filterset of group.filtersets">
-            <a routerLink="/filterset/{{filterset.code}}/search" class="index-page__filterset">
-                <span class="index-page__filterset-text">{{filterset.name}}</span>
-            </a>
-        </ng-container>
-    </div>
+    <ng-container *ngIf="filtersetsService.filtersetsReady$ | async">
+        <div class="index-page__filtersets" *ngFor="let group of filtersetGroups | async">
+            <ng-container *ngFor="let filterset of group.filtersets">
+                <a routerLink="/filterset/{{filterset.code}}/search" class="index-page__filterset">
+                    <span class="index-page__filterset-text">{{filterset.name}}</span>
+                </a>
+            </ng-container>
+        </div>
+        <p class="index-page__completeness-note">Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs might be missing.</p>
+    </ng-container>
 
-    <p class="index-page__completeness-note">Scheme index is an ongoing process that prioritizes popular SRFIs. Niche SRFIs might be missing.</p>
+    <ng-container *ngIf="(filtersetsService.filtersetsReady$ | async) === false">
+        <app-loader [isLoading]="true">
+        </app-loader>
+    </ng-container>
+
+    <h2 class="index-page__header">Offline availability</h2>
+    <p>
+        This site is implemented as a static site and uses a service worker, it should be fully functional even offline.
+    </p>
 
     <h2 class="index-page__header">Report an issue</h2>
     <p>Please report any issues or suggestions you may have at <a class="index-page__text-link"

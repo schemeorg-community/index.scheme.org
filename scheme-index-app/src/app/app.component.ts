@@ -31,7 +31,7 @@ export class AppComponent {
           filter((event) => event instanceof NavigationEnd),
           startWith(router)
       );
-      this.navbarItems = combineLatest([filtersetSvc.filtersets, routeChange]).pipe(
+      this.navbarItems = combineLatest([filtersetSvc.filtersets$, routeChange]).pipe(
           map(([filtersets, _]) => {
               return [{
                   label: 'Home',

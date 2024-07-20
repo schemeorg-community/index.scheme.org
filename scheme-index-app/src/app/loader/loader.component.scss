@@ -1,0 +1,11 @@
+.loader-cnt {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    height: 100%;
+}
+
+fa-icon {
+    color: var(--text-color-muted);
+}

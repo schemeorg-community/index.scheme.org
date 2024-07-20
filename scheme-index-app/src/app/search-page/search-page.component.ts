@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FilterPaneComponent } from '../filter-pane/filter-pane.component';
 import { PagerComponent } from '../pager/pager.component';
 import { CommonModule } from '@angular/common';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
   standalone: true,
@@ -17,7 +18,8 @@ import { CommonModule } from '@angular/common';
       FontAwesomeModule,
       FilterPaneComponent,
       SearchItemComponent,
-      PagerComponent
+      PagerComponent,
+      LoaderComponent
   ],
   selector: 'app-search-page',
   templateUrl: './search-page.component.html',
@@ -39,7 +41,7 @@ export class SearchPageComponent {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        svc: IndexService
+        public svc: IndexService
     ) {
         this.indexQuery = combineLatest([route.paramMap, route.queryParams]).pipe(map(([params, queryParams]) => {
             const filterset = params.get('filterset') || '';

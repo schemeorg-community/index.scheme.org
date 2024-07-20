@@ -3,12 +3,14 @@ import { Observable, map } from 'rxjs';
 import { IndexService } from '../index.service';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
     standalone: true,
     imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        LoaderComponent
     ],
     selector: 'app-index-page',
     templateUrl: './index-page.component.html',
@@ -18,11 +20,11 @@ export class IndexPageComponent {
 
     filtersetGroups: Observable<FiltersetGroup[]>;
 
-    constructor(filtersetsService: IndexService) {
+    constructor(public filtersetsService: IndexService) {
         const isRnrs = (code: string) => {
             return code.match(/r.rs/);
         };
-        this.filtersetGroups = filtersetsService.filtersets.pipe(map(filtersets => {
+        this.filtersetGroups = filtersetsService.filtersets$.pipe(map(filtersets => {
             return [{
                 filtersets: filtersets.filter(f => isRnrs(f.code))
             }, {

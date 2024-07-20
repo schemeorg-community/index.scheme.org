@@ -1,4 +1,4 @@
-import { Subject, ReplaySubject, combineLatest, first } from 'rxjs';
+import { Subject, ReplaySubject, combineLatest, first, BehaviorSubject, debounceTime } from 'rxjs';
 import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild } from '@angular/core';
 import { IndexQuery, IndexResponse, ResponseFacetValue } from '../index.types';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -44,6 +44,9 @@ export class FilterPaneComponent {
   @ViewChild('querytextfield')
   queryTextfield!: ElementRef;
 
+  @ViewChild('form')
+  searchForm!: ElementRef;
+
   @HostListener('window:keydown.control./', ['$event'])
   focusQueryField(event: KeyboardEvent) {
       event.preventDefault();
@@ -62,11 +65,13 @@ export class FilterPaneComponent {
   facets: Facet[] = [];
   queryString = '';
 
+  private _searchTrigger$: BehaviorSubject<void>;
+
   constructor(filtersetSvc: IndexService) {
     this.query$ = new ReplaySubject<IndexQuery>(1);
     this.response$ = new ReplaySubject<IndexResponse>(1);
 
-    combineLatest([this.query$, filtersetSvc.filtersetNameMap]).subscribe(([query, nameMap]) => {
+    combineLatest([this.query$, filtersetSvc.filtersetNameMap$]).subscribe(([query, nameMap]) => {
       this.filterset = nameMap[query.filterset] || '';
     });
 
@@ -74,6 +79,12 @@ export class FilterPaneComponent {
       this.facets = this.readFacetFromResponse(query, response);
       this.queryString = query.query || '';
     });
+
+    this._searchTrigger$ = new BehaviorSubject<void>(undefined);
+    this._searchTrigger$.pipe(debounceTime(400))
+        .subscribe(() => {
+            this.onSearch(this.searchForm.nativeElement);
+        });
   }
 
 
@@ -125,6 +136,10 @@ export class FilterPaneComponent {
           collapsed: false,
           filter: ''
       }
+  }
+
+  searchChange() {
+      this._searchTrigger$.next();
   }
 
   onSearch(f: HTMLFormElement) {

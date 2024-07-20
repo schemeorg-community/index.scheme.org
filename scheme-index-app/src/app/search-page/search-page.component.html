@@ -1,4 +1,4 @@
-<div class="search-page">
+<div class="search-page" *ngIf="svc.searcherReady$ | async">
     <app-filter-pane *ngIf="filterpaneParams | async; let params"
                  [query]="params.query"
                  [response]="params.response"
@@ -14,3 +14,8 @@
         <app-pager *ngIf="pagerParams | async; let pager" [pageSize]="pager.pageSize" [page]="pager.page" [total]="pager.total" (pageClick)="onPageClick($event)"/>
     </section>
 </div>
+
+<ng-container *ngIf="(svc.searcherReady$ | async) === false">
+    <app-loader [isLoading]="true">
+    </app-loader>
+</ng-container>

@@ -1,23 +1,62 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IndexResponse, IndexQuery, Filterset, SearchItem, SearchItemSingle, FuncSignatureReturn, ResponseFacetValue } from './index.types';
-import { Observable, shareReplay, map, combineLatest } from 'rxjs';
-import MiniSearch from 'node_modules/minisearch/dist/es';
+import { Observable, shareReplay, map, combineLatest, BehaviorSubject, of, mergeMap, firstValueFrom, tap } from 'rxjs';
+import MiniSearch, { Options } from 'node_modules/minisearch/dist/es';
 
 @Injectable({
   providedIn: 'root'
 })
 export class IndexService {
 
-
-  public types: Observable<SearchItem[]> = this.loadData().pipe(shareReplay());
-  public filtersets: Observable<Filterset[]> = this.loadFilters().pipe(shareReplay());
+  public filtersets$: Observable<Filterset[]>;
+  public filtersetsReady$: Observable<boolean>;
+  public filtersetNameMap$: Observable<{[key: string]: string}>;
+  public searcher$: Observable<Searcher>;
+  public searcherReady$: Observable<boolean>;
 
   private filtersetFilter$: Observable<{[index: string]: Set}>;
-  private searcher$: Observable<{ searcher: MiniSearch<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[]}>;
+  private _searcher$: BehaviorSubject<Searcher | null>;
+  private opts: Options<SearchItemIndexingWrap>;
+  private data$: Observable<{ content: SearchItemIndexingWrap[]; etag: string; }>;
+  private _filtersetsReady$: BehaviorSubject<boolean>;
+  private _searcherReady$: BehaviorSubject<boolean>;
 
   constructor(private http: HttpClient) {
-      this.filtersetFilter$ = this.filtersets.pipe(map(filters => {
+
+      this._filtersetsReady$ = new BehaviorSubject<boolean>(false);
+      this._searcherReady$ = new BehaviorSubject<boolean>(false);
+      this.filtersetsReady$ = this._filtersetsReady$.asObservable();
+      this.searcherReady$ = this._searcherReady$.asObservable();
+
+      this.opts = {
+          idField: 'id',
+          fields: ['name', 'description'],
+          tokenize: (text: string, field: string | undefined) => { 
+              switch (field) {
+                  // split name on space only so that exact
+                  // name matches bubble to top (instead of partial matches that have `-` in them take priority)
+                  // fuzzy finding by name is done by copying name to description field
+                  case 'name':
+                      return text.split(' ');
+                  default:
+                      return MiniSearch.getDefault('tokenize')(text, field);
+              }
+          },
+          searchOptions: {
+              boost: {
+                  name: 1000
+              },
+              fuzzy: 0.1
+          }
+      };
+
+      this.filtersets$ = this.loadFilters()
+        .pipe(
+            tap(() => this._filtersetsReady$.next(true)),
+            shareReplay()
+        );
+      this.filtersetFilter$ = this.filtersets$.pipe(map(filters => {
           const result: {[index: string]: Set} = {};
           for (const f of filters) {
               const set: Set = {};
@@ -28,21 +67,93 @@ export class IndexService {
           }
           return result;
       }));
-      this.searcher$ = this.types.pipe(map(data => this.buildSearcher(data)));
+
+      this.filtersetNameMap$ = this.filtersets$.pipe(map(filtersets => {
+          const m: {[key: string]: string}  = {};
+          filtersets.forEach(f => m[f.code] = f.name);
+          return m;
+      }));
+
+      this._searcher$ = new BehaviorSubject<Searcher | null>(null);
+      this.searcher$ = this._searcher$.pipe(
+          mergeMap(r => r ? of(r) : of())
+      );
+
+      this.data$ = this.loadData().pipe(
+          map(data => {
+              return {
+                  content: this.wrapData(data.content),
+                  etag: data.etag
+              };
+          }),
+          shareReplay()
+      );
+
+      this.loadSearcher(false);
   }
 
-  public filtersetNameMap: Observable<{[key: string]: string}> = this.filtersets.pipe(map(filtersets => {
-      const m: {[key: string]: string}  = {};
-      filtersets.forEach(f => m[f.code] = f.name);
-      return m;
-  }));
+  public reloadData() {
+      this.loadSearcher(true);
+  }
+
+  private saveToLocalStorage(s: MiniSearch<SearchItemIndexingWrap>, etag: string): void {
+      localStorage.setItem("scheme_index_etag", etag);
+      localStorage.setItem("scheme_index_searcher", JSON.stringify(s));
+  }
+
+  private async loadFromLocalStorage(): Promise<{ searcher: MiniSearch<SearchItemIndexingWrap>; etag: string; } | null> {
+      const etag = localStorage.getItem("scheme_index_etag");
+      if (!etag) return null;
+      const searcher = localStorage.getItem("scheme_index_searcher");
+      if (!searcher) return null;
+      const minisearch = await MiniSearch.loadJSONAsync(searcher, this.opts);
+      return {
+          searcher: minisearch,
+          etag: etag
+      };
+  }
+
+  private async loadSearcher(ignoreCache: boolean) {
+      const data = await firstValueFrom(this.data$);
+      let existingCache = null;
+      if (!ignoreCache) {
+          existingCache = await this.loadFromLocalStorage();
+      }
+      if (existingCache) {
+          if (existingCache.etag != data.etag) {
+              existingCache = null;
+          }
+      }
+      let searcher;
+      if (existingCache) {
+          searcher = {
+              searcher: existingCache.searcher,
+              all: data.content
+          };
+      } else {
+          const newSearcher = this.buildSearcher(data.content);
+          this.saveToLocalStorage(newSearcher.searcher, data.etag);
+          searcher = newSearcher;
+      }
+      this._searcher$.next(searcher);
+      this._searcherReady$.next(true);
+  }
 
   private loadFilters() {
     return this.http.get<Filterset[]>("assets/filters.json");
   }
 
-  private loadData() {
-    return this.http.get<SearchItem[]>("assets/types.json");
+  private loadData(): Observable<{ etag: string; content: SearchItem[] }> {
+    return this.http
+        .get<SearchItem[]>("assets/types.json", { observe: 'response' })
+        .pipe(
+            map(resp => {
+                return {
+                    etag: resp.headers.get('etag') || '',
+                    content: resp.body || []
+                };
+            })
+        );
   }
 
   public query(request: IndexQuery) {
@@ -180,29 +291,13 @@ export class IndexService {
       return result;
   }
 
-  private buildSearcher(data: SearchItem[]): { searcher: MiniSearch<SearchItemIndexingWrap>, all: SearchItemIndexingWrap[] } {
+  private wrapData(data: SearchItem[]): SearchItemIndexingWrap[] {
       const wrappedData = data.map((d, i) => this.wrapSearchItem(i, d));
-      const searcher =  new MiniSearch<SearchItemIndexingWrap>({
-          idField: 'id',
-          fields: ['name', 'description'],
-          tokenize: (text: string, field: string | undefined) => { 
-              switch (field) {
-                  // split name on space only so that exact
-                  // name matches bubble to top (instead of partial matches that have `-` in them take priority)
-                  // fuzzy finding by name is done by copying name to description field
-                  case 'name':
-                      return text.split(' ');
-                  default:
-                      return MiniSearch.getDefault('tokenize')(text, field);
-              }
-          },
-          searchOptions: {
-              boost: {
-                  name: 1000
-              },
-              fuzzy: 0.1
-          }
-      });
+      return wrappedData;
+  }
+
+  private buildSearcher(wrappedData: SearchItemIndexingWrap[]): Searcher {
+      const searcher =  new MiniSearch<SearchItemIndexingWrap>(this.opts);
       searcher.addAll(wrappedData);
       return {
           searcher: searcher,
@@ -295,4 +390,9 @@ interface SearchItemIndexingWrap {
     tags: Set;
     params: Set;
     returns: Set;
+}
+
+interface Searcher {
+    searcher: MiniSearch<SearchItemIndexingWrap>;
+    all: SearchItemIndexingWrap[];
 }

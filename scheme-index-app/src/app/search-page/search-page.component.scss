@@ -1,3 +1,10 @@
+:host {
+    align-self: stretch;
+    height: 100%;
+    display: block;
+    overflow: hidden;
+}
+
 $padding-breakpoint: 1000px;
 $media-breakpoint: 600px;
 
@@ -13,11 +20,9 @@ app-pager {
     align-self: center;
 }
 
-:host {
-    align-self: stretch;
+loader {
     height: 100%;
     display: block;
-    overflow: hidden;
 }
 
 .search-page {
