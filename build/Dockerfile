@@ -21,4 +21,7 @@ COPY --from=chicken /app/scheme-index-util/filters.json /app/scheme-index-app/sr
 RUN npm run build
 
 FROM nginx:1.27
-COPY --from=node /app/scheme-index-app/dist/scheme-index /usr/share/nginx/html
+COPY --from=node /app/scheme-index-app/dist/scheme-index /schemeindex
+WORKDIR /schemeindex/
+RUN zip -r /schemeindex.zip *
+COPY /schemeindex /usr/share/nginx/html
