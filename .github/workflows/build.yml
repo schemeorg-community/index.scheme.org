@@ -30,8 +30,8 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: schemeindex
+          path: build/schemeindex.zip
       - run: |
-          mv /schemeindex.zip ./build/schemeindex.zip
           apt-get install ansible
           cd deploy
           ansible-playbook -i hosts deploy.yml
