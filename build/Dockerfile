@@ -11,6 +11,7 @@ RUN ./scheme-index-util/buildtypes types/index.scm ./scheme-index-util/types.jso
 RUN ./scheme-index-util/buildfilters filters/index.scm ./scheme-index-util/filters.json
 
 FROM node:22 as node
+RUN apt-get update && apt-get install zip
 COPY ./scheme-index-app/package.json /app/scheme-index-app/package.json
 COPY ./scheme-index-app/package-lock.json /app/scheme-index-app/package-lock.json
 WORKDIR /app/scheme-index-app
@@ -19,9 +20,10 @@ COPY . /app
 COPY --from=chicken /app/scheme-index-util/types.json /app/scheme-index-app/src/assets/types.json
 COPY --from=chicken /app/scheme-index-util/filters.json /app/scheme-index-app/src/assets/filters.json
 RUN npm run build
+WORKDIR /app/scheme-index-app/dist/scheme-index
+RUN zip -r ../scheme-index.zip *
 
 FROM nginx:1.27
 COPY --from=node /app/scheme-index-app/dist/scheme-index /schemeindex
-WORKDIR /schemeindex/
-RUN zip -r /schemeindex.zip *
-RUN cp /schemeindex /usr/share/nginx/html
+COPY --from=node /app/scheme-index-app/dist/scheme-index.zip /schemeindex.zip
+RUN cp -r /schemeindex /usr/share/nginx/html
