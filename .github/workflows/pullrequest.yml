@@ -1,7 +1,7 @@
 name: 'Lint & test build on pull request'
 on:
   pull_request:
-    types: [opened, reopened]
+
 jobs:
   lint:
     runs-on: ubuntu-latest
