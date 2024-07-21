@@ -1,6 +1,8 @@
-name: Build docker image
+name: 'Build and deploy on push to master'
 on:
   push:
+    branches:
+      - 'master'
 
 jobs:
   build:
@@ -40,5 +42,3 @@ jobs:
           ssh-keyscan -t rsa index.scheme.org >> ~/.ssh/known_hosts
           cd deploy
           ansible-playbook -i hosts deploy.yml -e content_zip_file=$GITHUB_WORKSPACE/build/schemeindex.zip
-
-

@@ -1,6 +1,6 @@
 ---
 - name: 'Deploy scheme index'
-  hosts: index.scheme.org
+  hosts: 'index.scheme.org'
   tasks:
     - name: 'Upload nginx config'
       template:
