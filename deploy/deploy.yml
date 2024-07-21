@@ -1,0 +1,21 @@
+---
+- name: 'Deploy scheme index'
+  hosts: 'index.scheme.org'
+  tasks:
+    - name: 'Upload nginx config'
+      template:
+        src: 'template/scheme_index.conf'
+        dest: '{{nginx_conf_d_location}}/scheme_index.conf'
+    - name: 'Ensure content root exists'
+      file:
+        name: '{{root_location}}'
+        state: 'directory'
+    - name: 'Upload scheme index content'
+      unarchive:
+        src: '{{content_zip_file}}'
+        dest: '{{root_location}}'
+    - name: 'Reload nginx service'
+      systemd_service:
+        name: 'nginx'
+        state: 'reloaded'
+
