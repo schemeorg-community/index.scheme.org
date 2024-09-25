@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'docker:latest'
+                    image 'docker:cli'
                     args "-v /var/run/docker.sock:/var/run/docker.sock"
                     reuseNode true
                 }
