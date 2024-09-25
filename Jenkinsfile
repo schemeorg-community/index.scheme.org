@@ -21,10 +21,12 @@ pipeline {
                 }
             }
             steps {
-                docker build -f ./build/Dockerfile .
-                docker create --name dummy scheme-index:latest
-                docker cp dummy:/schemeindex.zip /tmp/schemeindex.zip
-                docker rm -f dummy
+                sh '''
+                    docker build -f ./build/Dockerfile .
+                    docker create --name dummy scheme-index:latest
+                    docker cp dummy:/schemeindex.zip /tmp/schemeindex.zip
+                    docker rm -f dummy
+                '''
             }
         }
 
