@@ -1,5 +1,9 @@
 pipeline {
     
+    agent {
+        label: 'docker'
+    }
+    
     stages {
 
         stage('Checkout') {
@@ -9,8 +13,18 @@ pipeline {
         }
 
         stage('Build') {
+            agent {
+                docker {
+                    image 'docker:latest'
+                    args "-v /var/run/docker.sock:/var/run/docker.sock"
+                    reuseNode true
+                }
+            }
             steps {
-                echo 'TODO'
+                docker build -f ./build/Dockerfile .
+                docker create --name dummy scheme-index:latest
+                docker cp dummy:/schemeindex.zip /tmp/schemeindex.zip
+                docker rm -f dummy
             }
         }
 
