@@ -43,6 +43,7 @@ pipeline {
             steps {
                 dir('deploy') {
                     sh '''
+                        echo $(whoami)
                         pip install ansible
                         ansible-playbook -v
                         ssh-keyscan -t rsa index.scheme.org >> ~/.ssh/known_hosts
