@@ -10,7 +10,7 @@ pipeline {
             agent {
                 docker {
                     image 'docker:cli'
-                    args "-v /var/run/docker.sock:/var/run/docker.sock -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro"
+                    // args "-v /var/run/docker.sock:/var/run/docker.sock -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro"
                     reuseNode true
                 }
             }
@@ -23,7 +23,7 @@ pipeline {
             agent {
                 docker {
                     image 'docker:cli'
-                    args "-v /var/run/docker.sock:/var/run/docker.sock -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro"
+                    // args "-v /var/run/docker.sock:/var/run/docker.sock -v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro"
                     reuseNode true
                 }
             }
