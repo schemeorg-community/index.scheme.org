@@ -41,10 +41,14 @@ pipeline {
                 }
             }
             steps {
-                sh '''
-                    pip install --include-deps ansible
-                    ansible-playbook -v
-                '''
+                dir('deploy') {
+                    sh '''
+                        pip install ansible
+                        ansible-playbook -v
+                        ssh-keyscan -t rsa index.scheme.org >> ~/.ssh/known_hosts
+                        ansible-playbook -i hosts deploy.yml -e content_zip_file=../schemeindex.zip
+                    '''
+                }
             }
         }
 
