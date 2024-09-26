@@ -37,13 +37,13 @@ pipeline {
             agent {
                 docker {
                     image 'python:3.9.20'
+                    args "-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro"
                     reuseNode true
                 }
             }
             steps {
                 dir('deploy') {
                     sh '''
-                        echo $(whoami)
                         pip install ansible
                         ansible-playbook -v
                         ssh-keyscan -t rsa index.scheme.org >> ~/.ssh/known_hosts
