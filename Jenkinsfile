@@ -37,7 +37,7 @@ pipeline {
             agent {
                 docker {
                     image 'python:3.9.20'
-                    args "-u"
+                    args "-u root"
                     reuseNode true
                 }
             }
