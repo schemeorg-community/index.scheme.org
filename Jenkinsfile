@@ -37,7 +37,7 @@ pipeline {
             agent {
                 docker {
                     image 'python:3.9.20'
-                    args "-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro"
+                    args "-u"
                     reuseNode true
                 }
             }
