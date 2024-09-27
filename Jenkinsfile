@@ -35,8 +35,10 @@ pipeline {
                 branch 'jenkins-build'
             }
             agent {
+                dockerfile {
+                    filename './deploy/ansible.Dockerfile'
+                }
                 docker {
-                    image 'python:3.9.20'
                     args "-u root"
                     reuseNode true
                 }
