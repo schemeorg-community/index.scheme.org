@@ -31,17 +31,13 @@ pipeline {
         }
 
         stage('Deploy') {
-            when {
-                branch 'jenkins-build'
-            }
             agent {
                 dockerfile {
                     filename './deploy/ansible.Dockerfile'
                 }
-                docker {
-                    args "-u root"
-                    reuseNode true
-                }
+            }
+            when {
+                branch 'jenkins-build'
             }
             steps {
                 dir('deploy') {
