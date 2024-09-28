@@ -34,6 +34,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename './deploy/ansible.Dockerfile'
+                    reuseNode true
                 }
             }
             when {
