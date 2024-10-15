@@ -327,6 +327,11 @@ The signature of the unfold procedure is (unfold stop? mapper successor seed arg
   (signature lambda () procedure?)
   (subsigs
     (return (lambda (el) (or undefined list?))))
+  (desc . "Returns an accumulator that, when invoked on an object, adds that object to a list inside the accumulator in order of accumulation and returns an unspecified value. However, if an end-of-file object is passed, the accumulator returns the list."))
+ ((name . "reverse-list-accumulator")
+  (signature lambda () procedure?)
+  (subsigs
+    (return (lambda (el) (or undefined list?))))
   (desc . "Returns an accumulator that, when invoked on an object, adds that object to a list inside the accumulator in reverse order of accumulation and returns an unspecified value. However, if an end-of-file object is passed, the accumulator returns the list."))
  ((name . "vector-accumulator")
   (signature lambda () procedure?)
