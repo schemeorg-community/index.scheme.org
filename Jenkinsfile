@@ -38,7 +38,7 @@ pipeline {
                 }
             }
             when {
-                branch 'jenkins-build'
+                branch 'master'
             }
             steps {
                 dir('deploy') {
