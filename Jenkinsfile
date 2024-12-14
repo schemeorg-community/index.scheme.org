@@ -3,6 +3,11 @@ pipeline {
     agent {
         label 'docker'
     }
+
+    parameters {
+        booleanParam(name: 'DEPLOY_STAGING', defaultValue: true, description: 'Deploy to index.staging.scheme.org')
+        booleanParam(name: 'DEPLOY_PROD', defaultValue: false, description: 'Deploy to index.scheme.org')
+    }
     
     stages {
 
@@ -53,7 +58,7 @@ pipeline {
             }
         }
 
-        stage('Deploy tuonela') {
+        stage('Deploy tuonela staging') {
             agent {
                 dockerfile {
                     filename './deploy/rsync.Dockerfile'
@@ -61,7 +66,33 @@ pipeline {
                 }
             }
             when {
-                branch 'tuonela-deployment'
+                expression {
+                    return params.DEPLOY_STAGING
+                }
+            }
+            steps {
+                sshagent(credentials: ['index_staging_tuonela_ssh']) {
+                    sh '''
+                        mkdir ~/.ssh
+                        ssh-keyscan -t rsa tuonela.scheme.org >> ~/.ssh/known_hosts
+                        rsync schemeindex.zip stag-index@tuonela.scheme.org:/staging/index/update/schemeindex.zip
+                        ssh stag-index@tuonela.scheme.org 'cd ~ ; bash install-update.sh'
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy tuonela production') {
+            agent {
+                dockerfile {
+                    filename './deploy/rsync.Dockerfile'
+                    reuseNode true
+                }
+            }
+            when {
+                expression {
+                    return params.DEPLOY_PROD
+                }
             }
             steps {
                 sshagent(credentials: ['index_tuonela_ssh']) {
