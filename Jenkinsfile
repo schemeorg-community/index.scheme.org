@@ -66,6 +66,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['index_tuonela_ssh']) {
                     sh '''
+                        mkdir ~/.ssh
                         ssh-keyscan -t rsa tuonela.scheme.org >> ~/.ssh/known_hosts
                         rsync schemeindex.zip prod-index@tuonela.scheme.org:/production/index/update/schemeindex.zip
                         ssh prod-index@tuonela.scheme.org 'cd ~ ; bash install-update.sh'
