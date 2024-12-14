@@ -53,6 +53,27 @@ pipeline {
             }
         }
 
+        stage('Deploy tuonela') {
+            agent {
+                docker {
+                    image 'ubuntu:24:04'
+                    reuseNode true
+                }
+            }
+            when {
+                branch 'tuonela-deployment'
+            }
+            steps {
+                sshagent(credentials: ['index_tuonela_ssh']) {
+                    sh '''
+                        ssh-keyscan -t rsa tuonela.scheme.org >> ~/.ssh/known_hosts
+                        rsync schemeindex.zip prod-index@tuonela.scheme.org:/production/index/update/schemeindex.zip
+                        ssh prod-index@tuonela.scheme.org 'cd ~ ; bash install-update.sh'
+                    '''
+                }
+            }
+        }
+
     }
 
 }
