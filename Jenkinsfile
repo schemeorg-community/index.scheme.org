@@ -55,8 +55,8 @@ pipeline {
 
         stage('Deploy tuonela') {
             agent {
-                docker {
-                    image 'ubuntu:24:04'
+                dockerfile {
+                    filename './deploy/rsync.Dockerfile'
                     reuseNode true
                 }
             }
