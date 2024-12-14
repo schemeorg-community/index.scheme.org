@@ -15,7 +15,7 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'docker:cli'
+                    image 'docker:20.10.24-cli'
                     args "-u root"
                     reuseNode true
                 }
