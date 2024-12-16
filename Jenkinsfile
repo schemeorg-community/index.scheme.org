@@ -3,6 +3,11 @@ pipeline {
     agent {
         label 'docker'
     }
+
+    parameters {
+        booleanParam(name: 'DEPLOY_STAGING', defaultValue: true, description: 'Deploy to index.staging.scheme.org')
+        booleanParam(name: 'DEPLOY_PROD', defaultValue: false, description: 'Deploy to index.scheme.org')
+    }
     
     stages {
 
@@ -15,7 +20,7 @@ pipeline {
         stage('Build') {
             agent {
                 docker {
-                    image 'docker:cli'
+                    image 'docker:20.10.24-cli'
                     args "-u root"
                     reuseNode true
                 }
@@ -30,25 +35,50 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy staging') {
             agent {
                 dockerfile {
-                    filename './deploy/ansible.Dockerfile'
+                    filename './deploy/rsync.Dockerfile'
                     reuseNode true
                 }
             }
             when {
-                branch 'master'
+                expression {
+                    return params.DEPLOY_STAGING
+                }
             }
             steps {
-                dir('deploy') {
-                    sh 'pip install ansible'
-                    sshagent(credentials: ['index_scheme_org_ssh']) {
-                        sh '''
-                            ssh-keyscan -t rsa index.scheme.org >> ~/.ssh/known_hosts
-                            ansible-playbook -i hosts deploy.yml -e content_zip_file=../schemeindex.zip
-                        '''
-                    }
+                sshagent(credentials: ['index_staging_tuonela_ssh']) {
+                    sh '''
+                        mkdir ~/.ssh
+                        ssh-keyscan -t rsa tuonela.scheme.org >> ~/.ssh/known_hosts
+                        rsync schemeindex.zip stag-index@tuonela.scheme.org:/staging/index/update/schemeindex.zip
+                        ssh stag-index@tuonela.scheme.org 'cd ~ ; bash install-update.sh'
+                    '''
+                }
+            }
+        }
+
+        stage('Deploy production') {
+            agent {
+                dockerfile {
+                    filename './deploy/rsync.Dockerfile'
+                    reuseNode true
+                }
+            }
+            when {
+                expression {
+                    return params.DEPLOY_PROD
+                }
+            }
+            steps {
+                sshagent(credentials: ['index_tuonela_ssh']) {
+                    sh '''
+                        mkdir ~/.ssh
+                        ssh-keyscan -t rsa tuonela.scheme.org >> ~/.ssh/known_hosts
+                        rsync schemeindex.zip prod-index@tuonela.scheme.org:/production/index/update/schemeindex.zip
+                        ssh prod-index@tuonela.scheme.org 'cd ~ ; bash install-update.sh'
+                    '''
                 }
             }
         }
