@@ -6,8 +6,8 @@
   (desc . "Returns a range whose length (number of elements) is length. The indexer procedure returns the nth element (where 0 ≤ n < length) of the range, given n. This procedure must run in O(1) time. The range returned is compact, although indexer may close over arbitrarily large data structures. The average accessing time of the resulting range is the average time needed to run indexer."))
  ((name . "numeric-range")
   (signature case-lambda 
-             (((numbger? start) (numbger? end)) range?)
-             (((numbger? start) (numbger? end) (numbger? step)) range?))
+             (((number? start) (number? end)) range?)
+             (((number? start) (number? end) (number? step)) range?))
   (tags pure)
   (desc . "Returns a numeric range, a special case of a range specified by an inclusive lower bound start, an exclusive upper bound end, and a step value (default 1), all of which can be exact or inexact real numbers. This constructor produces the sequence
     start, (+ start step), (+ start (* 2 step)), …, (+ start (* n step)), 
