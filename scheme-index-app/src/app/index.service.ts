@@ -92,6 +92,10 @@ export class IndexService {
       this.loadSearcher(false);
   }
 
+  public facetCollapseOnSearch(): boolean {
+      return window.innerWidth <= 600;
+  }
+
   public reloadData() {
       this.loadSearcher(true);
   }
