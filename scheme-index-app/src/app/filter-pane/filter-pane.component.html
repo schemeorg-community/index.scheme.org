@@ -17,6 +17,9 @@
         <div class="filter-pane__query-cnt">
             <input id="query-field" name="query" autocomplete="off" value="{{queryString}}" class="filter-pane__query"
                 placeholder="Search ..." aria-label="Search text" #querytextfield (input)="searchChange()">
+            <button *ngIf="showSearchButton()" (click)="onSearchButtonClick()" class="filter-pane__search-btn">
+                <fa-icon [icon]="faSearch"></fa-icon>
+            </button>
         </div>
         <div class="filter-pane__facets">
             <ng-container *ngFor="let facet of facets">

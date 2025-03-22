@@ -78,7 +78,7 @@ export class SearchPageComponent {
         this.indexQuery.subscribe(q => {
             svc.query(q).pipe(first()).subscribe(resp => this.response.next(resp));
             // collapse filter panel for small screens on query
-            if (window.innerWidth < 600) {
+            if (this.svc.facetCollapseOnSearch()) {
                 this.facetCollapsed = true;
             }
             if (this.resultsContainer)

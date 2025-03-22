@@ -65,9 +65,9 @@ export class FilterPaneComponent {
   facets: Facet[] = [];
   queryString = '';
 
-  private _searchTrigger$: BehaviorSubject<void>;
+  private _searchTrigger$: Subject<void>;
 
-  constructor(filtersetSvc: IndexService) {
+  constructor(private filtersetSvc: IndexService) {
     this.query$ = new ReplaySubject<IndexQuery>(1);
     this.response$ = new ReplaySubject<IndexResponse>(1);
 
@@ -80,7 +80,7 @@ export class FilterPaneComponent {
       this.queryString = query.query || '';
     });
 
-    this._searchTrigger$ = new BehaviorSubject<void>(undefined);
+    this._searchTrigger$ = new Subject<void>();
     this._searchTrigger$.pipe(debounceTime(400))
         .subscribe(() => {
             this.onSearch(this.searchForm.nativeElement);
@@ -139,7 +139,17 @@ export class FilterPaneComponent {
   }
 
   searchChange() {
-      this._searchTrigger$.next();
+      if (!this.filtersetSvc.facetCollapseOnSearch()) {
+          this._searchTrigger$.next();
+      }
+  }
+
+  showSearchButton() {
+      return this.filtersetSvc.facetCollapseOnSearch();
+  }
+
+  onSearchButtonClick() {
+    this._searchTrigger$.next();
   }
 
   onSearch(f: HTMLFormElement) {
