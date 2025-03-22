@@ -5,7 +5,7 @@ pipeline {
     }
 
     parameters {
-        booleanParam(name: 'DEPLOY_STAGING', defaultValue: true, description: 'Deploy to index.staging.scheme.org')
+        booleanParam(name: 'DEPLOY_STAGING', defaultValue: false, description: 'Deploy to index.staging.scheme.org')
         booleanParam(name: 'DEPLOY_PROD', defaultValue: false, description: 'Deploy to index.scheme.org')
     }
     
