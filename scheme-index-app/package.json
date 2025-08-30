@@ -22,7 +22,7 @@
     "@angular/router": "^19.2.14",
     "@angular/service-worker": "^19.2.14",
     "@fontsource/roboto": "^4.5.8",
-    "@fortawesome/angular-fontawesome": "^0.15.0",
+    "@fortawesome/angular-fontawesome": "^1.0.0",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "fuse.js": "^7.0.0",
     "minisearch": "^7.0.0",
