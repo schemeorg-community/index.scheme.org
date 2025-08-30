@@ -11,19 +11,18 @@ import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule,
-      RouterModule,
-      FontAwesomeModule,
-      FilterPaneComponent,
-      SearchItemComponent,
-      PagerComponent,
-      LoaderComponent
-  ],
-  selector: 'app-search-page',
-  templateUrl: './search-page.component.html',
-  styleUrls: ['./search-page.component.scss']
+    imports: [
+        CommonModule,
+        RouterModule,
+        FontAwesomeModule,
+        FilterPaneComponent,
+        SearchItemComponent,
+        PagerComponent,
+        LoaderComponent
+    ],
+    selector: 'app-search-page',
+    templateUrl: './search-page.component.html',
+    styleUrls: ['./search-page.component.scss']
 })
 export class SearchPageComponent {
 

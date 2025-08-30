@@ -9,16 +9,15 @@ import { CommonModule } from '@angular/common';
 import { FacetFilterPipe } from '../facet-filter.pipe';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule,
-      FormsModule,
-      FontAwesomeModule,
-      FacetFilterPipe
-  ],
-  selector: 'app-filter-pane',
-  templateUrl: './filter-pane.component.html',
-  styleUrls: ['./filter-pane.component.scss']
+    imports: [
+        CommonModule,
+        FormsModule,
+        FontAwesomeModule,
+        FacetFilterPipe
+    ],
+    selector: 'app-filter-pane',
+    templateUrl: './filter-pane.component.html',
+    styleUrls: ['./filter-pane.component.scss']
 })
 export class FilterPaneComponent {
 

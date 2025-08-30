@@ -5,7 +5,6 @@ import { ReplaySubject, Observable, map } from 'rxjs';
 import { SearchItem, SearchItemSingle, Signature } from '../index.types';
 
 @Component({
-    standalone: true,
     imports: [
         CommonModule,
         RouterModule

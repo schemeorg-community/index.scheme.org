@@ -8,15 +8,14 @@ import { RouterLink, SearchItemComponent } from '../search-item/search-item.comp
 import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule,
-      RouterModule,
-      SearchItemComponent
-  ],
-  selector: 'app-single-entry-page',
-  templateUrl: './single-entry-page.component.html',
-  styleUrls: ['./single-entry-page.component.scss']
+    imports: [
+        CommonModule,
+        RouterModule,
+        SearchItemComponent
+    ],
+    selector: 'app-single-entry-page',
+    templateUrl: './single-entry-page.component.html',
+    styleUrls: ['./single-entry-page.component.scss']
 })
 export class SingleEntryPageComponent {
 

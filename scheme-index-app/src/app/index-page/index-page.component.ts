@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
-    standalone: true,
     imports: [
         CommonModule,
         RouterModule,
