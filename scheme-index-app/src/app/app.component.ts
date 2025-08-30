@@ -25,9 +25,6 @@ export class AppComponent {
   faFile = faFile;
   faTimes = faTimes;
 
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
   constructor() {
       const filtersetSvc = inject(IndexService);
       const router = inject(Router);

@@ -21,9 +21,6 @@ export class IndexPageComponent {
 
     filtersetGroups: Observable<FiltersetGroup[]>;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const filtersetsService = this.filtersetsService;
 

@@ -24,9 +24,6 @@ export class IndexService {
   private _filtersetsReady$: BehaviorSubject<boolean>;
   private _searcherReady$: BehaviorSubject<boolean>;
 
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
-
   constructor() {
 
       this._filtersetsReady$ = new BehaviorSubject<boolean>(false);

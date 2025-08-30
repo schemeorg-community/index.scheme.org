@@ -41,9 +41,6 @@ export class SearchPageComponent {
     results: Observable<SearchItem[]>;
     facetCollapsed = false;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const route = this.route;
         const svc = this.svc;

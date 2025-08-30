@@ -1,4 +1,4 @@
-import { Subject, ReplaySubject, combineLatest, first, BehaviorSubject, debounceTime } from 'rxjs';
+import { Subject, ReplaySubject, combineLatest, first, debounceTime } from 'rxjs';
 import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild, inject } from '@angular/core';
 import { IndexQuery, IndexResponse, ResponseFacetValue } from '../index.types';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
@@ -66,9 +66,6 @@ export class FilterPaneComponent {
   queryString = '';
 
   private _searchTrigger$: Subject<void>;
-
-  /** Inserted by Angular inject() migration for backwards compatibility */
-  constructor(...args: unknown[]);
 
   constructor() {
     const filtersetSvc = this.filtersetSvc;

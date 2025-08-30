@@ -21,9 +21,6 @@ export class SingleEntryPageComponent {
 
     public entry: Observable<SearchItem>;
 
-    /** Inserted by Angular inject() migration for backwards compatibility */
-    constructor(...args: unknown[]);
-
     constructor() {
         const route = inject(ActivatedRoute);
         const svc = inject(IndexService);
