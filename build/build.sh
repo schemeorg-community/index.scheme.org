@@ -19,7 +19,7 @@ npm install
 npm run build
 
 echo 'Zipping result'
-cd $ROOT/scheme-index-app/dist/scheme-index
+cd $ROOT/scheme-index-app/dist/scheme-index/browser
 zip -r $ROOT/build/schemeindex.zip *
 
 echo "Build output at $ROOT/build/schemeindex.zip"
