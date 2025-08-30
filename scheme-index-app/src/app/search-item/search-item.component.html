@@ -179,7 +179,7 @@
       }@if (routerResolver(item, 'name', item.name); as link) {
       <a class="signature__name--syntax" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{item.name}}</a>
     }
-    @for (part of highlightSyntaxSignature(literals, variant.pattern); track part) {
+    @for (part of highlightSyntaxSignature(literals, variant.pattern); track $index) {
       <ng-container *ngTemplateOutlet="colored_text; context: {part: part}"/>
     }
     @if (variant.type) {
@@ -205,7 +205,7 @@
       <div>
         @for (p of patterns; track p) {
           <div>
-            @for (p of highlightLiterals(literals, p); track p) {
+            @for (p of highlightLiterals(literals, p); track $index) {
               <ng-container *ngTemplateOutlet="colored_text; context: {part: p}"/>
             }
           </div>
