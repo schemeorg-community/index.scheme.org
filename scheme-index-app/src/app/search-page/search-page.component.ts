@@ -1,5 +1,5 @@
 import { ReplaySubject, Observable, map, combineLatest, first } from 'rxjs';
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IndexService } from '../index.service';
 import { IndexResponse, IndexQuery, SearchItem } from '../index.types';
@@ -25,6 +25,10 @@ import { LoaderComponent } from '../loader/loader.component';
     styleUrls: ['./search-page.component.scss']
 })
 export class SearchPageComponent {
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    svc = inject(IndexService);
+
 
     @ViewChild('results_container')
     resultsContainer?: ElementRef;
@@ -37,11 +41,13 @@ export class SearchPageComponent {
     results: Observable<SearchItem[]>;
     facetCollapsed = false;
 
-    constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        public svc: IndexService
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const route = this.route;
+        const svc = this.svc;
+
         this.indexQuery = combineLatest([route.paramMap, route.queryParams]).pipe(map(([params, queryParams]) => {
             const filterset = params.get('filterset') || '';
             this.filterset = filterset;

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { IndexResponse, IndexQuery, Filterset, SearchItem, SearchItemSingle, FuncSignatureReturn, ResponseFacetValue } from './index.types';
 import { Observable, shareReplay, map, combineLatest, BehaviorSubject, of, mergeMap, firstValueFrom, tap } from 'rxjs';
@@ -8,6 +8,8 @@ import MiniSearch, { Options } from 'node_modules/minisearch/dist/es';
   providedIn: 'root'
 })
 export class IndexService {
+  private http = inject(HttpClient);
+
 
   public filtersets$: Observable<Filterset[]>;
   public filtersetsReady$: Observable<boolean>;
@@ -22,7 +24,10 @@ export class IndexService {
   private _filtersetsReady$: BehaviorSubject<boolean>;
   private _searcherReady$: BehaviorSubject<boolean>;
 
-  constructor(private http: HttpClient) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
 
       this._filtersetsReady$ = new BehaviorSubject<boolean>(false);
       this._searcherReady$ = new BehaviorSubject<boolean>(false);

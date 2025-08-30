@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterModule  } from '@angular/router';
 import { filter, map, Observable, startWith, combineLatest } from 'rxjs';
 import { IndexService } from './index.service';
@@ -25,7 +25,13 @@ export class AppComponent {
   faFile = faFile;
   faTimes = faTimes;
 
-  constructor(filtersetSvc: IndexService, router: Router) {
+  /** Inserted by Angular inject() migration for backwards compatibility */
+  constructor(...args: unknown[]);
+
+  constructor() {
+      const filtersetSvc = inject(IndexService);
+      const router = inject(Router);
+
       const routeChange = router.events.pipe(
           filter((event) => event instanceof NavigationEnd),
           startWith(router)

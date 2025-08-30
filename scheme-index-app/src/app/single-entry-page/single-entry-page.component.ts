@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable, mergeMap } from 'rxjs';
@@ -21,11 +21,14 @@ export class SingleEntryPageComponent {
 
     public entry: Observable<SearchItem>;
 
-    constructor(
-        route: ActivatedRoute,
-        svc: IndexService,
-        title: Title
-    ) {
+    /** Inserted by Angular inject() migration for backwards compatibility */
+    constructor(...args: unknown[]);
+
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const svc = inject(IndexService);
+        const title = inject(Title);
+
         this.entry = route.paramMap.pipe(
             mergeMap(params => {
                 const filterset = decodeURIComponent(params.get('filterset') || '');
