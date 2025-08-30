@@ -1,11 +1,17 @@
 <footer class="pager" aria-label="Pager">
-    <ng-container *ngFor="let page of pages | async">
-        <span class="pager__gap" *ngIf="page.gap">...</span>
-        <a class="pager__page pager__page--inactive" (click)="pageClick.emit(page.number)" *ngIf="!page.gap && page.link">
-            {{page.number}}
-        </a>
-        <span class="pager__page pager__page--active" *ngIf="!page.gap && !page.link">
-            {{page.number}}
-        </span>
-    </ng-container>
+  @for (page of pages | async; track page) {
+    @if (page.gap) {
+      <span class="pager__gap">...</span>
+    }
+    @if (!page.gap && page.link) {
+      <a class="pager__page pager__page--inactive" (click)="pageClick.emit(page.number)">
+        {{page.number}}
+      </a>
+    }
+    @if (!page.gap && !page.link) {
+      <span class="pager__page pager__page--active">
+        {{page.number}}
+      </span>
+    }
+  }
 </footer>

@@ -5,16 +5,15 @@ import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, f
 import { IndexService } from '../index.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { FacetFilterPipe } from '../facet-filter.pipe';
 
 @Component({
     imports: [
-        CommonModule,
-        FormsModule,
-        FontAwesomeModule,
-        FacetFilterPipe
-    ],
+    FormsModule,
+    FontAwesomeModule,
+    FacetFilterPipe
+],
     selector: 'app-filter-pane',
     templateUrl: './filter-pane.component.html',
     styleUrls: ['./filter-pane.component.scss']
