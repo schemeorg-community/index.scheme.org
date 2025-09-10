@@ -39,7 +39,6 @@ pipeline {
             agent {
                 dockerfile {
                     filename './deploy/rsync.Dockerfile'
-                    args '-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro'
                     reuseNode true
                 }
             }
@@ -51,7 +50,9 @@ pipeline {
             steps {
                 sshagent(credentials: ['index_staging_tuonela_ssh']) {
                     sh '''
-                        rsync -e "ssh -o StrictHostKeyChecking=no" schemeindex.zip stag-index@tuonela.scheme.org:/staging/index/update/schemeindex.zip
+                        mkdir ~/.ssh
+                        ssh-keyscan -t rsa tuonela.scheme.org >> ~/.ssh/known_hosts
+                        rsync schemeindex.zip stag-index@tuonela.scheme.org:/staging/index/update/schemeindex.zip
                         ssh stag-index@tuonela.scheme.org 'cd ~ ; bash install-update.sh'
                     '''
                 }
