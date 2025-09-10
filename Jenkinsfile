@@ -50,9 +50,7 @@ pipeline {
             steps {
                 sshagent(credentials: ['index_staging_tuonela_ssh']) {
                     sh '''
-                        mkdir ~/.ssh
-                        ssh-keyscan -t rsa tuonela.scheme.org >> ~/.ssh/known_hosts
-                        rsync schemeindex.zip stag-index@tuonela.scheme.org:/staging/index/update/schemeindex.zip
+                        rsync -e "ssh -o StrictHostKeyChecking=no" schemeindex.zip stag-index@tuonela.scheme.org:/staging/index/update/schemeindex.zip
                         ssh stag-index@tuonela.scheme.org 'cd ~ ; bash install-update.sh'
                     '''
                 }
