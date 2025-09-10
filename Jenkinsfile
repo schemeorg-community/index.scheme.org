@@ -21,7 +21,7 @@ pipeline {
             agent {
                 docker {
                     image 'docker:20.10.24-cli'
-                    args "-u root"
+                    args '-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro'
                     reuseNode true
                 }
             }
