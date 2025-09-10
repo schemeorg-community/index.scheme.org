@@ -39,6 +39,7 @@ pipeline {
             agent {
                 dockerfile {
                     filename './deploy/rsync.Dockerfile'
+                    args '-v /etc/passwd:/etc/passwd:ro -v /etc/group:/etc/group:ro'
                     reuseNode true
                 }
             }
