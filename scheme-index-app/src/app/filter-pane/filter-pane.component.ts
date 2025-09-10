@@ -1,26 +1,26 @@
-import { Subject, ReplaySubject, combineLatest, first, BehaviorSubject, debounceTime } from 'rxjs';
-import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild } from '@angular/core';
+import { Subject, ReplaySubject, combineLatest, first, debounceTime } from 'rxjs';
+import { Component, Input, Output, EventEmitter, HostListener, ElementRef, ViewChild, inject } from '@angular/core';
 import { IndexQuery, IndexResponse, ResponseFacetValue } from '../index.types';
 import { faMagnifyingGlass, faFolderOpen, faFolderClosed, faCircleChevronLeft, faCircleChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { IndexService } from '../index.service';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import { FacetFilterPipe } from '../facet-filter.pipe';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule,
-      FormsModule,
-      FontAwesomeModule,
-      FacetFilterPipe
-  ],
-  selector: 'app-filter-pane',
-  templateUrl: './filter-pane.component.html',
-  styleUrls: ['./filter-pane.component.scss']
+    imports: [
+    FormsModule,
+    FontAwesomeModule,
+    FacetFilterPipe
+],
+    selector: 'app-filter-pane',
+    templateUrl: './filter-pane.component.html',
+    styleUrls: ['./filter-pane.component.scss']
 })
 export class FilterPaneComponent {
+  private filtersetSvc = inject(IndexService);
+
 
   @Input()
   collapsed = false;
@@ -67,7 +67,9 @@ export class FilterPaneComponent {
 
   private _searchTrigger$: Subject<void>;
 
-  constructor(private filtersetSvc: IndexService) {
+  constructor() {
+    const filtersetSvc = this.filtersetSvc;
+
     this.query$ = new ReplaySubject<IndexQuery>(1);
     this.response$ = new ReplaySubject<IndexResponse>(1);
 

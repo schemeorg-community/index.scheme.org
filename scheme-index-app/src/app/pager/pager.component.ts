@@ -3,13 +3,12 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { ReplaySubject, Observable, combineLatest, map } from 'rxjs';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule
-  ],
-  selector: 'app-pager',
-  templateUrl: './pager.component.html',
-  styleUrls: ['./pager.component.scss']
+    imports: [
+        CommonModule
+    ],
+    selector: 'app-pager',
+    templateUrl: './pager.component.html',
+    styleUrls: ['./pager.component.scss']
 })
 export class PagerComponent {
 

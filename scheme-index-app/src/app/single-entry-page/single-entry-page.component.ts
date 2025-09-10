@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { Observable, mergeMap } from 'rxjs';
@@ -8,25 +8,24 @@ import { RouterLink, SearchItemComponent } from '../search-item/search-item.comp
 import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule,
-      RouterModule,
-      SearchItemComponent
-  ],
-  selector: 'app-single-entry-page',
-  templateUrl: './single-entry-page.component.html',
-  styleUrls: ['./single-entry-page.component.scss']
+    imports: [
+        CommonModule,
+        RouterModule,
+        SearchItemComponent
+    ],
+    selector: 'app-single-entry-page',
+    templateUrl: './single-entry-page.component.html',
+    styleUrls: ['./single-entry-page.component.scss']
 })
 export class SingleEntryPageComponent {
 
     public entry: Observable<SearchItem>;
 
-    constructor(
-        route: ActivatedRoute,
-        svc: IndexService,
-        title: Title
-    ) {
+    constructor() {
+        const route = inject(ActivatedRoute);
+        const svc = inject(IndexService);
+        const title = inject(Title);
+
         this.entry = route.paramMap.pipe(
             mergeMap(params => {
                 const filterset = decodeURIComponent(params.get('filterset') || '');

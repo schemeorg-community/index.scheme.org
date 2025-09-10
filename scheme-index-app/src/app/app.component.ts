@@ -1,4 +1,4 @@
-import { Component, HostBinding } from '@angular/core';
+import { Component, HostBinding, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterModule  } from '@angular/router';
 import { filter, map, Observable, startWith, combineLatest } from 'rxjs';
 import { IndexService } from './index.service';
@@ -8,16 +8,15 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule,
-      FormsModule,
-      RouterModule,
-      FontAwesomeModule
-  ],
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        FontAwesomeModule
+    ],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
 
@@ -26,7 +25,10 @@ export class AppComponent {
   faFile = faFile;
   faTimes = faTimes;
 
-  constructor(filtersetSvc: IndexService, router: Router) {
+  constructor() {
+      const filtersetSvc = inject(IndexService);
+      const router = inject(Router);
+
       const routeChange = router.events.pipe(
           filter((event) => event instanceof NavigationEnd),
           startWith(router)

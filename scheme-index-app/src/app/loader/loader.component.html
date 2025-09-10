@@ -1,3 +1,5 @@
 <div class="loader-cnt">
-    <fa-icon size="3x" animation="spin" [icon]="spinnerIcon" *ngIf="loading$ | async"></fa-icon>
+  @if (loading$ | async) {
+    <fa-icon size="3x" animation="spin" [icon]="spinnerIcon"></fa-icon>
+  }
 </div>

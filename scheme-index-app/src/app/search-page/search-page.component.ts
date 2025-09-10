@@ -1,5 +1,5 @@
 import { ReplaySubject, Observable, map, combineLatest, first } from 'rxjs';
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { IndexService } from '../index.service';
 import { IndexResponse, IndexQuery, SearchItem } from '../index.types';
@@ -11,21 +11,24 @@ import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
-  standalone: true,
-  imports: [
-      CommonModule,
-      RouterModule,
-      FontAwesomeModule,
-      FilterPaneComponent,
-      SearchItemComponent,
-      PagerComponent,
-      LoaderComponent
-  ],
-  selector: 'app-search-page',
-  templateUrl: './search-page.component.html',
-  styleUrls: ['./search-page.component.scss']
+    imports: [
+        CommonModule,
+        RouterModule,
+        FontAwesomeModule,
+        FilterPaneComponent,
+        SearchItemComponent,
+        PagerComponent,
+        LoaderComponent
+    ],
+    selector: 'app-search-page',
+    templateUrl: './search-page.component.html',
+    styleUrls: ['./search-page.component.scss']
 })
 export class SearchPageComponent {
+    private route = inject(ActivatedRoute);
+    private router = inject(Router);
+    svc = inject(IndexService);
+
 
     @ViewChild('results_container')
     resultsContainer?: ElementRef;
@@ -38,11 +41,10 @@ export class SearchPageComponent {
     results: Observable<SearchItem[]>;
     facetCollapsed = false;
 
-    constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        public svc: IndexService
-    ) {
+    constructor() {
+        const route = this.route;
+        const svc = this.svc;
+
         this.indexQuery = combineLatest([route.paramMap, route.queryParams]).pipe(map(([params, queryParams]) => {
             const filterset = params.get('filterset') || '';
             this.filterset = filterset;

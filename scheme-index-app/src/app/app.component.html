@@ -1,41 +1,55 @@
 <nav class="navbar">
-    <ul class="navbar__list navbar__list--toplevel">
-        <li class="navbar__list-item">
-            <a href="https://scheme.org"
-                class="navbar__link navbar__link--clickable navbar__link--schemeorg">Scheme.org</a>
-        </li>
-        <ng-container *ngFor="let item of navbarItems | async">
-          <ng-container *ngTemplateOutlet="navbaritem; context: {item: item}"/>
-        </ng-container>
-    </ul>
-    <div class="theme-cb-wrapper">
-        <select #themecb class="theme-cb" (change)="onSelectTheme(themecb.value)" [(ngModel)]="selectedTheme">
-            <option value="default">System default</option>
-            <option value="light">Light</option>
-            <option value="dark">Dark</option>
-        </select>
-        theme
-    </div>
+  <ul class="navbar__list navbar__list--toplevel">
+    <li class="navbar__list-item">
+      <a href="https://scheme.org"
+      class="navbar__link navbar__link--clickable navbar__link--schemeorg">Scheme.org</a>
+    </li>
+    @for (item of navbarItems | async; track item) {
+      <ng-container *ngTemplateOutlet="navbaritem; context: {item: item}"/>
+    }
+  </ul>
+  <div class="theme-cb-wrapper">
+    <select #themecb class="theme-cb" (change)="onSelectTheme(themecb.value)" [(ngModel)]="selectedTheme">
+      <option value="default">System default</option>
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
+    theme
+  </div>
 </nav>
 <div class="routeview">
-    <router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>
 
 <ng-template #navbaritem let-item="item">
-    <li class="navbar__list-item">
-        <span class="navbar__link navbar__link--active" *ngIf="item.isActive">
-            <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>&nbsp;{{item.label}}
+  <li class="navbar__list-item">
+    @if (item.isActive) {
+      <span class="navbar__link navbar__link--active">
+        @if (item.icon) {
+          <fa-icon [icon]="item.icon"></fa-icon>
+          }&nbsp;{{item.label}}
         </span>
-        <a [routerLink]="item.link" class="navbar__link navbar__link--clickable" *ngIf="!item.isActive && item.link">
-            <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>&nbsp;{{item.label}}
-        </a>
-        <span class="navbar__link" *ngIf="!item.isActive && !item.link">
-            <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>&nbsp;{{item.label}}
-        </span>
-        <ul class="navbar__list navbar__list--nestedlevel" *ngIf="item.items.length > 0">
-          <ng-container *ngFor="let item of item.items">
-            <ng-container *ngTemplateOutlet="navbaritem; context: {item: item}" />
-          </ng-container>
-        </ul>
-    </li>
-</ng-template>
+      }
+      @if (!item.isActive && item.link) {
+        <a [routerLink]="item.link" class="navbar__link navbar__link--clickable">
+          @if (item.icon) {
+            <fa-icon [icon]="item.icon"></fa-icon>
+            }&nbsp;{{item.label}}
+          </a>
+        }
+        @if (!item.isActive && !item.link) {
+          <span class="navbar__link">
+            @if (item.icon) {
+              <fa-icon [icon]="item.icon"></fa-icon>
+              }&nbsp;{{item.label}}
+            </span>
+          }
+          @if (item.items.length > 0) {
+            <ul class="navbar__list navbar__list--nestedlevel">
+              @for (item of item.items; track item) {
+                <ng-container *ngTemplateOutlet="navbaritem; context: {item: item}" />
+              }
+            </ul>
+          }
+        </li>
+      </ng-template>

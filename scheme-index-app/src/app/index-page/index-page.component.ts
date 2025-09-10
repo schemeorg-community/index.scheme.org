@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 import { IndexService } from '../index.service';
 import { RouterModule } from '@angular/router';
@@ -6,7 +6,6 @@ import { CommonModule } from '@angular/common';
 import { LoaderComponent } from '../loader/loader.component';
 
 @Component({
-    standalone: true,
     imports: [
         CommonModule,
         RouterModule,
@@ -17,10 +16,14 @@ import { LoaderComponent } from '../loader/loader.component';
     styleUrls: ['./index-page.component.scss']
 })
 export class IndexPageComponent {
+    filtersetsService = inject(IndexService);
+
 
     filtersetGroups: Observable<FiltersetGroup[]>;
 
-    constructor(public filtersetsService: IndexService) {
+    constructor() {
+        const filtersetsService = this.filtersetsService;
+
         const isRnrs = (code: string) => {
             return code.match(/r.rs/);
         };

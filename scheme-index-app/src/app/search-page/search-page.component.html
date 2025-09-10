@@ -1,21 +1,31 @@
-<div class="search-page" *ngIf="svc.searcherReady$ | async">
-    <app-filter-pane *ngIf="filterpaneParams | async; let params"
-                 [query]="params.query"
-                 [response]="params.response"
-                 [collapsed]="facetCollapsed"
-                 (collapseChange)="onFacetCollapseChange($event)"
-                 (queryChange)="onQueryChange($event)"
-                 class="search-page__controls"
-                 [class.search-page__controls--hidden]="facetCollapsed" />
+@if (svc.searcherReady$ | async) {
+  <div class="search-page">
+    @if (filterpaneParams | async; as params) {
+      <app-filter-pane
+        [query]="params.query"
+        [response]="params.response"
+        [collapsed]="facetCollapsed"
+        (collapseChange)="onFacetCollapseChange($event)"
+        (queryChange)="onQueryChange($event)"
+        class="search-page__controls"
+        [class.search-page__controls--hidden]="facetCollapsed" />
+    }
     <section class="search-page__search-result definition-list animated-enter" aria-label="Search results" #results_container>
-        <div class="definition-list__content-shadow" *ngIf="results | async; let results">
-            <app-search-item *ngFor="let result of results" [searchitem]="result" [routerResolver]="seachItemRouterResolver.bind(this)"/>
+      @if (results | async; as results) {
+        <div class="definition-list__content-shadow">
+          @for (result of results; track result) {
+            <app-search-item [searchitem]="result" [routerResolver]="seachItemRouterResolver.bind(this)"/>
+          }
         </div>
-        <app-pager *ngIf="pagerParams | async; let pager" [pageSize]="pager.pageSize" [page]="pager.page" [total]="pager.total" (pageClick)="onPageClick($event)"/>
+      }
+      @if (pagerParams | async; as pager) {
+        <app-pager [pageSize]="pager.pageSize" [page]="pager.page" [total]="pager.total" (pageClick)="onPageClick($event)"/>
+      }
     </section>
-</div>
+  </div>
+}
 
-<ng-container *ngIf="(svc.searcherReady$ | async) === false">
-    <app-loader [isLoading]="true">
-    </app-loader>
-</ng-container>
+@if ((svc.searcherReady$ | async) === false) {
+  <app-loader [isLoading]="true">
+  </app-loader>
+}

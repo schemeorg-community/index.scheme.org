@@ -6,7 +6,6 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 @Component({
     selector: 'app-loader',
-    standalone: true,
     imports: [
         CommonModule,
         FontAwesomeModule
