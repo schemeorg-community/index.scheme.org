@@ -80,7 +80,7 @@ export class SearchItemComponent {
 
     highlightSyntaxSignature(literals: string[], pattern: string): TextPart[] {
         // name is already rendered in template and needs to be removed before rendering rest of signature
-        const ommitedPrefix = pattern.match(/(^\([^\s)]*)(?:(?:\s)|(?:\)$))/);
+        const ommitedPrefix = pattern.match(/(^\([^\s)]*)/);
         const ommitedPrefixEnd = ommitedPrefix? ommitedPrefix[1].length : 0;
         return [...this.highlightLiterals(literals, pattern.substring(ommitedPrefixEnd))];
     }
@@ -91,16 +91,17 @@ export class SearchItemComponent {
         for (;;) {
             let nextLiteralIndex = -1;
             let nextLiteral = '';
-            for (const l of literals) {
+            for (const l of ['...', '(', ')', ...literals]) {
                 const i = pattern.indexOf(l, index);
+                console.log(pattern, l, index, i);
                 if (i == -1)
                     continue;
                 //do not highlight if it's inside another identifier
                 const prec = pattern.charAt(i - 1);
                 const follow = pattern.charAt(i + l.length);
-                if (prec && prec.match(/[^ ()]/))
+                if (l != '(' && l != ')' && prec && prec.match(/[^ ()]/))
                     continue;
-                if (follow && follow.match(/[^ ()]/))
+                if (l != '(' && l != ')' && follow && follow.match(/[^ ()]/))
                     continue;
                 if (nextLiteralIndex == -1 || i < nextLiteralIndex) {
                     nextLiteralIndex = i;
@@ -118,8 +119,21 @@ export class SearchItemComponent {
                 kind: 'plain',
                 text: pattern.substring(index, nextLiteralIndex)
             });
+            let kind: 'ellipsis' | 'paren' | 'literal';
+            switch (nextLiteral) {
+              case '...':
+                kind = 'ellipsis';
+                break;
+              case '(':
+              case ')':
+                kind = 'paren';
+                break;
+              default:
+                kind = 'literal'
+                break;
+            }
             parts.push({
-                kind: 'literal',
+                kind: kind,
                 text: pattern.substring(nextLiteralIndex, nextLiteralIndex + nextLiteral.length)
             });
             index = nextLiteralIndex + nextLiteral.length;
@@ -165,7 +179,7 @@ interface ComponentSearchItemGroup {
 }
 
 interface TextPart {
-    kind: 'plain' | 'literal' | 'name';
+    kind: 'plain' | 'literal' | 'name' | 'ellipsis' | 'paren';
     text: string;
 }
 

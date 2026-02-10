@@ -89,44 +89,53 @@
 </ng-template>
 
 <ng-template #function_signature let-name="name" let-item="item" let-variant="variant" let-nolink="nolink">
-  (@if (nolink || !routerResolver(item, 'name', name)) {
-  <span class="signature__name">{{name}}</span>
-  }@if (!nolink && routerResolver(item, 'name', name); as link) {
-  <a class="signature__name" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{name}}</a>
-}
-@for (param of variant.params; track param) {
-  &ngsp;<ng-container *ngTemplateOutlet="function_param; context: {item: item, param: param, nolink: nolink}"/>
-  })
-  <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: variant.return, nolink: nolink}"/>
+    <span class="signature__paren">(</span>
+    @if (nolink || !routerResolver(item, 'name', name)) {
+        <span class="signature__name">{{name}}</span>
+    }
+    @if (!nolink && routerResolver(item, 'name', name); as link) {
+        <a class="signature__name" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{name}}</a>
+    }
+    @for (param of variant.params; track param) {
+        &ngsp;<ng-container *ngTemplateOutlet="function_param; context: {item: item, param: param, nolink: nolink}"/>
+    }
+    <span class="signature__paren">)</span>
+    <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: variant.return, nolink: nolink}"/>
 </ng-template>
 
 <ng-template #function_param let-param="param" let-item="item" let-nolink="nolink">
   @if (param.types.length) {
-    (@for (type of param.types; track type; let last = $last) {
-    @if (!nolink && type !== '#f') {
-      @if (routerResolver(item, 'param', type); as link) {
-        <a [routerLink]="link.routerLink" [queryParams]="link.queryParams" class="signature__type">{{type}}</a>
-      }
+    <span class="signature__paren">(</span>
+    @for (type of param.types; track type; let last = $last) {
+        @if (!nolink && type !== '#f') {
+            @if (routerResolver(item, 'param', type); as link) {
+                <a [routerLink]="link.routerLink" [queryParams]="link.queryParams" class="signature__type">{{type}}</a>
+            }
+        }
+        @if (nolink && type !== '#f') {
+            <span class="signature__type">{{type}}</span>
+        }
+        @if (type === '#f') {
+            <span class="signature__false-literal">{{type}}</span>
+        }
+        @if (!last) {
+            /
+        }
     }
-    @if (nolink && type !== '#f') {
-      <span class="signature__type">{{type}}</span>
-    }
-    @if (type === '#f') {
-      <span class="signature__false-literal">{{type}}</span>
-    }
-    @if (!last) {
-      /
-    }
-    }&ngsp;{{param.name}})
+    <span>&ngsp;{{param.name}}</span><span class="signature__paren">)</span>
   }
   @if (!param.types.length) {
-    {{param.name}}
+    @if (param.name === "...") {
+        <ng-container *ngTemplateOutlet="ellipsis"></ng-container>
+    } @else {
+        <span>{{param.name}}</span>
+    }
   }
 </ng-template>
 
 <ng-template #function_return let-item="item" let-return="return" let-nolink="nolink">
   @if (return.type !== 'undefined') {
-    =&gt;
+    &#10233;
     <ng-container *ngTemplateOutlet="function_return_internal; context: {item: item, return: return, nolink: nolink}"/>
   }
 </ng-template>
@@ -146,57 +155,85 @@
     }
   }
   @if (return.kind === 'return' && isAuxiliaryType(return.type) && return.type !== '#f') {
-    {{return.type}}
+    @if (return.type === '*') {
+        <span>&#x2217;</span>
+    } @else {
+        @if (return.type === '...') {
+            <ng-container *ngTemplateOutlet="ellipsis"></ng-container>
+        } @else {
+            <span>{{return.type}}</span>
+        }
+    }
   }
   @if (return.kind === 'values') {
-    (values
+    <span class="signature__paren">(</span>
+    <span>values</span>
     @for (r of return.items; track r) {
-      &ngsp;<ng-container *ngTemplateOutlet="function_return_internal; context: {item: item, return: r}"/>
-      })
+      &ngsp;
+      <ng-container *ngTemplateOutlet="function_return_internal; context: {item: item, return: r}"/>
     }
-    @if (return.kind === 'or') {
-      @for (r of return.items; track r; let last = $last) {
-        <ng-container *ngTemplateOutlet="function_return_internal; context: {item: item, return: r}">
-        </ng-container>
-        @if (!last) {
-          /
-        }
+    <span class="signature__paren">)</span>
+  }
+  @if (return.kind === 'or') {
+    @for (r of return.items; track r; let last = $last) {
+      <ng-container *ngTemplateOutlet="function_return_internal; context: {item: item, return: r}">
+      </ng-container>
+      @if (!last) {
+        /
       }
     }
+  }
   </ng-template>
 
   <ng-template #value_signature let-item="item" let-name="name" let-value="value" let-toplevel="toplevel">
-    @if (toplevel && routerResolver(item, 'name', item.name); as link) {
-      <a class="signature__name" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{name}}</a>
-      }@if (!toplevel || !routerResolver(item, 'name', item.name)) {
-      <span class="signature__name">{{name}}</span>
-      } <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: value}"/>
+      @if (toplevel && routerResolver(item, 'name', item.name); as link) {
+        <a class="signature__name" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{name}}</a>
+      }
+      @if (!toplevel || !routerResolver(item, 'name', item.name)) {
+        <span class="signature__name">{{name}}</span>
+      }
+      <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: value}"/>
     </ng-template>
 
     <ng-template #syntax_signature let-item="item" let-variant="variant" let-literals="literals">
-      (@if (!routerResolver(item, 'name', item.name)) {
-      <span class="signature__name--syntax">{{item.name}}</span>
-      }@if (routerResolver(item, 'name', item.name); as link) {
-      <a class="signature__name--syntax" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{item.name}}</a>
-    }
-    @for (part of highlightSyntaxSignature(literals, variant.pattern); track $index) {
-      <ng-container *ngTemplateOutlet="colored_text; context: {part: part}"/>
-    }
-    @if (variant.type) {
-      <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: variant.type}"/>
-    }
+      <span class="signature__paren">(</span>
+      @if (!routerResolver(item, 'name', item.name)) {
+        <span class="signature__name--syntax">{{item.name}}</span>
+      }
+      @if (routerResolver(item, 'name', item.name); as link) {
+        <a class="signature__name--syntax" [routerLink]="link.routerLink" [queryParams]="link.queryParams">{{item.name}}</a>
+      }
+      @for (part of highlightSyntaxSignature(literals, variant.pattern); track $index) {
+        <ng-container *ngTemplateOutlet="colored_text; context: {part: part}"/>
+      }
+      @if (variant.type) {
+        <ng-container *ngTemplateOutlet="function_return; context: {item: item, return: variant.type}"/>
+      }
   </ng-template>
 
   <ng-template #vector_signature let-item="item" let-name="name" let-element="element">
-    {{name}} =&gt; #(<ng-container *ngTemplateOutlet="function_param; context: {item: item, param: element}"/> ...)
+    {{name}} &#x21D2;
+    <span class="signature__paren">#(</span>
+    <ng-container *ngTemplateOutlet="function_param; context: {item: item, param: element}"/> <ng-container *ngTemplateOutlet="ellipsis"></ng-container>
+    <span class="signature__paren">)</span>
   </ng-template>
 
   <ng-template #list_signature let-item="item" let-name="name" let-element="element">
-    {{name}} =&gt; '(<ng-container *ngTemplateOutlet="function_param; context: {item: item, param: element}"/> ...)
+    {{name}} &#x21D2;
+    <span class="signature__paren">'(</span>
+    <ng-container *ngTemplateOutlet="function_param; context: {item: item, param: element}"/> <ng-container *ngTemplateOutlet="ellipsis"></ng-container>
+    <span class="signature__paren">)</span>
   </ng-template>
 
   <ng-template #alist_signature let-item="item" let-name="name" let-car="car" let-cdr="cdr">
-    {{name}} =&gt; '((<ng-container *ngTemplateOutlet="function_param; context: {item: item, param: car}"/> . <ng-container *ngTemplateOutlet="function_param; context: {item: item, param: cdr}"/>) ...)
+    {{name}} &#x21D2;
+    <span class="signature__paren">'((</span>
+    <ng-container *ngTemplateOutlet="function_param; context: {item: item, param: car}"/>
+    <span class="signature__paren">.</span>
+    <ng-container *ngTemplateOutlet="function_param; context: {item: item, param: cdr}"/>
+    <span class="signature__paren">)</span>
+    <ng-container *ngTemplateOutlet="ellipsis"></ng-container>
+    <span class="signature__paren">)</span>
   </ng-template>
 
   <ng-template #pattern_signature let-name="name" let-literals="literals" let-patterns="patterns">
@@ -215,8 +252,14 @@
   </ng-template>
 
   <ng-template #colored_text let-part="part">
+    @if (part.kind === 'paren') {
+      <span class="signature__paren">{{part.text}}</span>
+    }
+    @if (part.kind === 'ellipsis') {
+        <ng-container *ngTemplateOutlet="ellipsis"></ng-container>
+    }
     @if (part.kind === 'plain') {
-      {{part.text}}
+      <span>{{part.text}}</span>
     }
     @if (part.kind === 'literal') {
       <span class="signature__syntax">{{part.text}}</span>
@@ -224,4 +267,8 @@
     @if (part.kind === 'name') {
       <span class="signature__syntax">{{part.text}}</span>
     }
+  </ng-template>
+
+  <ng-template #ellipsis>
+      <span class="signature__ellipsis">&hellip;</span>
   </ng-template>

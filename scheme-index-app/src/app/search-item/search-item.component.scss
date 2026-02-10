@@ -164,82 +164,8 @@ $media-breakpoint: 600px;
     &__pattern-block-name {
         margin-right: 1em;
     }
-}
-
-.sexpr {
-    font-family: monospace;
-
-    &.sexpr-flex {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: baseline;
-    }
-
-    &.sexpr-shrink {
-        flex-shrink: 1;
-    }
-
-    &.muted {
+    &__paren,
+    &__ellipsis {
         color: var(--text-color-muted);
     }
-
-    &.syntaxbracket-0 {
-        color: var(--text-color-muted);
-    }
-
-    &.syntaxbracket-1 {
-        font-weight: bold;
-        color: var(--accent-color);
-    }
-
-    &.syntaxbracket-2 {
-        font-weight: bold;
-        color: var(--secondary-color);
-    }
-
-    &.spacer {
-        width: 0.25em;
-    }
-
-    &.wide-spacer {
-        width: 0.75em;
-    }
-
-    &.bright-name {
-        font-weight: bold;
-        color: var(--accent-color);
-    }
-
-    &.muted-name {
-        font-weight: bold;
-        color: var(--text-color-muted);
-    }
-
-    &.bright-type {
-        font-weight: bold;
-        color: var(--secondary-color);
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    &.bright-type:hover {
-        text-decoration: underline;
-        opacity: 0.7;
-    }
-
-    &.bright-syntax {
-        font-weight: bold;
-        color: var(--tertary-color);
-    }
-
-    &.muted-type {
-        font-weight: bold;
-        color: var(--text-color-muted);
-    }
-
-    &.result-item-block-header {
-        font-size: 0.8em;
-        color: var(--text-color-muted);
-    }
-
 }
