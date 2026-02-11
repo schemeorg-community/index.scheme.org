@@ -1,14 +1,14 @@
 pipeline {
-    
+
     agent {
-        label 'docker'
+        label 'docker-x86_64'
     }
 
     parameters {
         booleanParam(name: 'DEPLOY_STAGING', defaultValue: false, description: 'Deploy to index.staging.scheme.org')
         booleanParam(name: 'DEPLOY_PROD', defaultValue: false, description: 'Deploy to index.scheme.org')
     }
-    
+
     stages {
 
         stage('Checkout') {
