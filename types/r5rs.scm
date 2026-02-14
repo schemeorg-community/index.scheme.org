@@ -689,7 +689,7 @@ Note: The domain of string->number may be restricted by implementations in the f
      (element element ... . template)
      (ellipsis template)
      (_append "#" (element ...))))
-   (element (pattern template (_append template ellipsis))))
+   (element (pattern template (_append template " " ellipsis))))
   (desc . "An instance of syntax-rules produces a new macro transformer by specifying a sequence of hygienic rewrite rules. A use of a macro whose keyword is associated with a transformer specified by syntax-rules is matched against the patterns contained in the 〈syntax rule〉s, beginning with the leftmost 〈syntax rule〉. When a match is found, the macro use is transcribed hygienically according to the template.
 An identifier that appears in the pattern of a 〈syntax rule〉 is a pattern variable, unless it is the keyword that begins the pattern, is listed in 〈literals〉, or is the identifier “...”. Pattern variables match arbitrary input elements and are used to refer to elements of the input in the template. It is an error for the same pattern variable to appear more than once in a 〈pattern〉.
 The keyword at the beginning of the pattern in a 〈syntax rule〉 is not involved in the matching and is not considered a pattern variable or literal identifier.
@@ -1028,7 +1028,7 @@ sin^-1 z = -i log(iz + (1 - z^2)^0.5)
 cos^-1 z = pi/2 - sin^-1 z
 tan^-1 z = (log(1 + iz) - log(1 - iz)) / (2i)"))
  ((group
-    ((name . "number?") 
+    ((name . "number?")
      (signature lambda (obj) boolean?)
      (tags pure predicate))
     ((name . "complex?")

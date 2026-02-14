@@ -720,7 +720,7 @@ The substring procedure returns a newly allocated string formed from the charact
      (element element ... . template)
      (ellipsis template)
      (_append "#" (element ...))))
-   (element (pattern template (_append template ellipsis))))
+   (element (pattern template (_append template " " ellipsis))))
   (desc . "Semantics: An instance of syntax-rules evaluates, at macro-expansion time, to a new macro transformer by specifying a sequence of hygienic rewrite rules. A use of a macro whose keyword is associated with a transformer specified by syntax-rules is matched against the patterns contained in the <syntax rule>s, beginning with the leftmost <syntax rule>. When a match is found, the macro use is transcribed hygienically according to the template. It is a syntax violation when no match is found.
 An identifier appearing within a <pattern> may be an underscore ( _ ), a literal identifier listed in the list of literals (<literal> ...), or an ellipsis ( ... ). All other identifiers appearing within a <pattern> are pattern variables. It is a syntax violation if an ellipsis or underscore appears in (<literal> ...).
 While the first subform of <srpattern> may be an identifier, the identifier is not involved in the matching and is not considered a pattern variable or literal identifier.

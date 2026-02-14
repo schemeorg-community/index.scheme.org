@@ -25,7 +25,7 @@
      (element element ... . template)
      (ellipsis template)
      (_append "#" (element ...))))
-   (element (pattern template (_append template ellipsis))))
+   (element (pattern template (_append template " " ellipsis))))
   (desc . "Syntax-rules syntax is extended so that there is an extra possible token before the literal identifier list:
 (syntax-rules [<ellipsis-identifier>] (<literal-identifier> ...)
     (<pattern> <template>)
