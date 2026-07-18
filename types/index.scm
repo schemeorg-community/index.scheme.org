@@ -317,6 +317,7 @@
  ((srfi 219) . "types/srfi.219.scm")
  ((srfi 236) . "types/srfi.236.scm")
  ((srfi 239) . "types/srfi.239.scm")
+ ((srfi 253) . "types/srfi.253.scm")
 
  ;; specific implementation handling
  ;(bigloo . "types/r5rs.scm")
