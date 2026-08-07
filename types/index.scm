@@ -315,6 +315,7 @@
  ((srfi 196) . "types/srfi.196.scm")
  ((srfi 197) . "types/srfi.197.scm")
  ((srfi 219) . "types/srfi.219.scm")
+ ((srfi 235) . "types/srfi.235.scm")
  ((srfi 236) . "types/srfi.236.scm")
  ((srfi 239) . "types/srfi.239.scm")
  ((srfi 253) . "types/srfi.253.scm")
