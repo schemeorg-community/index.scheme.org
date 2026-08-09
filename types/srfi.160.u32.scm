@@ -353,7 +353,7 @@ When multiple vectors are passed, pred? must take the same number of arguments a
 ((name . "write-u32vector")
  (signature
    case-lambda
-   (((u32vector u32vec)) undefined)
-   (((u32vector u32vec) (output-port? port)) undefined))
+   (((u32vector? u32vec)) undefined)
+   (((u32vector? u32vec) (output-port? port)) undefined))
  (desc . "Prints to port (the current output port by default) a representation of u32vec in the lexical syntax explained below."))
 )

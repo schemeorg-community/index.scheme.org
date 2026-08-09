@@ -353,7 +353,7 @@ When multiple vectors are passed, pred? must take the same number of arguments a
 ((name . "write-f64vector")
  (signature
    case-lambda
-   (((f64vector f64vec)) undefined)
-   (((f64vector f64vec) (output-port? port)) undefined))
+   (((f64vector? f64vec)) undefined)
+   (((f64vector? f64vec) (output-port? port)) undefined))
  (desc . "Prints to port (the current output port by default) a representation of f64vec in the lexical syntax explained below."))
 )

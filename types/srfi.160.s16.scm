@@ -353,7 +353,7 @@ When multiple vectors are passed, pred? must take the same number of arguments a
 ((name . "write-s16vector")
  (signature
    case-lambda
-   (((s16vector s16vec)) undefined)
-   (((s16vector s16vec) (output-port? port)) undefined))
+   (((s16vector? s16vec)) undefined)
+   (((s16vector? s16vec) (output-port? port)) undefined))
  (desc . "Prints to port (the current output port by default) a representation of s16vec in the lexical syntax explained below."))
 )
