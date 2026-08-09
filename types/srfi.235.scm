@@ -1,43 +1,34 @@
 (((name . "constantly")
   (signature lambda (obj ...) procedure?)
-  (desc . "Returns the objs as its values, ignoring args.
-(map (constantly 3) '(1 2 3)) => (3 3 3)"))
+  (desc . "Returns the objs as its values, ignoring args."))
  ((name . "complement")
   (signature lambda ((procedure? proc)) procedure?)
   (subsigs (proc (lambda (x) boolean?)))
-  (desc . "Returns #t when (proc obj) returns #f, and #f otherwise.
-(map (complement (lambda (x) #f)) '(1 2 3)) => (#t #t #t)
-(map (complement (lambda (x) 3)) '(1 2 3)) => (#f #f #f)"))
+  (desc . "Returns #t when (proc obj) returns #f, and #f otherwise."))
  ((name . "flip")
   (signature lambda ((procedure? proc)) procedure?)
   (subsigs (proc (lambda (objs ...) *)))
-  (desc . "Returns what (apply proc (reverse objs)) returns.
-((flip list) 1 2 3) => (3 2 1)"))
+  (desc . "Returns what (apply proc (reverse objs)) returns."))
  ((name . "swap")
   (signature lambda ((procedure? proc)) procedure?)
   (subsigs (proc (lambda (x y rest ...) *)))
-  (desc . "Returns (apply proc obj₂ obj₁ objs).
-((swap cons) 1 2) => (2 . 1)"))
+  (desc . "Returns (apply proc obj₂ obj₁ objs)."))
  ((name . "on-left")
   (signature lambda ((procedure? proc)) procedure?)
   (subsigs (proc (lambda (x) *)))
-  (desc . "Returns (proc obj₁).
-(map (on-left list) '(1 2 3) '(4 5 6)) => '((1) (2) (3))"))
+  (desc . "Returns (proc obj₁)."))
  ((name . "on-right")
   (signature lambda ((procedure? proc)) procedure?)
   (subsigs (proc (lambda (x) *)))
-  (desc . "Returns (proc obj₂).
-(map (on-right list) '(1 2 3) '(4 5 6)) => '((4) (5) (6))"))
+  (desc . "Returns (proc obj₂)."))
  ((name . "conjoin")
   (signature lambda ((procedure? proc) ...) procedure?)
   (subsigs (proc (lambda (arg ...) boolean?)))
-  (desc . "The predicates are applied in turn to the args as follows: If a call to a predicate returns false, no more predicates are applied and #f is returned. If all predicates return true, then the last value is returned. If there are no predicates, #t is returned.
-(map (conjoin even? exact?) '(1.0 1 2.0 2)) => '(#f #f #f #t)"))
+  (desc . "The predicates are applied in turn to the args as follows: If a call to a predicate returns false, no more predicates are applied and #f is returned. If all predicates return true, then the last value is returned. If there are no predicates, #t is returned."))
  ((name . "disjoin")
   (signature lambda ((procedure? proc) ...) procedure?)
   (subsigs (proc (lambda (arg ...) boolean?)))
-  (desc . "The predicates are applied in turn to the args as follows: If a call to a predicate returns true, no more predicates are applied and its value is returned. If all predicates return false, then the last value is returned. If there are no predicates, #f is returned.
-(map (disjoin even? exact?) '(1.0 1 2.0 2)) => '(#f #t #t #t)"))
+  (desc . "The predicates are applied in turn to the args as follows: If a call to a predicate returns true, no more predicates are applied and its value is returned. If all predicates return false, then the last value is returned. If there are no predicates, #f is returned."))
  ((name . "each-of")
   (signature lambda ((procedure? proc) ...) procedure?)
   (subsigs (proc (lambda (arg ...) *)))
@@ -45,38 +36,30 @@
  ((name . "all-of")
   (signature lambda ((procedure? proc)) procedure?)
   (subsigs (proc (lambda ((list? list)) *)))
-  (desc . "Applies predicate to each element of list in turn, and immediately returns #f if predicate is not satisfied by that element. If every element satisfies predicate, returns the result of the last call to predicate. If list is empty, returns #t.
-((all-of even?) '(2 4 6)) => #t
-((all-of odd?) '(1 2 3)) => #f"))
+  (desc . "Applies predicate to each element of list in turn, and immediately returns #f if predicate is not satisfied by that element. If every element satisfies predicate, returns the result of the last call to predicate. If list is empty, returns #t."))
  ((name . "any-of")
   (signature lambda ((procedure? proc)) procedure?)
   (subsigs (proc (lambda ((list? list)) *)))
   (desc . "
 
-Applies predicate to each element of list in turn, and if predicate is satisfied by that element, immediately returns the result of calling predicate. If no element satisfies predicate returns #f. If list is empty, returns #f.
-((any-of even?) '(2 4 5)) => #t
-((any-of odd?) '(2 4 6)) => #f"))
+Applies predicate to each element of list in turn, and if predicate is satisfied by that element, immediately returns the result of calling predicate. If no element satisfies predicate returns #f. If list is empty, returns #f."))
  ((name . "on")
   (signature lambda ((procedure? reducer) (procedure? mapper)) procedure?)
   (subsigs (reducer (lambda (a b) *))
            (mapper (lambda (x) *)))
-  (desc . "Applies mapper to each obj in any order and then applies reducer to all of the results in left to right order.
-((on + -) 1 2 3) => -6"))
+  (desc . "Applies mapper to each obj in any order and then applies reducer to all of the results in left to right order."))
  ((name . "left-section")
   (signature lambda ((procedure? proc) arg ...) procedure?)
   (subsigs (proc (lambda (obj ...) *)))
-  (desc . "Applies proc to args concatenated with objs.
-(map (left-section - 1) '(1 2 3)) => (0 -1 -2) "))
+  (desc . "Applies proc to args concatenated with objs."))
  ((name . "right-section")
   (signature lambda ((procedure? proc) arg ...) procedure?)
   (subsigs (proc (lambda (obj ...) *)))
-  (desc . "Applies proc to objs concatenated with the value of (reverse args).
-(map (right-section - 1) '(1 2 3)) => (0 1 2)"))
+  (desc . "Applies proc to objs concatenated with the value of (reverse args)."))
  ((name . "apply-chain")
   (signature lambda ((procedure? proc) ...) procedure?)
   (subsigs (proc (lambda (obj ...) *)))
-  (desc . "Applies the last proc to args returning zero or more values, then applies the previous proc to the values, returning more values, until the first proc has been invoked; its values are returned. For example, (apply-chain car cdr) returns a procedure that behaves like cadr:
-(map (apply-chain car cdr) '((1 2 3) (4 5 6))) => (2 5)"))
+  (desc . "Applies the last proc to args returning zero or more values, then applies the previous proc to the values, returning more values, until the first proc has been invoked; its values are returned. For example, (apply-chain car cdr) returns a procedure that behaves like cadr:"))
  ((group ((name . "arguments-drop")
           (signature lambda ((procedure? proc) (integer? n)) procedure?)
           (subsigs (proc (lambda (obj ...) *))))
@@ -89,11 +72,7 @@ Applies predicate to each element of list in turn, and if predicate is satisfied
          ((name . "arguments-take-right")
           (signature lambda ((procedure? proc) (integer? n)) procedure?)
           (subsigs (proc (lambda (obj ...) *)))))
-  (desc "Apply proc to the args after taking/dropping n arguments from args.
-(apply (arguments-drop + 2) '(1 2 3 4 5)) => 12
-(apply (arguments-drop-right + 2) '(1 2 3 4 5)) => 6
-(apply (arguments-take + 2) '(1 2 3 4 5)) => 3
-(apply (arguments-take-right + 2) '(1 2 3 4 5)) => 9"))
+  (desc "Apply proc to the args after taking/dropping n arguments from args."))
  ((name . "group-by")
   (signature case-lambda
              (((procedure? key-proc)) list?)
@@ -165,14 +144,10 @@ Applies predicate to each element of list in turn, and if predicate is satisfied
  ;; Other procedures
  ((name . "always")
   (signature lambda (arg ...) boolean?)
-  (desc . "Ignores its arguments and always returns #t.
-(always 1 2 3) => #t"))
+  (desc . "Ignores its arguments and always returns #t."))
  ((name . "never")
   (signature lambda (arg ...) #f)
-  (desc . "Ignores its arguments and always returns #f.
-(never 1 2 3) => #f"))
+  (desc . "Ignores its arguments and always returns #f."))
  ((name . "boolean")
   (signature lambda (obj) boolean?)
-  (desc . "If obj is true, returns #t; otherwise returns #f.
-(boolean 3) => #t
-(boolean #f) => #f")))
+  (desc . "If obj is true, returns #t; otherwise returns #f.")))
