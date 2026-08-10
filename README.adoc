@@ -34,7 +34,7 @@ Group has following properties:
 | description
 
 | group
-| A list of identifiers under the group. Each entry must have format as described under a table for single idenfier entry.
+| A list of identifiers under the group. Each entry must have format as described under a table for single idenfier entry, except that it needs no `desc`-ription for the virtue of having a group one.
 
 | desc
 | A textual description applicable for entire group
