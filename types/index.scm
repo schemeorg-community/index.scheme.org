@@ -293,11 +293,11 @@
  ((srfi 161) . "types/srfi.161.scm")
  ((srfi 162) . "types/srfi.162.scm")
  ;; srfi 163 -- non-sexrp syntax
- ;; ((srfi 164) . "types/srfi.164.scm") TODO
+ ;; srfi 164 -- unpopular (TODO?)
  ((srfi 165) . "types/srfi.165.scm")
- ;; ((srfi 166) . "types/srfi.166.scm") TODO
- ;; ((srfi 167) . "types/srfi.167.scm") TODO
- ;; ((srfi 168) . "types/srfi.168.scm") TODO
+ ;; srfi 166 -- unpopular (TODO?)
+ ;; srfi 167 -- unpopular (TODO?)
+ ;; srfi 168 -- unpopular (TODO?)
  ;; srfi 169 -- non-sexrp syntax
  ;; ((srfi 170) . "types/srfi.170.scm") TODO
  ;; ((srfi 171) . "types/srfi.171.scm") TODO
@@ -308,12 +308,46 @@
  ;; srfi 176 -- meta srfi
  ;; srfi 177 -- withdrawn
  ;; ((srfi 178) . "types/srfi.178.scm") TODO
+ ;; ((srfi 179) . "types/srfi.179.scm") TODO
  ((srfi 180) . "types/srfi.180.scm")
+ ;; ((srfi 181) . "types/srfi.181.scm") TODO
+ ;; srfi 182 -- withdrawn
+ ;; srfi 183 -- withdrawn
+ ;; srfi 184 -- withdrawn
  ((srfi 185) . "types/srfi.185.scm")
+ ;; srfi 186 -- withdrawn
+ ;; srfi 187 -- withdrawn
+ ;; ((srfi 188) . "types/srfi.188.scm") TODO
+ ;; ((srfi 189) . "types/srfi.189.scm") TODO
  ((srfi 190) . "types/srfi.190.scm")
+ ;; srfi 191 -- withdrawn
+ ;; ((srfi 192) . "types/srfi.192.scm") TODO
  ((srfi 193) . "types/srfi.193.scm")
+ ;; ((srfi 194) . "types/srfi.194.scm") TODO
+ ;; ((srfi 195) . "types/srfi.195.scm") TODO
  ((srfi 196) . "types/srfi.196.scm")
  ((srfi 197) . "types/srfi.197.scm")
+ ;; srfi 198 -- withdrawn
+ ;; srfi 199 -- withdrawn
+ ;; srfi 200 -- withdrawn
+ ;; srfi 201 -- unpopular (TODO?)
+ ;; srfi 202 -- unpopular (TODO?)
+ ;; srfi 203 -- unpopular (TODO?)
+ ;; srfi 204 -- withdrawn
+ ;; srfi 205 -- withdrawn
+ ;; srfi 206 -- unpopular (TODO?)
+ ;; srfi 207 -- non-sexrp syntax
+ ;; srfi 208 -- unpopular (TODO?)
+ ;; ((srfi 209) . "types/srfi.209.scm") TODO
+ ;; ((srfi 210) . "types/srfi.210.scm") TODO
+ ;; srfi 211 -- unpopular (TODO?)
+ ;; ((srfi 212) . "types/srfi.212.scm") TODO
+ ;; srfi 213 -- unpopular, read syntax
+ ;; ((srfi 214) . "types/srfi.214.scm") TODO
+ ;; ((srfi 215) . "types/srfi.215.scm") TODO
+ ;; ((srfi 216) . "types/srfi.216.scm") TODO
+ ;; ((srfi 217) . "types/srfi.217.scm") TODO
+ ;; srfi 218 -- withdrawn
  ((srfi 219) . "types/srfi.219.scm")
  ((srfi 236) . "types/srfi.236.scm")
  ((srfi 239) . "types/srfi.239.scm")
