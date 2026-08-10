@@ -88,7 +88,7 @@ where type is same as described under functions.
 
 | tags
 | A list of symbols. Tags don't have inherent special treatment (ie., definition can make use of any tag it wants). 
-Currently used tags are described in <<Tags>>
+Currently used tags are: `pure` for procedures modifying no state; and `predicate` for boolean-returning single-argument procedures checking conformance of a value with certain criteria.
 
 | subsigs
 | Additional elaboration of signatures for the parameters / returns / syntax fragments / datastructure content. Each entry in this list is a list,
