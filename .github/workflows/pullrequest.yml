@@ -8,5 +8,6 @@ jobs:
     container:
       image: schemers/chicken:5
     steps:
+      - uses: actions/checkout@v4
       - name: 'Validate data'
         run: 'cd scheme-index-util; bash validatedata-native.sh'
