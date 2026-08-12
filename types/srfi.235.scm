@@ -108,7 +108,7 @@
           (subsigs 
               (proc (lambda (obj ...) *))
               (return (lambda (obj ...) *)))))
-  (desc "Apply proc to the args after taking/dropping n arguments from args."))
+  (desc . "Apply proc to the args after taking/dropping n arguments from args."))
  ((name . "group-by")
   (signature case-lambda
              (((procedure? key-proc)) procedure?)
