@@ -1,4 +1,4 @@
-(((nam . "*")
+(((name . "*")
   (signature lambda ((number? z) ...) number?)
   (tags pure)
   (desc . "This procedure returns the product of its arguments."))
