@@ -102,8 +102,18 @@ SOFTWARE.
   (unless (string? lib-name)
     (error "lib-name must be string"))
   (cond
-    ((assoc 'group e) => (lambda (group)
-                           (for-each (lambda (e) (validate-single-entry-definition exclude lib-name e)) (cdr group))))
+    ((assoc 'group e) =>
+     (lambda (group)
+         (define desc 
+           (cond
+             ((assoc 'desc e) => cdr)
+             (else "")))
+         (unless (string? desc)
+           (error "group desc must be string"))
+         (for-each 
+             (lambda (e) 
+                 (validate-single-entry-definition exclude lib-name e)) 
+             (cdr group))))
     (else (validate-single-entry-definition exclude lib-name e))))
 
 (define (validate-single-entry-definition exclude lib-name e)
