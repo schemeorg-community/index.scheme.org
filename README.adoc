@@ -131,7 +131,7 @@ Filterset definition file should be a list of pairs. `car` is a symbolic library
 
 == Development
 
-Use `validate.data.scm` helper in `scheme-index-util` folder to validate the data conforms to specification, by either:
+Use `validatedata.scm` helper in `scheme-index-util` folder to validate the data conforms to specification, by either:
 
 * Running `validatedata-native.sh` (requires chicken scheme installation);
 
