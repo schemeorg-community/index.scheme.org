@@ -9,6 +9,8 @@ Browse index content through one of available frontends:
 
 * https://scheme-index.aartaka.me
 
+Rendered HTML version of this readme is available at https://schemeorg-community.github.io/index.scheme.org/.
+
 == Identifiers definitions
 
 Identifiers definitions are grouped into files (one file for each library) under `types/*.scm`, and a single root index file which defines names and paths to those files `types/index.scm`.
