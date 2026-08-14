@@ -1,76 +1,67 @@
-(((name . "list-sorted?")
-  (signature lambda ((procedure? <) (list? lis)) boolean?)
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure)
-  (desc . "(shared description for list-sorted?, vector-sorted?)  These procedures return true iff their input list or vector is in sorted order, as determined by <. Specifically, they return #f iff there is an adjacent pair ... X Y ... in the input list or vector such that Y < X in the sense of <. The optional start and end range arguments restrict vector-sorted? to examining the indicated subvector.
+(((group ((name . "list-sorted?")
+          (signature lambda ((procedure? <) (list? lis)) boolean?)
+          (subsigs (< (lambda (obj1 obj2) boolean?)))
+          (tags pure))
+         ((name . "vector-sorted?")
+          (signature
+           case-lambda
+           (((procedure? <) (vector? v)) boolean?)
+           (((procedure? <) (vector? v) (integer? start)) boolean?)
+           (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
+          (subsigs (< (lambda (obj1 obj2) boolean?)))
+          (tags pure)))
+  (desc . "These procedures return true iff their input list or vector is in sorted order, as determined by <. Specifically, they return #f iff there is an adjacent pair ... X Y ... in the input list or vector such that Y < X in the sense of <. The optional start and end range arguments restrict vector-sorted? to examining the indicated subvector.
 These procedures are equivalent to the SRFI 95 sorted? procedure when applied to lists or vectors respectively, except that they do not accept a key procedure."))
- ((name . "vector-sorted?")
-  (signature
-   case-lambda
-   (((procedure? <) (vector? v)) boolean?)
-   (((procedure? <) (vector? v) (integer? start)) boolean?)
-   (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure)
-  (desc . "(shared description for list-sorted?, vector-sorted?)  These procedures return true iff their input list or vector is in sorted order, as determined by <. Specifically, they return #f iff there is an adjacent pair ... X Y ... in the input list or vector such that Y < X in the sense of <. The optional start and end range arguments restrict vector-sorted? to examining the indicated subvector.
-These procedures are equivalent to the SRFI 95 sorted? procedure when applied to lists or vectors respectively, except that they do not accept a key procedure."))
- ((name . "list-sort")
-  (signature lambda ((procedure? <) (list? lis)) list?)
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure)
-  (desc . "(shared description for list-sort, list-stable-sort)  These procedures do not alter their inputs, but are allowed to return a value that shares a common tail with a list argument.
+ ((group ((name . "list-sort")
+          (signature lambda ((procedure? <) (list? lis)) list?)
+          (subsigs (< (lambda (obj1 obj2) boolean?)))
+          (tags pure))
+         ((name . "list-stable-sort")
+          (signature lambda ((procedure? <) (list? lis)) list?)
+          (subsigs (< (lambda (obj1 obj2) boolean?)))
+          (tags pure)))
+  (desc . "These procedures do not alter their inputs, but are allowed to return a value that shares a common tail with a list argument.
 The list-stable-sort procedure is equivalent to the R6RS list-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to lists, except that it does not accept a key procedure."))
- ((name . "list-stable-sort")
-  (signature lambda ((procedure? <) (list? lis)) list?)
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure)
-  (desc . "(shared description for list-sort, list-stable-sort)  These procedures do not alter their inputs, but are allowed to return a value that shares a common tail with a list argument.
-The list-stable-sort procedure is equivalent to the R6RS list-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to lists, except that it does not accept a key procedure."))
- ((name . "list-sort!")
-  (signature lambda ((procedure? <) (list? lis)) list?)
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (desc . "(shared description for list-sort!, list-stable-sort!)  These procedures are linear update operators — they are allowed, but not required, to alter the cons cells of their arguments to produce their results. They return a sorted list containing the same elements as lis.
+ ((group ((name . "list-sort!")
+          (signature lambda ((procedure? <) (list? lis)) list?)
+          (subsigs (< (lambda (obj1 obj2) boolean?))))
+         ((name . "list-stable-sort!")
+          (signature lambda ((procedure? <) (list? lis)) list?)
+          (subsigs (< (lambda (obj1 obj2) boolean?)))))
+  (desc . "These procedures are linear update operators — they are allowed, but not required, to alter the cons cells of their arguments to produce their results. They return a sorted list containing the same elements as lis.
 The list-stable-sort! procedure is equivalent to the SRFI 95 sort! procedure when applied to lists, except that it does not accept a key procedure."))
- ((name . "list-stable-sort!")
-  (signature lambda ((procedure? <) (list? lis)) list?)
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (desc . "(shared description for list-sort!, list-stable-sort!)  These procedures are linear update operators — they are allowed, but not required, to alter the cons cells of their arguments to produce their results. They return a sorted list containing the same elements as lis.
-The list-stable-sort! procedure is equivalent to the SRFI 95 sort! procedure when applied to lists, except that it does not accept a key procedure."))
- ((name . "vector-sort")
-  (signature
-   case-lambda
-   (((procedure? <) (vector? v)) boolean?)
-   (((procedure? <) (vector? v) (integer? start)) boolean?)
-   (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure)
-  (desc . "(shared description for vector-sort, vector-stable-sort) These procedures do not alter their inputs, but allocate a fresh vector as their result, of length end - start. The vector-stable-sort procedure with no optional arguments is equivalent to the R6RS vector-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to vectors, except that it does not accept a key procedure."))
- ((name . "vector-stable-sort")
-  (signature
-   case-lambda
-   (((procedure? <) (vector? v)) boolean?)
-   (((procedure? <) (vector? v) (integer? start)) boolean?)
-   (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (tags pure)
-  (desc . "(shared description for vector-sort, vector-stable-sort) These procedures do not alter their inputs, but allocate a fresh vector as their result, of length end - start. The vector-stable-sort procedure with no optional arguments is equivalent to the R6RS vector-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to vectors, except that it does not accept a key procedure."))
- ((name . "vector-sort!")
-  (signature
-   case-lambda
-   (((procedure? <) (vector? v)) boolean?)
-   (((procedure? <) (vector? v) (integer? start)) boolean?)
-   (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (desc . "(shared description for vector-sort!, vector-stable-sort!)  These procedures sort their data in-place. (But note that vector-stable-sort! may allocate temporary storage proportional to the size of the input — there are no known O(n lg n) stable vector sorting algorithms that run in constant space.) They return an unspecified value.
-The vector-sort! procedure with no optional arguments is equivalent to the R6RS vector-sort! procedure."))
- ((name . "vector-stable-sort!")
-  (signature
-   case-lambda
-   (((procedure? <) (vector? v)) boolean?)
-   (((procedure? <) (vector? v) (integer? start)) boolean?)
-   (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
-  (subsigs (< (lambda (obj1 obj2) boolean?)))
-  (desc . "(shared description for vector-sort!, vector-stable-sort!)  These procedures sort their data in-place. (But note that vector-stable-sort! may allocate temporary storage proportional to the size of the input — there are no known O(n lg n) stable vector sorting algorithms that run in constant space.) They return an unspecified value.
+ ((group ((name . "vector-sort")
+          (signature
+           case-lambda
+           (((procedure? <) (vector? v)) boolean?)
+           (((procedure? <) (vector? v) (integer? start)) boolean?)
+           (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
+          (subsigs (< (lambda (obj1 obj2) boolean?)))
+          (tags pure))
+         ((name . "vector-stable-sort")
+          (signature
+           case-lambda
+           (((procedure? <) (vector? v)) boolean?)
+           (((procedure? <) (vector? v) (integer? start)) boolean?)
+           (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
+          (subsigs (< (lambda (obj1 obj2) boolean?)))
+          (tags pure)))
+  (desc . "These procedures do not alter their inputs, but allocate a fresh vector as their result, of length end - start. The vector-stable-sort procedure with no optional arguments is equivalent to the R6RS vector-sort procedure. It is also equivalent to the SRFI 95 sort procedure when applied to vectors, except that it does not accept a key procedure."))
+ ((group ((name . "vector-sort!")
+          (signature
+           case-lambda
+           (((procedure? <) (vector? v)) boolean?)
+           (((procedure? <) (vector? v) (integer? start)) boolean?)
+           (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
+          (subsigs (< (lambda (obj1 obj2) boolean?))))
+         ((name . "vector-stable-sort!")
+          (signature
+           case-lambda
+           (((procedure? <) (vector? v)) boolean?)
+           (((procedure? <) (vector? v) (integer? start)) boolean?)
+           (((procedure? <) (vector? v) (integer? start) (integer? end)) boolean?))
+          (subsigs (< (lambda (obj1 obj2) boolean?)))))
+  (desc . "These procedures sort their data in-place. (But note that vector-stable-sort! may allocate temporary storage proportional to the size of the input — there are no known O(n lg n) stable vector sorting algorithms that run in constant space.) They return an unspecified value.
 The vector-sort! procedure with no optional arguments is equivalent to the R6RS vector-sort! procedure."))
  ((name . "list-merge")
   (signature lambda ((procedure? <) (list? lis1) (list? lis2)) list?)
