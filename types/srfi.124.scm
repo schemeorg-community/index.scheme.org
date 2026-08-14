@@ -9,12 +9,11 @@
   (signature lambda ((ephemeron? ephemeron)) boolean?)
   (desc . " Returns #t if ephemeron has been broken; otherwise returns #f.
 This procedure must be used with care. If it returns #f, that guarantees only that prior evaluations of ephemeron-key or ephemeron-datum yielded the key or datum that was stored in ephemeron. However, it makes no guarantees about subsequent calls to ephemeron-key or ephemeron-datum, because the GC may run and break the ephemeron immediately after ephemeron-broken? returns."))
- ((name . "ephemeron-key")
-  (signature lambda ((ephemeron? ephemeron)) *)
-  (desc . "(shared description for ephemeron-key, ephemeron-datum) These return the key or datum component, respectively, of ephemeron. If ephemeron has been broken, these operations return #f, but they can also return #f if that is what was stored as the key or datum."))
- ((name . "ephemeron-datum")
-  (signature lambda ((ephemeron? ephemeron)) *)
-  (desc . "(shared description for ephemeron-key, ephemeron-datum) These return the key or datum component, respectively, of ephemeron. If ephemeron has been broken, these operations return #f, but they can also return #f if that is what was stored as the key or datum."))
+ ((group ((name . "ephemeron-key")
+          (signature lambda ((ephemeron? ephemeron)) *))
+         ((name . "ephemeron-datum")
+          (signature lambda ((ephemeron? ephemeron)) *)))
+  (desc . "These return the key or datum component, respectively, of ephemeron. If ephemeron has been broken, these operations return #f, but they can also return #f if that is what was stored as the key or datum."))
  ((name . "reference-barrier")
   (signature lambda (key) *)
   (desc . "This procedure ensures that the garbage collector does not break an ephemeron containing an unreferenced key before a certain point in a program. The program can invoke a reference barrier on the key by calling this procedure, which guarantees that even if the program does not use the key, it will be considered strongly reachable until after reference-barrier returns.
