@@ -76,44 +76,28 @@
 2 The equality predicate returns #t if both of the following tests are satisfied in order: the lengths of the vectors are the same in the sense of =, and the elements of the vectors are the same in the sense of the equality predicate of element-comparator.
 3 The ordering predicate returns #t if the results of applying length to the first vector is less than the result of applying length to the second vector. If the lengths are equal, then the elements are examined pairwise using the ordering predicate of element-comparator. If any pair of elements returns #t, then that is the result of the list comparator's ordering predicate; otherwise the result is #f
 4 The hash function computes the hash values of the elements using the hash function of element-comparator and then hashes them together in an implementation-defined way."))
- ((name . "make-eq-comparator")
-  (signature lambda () comparator?)
-  (tags pure)
-  (desc . "make-eq-comparator, make-eqv-comparator, make-equal-comparator These procedures return comparators whose functions behave as follows:
+ ((group ((name . "make-eq-comparator")
+          (signature lambda () comparator?)
+          (tags pure))
+         ((name . "make-eqv-comparator")
+          (signature lambda () comparator?)
+          (tags pure))
+         ((name . "make-equal-comparator")
+          (signature lambda () comparator?)
+          (tags pure)))
+  (desc . "These procedures return comparators whose functions behave as follows:
 1 The type test returns #t in all cases.
 2 The equality functions are eq?, eqv?, and equal? respectively.
 3 The ordering function is implementation-defined, except that it must conform to the rules for ordering functions. It may signal an error instead.
 4 The hash function is default-hash."))
- ((name . "make-eqv-comparator")
-  (signature lambda () comparator?)
-  (tags pure)
-  (desc . "make-eq-comparator, make-eqv-comparator, make-equal-comparator These procedures return comparators whose functions behave as follows:
-1 The type test returns #t in all cases.
-2 The equality functions are eq?, eqv?, and equal? respectively.
-3 The ordering function is implementation-defined, except that it must conform to the rules for ordering functions. It may signal an error instead.
-4 The hash function is default-hash."))
- ((name . "make-equal-comparator")
-  (signature lambda () comparator?)
-  (tags pure)
-  (desc . "make-eq-comparator, make-eqv-comparator, make-equal-comparator These procedures return comparators whose functions behave as follows:
-1 The type test returns #t in all cases.
-2 The equality functions are eq?, eqv?, and equal? respectively.
-3 The ordering function is implementation-defined, except that it must conform to the rules for ordering functions. It may signal an error instead.
-4 The hash function is default-hash."))
- ((name . "boolean-hash") (signature lambda (obj) integer?) (tags pure)
-  (desc . "boolean-hash, char-hash, char-ci-hash string-hash, string-ci-hash, symbol-hash, number-hash These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
- ((name . "char-hash") (signature lambda (obj) integer?) (tags pure)
-  (desc . "boolean-hash, char-hash, char-ci-hash string-hash, string-ci-hash, symbol-hash, number-hash These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
- ((name . "char-ci-hash") (signature lambda (obj) integer?) (tags pure)
-  (desc . "boolean-hash, char-hash, char-ci-hash string-hash, string-ci-hash, symbol-hash, number-hash These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
- ((name . "string-hash") (signature lambda (obj) integer?) (tags pure)
-  (desc . "boolean-hash, char-hash, char-ci-hash string-hash, string-ci-hash, symbol-hash, number-hash These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
- ((name . "string-ci-hash") (signature lambda (obj) integer?) (tags pure)
-  (desc . "boolean-hash, char-hash, char-ci-hash string-hash, string-ci-hash, symbol-hash, number-hash These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
- ((name . "symbol-hash") (signature lambda (obj) integer?) (tags pure)
-  (desc . "boolean-hash, char-hash, char-ci-hash string-hash, string-ci-hash, symbol-hash, number-hash These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
- ((name . "number-hash") (signature lambda (obj) integer?) (tags pure)
-  (desc . "boolean-hash, char-hash, char-ci-hash string-hash, string-ci-hash, symbol-hash, number-hash These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
+ ((group ((name . "boolean-hash") (signature lambda (obj) integer?) (tags pure))
+         ((name . "char-hash") (signature lambda (obj) integer?) (tags pure))
+         ((name . "char-ci-hash") (signature lambda (obj) integer?) (tags pure))
+         ((name . "string-hash") (signature lambda (obj) integer?) (tags pure))
+         ((name . "string-ci-hash") (signature lambda (obj) integer?) (tags pure))
+         ((name . "symbol-hash") (signature lambda (obj) integer?) (tags pure))
+         ((name . "number-hash") (signature lambda (obj) integer?) (tags pure)))
+  (desc . "These are hash functions for some standard Scheme types, suitable for passing to make-comparator. Users may write their own hash functions with the same signature. However, if programmers wish their hash functions to be backward compatible with the reference implementation of SRFI 69, they are advised to write their hash functions to accept a second argument and ignore it. These are suitable hash functions for the specified types. The hash functions char-ci-hash and string-ci-hash treat their argument case-insensitively. Note that while symbol-hash may return the hashed value of applying symbol->string and then string-hash to the symbol, this is not a requirement."))
  ((name . "hash-bound") (signature syntax-rules () ((_) integer?)) (tags)
   (desc . "Hash functions should be written so as to return a number between 0 and the largest reasonable number of elements (such as hash buckets) a data structure in the implementation might have. What that value is depends on the implementation. This value provides the current bound as a positive exact integer, typically for use by user-written hash functions. However, they are not required to bound their results in this way."))
  ((name . "hash-salt") (signature syntax-rules () ((_) integer?)) (tags)
@@ -177,45 +161,37 @@ This SRFI recommends (but does not require) that libraries which expose comparat
   (signature lambda ((comparator? comparator) obj) integer?)
   (tags pure)
   (desc . " Invokes the hash function of comparator on obj and returns what it returns. More convenient than comparator-hash-function, but less efficient when the function is called repeatedly. Note: No invokers are required for the equality and ordering predicates, because =? and <? serve this function. "))
- ((name . "=?")
-  (signature
-   lambda
-   ((comparator? comparator) object1 object2 object3 ...)
-   boolean?)
-  (tags pure)
-  (desc . "=?, <?, >?, <=?, >=? These procedures are analogous to the number, character, and string comparison predicates of Scheme. They allow the convenient use of comparators to handle variable data types.
-These procedures apply the equality and ordering predicates of comparator to the objects as follows. If the specified relation returns #t for all objecti and objectj where n is the number of objects and 1 <= i < j <= n, then the procedures return #t, but otherwise #f. Because the relations are transitive, it suffices to compare each object with its successor. The order in which the values are compared is unspecified."))
- ((name . "<?")
-  (signature
-   lambda
-   ((comparator? comparator) object1 object2 object3 ...)
-   boolean?)
-  (tags pure)
-  (desc . "=?, <?, >?, <=?, >=? These procedures are analogous to the number, character, and string comparison predicates of Scheme. They allow the convenient use of comparators to handle variable data types.
-These procedures apply the equality and ordering predicates of comparator to the objects as follows. If the specified relation returns #t for all objecti and objectj where n is the number of objects and 1 <= i < j <= n, then the procedures return #t, but otherwise #f. Because the relations are transitive, it suffices to compare each object with its successor. The order in which the values are compared is unspecified."))
- ((name . ">?")
-  (signature
-   lambda
-   ((comparator? comparator) object1 object2 object3 ...)
-   boolean?)
-  (tags pure)
-  (desc . "=?, <?, >?, <=?, >=? These procedures are analogous to the number, character, and string comparison predicates of Scheme. They allow the convenient use of comparators to handle variable data types.
-These procedures apply the equality and ordering predicates of comparator to the objects as follows. If the specified relation returns #t for all objecti and objectj where n is the number of objects and 1 <= i < j <= n, then the procedures return #t, but otherwise #f. Because the relations are transitive, it suffices to compare each object with its successor. The order in which the values are compared is unspecified."))
- ((name . "<=?")
-  (signature
-   lambda
-   ((comparator? comparator) object1 object2 object3 ...)
-   boolean?)
-  (tags pure)
-  (desc . "=?, <?, >?, <=?, >=? These procedures are analogous to the number, character, and string comparison predicates of Scheme. They allow the convenient use of comparators to handle variable data types.
-These procedures apply the equality and ordering predicates of comparator to the objects as follows. If the specified relation returns #t for all objecti and objectj where n is the number of objects and 1 <= i < j <= n, then the procedures return #t, but otherwise #f. Because the relations are transitive, it suffices to compare each object with its successor. The order in which the values are compared is unspecified."))
- ((name . ">=?")
-  (signature
-   lambda
-   ((comparator? comparator) object1 object2 object3 ...)
-   boolean?)
-  (tags pure)
-  (desc . "=?, <?, >?, <=?, >=? These procedures are analogous to the number, character, and string comparison predicates of Scheme. They allow the convenient use of comparators to handle variable data types.
+ ((group ((name . "=?")
+          (signature
+           lambda
+           ((comparator? comparator) object1 object2 object3 ...)
+           boolean?)
+          (tags pure))
+         ((name . "<?")
+          (signature
+           lambda
+           ((comparator? comparator) object1 object2 object3 ...)
+           boolean?)
+          (tags pure))
+         ((name . ">?")
+          (signature
+           lambda
+           ((comparator? comparator) object1 object2 object3 ...)
+           boolean?)
+          (tags pure))
+         ((name . "<=?")
+          (signature
+           lambda
+           ((comparator? comparator) object1 object2 object3 ...)
+           boolean?)
+          (tags pure))
+         ((name . ">=?")
+          (signature
+           lambda
+           ((comparator? comparator) object1 object2 object3 ...)
+           boolean?)
+          (tags pure)))
+  (desc . "These procedures are analogous to the number, character, and string comparison predicates of Scheme. They allow the convenient use of comparators to handle variable data types.
 These procedures apply the equality and ordering predicates of comparator to the objects as follows. If the specified relation returns #t for all objecti and objectj where n is the number of objects and 1 <= i < j <= n, then the procedures return #t, but otherwise #f. Because the relations are transitive, it suffices to compare each object with its successor. The order in which the values are compared is unspecified."))
  ((name . "comparator-if<=>")
   (signature
