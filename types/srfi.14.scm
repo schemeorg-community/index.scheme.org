@@ -255,10 +255,19 @@ Note that if you need to determine the actual character on which a predicate ret
  ((name . "char-set-delete!")
   (signature lambda ((char-set? cs) (char? char1) ...) char-set?)
   (desc . "Delete the chari characters from character set cs. Linear-update variant. The procedure is allowed, but not required, to side-effect its first parameter."))
- ((name . "char-set-complement")
-  (signature lambda ((char-set? cs)) char-set?)
-  (tags pure)
-  (desc . "(shared description for char-set-complement, char-set-union, char-set-intersection, char-set-difference, char-set-xor, char-set-diff+intersection) These procedures implement set complement, union, intersection, difference, and exclusive-or for character sets. The union, intersection and xor operations are n-ary. The difference function is also n-ary, associates to the left (that is, it computes the difference between its first argument and the union of all the other arguments), and requires at least one argument.
+ ((group ((name . "char-set-complement")
+          (signature lambda ((char-set? cs)) char-set?) (tags pure))
+         ((name . "char-set-union")
+          (signature lambda ((char-set? cs1) ...) char-set?) (tags pure))
+         ((name . "char-set-intersection")
+          (signature lambda ((char-set? cs1) ...) char-set?) (tags pure))
+         ((name . "char-set-difference")
+          (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?) (tags pure))
+         ((name . "char-set-xor")
+          (signature lambda ((char-set? cs1) ...) char-set?) (tags pure))
+         ((name . "char-set-diff+intersection")
+          (signature lambda ((char-set? cs1) (char-set? cs2) ...) (values char-set? char-set?)) (tags pure)))
+  (desc . "These procedures implement set complement, union, intersection, difference, and exclusive-or for character sets. The union, intersection and xor operations are n-ary. The difference function is also n-ary, associates to the left (that is, it computes the difference between its first argument and the union of all the other arguments), and requires at least one argument.
     Boundary cases:
     (char-set-union) => char-set:empty
     (char-set-intersection) => char-set:full
@@ -271,121 +280,19 @@ Note that if you need to determine the actual character on which a predicate ret
 
     but can be implemented more efficiently.
     Programmers should be aware that char-set-complement could potentially be a very expensive operation in Scheme implementations that provide a very large character type, such as 32-bit Unicode. If this is a possibility, sets can be complimented with respect to a smaller universe using char-set-difference."))
- ((name . "char-set-union")
-  (signature lambda ((char-set? cs1) ...) char-set?)
-  (tags pure)
-  (desc . "(shared description for char-set-complement, char-set-union, char-set-intersection, char-set-difference, char-set-xor, char-set-diff+intersection) These procedures implement set complement, union, intersection, difference, and exclusive-or for character sets. The union, intersection and xor operations are n-ary. The difference function is also n-ary, associates to the left (that is, it computes the difference between its first argument and the union of all the other arguments), and requires at least one argument.
-    Boundary cases:
-    (char-set-union) => char-set:empty
-    (char-set-intersection) => char-set:full
-    (char-set-xor) => char-set:empty
-    (char-set-difference cs) => cs
-
-    char-set-diff+intersection returns both the difference and the intersection of the arguments -- it partitions its first parameter. It is equivalent to
-    (values (char-set-difference cs1 cs2 ...)
-            (char-set-intersection cs1 (char-set-union cs2 ...)))
-
-    but can be implemented more efficiently.
-    Programmers should be aware that char-set-complement could potentially be a very expensive operation in Scheme implementations that provide a very large character type, such as 32-bit Unicode. If this is a possibility, sets can be complimented with respect to a smaller universe using char-set-difference."))
- ((name . "char-set-intersection")
-  (signature lambda ((char-set? cs1) ...) char-set?)
-  (tags pure)
-  (desc . "(shared description for char-set-complement, char-set-union, char-set-intersection, char-set-difference, char-set-xor, char-set-diff+intersection) These procedures implement set complement, union, intersection, difference, and exclusive-or for character sets. The union, intersection and xor operations are n-ary. The difference function is also n-ary, associates to the left (that is, it computes the difference between its first argument and the union of all the other arguments), and requires at least one argument.
-    Boundary cases:
-    (char-set-union) => char-set:empty
-    (char-set-intersection) => char-set:full
-    (char-set-xor) => char-set:empty
-    (char-set-difference cs) => cs
-
-    char-set-diff+intersection returns both the difference and the intersection of the arguments -- it partitions its first parameter. It is equivalent to
-    (values (char-set-difference cs1 cs2 ...)
-            (char-set-intersection cs1 (char-set-union cs2 ...)))
-
-    but can be implemented more efficiently.
-    Programmers should be aware that char-set-complement could potentially be a very expensive operation in Scheme implementations that provide a very large character type, such as 32-bit Unicode. If this is a possibility, sets can be complimented with respect to a smaller universe using char-set-difference."))
- ((name . "char-set-difference")
-  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-  (tags pure)
-  (desc . "(shared description for char-set-complement, char-set-union, char-set-intersection, char-set-difference, char-set-xor, char-set-diff+intersection) These procedures implement set complement, union, intersection, difference, and exclusive-or for character sets. The union, intersection and xor operations are n-ary. The difference function is also n-ary, associates to the left (that is, it computes the difference between its first argument and the union of all the other arguments), and requires at least one argument.
-    Boundary cases:
-    (char-set-union) => char-set:empty
-    (char-set-intersection) => char-set:full
-    (char-set-xor) => char-set:empty
-    (char-set-difference cs) => cs
-
-    char-set-diff+intersection returns both the difference and the intersection of the arguments -- it partitions its first parameter. It is equivalent to
-    (values (char-set-difference cs1 cs2 ...)
-            (char-set-intersection cs1 (char-set-union cs2 ...)))
-
-    but can be implemented more efficiently.
-    Programmers should be aware that char-set-complement could potentially be a very expensive operation in Scheme implementations that provide a very large character type, such as 32-bit Unicode. If this is a possibility, sets can be complimented with respect to a smaller universe using char-set-difference."))
- ((name . "char-set-xor")
-  (signature lambda ((char-set? cs1) ...) char-set?)
-  (tags pure)
-  (desc . "(shared description for char-set-complement, char-set-union, char-set-intersection, char-set-difference, char-set-xor, char-set-diff+intersection) These procedures implement set complement, union, intersection, difference, and exclusive-or for character sets. The union, intersection and xor operations are n-ary. The difference function is also n-ary, associates to the left (that is, it computes the difference between its first argument and the union of all the other arguments), and requires at least one argument.
-    Boundary cases:
-    (char-set-union) => char-set:empty
-    (char-set-intersection) => char-set:full
-    (char-set-xor) => char-set:empty
-    (char-set-difference cs) => cs
-
-    char-set-diff+intersection returns both the difference and the intersection of the arguments -- it partitions its first parameter. It is equivalent to
-    (values (char-set-difference cs1 cs2 ...)
-            (char-set-intersection cs1 (char-set-union cs2 ...)))
-
-    but can be implemented more efficiently.
-    Programmers should be aware that char-set-complement could potentially be a very expensive operation in Scheme implementations that provide a very large character type, such as 32-bit Unicode. If this is a possibility, sets can be complimented with respect to a smaller universe using char-set-difference."))
- ((name . "char-set-diff+intersection")
-  (signature
-   lambda
-   ((char-set? cs1) (char-set? cs2) ...)
-   (values char-set? char-set?))
-  (tags pure)
-  (desc . "(shared description for char-set-complement, char-set-union, char-set-intersection, char-set-difference, char-set-xor, char-set-diff+intersection) These procedures implement set complement, union, intersection, difference, and exclusive-or for character sets. The union, intersection and xor operations are n-ary. The difference function is also n-ary, associates to the left (that is, it computes the difference between its first argument and the union of all the other arguments), and requires at least one argument.
-    Boundary cases:
-    (char-set-union) => char-set:empty
-    (char-set-intersection) => char-set:full
-    (char-set-xor) => char-set:empty
-    (char-set-difference cs) => cs
-
-    char-set-diff+intersection returns both the difference and the intersection of the arguments -- it partitions its first parameter. It is equivalent to
-    (values (char-set-difference cs1 cs2 ...)
-            (char-set-intersection cs1 (char-set-union cs2 ...)))
-
-    but can be implemented more efficiently.
-    Programmers should be aware that char-set-complement could potentially be a very expensive operation in Scheme implementations that provide a very large character type, such as 32-bit Unicode. If this is a possibility, sets can be complimented with respect to a smaller universe using char-set-difference."))
- ((name . "char-set-complement!")
-  (signature lambda ((char-set? cs)) char-set?)
-  (desc . "(shared description for char-set-complement!, char-set-union!, char-set-intersection!, char-set-difference!, char-set-xor!, char-set-diff+intersection!)
-    These are linear-update variants of the set-algebra functions. They are allowed, but not required, to side-effect their first (required) parameter.
-    char-set-diff+intersection! is allowed to side-effect both of its two required parameters, cs1 and cs2."))
- ((name . "char-set-union")
-  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-  (desc . "(shared description for char-set-complement!, char-set-union!, char-set-intersection!, char-set-difference!, char-set-xor!, char-set-diff+intersection!)
-    These are linear-update variants of the set-algebra functions. They are allowed, but not required, to side-effect their first (required) parameter.
-    char-set-diff+intersection! is allowed to side-effect both of its two required parameters, cs1 and cs2."))
- ((name . "char-set-intersection!")
-  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-  (desc . "(shared description for char-set-complement!, char-set-union!, char-set-intersection!, char-set-difference!, char-set-xor!, char-set-diff+intersection!)
-    These are linear-update variants of the set-algebra functions. They are allowed, but not required, to side-effect their first (required) parameter.
-    char-set-diff+intersection! is allowed to side-effect both of its two required parameters, cs1 and cs2."))
- ((name . "char-set-difference!")
-  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-  (desc . "(shared description for char-set-complement!, char-set-union!, char-set-intersection!, char-set-difference!, char-set-xor!, char-set-diff+intersection!)
-    These are linear-update variants of the set-algebra functions. They are allowed, but not required, to side-effect their first (required) parameter.
-    char-set-diff+intersection! is allowed to side-effect both of its two required parameters, cs1 and cs2."))
- ((name . "char-set-xor!")
-  (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?)
-  (desc . "(shared description for char-set-complement!, char-set-union!, char-set-intersection!, char-set-difference!, char-set-xor!, char-set-diff+intersection!)
-    These are linear-update variants of the set-algebra functions. They are allowed, but not required, to side-effect their first (required) parameter.
-    char-set-diff+intersection! is allowed to side-effect both of its two required parameters, cs1 and cs2."))
- ((name . "char-set-diff+intersection!")
-  (signature
-   lambda
-   ((char-set? cs1) (char-set? cs2) (char-set? cs3) ...)
-   (values char-set? char-set?))
-  (desc . "(shared description for char-set-complement!, char-set-union!, char-set-intersection!, char-set-difference!, char-set-xor!, char-set-diff+intersection!)
-    These are linear-update variants of the set-algebra functions. They are allowed, but not required, to side-effect their first (required) parameter.
+ ((group ((name . "char-set-complement!")
+          (signature lambda ((char-set? cs)) char-set?))
+         ((name . "char-set-union")
+          (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+         ((name . "char-set-intersection!")
+          (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+         ((name . "char-set-difference!")
+          (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+         ((name . "char-set-xor!")
+          (signature lambda ((char-set? cs1) (char-set? cs2) ...) char-set?))
+         ((name . "char-set-diff+intersection!")
+          (signature lambda ((char-set? cs1) (char-set? cs2) (char-set? cs3) ...) (values char-set? char-set?))))
+  (desc . "These are linear-update variants of the set-algebra functions. They are allowed, but not required, to side-effect their first (required) parameter.
     char-set-diff+intersection! is allowed to side-effect both of its two required parameters, cs1 and cs2."))
  ((name . "char-set:lower-case") (signature value char-set?) (desc . "Lower-case letters"))
  ((name . "char-set:upper-case") (signature value char-set?) (desc . "Upper-case letters"))
