@@ -648,8 +648,8 @@
  ((name . "string->number")
   (signature
    case-lambda
-   (((string? string)) number?)
-   (((string? string) (integer? radix)) number?))
+   (((string? string)) (or number? #f))
+   (((string? string) (integer? radix)) (or number? #f)))
   (tags pure)
   (desc . "Returns a number of the maximally precise representation expressed by the given string. It is an error if radix is not 2, 8, 10, or 16.  If supplied, radix is a default radix that will be overridden if an explicit radix prefix is present in string (e.g. \"#o177\"). If radix is not supplied, then the default radix is 10. If string is not a syntactically valid notation for a number, or would result in a number that the implementation cannot represent, then string->number returns #f. An error is never signaled due to the content of string. Note: The domain of string->number may be restricted by implementations in the following ways. If all numbers supported by an implementation are real, then string->number is permitted to return #f whenever string uses the polar or rectangular notations for complex numbers. If all numbers are integers, then string->number may return #f whenever the fractional notation is used. If all numbers are exact, then string->number may return #f whenever an exponent marker or explicit exactness prefix is used. If all inexact numbers are integers, then string->number may return #f whenever a decimal point is used. The rules used by a particular implementation for string->number must also be applied to read and to the routine that reads programs, in order to maintain consistency between internal numeric processing, I/O, and the processing of programs. As a consequence, the R5RS permission to return #f when string has an explicit radix prefix has been withdrawn."))
  ((name . "string->symbol")

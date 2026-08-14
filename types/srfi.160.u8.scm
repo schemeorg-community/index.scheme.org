@@ -353,7 +353,7 @@ When multiple vectors are passed, pred? must take the same number of arguments a
 ((name . "write-u8vector")
  (signature
    case-lambda
-   (((u8vector u8vec)) undefined)
-   (((u8vector u8vec) (output-port? port)) undefined))
+   (((u8vector? u8vec)) undefined)
+   (((u8vector? u8vec) (output-port? port)) undefined))
  (desc . "Prints to port (the current output port by default) a representation of u8vec in the lexical syntax explained below."))
 )

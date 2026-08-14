@@ -1,0 +1,37 @@
+name: 'Render and deploy docs'
+on:
+  push:
+    branches:
+      - main
+      - remove-site-part
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy-pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: 'Install asciidoc'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y asciidoctor
+      - name: 'Render README.adoc'
+        run: |
+          asciidoctor README.adoc -o index.html
+          mkdir _site
+          mv index.html _site
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5

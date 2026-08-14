@@ -308,6 +308,6 @@ When multiple vectors are passed, pred? must take the same number of arguments a
 ((name . "write-@vector")
  (signature
    case-lambda
-   (((@vector @vec)) undefined)
-   (((@vector @vec) (output-port? port)) undefined))
+   (((@vector? @vec)) undefined)
+   (((@vector? @vec) (output-port? port)) undefined))
  (desc . "Prints to port (the current output port by default) a representation of @vec in the lexical syntax explained below."))

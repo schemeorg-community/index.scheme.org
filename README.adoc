@@ -1,8 +1,15 @@
 = Scheme index
 :toc: left
 
-Scheme index catalogs definitions of procedures, macros, values from scheme specifications and SRFI libraries, using sexpr textual format. Main points of interests is the `types` folder.
-This repository also provides complementary static site GUI. It's accessible at https://index.scheme.org . 
+Scheme index catalogs definitions of procedures, macros, values from scheme specifications and SRFI libraries, using sexpr textual format.
+
+Browse index content through one of available frontends:
+
+* https://index.scheme.org
+
+* https://scheme-index.aartaka.me
+
+Rendered HTML version of this readme is available at https://schemeorg-community.github.io/index.scheme.org/.
 
 == Identifiers definitions
 
@@ -122,17 +129,10 @@ Index should be a list of alists. Each alist contains three fields:
 
 Filterset definition file should be a list of pairs. `car` is a symbolic library name (matching what is defined in index for identifiers definitions). `cdr` is either a symbolic library name (in which case, all the usages of library in `car` are renamed to what is in `cdr`), or a `#t` value (indicating to include library in `car` as is, without a rename).
 
-== Compiling / running static site GUI
+== Development
 
-=== Native
+Use `validatedata.scm` helper in `scheme-index-util` folder to validate the data conforms to specification, by either:
 
-Open `build` directory and execute `bash build.sh`. Requires:
+* Running `validatedata-native.sh` (requires chicken scheme installation);
 
-. Chicken scheme compiler, with json, matchable and srfi 1 eggs installed;
-. Nodejs / npm installation.
-
-After building, you'll find `schemeindex.zip` in build directory, which you can unzip and deploy from any web server. If you plan serving not from root, edit `index.html` file and change `<base href=".">` to point to appropriate prefix.
-
-=== Docker compose
-
-Open `build` directory and execute `docker compose up`. The site will be available at `localhost:8080`.
+* Running `validatedata-docker.sh` (requires docker installation).
