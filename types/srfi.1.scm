@@ -611,4 +611,4 @@
   (desc . "These are linear-update variants. They are allowed, but not required, to use the cons cells in their first list parameter to construct their answer. lset-union! is permitted to recycle cons cells from any of its list arguments."))
  ((group ((name . "set-car!") (signature lambda ((pair? pair) object) undefined))
          ((name . "set-cdr!") (signature lambda ((pair? pair) object) undefined)))
-  (desc . "set-car!, set-cdr! These procedures store object in the car and cdr field of pair, respectively. The value returned is unspecified.")))
+  (desc . "These procedures store object in the car and cdr field of pair, respectively. The value returned is unspecified.")))
