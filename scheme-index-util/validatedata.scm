@@ -27,6 +27,11 @@ SOFTWARE.
         matchable
         srfi-1)
 
+(cond-expand
+  (chicken-6
+   (import (scheme base)))
+  (else))
+
 (define (main)
   (define filters-index-file-name (list-ref (command-line-arguments) 0))
   (define types-index-file-name (list-ref (command-line-arguments) 1))
