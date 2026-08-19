@@ -1005,50 +1005,50 @@ If no match is found, the functions return false. The start and end parameters s
  ((name . "string-unfold")
   (signature
    case-lambda
-   (((procedure? p) (procedure? f) (procedure? g) seed) string?)
-   (((procedure? p) (procedure? f) (procedure? g) seed (string? base)) string?)
-   (((procedure? p)
-     (procedure? f)
-     (procedure? g)
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed) string?)
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed (string? base)) string?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
      seed
      (string? base)
      (procedure? make-final))
     string?))
   (subsigs
-   (p (lambda (seed) boolean?))
-   (f (lambda (seed) *))
-   (g (lambda (seed) *))
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))
    (make-final (lambda (seed) string?)))
   (tags pure)
   (desc . "This is a fundamental constructor for strings.
-* G is used to generate a series of \"seed\" values from the initial seed: seed, (g seed), (g^2 seed), (g^3 seed), ...
-* P tells us when to stop -- when it returns true when applied to one of these seed values.
-* F maps each seed value to the corresponding character in the result string. These chars are assembled into the string in a left-to-right order.
+* successor is used to generate a series of \"seed\" values from the initial seed: seed, (successor seed), (successor^2 seed), (successor^3 seed), ...
+* stop? tells us when to stop -- when it returns true when applied to one of these seed values.
+* mapper maps each seed value to the corresponding character in the result string. These chars are assembled into the string in a left-to-right order.
 * Base is the optional initial/leftmost portion of the constructed string; it defaults to the empty string \"\".
 * Make-final is applied to the terminal seed value (on which p returns true) to produce the final/rightmost portion of the constructed string. It defaults to (lambda (x) \"\").
 The final string constructed does not share storage with either base or the value produced by make-final."))
  ((name . "string-unfold-right")
   (signature
    case-lambda
-   (((procedure? p) (procedure? f) (procedure? g) seed) string?)
-   (((procedure? p) (procedure? f) (procedure? g) seed (string? base)) string?)
-   (((procedure? p)
-     (procedure? f)
-     (procedure? g)
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed) string?)
+   (((procedure? stop?) (procedure? mapper) (procedure? successor) seed (string? base)) string?)
+   (((procedure? stop?)
+     (procedure? mapper)
+     (procedure? successor)
      seed
      (string? base)
      (procedure? make-final))
     string?))
   (subsigs
-   (p (lambda (seed) boolean?))
-   (f (lambda (seed) *))
-   (g (lambda (seed) *))
+   (stop? (lambda (seed) boolean?))
+   (mapper (lambda (seed) *))
+   (successor (lambda (seed) *))
    (make-final (lambda (seed) string?)))
   (tags pure)
   (desc . " This is a fundamental constructor for strings.
-* G is used to generate a series of \"seed\" values from the initial seed: seed, (g seed), (g2 seed), (g3 seed), ...
-* P tells us when to stop -- when it returns true when applied to one of these seed values.
-* F maps each seed value to the corresponding character in the result string. These chars are assembled into the string in a right-to-left order.
+* successor is used to generate a series of \"seed\" values from the initial seed: seed, (successor seed), (successor2 seed), (successor3 seed), ...
+* stop? tells us when to stop -- when it returns true when applied to one of these seed values.
+* mapper maps each seed value to the corresponding character in the result string. These chars are assembled into the string in a right-to-left order.
 * Base is the optional initial/rightmost portion of the constructed string; it defaults to the empty string \"\".
 * Make-final is applied to the terminal seed value (on which P returns true) to produce the final/leftmost portion of the constructed string. It defaults to (lambda (x) \"\").
 The final string constructed does not share storage with either base or the value produced by make-final."))

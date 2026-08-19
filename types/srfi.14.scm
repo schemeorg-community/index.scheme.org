@@ -63,28 +63,28 @@
  ((group ((name . "char-set-unfold")
           (signature
            case-lambda
-           (((procedure? f) (procedure? p) (procedure? g) seed) char-set?)
-           (((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs))
+           (((procedure? stop?) (procedure? mapper) (procedure? successor) seed) char-set?)
+           (((procedure? stop?) (procedure? mapper) (procedure? successor) seed (char-set? base-cs))
             char-set?))
           (subsigs
-           (f (lambda (seed) char?))
-           (p (lambda (seed) boolean?))
-           (g (lambda (seed) *)))
+           (stop? (lambda (seed) boolean?))
+           (mapper (lambda (seed) char?))
+           (successor (lambda (seed) *)))
           (tags pure))
          ((name . "char-set-unfold!")
           (signature
            lambda
-           ((procedure? f) (procedure? p) (procedure? g) seed (char-set? base-cs))
+           ((procedure? stop?) (procedure? mapper) (procedure? successor) seed (char-set? base-cs))
            char-set?)
           (subsigs
-           (f (lambda (seed) char?))
-           (p (lambda (seed) boolean?))
-           (g (lambda (seed) *)))
+           (stop? (lambda (seed) boolean?))
+           (mapper (lambda (seed) char?))
+           (successor (lambda (seed) *)))
           (tags pure)))
   (desc . "This is a fundamental constructor for char-sets.
-* G is used to generate a series of \"seed\" values from the initial seed: seed, (g seed), (g2 seed), (g3 seed), ...
-* P tells us when to stop -- when it returns true when applied to one of these seed values.
-* F maps each seed value to a character. These characters are added to the base character set base-cs to form the result; base-cs defaults to the empty set. char-set-unfold! adds the characters to base-cs in a linear-update -- it is allowed, but not required, to side-effect and use base-cs's storage to construct the result."))
+* successor is used to generate a series of \"seed\" values from the initial seed: seed, (successor seed), (successor2 seed), (successor3 seed), ...
+* stop? tells us when to stop -- when it returns true when applied to one of these seed values.
+* mapper maps each seed value to a character. These characters are added to the base character set base-cs to form the result; base-cs defaults to the empty set. char-set-unfold! adds the characters to base-cs in a linear-update -- it is allowed, but not required, to side-effect and use base-cs's storage to construct the result."))
  ((name . "char-set-for-each")
   (signature lambda ((procedure? proc) (char-set? cs)) undefined)
   (subsigs (proc (lambda ((char? c)) undefined)))
