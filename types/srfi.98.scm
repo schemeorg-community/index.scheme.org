@@ -1,10 +1,7 @@
 (((name . "getenv")
-  (signature lambda ((string? name)) (or string? #f))
+  (signature case-lambda
+             (((string? name)) (or string? #f))
+             (() list?))
   (tags pure)
-  (desc . "Returns the value of the named environment variable as a string, or #f if the named environment variable is not found."))
- ((name . "getenv")
-  (signature lambda () list?)
-  (subsigs
-    (return (alist (string? key) (string? value))))
-  (tags pure)
-  (desc . "Returns names and values of all the environment variables as an a-list.")))
+  (desc . "Returns the value of the named environment variable as a string, or #f if the named environment variable is not found.
+In the second form, returns names and values of all the environment variables as an alist.")))
