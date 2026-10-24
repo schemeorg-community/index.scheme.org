@@ -11,7 +11,6 @@
  (predicate . "A procedure that returns a (usually) boolean value for whether its argument has some property")
  (comparison . "A procedure that compares its two arguments, usually for ordering")
  (equality . "A procedure that compares its two arguments for being similar (in some sense)")
- (thunk . "A user-provided zero-argument procedure intended to be ran indirectly by the library internals")
  ;; SRFI-specific types
  (computation . "A computation can be thought of as suspended code much like promises but with the difference that a computation can be executed more than once and that its results are not cached (SRFI-165)")
  (computation-env . "The computations of the environment monad are executed on an environment (SRFI-165)")
