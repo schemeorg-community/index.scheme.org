@@ -1,13 +1,16 @@
 (
  ;; Standard predicate-less types
  (environment . "Environment (set of libraries and their identifiers,) as per R7RS section 6.12")
- (predicate . "A procedure that returns a (usually) boolean value for whether its argument has some property")
  (file-options . "Object representing special flags for file handling and I/O (R6RS)")
  (codec . "An immutable Scheme object that represents a Unicode or similar encoding scheme (R6RS)")
  (transcoder . "A transcoder is an immutable Scheme object that combines a codec with an end-of-line style and a method for handling decoding errors (R6RS)")
  (enum-set . "Finite set of enumerated values of a certain type (R6RS)")
  (opaque-port-position . "Position in a port (R6RS)")
  (transformer-spec . "Object returned by macro-creating forms")
+ ;; Procedure types
+ (predicate . "A procedure that returns a (usually) boolean value for whether its argument has some property")
+ (comparison . "A procedure that compares its two arguments, usually for ordering")
+ (equality . "A procedure that compares its two arguments for being similar (in some sense)")
  ;; SRFI-specific types
  (computation . "A computation can be thought of as suspended code much like promises but with the difference that a computation can be executed more than once and that its results are not cached (SRFI-165)")
  (computation-env . "The computations of the environment monad are executed on an environment (SRFI-165)")
